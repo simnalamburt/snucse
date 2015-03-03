@@ -6,3 +6,11 @@ authors = ["Hyeon Kim <simnalamburt@gmail.com>"]
 
 [dependencies]
 time = "*"
+
+[[bin]]
+name = "1d"
+path = "1d.rs"
+
+[[bin]]
+name = "2d"
+path = "2d.rs"
