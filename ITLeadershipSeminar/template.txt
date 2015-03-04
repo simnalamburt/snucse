@@ -1,0 +1,32 @@
+Seminar Category [일반/4과/외부/기타]:
+Name of Speaker:
+Title of Presentation:
+Date:
+TIme:
+Submission Date:
+Place:
+Evaluator's Name / Student id / Email:
+
+
+Abstract (less than 100 words):
+
+Strong Points in the Contents (less than 100 words):
+
+Weak Points in the Contents (less than 100 words):
+
+
+Mark the presentation skills
+(1-insufficient, 2-limited, 3-good, 4-very good, 5-excellent)
+Body language and eye contact ...............................( )
+Correct language ............................................( )
+Understandable (rhythm, intonation, accent) .................( )
+Spoken loud enough ..........................................( )
+Overview of presentation in the beginning ...................( )
+Objectives clearly stated ...................................( )
+Logically well-organized ....................................( )
+The presenter masters the material thoroughly ...............( )
+Well prepared slides ........................................( )
+Proper use of color, multimedia, graphics ...................( )
+Slides easy to understand ...................................( )
+Q&A well managed ............................................( )
+Overall (will you recommend it to others ?) .................( )
