@@ -1,0 +1,47 @@
+Seminar Category [일반/4과/외부/기타]: 일반
+Name of Speaker: 이효건 부사장 (삼성전자 SW 센터)
+Title of Presentation: Smart 기술 Trend 및 전망
+Date: 2015.03.04
+TIme: 수요일 15:30
+Submission Date: 2015.03.04
+Place: 서울대학교 302동 105호
+Evaluator's Name / Student id / Email: 김지현 / 2013-11392 / simnalamburt@gmail.com
+
+
+Abstract (less than 100 words):
+  21세기 이래로 IT 분야에서 발생하고, 이목을 많이 끌은 기술들; IOT, 클라우드
+  시스템, 빅데이터 분석, 딥러닝, 컴퓨터비전, 가상현실, Wearable devie 기술들을
+  간략히 훑고, 연구실에만 있던 이러한 기술들이 어떻게 발전하여 우리의 생활에
+  적용되게 되었는지를 요약하고, 이와 더불어 앞으로의 전망은 어떠한지, 삼성은
+  SW부문에 있어 어떠한 스탠드를 취할것인지를 말하는 발표였다.
+
+Strong Points in the Contents (less than 100 words):
+  이름은 들어봤을법 하지만 정확히 무엇이었는지는 모를, 소위 Heap 한 기술들을
+  모두 훑어주고, 이들 각각이 어느 회사를 등에 업고 발전하였는지를 가르쳐주는것은
+  꽤 괜찮았다. 특히 발표자가 삼성전자 S/W 센터 부사장이었기때문에, 다른사람을
+  통해 듣는것보다 더욱 신뢰감이 있었다.
+
+Weak Points in the Contents (less than 100 words):
+  발표의 주제 자체가 이미 여러 매체(인터넷, 잡지, 신문)를 통해 많이 화자된
+  기술들을 한번 다시 더 설명해주는것인데, 이 발표는 인문대, 사회대생이 아니라 이
+  기술들 각각을 이미 모두 깊이 알고도 남았어야할 전기정보공학부 학생들을
+  대상으로 한 것들을 대상으로 한 것이다. 전공학생들을 대상으로 한것이라면 그저
+  훑을뿐이 아닌, 어느 기술이 진정한 가치가 있는것이고, 어느 기술이 그저
+  Heap하기만 할뿐인 허울없는 기술인지를 짚어줬으면 했다.
+
+
+Mark the presentation skills
+(1-insufficient, 2-limited, 3-good, 4-very good, 5-excellent)
+Body language and eye contact ...............................(2)
+Correct language ............................................(4)
+Understandable (rhythm, intonation, accent) .................(3)
+Spoken loud enough ..........................................(4)
+Overview of presentation in the beginning ...................(5)
+Objectives clearly stated ...................................(5)
+Logically well-organized ....................................(4)
+The presenter masters the material thoroughly ...............(5)
+Well prepared slides ........................................(2)
+Proper use of color, multimedia, graphics ...................(2)
+Slides easy to understand ...................................(3)
+Q&A well managed ............................................(3)
+Overall (will you recommend it to others ?) .................(2)
