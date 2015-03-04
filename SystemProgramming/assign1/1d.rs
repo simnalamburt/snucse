@@ -43,5 +43,5 @@ fn test(num: usize) {
 
 fn main() {
     println!("{:>5}, {:>10}, {:>20}, {:>20}, {:>20}", "#", "size", "friendly", "unfriendly", "unfriendly / friendly");
-    for num in 1..2048 { test(4*num) }
+    for num in 1..2050 { test(4*num) }
 }
