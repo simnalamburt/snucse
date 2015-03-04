@@ -36,16 +36,24 @@ fn test(stride: usize, size: usize) {
     let unfriendly = t1.to(t2).num_nanoseconds().unwrap();
     let ratio = friendly as f64/unfriendly as f64;
 
-    println!("{:>5}, {:>10}, {:>20}, {:>20}, {:>20}", stride, size, friendly, unfriendly, ratio);
+    println!("{:>4}, {:>10}, {:>15}, {:>15}, {:>15}", stride, size, friendly, unfriendly, ratio);
 }
 
 fn main() {
-    println!("{:>5}, {:>10}, {:>20}, {:>20}, {:>20}", "stride", "size", "friendly", "unfriendly", "unfriendly / friendly");
-    for stride in 1usize..64 {
-        for exp in 11..25 {
-            for _ in 0..5 {
+    loop {
+        println!("{:>6}, {:>8}, {:>15}, {:>15}, {:>15}", "stride", "size", "friendly", "unfriendly", "fri/unfri");
+        for n in 1..2050 {
+            let stride = 4*n;
+            test(stride, stride * stride)
+        }
+        println!("");
+
+        println!("{:>6}, {:>8}, {:>15}, {:>15}, {:>15}", "stride", "size", "friendly", "unfriendly", "fri/unfri");
+        for stride in 1usize..64 {
+            for exp in 11..25 {
                 test(stride, 2 << exp)
             }
         }
+        println!("");
     }
 }
