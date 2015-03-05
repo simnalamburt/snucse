@@ -1,0 +1,45 @@
+Seminar Category [일반/4과/외부/기타]: 4과
+Name of Speaker: 신도리코 이병백 전무
+Title of Presentation: 미래를 창조하는 3D프린터
+Date: 3월 5일
+TIme: 오후 5:00~6:00
+Submission Date: 3월 5일
+Place: 서울대학교 제1공학관(301동) 102호
+Evaluator's Name / Student id / Email: 김지현 / 2013-11392 / simnalamburt@gmail.com
+
+
+Abstract (less than 100 words):
+  왜 3D 프린터가 각광받는지, 3D 프린터 기술이 어떻게 발전해왔는지, 3D 프린터가
+  기존 제조공정이 해결하지 못하는 문제를 어떻게 해결하는지, 3D 프린터에 어떤
+  종류가 있는지, 3D 프린터 기술이 기계가 아닌 ICT와 어떻게 관련이 있는지
+  설명하는 발표이다.
+
+Strong Points in the Contents (less than 100 words):
+  최근 갑자기 유명해지면서 3D 프린터 기술에 관한 사실들이 확대되고 과장된것들이
+  많은데, 3D 프린터가 유명해지기 이전부터 꾸준이 3D 프린터 산업에 몸담으신분이
+  발표하셔서 어느부분이 부풀려진것이고, 어느부분이 사실인지 구분해주셔서 좋았다.
+  그리고 전기정보공학부 학생을 대상으로 한 세미나여서, 기계가 아니라 ICT 분야에
+  어떻게 활용되는지 위주로 설명해주셔서 좋았다.
+
+Weak Points in the Contents (less than 100 words):
+  오랜시간 업계에 계신분이셨기떄문에, 이미 여러 매체(신문이나 잡지)로 잘 알려진
+  사실이 아닌, 업계에 계신 분들의 입으로밖에 듣지 못하는 이야기를 듣고싶었는데
+  그렇지는 못했다. 그리고 발표가 3D 프린터의 전망이 어떠할지, 미래지향적인
+  이야기를 듣고싶었는데 현재 3D 프린터의 상태를 리뷰하는, 현재지향적인 발표여서
+  아쉬웠다.
+
+Mark the presentation skills
+(1-insufficient, 2-limited, 3-good, 4-very good, 5-excellent)
+Body language and eye contact ...............................(2)
+Correct language ............................................(3)
+Understandable (rhythm, intonation, accent) .................(4)
+Spoken loud enough ..........................................(5)
+Overview of presentation in the beginning ...................(1)
+Objectives clearly stated ...................................(2)
+Logically well-organized ....................................(3)
+The presenter masters the material thoroughly ...............(5)
+Well prepared slides ........................................(3)
+Proper use of color, multimedia, graphics ...................(5)
+Slides easy to understand ...................................(4)
+Q&A well managed ............................................(3)
+Overall (will you recommend it to others ?) .................(2)
