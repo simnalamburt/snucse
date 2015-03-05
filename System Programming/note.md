@@ -182,3 +182,366 @@ L2 크기가 얼마나 되는지 미루어 짐작할수 있겠지.
 ### Architecture
 
 * Y86 명령어셋을 다 알아야한다 (간단한 IA32)
+
+> 3월 5일
+
+링킹
+--------
+
+메인이라는 함수가 있고 스왑이라는 함수가 있다. 어떻게 이 두개를 하나의
+프로그램으로 붙일까? 그냥 소스를 하나로 concat 할수도있겠지. 근데 그러면 큰
+의미가 없겠지? 이걸 컴파일 하고 컴파일된 결과를 어떻게 한개로 만들까?
+
+### Static Linking
+
+```
+gcc -O2 -g -o p main.c swap.c
+./p
+```
+
+main.c -> `cpp, cc1, as` -> main.o
+swap.c -> `cpp, cc1, as` -> swap.o
+main.o, swap.o -> `ld` -> p
+
+*.c : 소스
+*.o : separately compiled relocatable object files
+p : executable, fullly linked, object file
+    (contains code and data for all functions defined in main.c and swap.c)
+
+### Why Linkers?
+
+왜 링크가 필요할까?
+
+1.  **증분빌드**. 프로그램의 일부만 고쳤을때 전체 리빌드를 하지
+    않기위해서, 모듈 디자인을 하기 위해서.
+
+    우리가 제일 많이 쉽게볼수있는게 리눅스 컴파일과정이야. 파일이 수백개가 있는데
+    전부 다 컴파일하려면 수백개를 다시해야하지? 근데 이걸 일부를 고친다고 그
+    몇시간을 다시 거친다는거는 무서운 일이지.
+
+    **라이브러리**를 만들 수도 있지. 자주 쓰는 함수들을 미리 라이브러리로 만들어놓고,
+    나중에 이걸 그냥 링크해서 쓸 수 있도록 만들 수 있겠지
+
+2.  **Efficiency**
+
+    Time: Separate compilation
+
+    Space: Libraries
+
+    라이브러리를 링크했을때 너가 그 라이브러리의 모든함수들을 다 쓰느냐. 그렇지
+    않아, 링크과정에서 이 안쓰는 함수들을 뺼 수 있다.
+
+### What does linker do
+
+1.  Symbol resolution
+
+    컴파일된 C 코드는 함수호출이 있는것은 알지만 이게 어느 어드레스의 함수인지는
+    아직 모르지. 전역변수와 같것도 마찬가지지. 이걸 정해주는것이 링커의 역할
+
+    ```
+    void swap() { }
+    swap();
+    int *xp = &x;
+    ```
+
+2.  Relocation
+
+    오브젝트파일이 여기에 100바이트, 여기에 200바이트 있을때 이걸 하나로
+    합쳐줘야겠지. 근데 합쳐주는과정에서 여러가지 위치들이 바뀌겠지. 그리고 이걸
+    실제로 실행하려고 메모리에 올릴때에 또 위치가 바뀌겠지. 그런 위치를 어떻게
+    바꿀지 여기엔 10을 더한다 여기엔 100을 더한다, 레퍼런스들을 나중에 고칠수
+    있도록 하는것이 링커의 역할
+
+### Three kinds of object files (modules)
+
+1.  `.o` Relocatable object file
+
+1.  `a.out` Executable object file
+
+1.  `.so` Shared object file
+
+    여러 프로그램들이 공유하는 오브젝트파일. 로드타임이나 실행타임에 동적으로
+    링크됨.
+
+    윈도우에서는 `dll`, OS X 에선 `dylib`이라고 불림.
+
+### Executable and Linkable Format (ELF)
+
+* Standard binary format for object files
+
+오브젝트 파일은 어떻게 만들어야 하는 Rule 이다. AT&T System V Unix 에서 만들어져
+계속 쓰이는것이다.
+
+### ELF Object file format
+
+1.  Elf header
+
+    워드 사이즈, 바이트 순서, 파일타입 (`.o`, exec, `.so`), 머신타입, 등
+
+1.  Segment header table
+
+    페이지 크기, virtual addresses memory segments (sections), segment sizes
+
+1.  .text section: 코드
+1.  .rodata section: readonly data (jump tables, ...)
+1.  .data section: Initialized global variables
+1.  .bss section
+
+    Uninitialized global variables, ...
+
+    실제로 실행되면 공간을 차지하지만, 오브젝트 파일에서는 차지할 공간의 크기,
+    이름만 들어있지만 실행되는순간 메모리가 잡힘.
+
+    "Block Started by Symbol", "Better Save Space"
+
+1.  .symtab section
+
+    symbol table. 주로 프로시저 이름, static variable name, section name, 등
+
+1.  .rel.text section
+
+    코드 세그먼트에 대한 relocation 정보. 코드에 들어있는 variable 에 대한
+    reference들, 실행되면 위치를 바꿔줘야하는 정보들이 여기에 들어있다.
+    일반적으로 이런걸 컴파일할때 제일 많이쓰는 방법은 data section에서 +100번지,
+    현재 program counter에서 -100번지 등 현재 정해져있는 위치의 offset을
+    사용한다.
+
+1.  .rel.data section
+
+    데이터 섹션에 대한 relocation 정보. 코드와 마찬가지로 실행되면 위치가
+    바뀌어야 하는것들에 대한것들
+
+1.  .debug section
+
+    디버그심볼이 들어이씀
+
+1.  섹션 헤더 테이블
+
+    각각의 섹션의 오프셋과 크기
+
+### Linker Symbols
+
+*   Global symbols
+
+    내가 쓰고, 다른 모듈에도 보이는 심볼
+
+*   External symbols
+
+    내가 쓰지만, 다른 모듈에서 정의된 심볼
+
+*   Local symbols
+
+    내가 정의하고 나만 쓰는 심볼
+
+### Resolving Symbols
+
+```c
+// main.c
+int buf[2] = {1, 2}; // Global
+
+int main() // Global
+{
+  swap(); // External
+  return 0;
+}
+```
+```c
+// swap.c
+extern int buf[]; // External
+
+int *bufp0 = &buf[0]; // Global
+static int *bufp1; // Local
+
+void swap() // Global
+{
+  int temp; // Linker knows nothing of temp
+
+  bufp1 = &buf[1];
+  temp = *bufp0;
+  *bufp0 = *bufp1;
+  *bufp1 = temp;
+}
+```
+
+### Relocating Code and Data
+
+표준 라이브러리
+
+main.o
+
+.text에 main() 코드가 들어가고
+전역변수가 .data에 들어가고
+
+swap.o
+
+.text에 swap() 코드가 들어각
+bufp0 가 .data에 들어가고
+bufp1는 .bss 에 들어감. swap의 private 심볼이지만, bss에 들어감
+
+이걸 링크하면
+
+.text에 헤더, 시스템 코드, 메인, 스왑, 기타 시스템 코드
+
+.data에 시스템 데이터, buf, bufp0
+
+.bss에 bufp1
+
+그밑에 .symtab, .debug
+
+### Relocation Info (main)
+
+objdump 떠서 보는것보단 -S 옵션줘서 어셈블리 파일 보는게 편함
+
+PC relative addressing. 코드 안에서 점프할때, immediate 변수를 쓸때엔 이걸 씀
+
+그 외에, Data segment에서 변수를 가져다 쓸때엔 .data 기준으로 오프셋
+
+### Executable before/after relocation (.text)
+
+relocation 하기 전에는 함수의 정보들이 main+12, asdf+x 이런식으로
+들어있는데, relocation 한 이후엔 정확히 함수를 가리킴
+
+### Strong and Weak symbols
+
+*   Strong: Procedures and initialized globals. `.data` 에 들어감. object 파일
+    안에 위치가 다 정해져있음
+*   Weak: Uninitialized globals. `.bss` 에 들어감. 위치가 정해져있지 않고,
+    메모리에 올라갈때 메모리가 정해짐
+
+### Linker's Symbol Rules
+
+1.  Multiple strong symbols are __not allowed__
+
+    Each item should be defined only once. Otherwise; **Linker error**.
+
+1.  Strong symbol과 weak symbol이 같이있을경우, strong symbol을 선택함.
+
+    ```c
+    // p1.c
+    int foo = 5;
+    p1() {
+
+    }
+    ```
+    ```c
+    // p2.c
+    int foo; // <- p1의 foo 가 strong 이어서, 이 foo는 무시됨.
+    p2 () {
+
+    }
+    ```
+
+1.  Weak symbol이 여러개일경우, 링커 마음대로.
+
+### Linker puzzles
+
+`int x; p1(){}`, `p1(){}`: 에러, `p1`
+
+`int x; p1(){}`, `int x; p2(){}`: OK
+
+`int x; int y; p1(){}`, `double x; p2(){}`: **Evil**, writes to x in p2 might
+overwite y
+
+`int x=7; int y=5; p1() {}`, `double x; p2() {}`: Nasty, writes to x in p2 will
+overwrite y
+
+`int x=7; p1(){}`, `int x; p2() {}`: OK
+
+### Nightmare scenario
+
+Two identical weak structs, compiled by differenct compilers with different
+alignment rules.
+
+### Role of `.h` files
+
+```c
+// global.h
+#ifdef INITIALIZE
+int g = 23;
+static int init = 1;
+#else
+int g;
+static int init = 0;
+#endif
+```
+
+`#ifdef` 매크로는 여러 하드웨어를 동시에 지원하기 위해서 만들어졌음.
+
+`-DINITIALIZE` 옵션으로 같은 소스코드로 여러 프로그램을 만들 수 있음
+
+### Global Variables
+
+*   Avoid if you can
+    - Side effect!
+    - Scope does matter
+    - 아까 나온 Weak symbol, strong symbol 문제
+*   Instead,
+    - Use `static` if you can
+    - Initialize if you define a global variable
+    - Use `extern` if you use external global variable
+
+### Packaging commonly used functions
+
+* How to package functions commonly used by programmers?
+  * Math, I/O, memory managements, string manipulation, etc.
+
+이걸 어떻게 패키징하는게 좋을까? 링킹을 함으로써 이것들을 가능케 할수 있다.
+
+1.  함수들을 한 파일에 전부다 집어넣는다.
+
+    그 `.o` 파일을 다른데서 링크하면 되지.
+
+    근데 공간/시간 비효율적임
+
+2.  그냥 여러 파일에 함수들을 퍼트려놓음.
+
+    프로그래머가 힘들어짐
+
+### Solution: Static Libraries
+
+`.a`, archive files
+
+*   잘쓰는 함수들이 들어있는 오브젝트 파일들을 전부 붙여놓음. 그리고 맨 앞에
+    인덱스를 놓아서 이 함수가 어느 주소에 있는지 표시해서 필요한 함수만 가져가서
+    링크할 수 있도록 함
+
+```sh
+ar rs libc.a atoi.o printf.o ... random.o
+```
+
+역시 증분 업데이트를 지원하고, 뒤에 필요한게 더 생기면 집어넣으면 됨
+
+### Commonly Used Libraries
+
+`libc.a` C 표준 라이브러리. 8MB, 1392 오브젝트
+
+`libm.a` 수학 라이브러리. 1MB, 401 오브젝트
+
+```sh
+ar -t /usr/lib/libc.a | sort
+
+# ...
+# fpritf.o
+# fpu_contro.o
+# fputc.o
+# ...
+```
+
+### Linking with static libraries
+
+main2.o src.o libc.a libvector.a -> `ld` -> exe
+
+### Using Static Libraries
+
+링커를 호출했을때 나열된 `.o`, `.a` 파일들의 심볼을 순서대로 리졸브 시키고,
+못찾은게 뭐가있는지 기억했다가 거기부터 리졸브를 해나감. 끝까지 다했는데
+리졸브를 못하면 뭔가 잘못된거.
+
+* Problem
+  * Command line order matters!
+  * Moral: put libraries at the end of the command line.
+
+    ```bash
+    gcc -L. libtest.o -lmine
+    gcc -L. -lmine libtest.o # <- Undefined reference to libfun
+    ```
