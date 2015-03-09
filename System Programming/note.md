@@ -392,9 +392,35 @@ bufp1는 .bss 에 들어감. swap의 private 심볼이지만, bss에 들어감
 
 objdump 떠서 보는것보단 -S 옵션줘서 어셈블리 파일 보는게 편함
 
-PC relative addressing. 코드 안에서 점프할때, immediate 변수를 쓸때엔 이걸 씀
+1.  PC relative address:
 
-그 외에, Data segment에서 변수를 가져다 쓸때엔 .data 기준으로 오프셋
+    코드 안의 주소를 가리킬때, immediate 변수를 쓸때 이 방법을 사용함.
+
+    ```
+    R_X86_64_PC32
+
+    ADDR(s) + *refptr(0) - refaddr
+
+    ADDR(bufp1 - 0x8) - (PC - x8) = 0x601050 - 0x8 - (0x400511 - 0x8)
+                                  = 0x200b3f
+    ```
+
+    PC는 항상 다음 실행할 opcode를 가리킴.
+
+    링커에게 필요한건 operand가 encoding 된곳 주소임.
+
+1.  `.data` relative address:
+
+    Data segment에서 변수를 가져다 쓸때에 이 방법을 사용함.
+
+1.  Absolute address: ADDR(s) + *refptr(0)
+
+    ```
+    R_X86_64_32S buf+0x4
+
+    ADDR(buf + 0x4) = 0x601038 + 0x4
+                    = 0x60103c
+    ```
 
 ### Executable before/after relocation (.text)
 
