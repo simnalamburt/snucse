@@ -1,18 +1,20 @@
-#![feature(std_misc)]
+#![feature(core, std_misc)]
 
 extern crate time;
 
+use std::iter::range_inclusive;
 use time::PreciseTime;
 
 fn main() {
-    println!("size,t");
-    for n in 10..30 {
-        test(n)
+    println!("stride,size,t");
+    for stride in range_inclusive(1, 32) {
+        for size in range_inclusive(10, 25) {
+            test(stride, size)
+        }
     }
 }
 
-fn test(exp: usize) {
-    let stride = 16;
+fn test(stride: usize, exp: usize) {
     let size = 2 << exp;
     let mut arr = vec![0u8; size];
 
@@ -25,5 +27,5 @@ fn test(exp: usize) {
 
     let t1 = PreciseTime::now();
     let t = t0.to(t1).num_nanoseconds().unwrap();
-    println!("{},{}", size, t);
+    println!("{},{},{}", stride, size, t);
 }
