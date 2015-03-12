@@ -174,3 +174,149 @@ Mid 1980's: GUI의 등장
     라이브러리가 있었는데, 그 회사가 없어지기 전 이 라이브러리를 오픈했고
 
     산업계에서 이걸 표준화해서 (위원회를 거친것은 아님) OpenGL 로 만듬
+
+Affine Geometric
+--------
+
+> 3월 12일
+
+Geometric Transformations
+--------
+
+* Linear transformation
+* Rigid transformation
+* Affine transformation
+* Projective transformation
+
+### Linear Transformations
+
+어떤 Vector들의 Combination을 Linear Transformation한것이나,
+어떤 Vector들의 Transformations들을 Combine한것이나 같을경우
+
+Linear combination is invariant under *T*
+
+T(v) = M33 v31 (Column major)
+     = v13 N33 (Row major)
+
+교과서는 칼럼메이저로 쓰는게 종이를 덜 차지함
+
+Examples:
+
+1. Scaling
+1. Shear
+1. Reflection
+1. Rotation
+
+*   모든 3D 선형변환은 3x3 행렬의 곱으로 표현할 수 있음
+*   모든 3D 선형변환은 회전, 스케일링, Shear의 조합으로 표현될 수 있다.
+*   회전은 스케일링과 Shear의 조합으로 표현될 수 있다. 과거에 이미지
+    프로세싱하는사람들은 절대로 로테이션 매트릭스를 그대로 쓰지 않았음. 무조건
+    Scaling과 Shear의 조합으로 썼음
+
+Matrix decomposition은 어렵다. 마음에 드는 decomposition 종류가 별로 없다.
+종류가 아주 수많음.
+
+Transform은 decompose가 쉽게 되지 않음. 기본 단위를 정하기 어렵다.
+
+### Changing bases
+
+v0/v1 벡터 공간 위의 (x, y) 점이 있다. 이 점은 가만히 냅두고 좌표계를 v0'/v1'로
+바꾸고싶다
+
+```
+x'v0' + y'v1' = xv0 + yv1
+```
+
+```
+v0 = a0v0' + a1v1'
+v1 = b0v0' + b1v1'
+```
+
+```
+| x' |   | a0 b0 || x |
+| y' | = | a1 b1 || y |
+```
+
+### Affine Transformations
+
+어파인 변환 T.
+
+T maps vectors to vetors, points to points
+
+Affine combination is invariant under T
+
+T(p) = M33p31 + T31
+
+### Homogeneous Coordinates
+
+```
+T(p) = | M33 T31 || p31 |
+       |  0   1  ||  1  |
+```
+
+Affine transformation is *linear* in Homogeneouse Coordinates
+
+### Affine Transformation의 속성
+
+어파인변환은..
+1.  선을 선으로 매핑한다
+1.  평행선 둘을 평행선 둘로 매핑한다.
+1.  선 상의 점들의 거리 비율을 유지한다.
+1.  절대적인 길이나 각도를 유지시켜주지 못한다.
+
+```
+| x` |   | a0 b0 c0 || x |
+| y` | = | a1 b1 c1 || y |
+| 1  |   | 0  0  1  || 1 |
+```
+
+### Rigid Transformations
+
+Rigid Transformations는 변환 전/후에, 모든 거리들이 유지되는 변환
+
+T
+
+1.  T는 벡터를 벡터로, 점을 점으로 매핑
+1.  T는 모든 점 사이의 거리를 유지
+1.  T는 모든 벡터들 사이의 외적을 유지 (to avoid reflection)
+
+리지드 트랜스폼은 딱 두개밖에 없음.
+
+1.  로테이션
+1.  트랜슬레이션
+
+```
+Orthogonal: R * R^T = R^T * R = I
+Special: det R = 1
+3D Transform
+```
+
+SO(3) 라고 한다.
+
+### Rigid Body Rotation
+
+R is orthogonal
+
+칼럼벡터를 그려도 90도, 로우벡터를 그려도 90도라는 뜻이다.
+
+이건 설명이 잘 안되고 여러분들이 열심히 들여다보세요.
+
+### Taxonomy of Transformations
+
+* Linear
+* Rigid
+* Affine
+* Projective
+
+Linear, Rigid < Affine < Projective
+
+### Composition of Transforms
+
+* Linear + Linear -> Linear
+* Affine + Affine -> Affine
+* Rigid + Rigid -> Rigid
+
+* Linear transformation의 Linear Combination은 Linear transformation
+* Affine transformation의 Linear Combination은 Affine함
+* Affine transformation의 Affine Combination은 Affine함
+* Rigid transformation의 Affine Combination은 Affine transformation
