@@ -571,3 +571,221 @@ main2.o src.o libc.a libvector.a -> `ld` -> exe
     gcc -L. libtest.o -lmine
     gcc -L. -lmine libtest.o # <- Undefined reference to libfun
     ```
+
+> 3월 12일
+
+### Shared Libraries
+
+스태틱 라이브러리의 단점:
+1.  바이너리마다 똑같은 라이브러리가 계속 반복됨
+1.  메모리상에 똑같은 라이브러리가 반복됨
+1.  라이브러리에 사소한거 고칠때마다 프로그램들을 전부 리빌드해야됨
+
+이곳 저곳에서 많이 쓰이는 라이브러리를 모든 바이너리에 집어넣지말고 별도로
+놓으면 용량절약이 될수있다!
+
+1.  그 프로그램이 처음 실행될때, 그 프로그램이 요구하는 라이브러리들을 동적으로
+    링킹할 수 있다. (Load-time linking)
+
+1.  다이나믹 링킹은 프로그램이 시작 된 이후에도 일어날 수 있다. (Run-time linking)
+    * Distributing software
+    * High-performance web servers
+    * Runtime library interpositioning
+    * 코드 핫로딩 (실행중에 코드교체)
+
+1.  다이나믹 라이브러리는 여러 프로그램에 의해 공유될수도 있다.
+    * 나중에 버추얼 메모리를 배우면 더 나옴
+
+### Dynamic Linking at Load-time
+
+### Dynamic Linking at Run-time
+
+함수    | 기능
+--------|-----
+dlopen  | 라이브러리(`.so`)를 로드함
+dlsym   | 라이브러리 안에서 심볼을 찾음
+dlclose | 로드했던 라이브러리를 닫음
+
+### Case Study: Library Interpositioning
+
+Library Interpositioning
+
+### Some Interpositioning Applications
+
+Security
+* Confinement (sandboxing)
+  * Interpose calls to libc function
+* Behind the scenes encryption
+  * Automatically encrypt otherwise unencrypted network connections
+
+Monitoring and Profiling
+* Count number of calls to functions
+
+I/O나 디스크 사용통계를 내고싶다 -> 인터포지셔닝
+
+### Example program
+
+```c
+#include <stdio.h>
+#include <stdlib.h>
+#include <malloc.h>
+
+int main() {
+    free(malloc(10));
+    printf("Hello, world!\n");
+    exit(0);
+}
+```
+
+Compile-time Interpositioning
+
+```c
+#define malloc(n) mymalloc(n, __FILE__, __LINE__)
+#define free(ptr) myfree(ptr, __FILE__, __LINE__)
+```
+
+Link-time Interpositioning
+
+```sh
+ld --wrap malloc
+```
+
+```sh
+gcc -O2 -Wall -W1,--wrap,malloc
+```
+
+```c
+void* __real_malloc(size_t size);
+void* __wrap_malloc(size_t size) {
+    void* ptr = __real_malloc(size);
+    return ptr;
+}
+
+/* ... */
+```
+
+Load/Run-time Interpositioning
+
+```
+void* malloc(size_t size) {
+    static void *(*mallocp)(size_t size);
+    /* ... */
+    if (!mallocp) {
+        mallocp = dlsym(RTLD_NEXT, "malloc");
+        /* error handling */
+    }
+    ptr = mallocp(size);
+    printf("malloc(%d) = %p\n", (int)size, ptr);
+    return ptr;
+}
+```
+
+### Interpositioning recap
+
+1.  Compile time
+1.  Load time
+1.  Run time
+
+--------
+
+Exceptional Control Flow:
+
+Exceptions and Processes
+--------
+
+### Control Flow
+
+Processors do only one thing:
+켜져서 꺼질때까지, 그냥 명령어들을 읽고 실행하고를 무한히 반복할뿐이다.
+
+이것을 바로 컨트롤 플로우라고 한다.
+근데 갑자기 다른일을 해야될떄가 있음
+
+### Altering the Control Flow
+
+Normal Control Flow:
+* Jumps and branches
+* 함수 호출, 반환
+
+Both react to changes in program state
+
+Insufficient for a useful syhstem: Defiicult to react to changes in system state
+- 갑자기 누군가 이 프로그램을 강제로 끌때
+- 시간에 맞춰서 프로그램이 꺼질때
+- CPU를 서로 다른 프로그램들이 공유할때
+
+이것을 Exceptional Control Flow 라고 함
+
+### Exceptional Control Flow
+
+1.  Low level mechanisms
+    * Exceptions
+    * hardware / OS soft의 역할이다
+1.  High level mechanisms
+    * 컨텍스트 스위치
+    * ...
+
+프로그래머가 컨트롤할 수 있는게 아님
+
+### Exceptions
+
+**Exception**이란 어떠한 이벤트에 대한 대답으로 OS로 컨트롤 플로우를
+넘겨주는것을 뜻함
+
+코어덤프, abort, div by 0, arithmetic overflow, page fault, I/O request
+completes, Ctrl-C, ...
+
+### Interrupt Vector
+
+익셉션 테이블이라는걸 만든다.
+32/64bit 짜리 함수포인터들이 쭉 들어있음.
+익셉션0, 익셉션 255번 이런식으로 익셉션마다 번호를 부여함.
+
+익셉션이 발생하면 정해진 익셉션 번호로 가서 어떠한 행동을 수행하고 정리되던가
+끝나던가 함.
+
+### Asynchronous Exceptions (Interrupts)
+
+프로그램하고 상관없이 작동하는 익셉션.
+
+1.  I/O interrupts
+
+    I/O를 요청하면 기다리는게 얼마나 오래 지속될지 알수가없다.
+
+1.  Hard reset interrupt
+
+    전원 뽑기, 리셋버튼 누르기
+
+1.  Soft reset interrupt
+
+    `Ctrl` + `Alt` + `Delete`
+
+### Synchronous Exceptions
+
+1.  Traps
+    * 의도적인것
+    * 시스템콜, 브레이크포인트, 특수한 여러 명령어들
+1.  Faults
+    * Unintentional하게 발생한것이지만, recover 가능할수도 있음
+    * 페이지 폴트, 세그폴, 부동소수점 익셉션
+1.  Aborts
+    * Unintentional, UNrecoverable
+    * 패리티 에러, 머신체크
+    * 그냥 abort 하는수밖에 없음
+
+### Trap Example: Opening File
+
+User calls: `open()`
+
+실행이 OS로 넘어갔다가(익셉션) 다시 돌아옴. OS가 파일 여는 동작들을 해줘야됨
+
+### Fault Example: Page Faults
+
+이상한곳에 메모리를 쓰려고 시도함. 빨리 죽어주는게 차라리 더 나음.
+
+```c
+int a[1000];
+main() {
+    a[5000] = 13;
+}
+```
