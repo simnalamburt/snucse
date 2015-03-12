@@ -2,10 +2,10 @@ Seminar Category [일반/4과/외부/기타]:
 Name of Speaker:
 Title of Presentation:
 Date:
-TIme:
+Time:
 Submission Date:
 Place:
-Evaluator's Name / Student id / Email:
+Evaluator's Name / Student id / Email: 김지현 / 2013-11392 / simnalamburt@gmail.com
 
 
 Abstract (less than 100 words):

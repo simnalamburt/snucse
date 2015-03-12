@@ -1,0 +1,44 @@
+Seminar Category [일반/4과/외부/기타]: 일반
+Name of Speaker: 박윤희 상무 (삼성전자 글로벌마케팅실 마케팅전략팀장)
+Title of Presentation: 삼성전자 글로벌 마케팅 전략
+Date: 2015년 3월 11일 수요일
+Time: 오후 3시 30분
+Submission Date: 3월 12일 목요일
+Place: 서울대학교 302동 105호
+Evaluator's Name / Student id / Email: 김지현 / 2013-11392 / simnalamburt@gmail.com
+
+
+Abstract (less than 100 words):
+  삼성전자가 애플로 대두되는 다른 글로벌 기업과 경쟁하기위해, 어떠한 마케팅
+  전략을 취하는가를 설명하는 세션이었다. 삼성이 정의하는 '마케팅'이란 무엇인가,
+  마케팅과 브랜딩을 대하는 자세, 그리고 이것을 엔지니어가 잘 알아야 하는 이유에
+  대해 설명하였다.
+
+Strong Points in the Contents (less than 100 words):
+  제일 좋았던것은, 엔지니어가 왜 마케팅에 대해 잘 알아야 하는가 를 잘
+  설명해주셨던것이다. 엔지니어는 대수롭게 여기지 않는 제품 이름짓기, 만든 물건을
+  남에게 알리는 행위 자체가 굉장히 중요한 기획이고, 제품을 어떻게 만드느냐
+  만큼이나 중요하다는것을 설명해주셨다.
+
+Weak Points in the Contents (less than 100 words):
+  주관적인 평가이지만 설명이 엔지니어 눈높이에 맞지 않았다는 느낌을 받았다.
+  마케팅, 기획 일을 하는 사람들은 당연히 여기는 가치를 엔지니어들은 알지
+  못하는데, 그런 간격이 메꿔지지 않아 발표를 듣는 내내 뭔가 설명하는사람과
+  청자의 핀트가 안맞는것같다는 느낌을 받았다.
+
+
+Mark the presentation skills
+(1-insufficient, 2-limited, 3-good, 4-very good, 5-excellent)
+Body language and eye contact ...............................(4)
+Correct language ............................................(5)
+Understandable (rhythm, intonation, accent) .................(4)
+Spoken loud enough ..........................................(4)
+Overview of presentation in the beginning ...................(3)
+Objectives clearly stated ...................................(3)
+Logically well-organized ....................................(3)
+The presenter masters the material thoroughly ...............(2)
+Well prepared slides ........................................(4)
+Proper use of color, multimedia, graphics ...................(3)
+Slides easy to understand ...................................(4)
+Q&A well managed ............................................(2)
+Overall (will you recommend it to others ?) .................(3)

@@ -1,0 +1,44 @@
+Seminar Category [일반/4과/외부/기타]: 4과
+Name of Speaker: 이정학 서울대학교 화학생물공학부 교수
+Title of Presentation: 창의성의 묘미
+Date: 2015년 3월 12일 목요일
+Time: 오후 5시
+Submission Date: 3월 12일
+Place: 서울대학교 301동 102호
+Evaluator's Name / Student id / Email: 김지현 / 2013-11392 / simnalamburt@gmail.com
+
+
+Abstract (less than 100 words):
+  '창의' 란 무엇인가 그 자체를 설명하는 발표였다. 역사/과학사적으로 연구자의
+  창의성이 큰 변화를 낳았던 에피소드, 발표자 개인의 사례 등이 소개되었으며,
+  어떠한 사고방식이 창의성을 가로막는가 등을 창의에 관한 원론적인 설명이 이어진
+  발표였다.
+
+Strong Points in the Contents (less than 100 words):
+  발표자가 연구분야에 오래 몸담은 분이셔서 '창의' 전체를 뭉뚱그려 발표한것이
+  아니라, 연구분야에서 발휘되는 창의성의 힘을 실제사례 위주로 소개해주셔서
+  좋았다. 돌발적인 사고가 발생했을때 이를 어떻게 창의적으로 해결하였는지 이런
+  사례가 재밌었다.
+
+Weak Points in the Contents (less than 100 words):
+  발표 자체에 영양가가 별로 없다는 느낌을 받았다. 이 발표 자체의 한계라고도 할
+  수 있지만 창의성이라는것 자체가 원래 책으로 배우고 남이 가르친다고 해서
+  함양되는것이 아닌것이라는 사실을 이미 이 발표에서 말해준다. 그렇다면 이 발표의
+  목적은 무엇인가?
+
+
+Mark the presentation skills
+(1-insufficient, 2-limited, 3-good, 4-very good, 5-excellent)
+Body language and eye contact ...............................(4)
+Correct language ............................................(3)
+Understandable (rhythm, intonation, accent) .................(3)
+Spoken loud enough ..........................................(4)
+Overview of presentation in the beginning ...................(3)
+Objectives clearly stated ...................................(2)
+Logically well-organized ....................................(3)
+The presenter masters the material thoroughly ...............(3)
+Well prepared slides ........................................(4)
+Proper use of color, multimedia, graphics ...................(4)
+Slides easy to understand ...................................(4)
+Q&A well managed ............................................(3)
+Overall (will you recommend it to others ?) .................(2)
