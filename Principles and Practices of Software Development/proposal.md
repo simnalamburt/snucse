@@ -1,39 +1,60 @@
 Web Based Real-time Electricity Monitoring Service
+========
+2013-11392 Hyeon Kim
 
 Problem
 --------
-정부에서 열심히 가정 전기절약을 외치지만, 정작 시민들은 정확히 무엇을 하면
-전기가 절약되는것인지 알기 힘들다. 전기 사용료 고지서는 한달에 한번씩 떨어지고,
-전기 계량기는 보기 힘든곳에 있기때문에, 자신이 전기를 많이 써도 많이 썼다는것에
-대한 피드백이 너무 늦게 주어지기 때문이다.
+Even though the effort of government's power saving campaign, citizens hardly
+know what actually reduces their power usage. People receive their power bills
+only once a week and most people rarely checks their power meter because of its
+bad position and UX. In short, people receives their feedback of power usage too
+late.
 
-이에대한 해결책으로 나는 Encored Technologies의 **에너지 플래너** 제품을
-이용하여, 가정용 실시간 전기사용량 피드백 웹서비스를 만들고자 한다.
+As a solution of this problem, I suggest to make in-home real-time power usage
+webservice using Encored Technologies' Energy Planner device.
 
 Hardware
 --------
-Encored Technologies에서 제공하는 에너지 플래너는 대부분의 가정에 쉽게 설치할 수
-있고, 설치할경우 1초 단위로 실시간 전기사용량과, 누적 전기사용량 등의 정보를
-HTTP 프로토콜로 사용자에게 제공하고, '대기전력'과 같은 일반적인 계량계로는
-측정할 수 없는 구체적인 정보도 사용자에게 제공해준다.
+Energy Planner made by Encored Technologies is easy to install for most houses,
+and it provides real-time and accumulated power usage to users via HTTP
+protocol. Also it provides informations about 'Standby power' which most power
+meters aren't able to measure.
 
 Solution
 --------
-인코어드의 에너지플래너 제품이 제공하는 RESTful API를 이용하면, 쉽게 유저에게
-실시간 전기사용량 정보를 제공하는 웹/모바일 서비스를 개발할 수 있다. 월 전기
-고지서가 아닌, 실시간 전기 사용 곡선을 유저에게 보여주는 유저가 자연스럽게
-어떠한 행동이 전기를 많이쓰고 어떠한 행동이 의외로 영향이 없는지를 학습하게
-하여, 좀더 능동적인 가정 전기절약을 유도할 수 있을것이다.
+We can easily develop a web service which provides real-time power usage
+information to user using RESTful API of Encored's Energy Planner. Giving real
+time power usage feedback instead of monthly power bill to users will let the
+users to learn what makes high power usage and what doesn't. Ultimately, this
+solution will achieve *voluntary* power saving.
 
-하루 에너지 소비 패턴을 분석하여, 전기의 이상사용이 감지될경우 유저에게 경고를
-줄 수도 있다. 예를들어 집에 없을 시간에 실수로 냉장고문이 열려 전기를
-낭비할경우, 유저에게 이를 피드백할 수 있을것이다.
+Analyzing the daily power usage pattern, it can send users a warning if it
+detects abnormal power usage. For example, if a door of refrigerator is opened
+while the user is sleeping, we can give a feed back of it to user.
 
-월 누적 전기사용량 정보를 이용해, 현재 자신이 어느 누진단계에 있는지
-피드백해줄수도 있다. 우리나라가 전기를 누진으로 걷는다는것은 알지만, 전기 얼마당
-누진율이 얼마나 붙는지 모두 체크하는 가정은 극히 드물다. 이를 편리하게
-시각화하여, 전기를 많이 쓰더라도 어느 선에서 멈춰야 할지 알려줘서 '전기세
-폭탄'을 막을 수 있다.
+Using the accumulated monthly power usage info, we can give a user feedback
+about which level the user is in of progressive tax. Most people know that the
+power tax of Korea is progressive tax but almost no people checks their level of
+progressive tax each month. We can visualize it, warn or stop user preventing so
+called 'tax bomb'.
 
-이정도 추세로 전기를 사용할경우 이번달 전기세가 어느정도 나올지를 미리
-알려줄수도 있다. 누진단계를 알려주는것보다,
+Also we can draw a trendline of power usage graph and forecast their power tax
+to users. Perhaps this way could be more effective than letting users to know
+their lever of progressive power tex.
+
+Implementation
+--------
+This service will be a web service, but it'll be developed in mobile-first.
+Because the gist of this project is giving an ease monitoring tool to users.
+
+Volatile informations like real-time power usage informations will be stored in
+Redis, in-memory key-value store. And long-term data like monthly power usage
+information will be stored in PostgreSQL. Server side applications will be built
+on top of Ruby on Rails and client side will be developed with AngularJS.
+
+Effect
+--------
+As I said this solution will achieve people's voluntary power saving. Instead of
+repeating slogans to people, this solution will let people to save their power
+willingly. Furthermore, this solution will be a good example of how to gamify
+existing campaigns, and show a new way to change the world better place.
