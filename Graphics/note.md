@@ -320,3 +320,57 @@ Linear, Rigid < Affine < Projective
 * Affine transformation의 Linear Combination은 Affine함
 * Affine transformation의 Affine Combination은 Affine함
 * Rigid transformation의 Affine Combination은 Affine transformation
+
+--------
+
+> 3월 17일 화요일
+
+회전행렬의 정의 = A^-1 이 A^T 인것.
+
+코디네이트를 새 코디네이트 시스템으로 보내주는것과
+한 코디네이트가 있을때, 새 코디네이트 시스템에서의 이 점의 좌표를 보는것은
+전혀 다르다
+
+임의의 축에 대한 회전 만드는법.
+
+1. Old fassioned
+2. Modern way
+
+코딩할때 아크코사인 쓰지마라. 뭔가 잘못되고있는것. 금기시되는 함수
+
+코사인이랑 사인을 알면 이미 행렬을 만들 수 있으니 각도를 몰라도 됨.
+
+### 천재를 구분하는 방법
+
+어떤 결론에 도달했는데, 왜 그 결론에 도달했는지 아무리 노력해도 그 이유를 알 수
+없을때 그를 천재라고 한다.
+
+오일러 각도
+
+아폴로 우주선 핸들이 짐버였다고 함
+
+인공위성의 지상촬영 카메라도 짐블에 달려있음
+
+xyz, xyx, xzy, xzx, 등 12가지 방법으로 오일러각도를 만들 수 있음
+
+로테이션을 시키다보면 xyx가 xyz로 변신할 수 있음.
+
+로테이션의 비극
+
+짐버락
+
+자유도가 사라지는 마법을 보여주마
+
+현질의 physics와 mathmatical repr이 매치하지 않아서 나타나는 일
+
+오일러 각도는 Ambiguous 함
+
+(x, pi/2, 0) = (0, pi/2, -x)
+
+이거떔에 이십년정도 전에 모 방송사에서 2억원주고 wavefront 샀더니 망한일이 있음
+
+* 지오메트리
+* 렌더링
+* 애니메이션
+
+학과 사무실에 있는 3D 프린터 내(이제희 교수님) 핑계 대고 막 쓰세요
