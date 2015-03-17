@@ -789,3 +789,216 @@ main() {
     a[5000] = 13;
 }
 ```
+
+--------
+
+> 3월 17일
+
+### Concurrent Processes
+
+여러개의 프로세스가 하나의 코어를 쓰기도하고, 여러 프로세스가 여러 코어를 쓰기도
+하고.
+
+두 프로세스가 동시에 실행되면 그걸 두 프로세스가 Concurrent하게 실행된다고 한다.
+그렇지 않은것은 Sequential한것
+
+근데 이건 CPU 입장에서 본거고, 사용자 입장에서 보면 프로세서가 멈췄다가
+실행되는건지, 둘이 같이 실행되는건지 구분이 안된다.
+
+컨텍스트 스위치가 요즘은 2기가헤르츠 프로세서에선 5마이크로 ~ 7마이크로정도 정도
+걸린다. 커널 코드가 컨텍스트 스위치를 해줌. 프로세스가 갖고있던 여러
+스테이트들을 전부 세이브하고, 저장되어있던 프로세스의 스테이트를 다시 읽어오는게
+컨텍스트 스위치
+
+Page Table. Virtual Memory에서 Physical Memory로 매핑해주는게 페이지 테이블인데,
+보통 이걸 캐쉬에 저장함. 프로세스마다 다 다른 페이지 테이블을 갖고있다. 캐쉬가
+넉넉하지 못하니 컨텍스트스위치 되어서 내려간 프로세스의 페이지 테이블은
+내려버린다던가 할수있다.
+
+### fork: Creating New Processes
+
+```c
+int fork(void);
+```
+
+fork는 호출은 한번되지만 리턴은 두번되는 아주 흥미로운 함수. 프로세스를 복사하는
+함수. 자식일경우 0, 부모일경우 PID가 리턴됨.
+
+```c
+#include <stdio.h>
+#include <unistd.h>
+
+int main() {
+    puts("ㅇㅅㅇ");
+    fork();
+    puts("ㅇㅅㅇ..");
+    fork();
+    puts("ㅇㅅㅇ....");
+    fork();
+    puts("ㅇㅅㅇ......");
+    return 0;
+}
+```
+
+위 예제를 실행했을때 나오는 경우의 수가 얼마일까? 이게 사실 이건 별문제는 아닌데
+컨커런트 프로그램을 만들다보면 실행 타이밍에 따라 문제가 생기기도하고
+안생기기도하고 이런 문제가 생김. 이런걸 편하게 디버깅할 수 있을까? 이거 좋은
+문제임.
+
+### exit: Ending a process
+
+```c
+void exit(int status)
+int atexit(void (*func)(void));
+```
+
+
+
+### Zombies
+
+죽고나서도 리소스를 잡아먹는 프로세스
+
+Reaping
+- 부모가 자식이 죽으면 깨끗하게 나머지를 정리함
+- Parent에게 자식 프로세스의 exit status가 들어감
+- 커널은 프로세스의 흔적을 지움
+
+What if parent doesn't reap
+- 부모가 자식보다 먼저죽으면, 리핑을 init이라는 process가 대신 해줌
+- shells, server, 데몬처럼 한번 만들면 죽지않고 계속 사는 프로세스에만 이런일이
+    일어남
+
+왜 이렇게 만들었을까? 왜 프로세스가 스스로 자기 흔적을 지우게 하지 않았을까?
+부모 프로세스에 return value같은걸 넘기고싶을 수 있으니까.
+
+defunct. exit을 했는데 부모가 아직 reap 하지 않은 프로세스. 이 상태가 지속되면 좀비.
+
+### wait: Synch with children
+
+```c
+int wait(int *child_status);
+```
+
+자식 프로세스가 끝날때까지 기다리고, child_status에 자식 프로세스가 반환한
+리턴값이 들어감.
+
+만약 여러 childern이 완료되었으면, will take in arbitrary order
+
+### execve: Loading and Running Programs
+
+> Execve() transforms the calling process into a new process.
+
+```c
+int execve(char *filename, char *argv[], char *envp[]);
+```
+
+Loads and runs in current process
+
+Does not return unless error
+
+쉘이 이렇게 만들어짐. 라인 하나 읽으면 포크하고, 자식에서 execve
+
+### Summary
+
+```
+fork
+exit
+wait / waitpid
+execve
+```
+
+Signal
+--------
+
+### The world of Multitasking
+
+하나의 프로세스가 돌다가 다른프로세스가 돌고 이러면 컨텍스트 스위칭이 일어난다.
+메모리는 메모리에 있으니까 냅두고, 레지스터 값을 통째로 저장하고 그런다. 근데
+실제로 OS가 하는 일은 마치 여러개의 프로세스가 같이 동시에 돌아가는것처럼 보이게
+해주는거. 실제로는 정해진 시간엔 하나밖에 안돌아가지만 이걸 추상화해서 여러개의
+프로세스가 동시에 돌아가는거처럼 보이게 해주는거.
+
+프로그래머가 여러개가 돌아가는걸 알때가 언제냐. fork를 해보면 알지. 중간에
+exit을 한다, wiat을 할수도있고, 등등.
+
+가장 쉽게 컴퓨터를 죽이는 방법?
+
+```c
+while(1) { fork(); }
+```
+
+이런거 잘못쓰면 굉장히 위험할 수 있다.
+
+### Unix Process Hierarchy
+
+[0]
+- init [1]
+  - D
+
+(피피티 참고)
+
+### Shell
+
+```
+sh
+csh, tcsh
+bash
+zsh
+```
+
+한라인씩 읽어서 그 라인을 읽고 커맨드를 실행하고 끝나는게 쉘이다.
+
+백그라운드 모드, 포그라운드모드가 따로있음
+
+일반적으로는 한번에 하나의 일만 하지만 경우에 따라서 한 명령어가 굉장히 오래
+돌아갈 수 있음. 이런건 뒤에 `&`를 붙이면 프로세스가 백그라운드로 돌아감
+
+```sh
+(sleep 7200; rm /tmp/junk) &
+```
+
+Background job의 문제는?
+
+1.  백그라운드 잡이 끝나면 좀비가 될거임
+1.  절대 reap되지 않음
+1.  이런일이 반복되면 메모리릭임
+
+```
+limit maxproc # csh
+ulimit -u     # bash
+```
+
+### ECF to the Rescue!
+
+### Signals
+
+A *signal* is a message that notifies a process that an event of some type has
+occurred in the system
+
+* 커널이 프로세스에게 보내는것
+* Akin to exceptions and interrupts
+* 시그널 ID는 1-30 정도의 작은 숫자임
+* 시그널이 왔을때 알수있는것은 시그널 ID와 시그널이 있었다는 사실일뿐
+
+이걸 쓰면 쉘이 백그라운드 잡에 대해서도 리핑을 할 수 있음
+
+
+ID | Name    | corresponding event
+---|---------|---------------------
+2  | SIGINT  |
+9  | SIGKILL |
+11 | SIGSEGV |
+14 | SIGALRM |
+17 | SIGCHLD |
+
+커널이 목표 프로세스의 어떤 값들을 바꿔서 보냄.
+
+보통 시스템콜 `kill` 로 보내짐
+
+### 시그널 받는법
+
+시그널에 대해 할수있는 대응
+
+1.  무시하기
+1.  꺼지기
+1.  시그널을 Catch하고, 적절한 핸들링을 함
