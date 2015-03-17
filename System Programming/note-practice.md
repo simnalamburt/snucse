@@ -173,3 +173,200 @@ cat exploit.txt | ./hex2raw | ./bufbomb -u sp02
 설명을 좀 더 넣으삼
 
 3월 16일 (월) 23:59:00 까지.
+
+--------
+
+### Micro Processor
+State: registers, memory, clock, ...
+Operation: Add, load, store, rising clock, ...
+
+프로세서마다 다 다름. Complex & Not reusable
+
+### ISA: Instruction Set Architecture
+컴파일러 writer와 Processor designer 사이의 추상 레이어
+
+### ISA: Compatibility
+* 모든 프로세서가 같은 ISA를 사용하진 않음
+  * IA32, PowerPC, ARM, ...
+* Different models in same family are compatible in ISA level
+  * Snapdragon & Exynos
+
+### ISA: Policy & Mechanism
+ISA implication: instructions be executed sequentially
+
+ISA Implementation: 명령어들이 선형으로 실행되는것으로 보이지만, 실제로는 그
+순서대로 꼭 수행할 필요가 없음. 결과만 같으면 됨. 이걸로 성능 최적화를 이룰 수
+있음
+
+### Why ISA?
+asdf
+
+Y86
+--------
+Subset of x86 (IA32). Simple ISA example for us
+
+### Programmer-Visible State
+State on assembly level
+
+* esp: `push`, `pop`, `call`, `ret`, ...
+* PC: program counter
+* CC: condition code register
+* Stat: for exception
+
+### Instructions
+
+initial | mean
+--------|------
+r       | register
+m       | memory
+i       | immediate
+
+* *source*-*dest*-movl
+* fn Operations
+  * addl, subl, andl, xorl
+* fn Conditions
+  * le, l, e, ne, ge, g, jmp
+
+
+asm               | opcode
+------------------|-------
+halt              | 0 0
+nop               | 1 0
+rrmovl rA, rB     | 2 0 rA rB
+irmovl V, rB      | 3 0  F rB V
+rmmovl rA, D(rB)  | 4 0 rA rB D
+mrmovl D(rB), rA  |
+
+### Instruction Encoding
+First byte: 4-bit for code, following 4-bit for function
+
+### Register Identifier
+4-bit for register
+
+### Little Endian
+rmmovl %esp, 0x00012345(%edx)
+
+40 42 45 23 01 00
+
+### Exceptions
+익셉션이 발생하면, Y86 실행이 그냥 멈춰버린다. 익셉션은 Stat 레지스터에 저장됨
+
+### Y86 vs X86
+
+SISC, RISC. 요즘은 x86도 SISC로 일단 읽고 내부적으로 RISC 형태의 마이크로
+오퍼레이션으로 바꿈
+
+### example
+`.pos 0` 메모리의 어디에 올라갈지 정함
+
+data도 메모리에 올라간다
+
+### Tools
+
+이름 | 설명
+-----|-----
+yas  | Y86 어셈블러
+yis  | Y86 시뮬레이터. 실행 전후 스테이터스 변화를 보여줌
+
+### Circuit Design using HDL
+synchesis
+
+### HCL: Hardware Control Language
+HDL과 유사하지만, 제한되어있고 훨씬 간단해짐
+
+```
+bool eq = (a && b) || (!a && !b) # equal
+bool out = (s && a) || (!s && b) # MUX
+```
+
+Word-level MUX
+
+```
+int A;
+int B;
+bool Eq = (A == B)
+```
+
+HCL `case` expression
+
+```
+[
+  case_1 : expr_1;
+  case_2 : expr_2;
+  case_3 : expr_3;
+]
+```
+
+HCL `for` Minimum
+
+```
+int Min3 = [
+  A <= B && A <= C : A;
+  B <= A && B <= C : B;
+  1                : C;
+];
+```
+
+HCL `set` Membership
+
+```
+bool s1 = code == 2 || code == 3;
+bool s0 = code == 1 || code == 3;
+
+// is same as
+bool s1 = code in {2, 3};
+bool s0 = code in {1, 3};
+```
+
+### SQE: Sequential Y86 Implementation
+Using HCL, any ISA could be implemented
+
+SEQ is a Y86 Implementation
+
+SEQ uses sequential execution mechanism
+
+seq-full.hcl
+
+1. Fetch
+1. Decode
+1. Execute
+1. Memory
+1. PC-update
+
+이걸 한 사이클 안에 처리함.
+
+파란색으로 표시된건 이미 구현된것, seq-full.hcl은 각 시그널을 매핑할뿐
+
+### 하버드 아키텍처
+데이터랑 명령이 구분됨
+
+### 과제
+
+1.  Y86으로 간단한 프로그램 만들기
+
+1.  SEQ 위에 `iaddl`, `leave` 명령어 만들기
+
+    ```
+    make VERSION=full
+
+    cd seq
+    ./ssim -t ../y86-code/asumi.yo
+    ./ssim -t ../y86-code/asuml.yo
+    ```
+
+    ```
+    ssh -X
+    ./ssim -g ../y86-code/asumi.yo
+    ```
+
+    Correctness Test (this will not test `iaddl`, `leave`)
+
+    ```
+    cd ../y86-code; make testssim
+    ```
+
+### Submission
+
+sp_practices2-1_2013-11392_김지현.zip
+
+23일(월) 자정까지
