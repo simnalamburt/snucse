@@ -1,0 +1,46 @@
+Seminar Category [일반/4과/외부/기타]: 일반
+Name of Speaker: 맹승주 마스터 (삼성전자 네트워크 사업부 선행개발그룹)
+Title of Presentation: 이동통신 기술 발전 방향
+Date: 2015년 3월 18일 수요일
+Time: 오후 3시 30분
+Submission Date: 2015년 3월 19일 목요일
+Place: 302동 105호
+Evaluator's Name / Student id / Email: 김지현 / 2013-11392 / simnalamburt@gmail.com
+
+
+Abstract (less than 100 words):
+  아무것도 없던 우린라에서 무전기에나 쓰이던 아날로그 음성통신 기술이 어떻게
+  생겨나고, LTE로 불리는 4세대 이동통신망에 이르기까지, 우리나라에서 어떻게
+  이동통신 기술이 발전하고 그 사이에서 삼성이 한 역할은 무엇인지를 말하는
+  발표였다. 기술을 어떻게 연구했는지 뿐만 아니라, 만든 기술을 표준화시키기위해
+  어떠한 노력이 필요했는지에 대한 내용이 있었다.
+
+Strong Points in the Contents (less than 100 words):
+  전기정보공학부 대상 세미나여서 그런지, 지금까지의 세미나들과는 비교가 안되게
+  내용이 아주 전문적이었다. 그래서 지금까지의 다른 세미나들보다 훨씬 남는것이
+  있다는 느낌이었고, 내용도 훨씬 재밌었다. 그리고 삼성전자가 3GPP, 3GPP2, IEEE
+  등의 표준단체와 협력하여 표준을 제정하는 설명을 하시면서 기술을 만들면 끝이
+  아니라는 이야기를 해주셨었는데 이부분도 아주 유익했다.
+
+Weak Points in the Contents (less than 100 words):
+  너무 짧은시간 안에 어려운 이야기를 너무 많이 들어서, 전자과가 아닌
+  컴퓨터공학과인 나로서는 내용이 정리가 약간 안된다는 느낌을 받았고, 우리나라
+  무선통신기술을 삼성만이 발전시킨것은 아닐텐데 이야기가 삼성위주로 약간
+  편향되었다는 느낌을 받았다.
+
+
+Mark the presentation skills
+(1-insufficient, 2-limited, 3-good, 4-very good, 5-excellent)
+Body language and eye contact ...............................(4)
+Correct language ............................................(4)
+Understandable (rhythm, intonation, accent) .................(5)
+Spoken loud enough ..........................................(4)
+Overview of presentation in the beginning ...................(1)
+Objectives clearly stated ...................................(2)
+Logically well-organized ....................................(3)
+The presenter masters the material thoroughly ...............(5)
+Well prepared slides ........................................(4)
+Proper use of color, multimedia, graphics ...................(5)
+Slides easy to understand ...................................(4)
+Q&A well managed ............................................(4)
+Overall (will you recommend it to others ?) .................(4)

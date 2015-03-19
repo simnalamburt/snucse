@@ -1,0 +1,45 @@
+Seminar Category [일반/4과/외부/기타]: 4과
+Name of Speaker: 방승찬 박사님, 한국전자통신 연구원
+Title of Presentation: 이동통신 발전사 및 핵심기술
+Date: 2015년 3월 19일
+Time: 오후 5시
+Submission Date: 2015년 3월 19일
+Place: 301동 118호
+Evaluator's Name / Student id / Email: 김지현 / 2013-11392 / simnalamburt@gmail.com
+
+
+Abstract (less than 100 words):
+  아무것도 없던 우리나라에서 어떻게 독자기술로 이동통신 기술이 발전하여,
+  전국에서 핸드폰을 쓸 수 있는 나라가 되었는지를 설명하는 발표이다. 무선통신
+  기술뿐만 아니라 우리나라에 인터넷이 어떻게 설치되었고, 패킷 스위칭 네트워크가
+  어떻게 만들어지고 등 통신기술 전반에 대한 이야기를 해주셨다.
+
+Strong Points in the Contents (less than 100 words):
+  여타 발표들과는 다르게 구체적으로 어떠어떠한 기술이 어떻게 발전하였는지를
+  구체적으로 설명해주셔서 좋았다. 수준 높은 내용도 쉽게 설명해주셔서 좋았다.
+  그리고 내가 태어나기조차도 이전인 아날로그 통신기술 시절부터 알려주셔서
+  재밌었고, 우리나라와 해외에서 쓰는 통신기술이 어떻게 다른지, 흥미로운 내용
+  위주로 알려주셔서 좋았다.
+
+Weak Points in the Contents (less than 100 words):
+  발표를 들을 당시, 발표의 큰 그림을 미리 설명듣고싶었는데 맨 처음부터 갑자기
+  설명을 듣기 시작하니까 다 듣고나서 정리가 잘 되지 않는것같다는 느낌을 받았다.
+  그리고 여러 기술들의 이름을 설명받았지만 각 기술들이 서로 어떻게 다른지,
+  장단점이 어떻게 있었는지를 설명해주셨었다면 더 유익했었을것같다.
+
+
+Mark the presentation skills
+(1-insufficient, 2-limited, 3-good, 4-very good, 5-excellent)
+Body language and eye contact ...............................(4)
+Correct language ............................................(4)
+Understandable (rhythm, intonation, accent) .................(5)
+Spoken loud enough ..........................................(4)
+Overview of presentation in the beginning ...................(1)
+Objectives clearly stated ...................................(2)
+Logically well-organized ....................................(3)
+The presenter masters the material thoroughly ...............(5)
+Well prepared slides ........................................(4)
+Proper use of color, multimedia, graphics ...................(5)
+Slides easy to understand ...................................(4)
+Q&A well managed ............................................(4)
+Overall (will you recommend it to others ?) .................(4)
