@@ -1001,4 +1001,293 @@ ID | Name    | corresponding event
 
 1.  무시하기
 1.  꺼지기
-1.  시그널을 Catch하고, 적절한 핸들링을 함
+1.  시그널을 Catch하고, 적절한 핸들링을 함. Signal Handler 가 호출됨
+
+--------
+
+> 3월 19일 목요일
+
+### Pending and BLocked Signals
+Pending signal: 보내졌는데 아직 받아지지 못한 시그널
+
+시그널은 큐가 있는게 아니라 시그널이 도착했다, 도착하지 않았다 만 있는 비트만
+있는것이기 때문에 시그널은 여러개를 보낼 수 없음.
+
+프로세스는 마음대로 시그널을 블락할 수 있음. 언블락할때까지는 그 시그날을 받지
+않음. 인터럽트 마스크랑 똑같음.
+
+### Signal Concepts
+시그널마다 비트가 있어서, 비트가 셋이 되면 블락된거임.
+
+Pending bit: 시그널 갯수(0~30)만큼 있고, 시그널이 오면 해당 비트가 셋됨
+
+Blocked bit: `sigprocmask`, 특정 비트를 셋 하면 그 비트에 해당하는 시그널이
+block됨
+
+### Process Groups
+각각의 프로세스들엔 `pid`가 있는데, 프로세스들을 묶어서 `pgid`라는것도 또 부여됨
+
+보통 한 프로세스는 자기 자신을 프로세스 그룹으로 갖는데
+
+Foreground-job 을 만들고 걔네가 차일드 프로세스를 만들면 걔네들은 같은 그룹이
+되는거임
+
+* `getpgrp()`
+* `setpgid()`
+
+### Sending signals with `/bin/kill`
+`kill`로 `24817`에 `SIGKILL` 보내기
+```sh
+kill -9 -24817
+```
+
+### Sending signals from the keyboard
+키   | 이름    | 설명
+-----|---------|-------------------------
+`^Z` | SIGTSTP | Stop precess, resumable
+`^C` | SIGINT  | Terminate process
+
+```
+First letter of STAT
+S: sleeping
+T: stopped
+R: running
+
+Second letter of STAT
+s: session leader
++: foreground proc group
+```
+
+sleep과 stop의 차이점? sleep은 자발적으로 한거고, stop은 외부의 요인때문에
+생긴것
+
+### Sending signals with `kill()`
+```
+kill(pid, SIGKILL);
+```
+
+### Receiving signals
+Kernel computes `pnb = pending & ~blocked`
+
+시그널은 인터럽트처럼 실행을 가로막고 검사할정도로 그렇게 강력하진 않음.
+어딘가로 컨트롤이 넘어갔다가 다시 들어올때 시그널을 검사함. (ex: 인터럽트, 트랩,
+컨텍스트 스위치, ...)
+
+`^C` 를 누른다고 바로 프로세스가 멈추지 않는 이유.
+
+* `if (pnb == 0)`
+  * 프로세스에게 실행을 넘겨줌
+* `else`
+  * Choose least nonzero bit k in `pnb` and force process `p` to receive signal `k`
+  * ..
+
+### Default Actions
+각 시그널들은 아래중 하나의 디폴트 액션을 가짐
+
+* 프로세스가 종료됨
+* 프로세스가 종료되고 코어덤프
+* 프로세스가 `SIGCONT` 시그널이 들어올때까지 멈춤
+* 프로세스가 시그널을 무시함
+
+### Installing signal handlers
+프로세스별로 각자 새로운 시그널 핸들러를 등록할 수 있음.
+
+```c
+handler_t *signal(int signum, handler_t *handler);
+```
+
+Different values for handler:
+
+* `SIG_IGN`: `signum`을 무시해라
+* `SIG_DFL`: `signum`에 대한 시그널 핸들러를 디폴트 액션으로 돌려버려라
+* Otherwise: `handler`는 시그널 핸들러의 주소
+  * 이를 Installing signal handler 라고 함
+
+```c
+void int_handler(int sig) {
+    safe_printf("Process %d received signal %d\n", getpid(), sig);
+    // 시그널 핸들러 안에서 사용하는 printf 펑션
+    // async-signal-safe wrapper for printf
+    //
+    // write(1, buf, strlen(buf)); /* write is async-signal-safe */
+
+    exit(0);
+
+}
+
+signal(SIGINT, int_handler);
+```
+
+시그널은 보내는순서대로 받지 않음.
+
+우리는 어느 프로세스가 어떻게 컨텍스트 스위치 될지 모른다.
+
+### Signals handlers as Concurrent Flows
+A signal handler is a separate logical flow (not process) that runs concurrently
+with the main program
+
+마치 멀티스레딩처럼 작동함.
+
+### Another View of Signal Handlers as Concurrent Flows
+프로세스는 시그날이 발생해도 모름. 컨텍스트 스위치나 시스템콜을 해서 커널코드로
+컨트롤플로우가 넘어갔다가 다시 돌아와야만 시그널을 처리함
+
+디폴트 시그널 핸들러는 커널코드 안에 들어있음
+
+### Signal Handler Funkiness
+* Pending signals are not queued
+  * 어느게 먼저왔는지도 모르고 그저 이게 왔었다는 사실만 알수있을뿐
+  * 여러 프로세스가 비슷한 시간에 같은 종류의 시그널을 동시에 보내오면,
+    시그널들이 서로 씹힐수도 있음
+
+### Living with Nonqueuing Signals
+시그널 핸들러가 한번 불려도, 핸들러 하나 안에서 여러 시그널을 처리할 수 있는
+구조를 만듬
+
+```c
+waitpid(-1, &child_status, WNOHANG);
+```
+
+시그널 핸들러가 실행중인동안 새 시그널이 들어오면? 교수님께서는 이미 실행중인
+시그널 핸들러가 종료된 다음 실행된다고 하심.
+
+시그널 핸들러가 호출된순간 이미 pending bit는 사라진상태.
+
+
+### More signal handler funkiness
+`read()`와 같이 오래걸리는 시스템콜을 하는도중 시그널이 오면?
+
+시그널 핸들러는 `read()` 호출을 인터럽트한다.
+
+* Linux: 시그널 핸들러가 끝나면, `read()` 콜을 자동으로 재개함
+* 다른 일부 Unix 환경에선 `read()` 호출이 `EINTER`를 반환하고 실패하고,
+  `errno`가 세팅된다. 이경우 어플리케이션이 재개해야함.
+
+시그널을 쓰면서 포터블한 프로그램 만드는건 굉장히 골치아픔
+
+`SIGKILL`이 오버라이드 불가능한이유? 프로그램을 무조건 끌 수 있게 하기위해.
+`SIGINT` 오버라이드한다음에 `exit()` 호출을 안해봐라.
+
+### A Program That Reacts to Internally Generated Events
+프로그램 내부에서 만든 시그널을 스스로 처리함.
+
+### Async-Signal-Safety
+`async-signal-safe` 한 프로그램은 아래 조건중 하나를 만족해야함.
+
+* reentrant (all variables stored on stack frame, 전역변수를 쓰면 안됨;
+    stateless 해야함. 프로그램을 여러번 실행해도 결과가 같아야함)
+* Non-interruptible by signals
+
+> Reentrant == Stateless && No side effect
+
+POSIX 표준은 117개 함수들에 대한 `async-signal-safe`를 보장함
+
+```c
+void safe_printf(const char *format, ...) {
+    char buf[MAXS];
+    va_list args;
+
+    va_start(args, format);                     /* reentrant */
+    vsnprintf(buf, sizeof(buf), format, args);  /* reentrant */
+    va_end(args);                               /* reentrant */
+    write(1, buf, strlen(buf));                 /* async-signal-safe */
+}
+```
+
+### Signal example
+```c
+#include <stdlib.h>
+#include <signal.h>
+#include <unistd.h>
+#include <stdio.h>
+
+void s(int d) {
+  printf("begin (%d)\n", d);
+  sleep(5);
+  printf("end   (%d)\n", d);
+}
+
+int main() {
+  int pid = getpid();
+  signal(SIGINT, s);
+  signal(SIGCHLD, s);
+  if (fork() == 0) {
+    kill(pid, SIGINT);
+    sleep(1);
+    kill(pid, SIGINT);
+    sleep(1);
+    exit(0);
+  }
+  for(;;);
+}
+```
+
+결과:
+```
+begin (2)
+begin (20)
+end   (20)
+end   (2)
+begin (2)
+end   (2)
+```
+
+결론:
+
+* 컨텍스트 스위치는 충분히 자주 일어남
+* 한 시그널에 대해선, 시그널 핸들러가 동시에 1개 이상 실행되지 않음
+* 다른 시그널의 경우 시그널 핸들러가 실행되는 도중 다른 시그널 핸들러가 시작될
+  수 있음
+* 그러나 여러 시그널 핸들러가 동시에 실행될수는 없음
+
+### Nonlocal Jumps: `setjmp`/`longjmp`
+* Powerful but dangerous
+* User-level mechanism for transferring control to an arbitrary location
+  * Controlled to way to break the procedure call / return discipline
+  * Userful for error recovery and signal handling
+
+이건 점프를 하고 나서 원점으로 돌아오지 않는것이 특징.
+
+`longjmp`를 하기위해선 항상 `setjmp`를 먼저 해서, 어디로 갈지 정해야함.
+
+```c
+int setjmp(jmp_buf j);
+```
+
+* Must be called before `longjmp`
+* Identifies a return site for a subsequent `longjmp`
+* Called once, return one or more times
+* `setjmp()` 를 실행하면 무의미한 값이 리턴되고 그냥 다음 인스트럭션이 호출되고,
+  차후에 `longjmp`가 호출되면 실행이 여기로 돌아오면서 유의미한 값이 반환됨.
+
+```c
+void longjmp(jmp_buf j, int i);
+```
+
+* 아까 `setjmp` 했던 위치로 돌아가는것.
+* `i` 에 준 값이 `setjmp`에서 반환됨. 반환될때의 정보는 모두 `j`에 들어있음.
+
+### `setjmp`/`longjmp` example
+
+> 피피티
+
+### Limitations of Nonlocal Jumps
+Works within stack discipline
+
+* longjmp 하기전에 있던 스택이 점프하고나서 사라지면?
+* 자식함수에서 `setjmp`를 하고, 부모함수에서 `longjmp`를 하면? 무슨일이 일어날지
+  알수없다.
+
+### Summary
+
+* 시그널은 오버헤드가 아주 크다.
+  * >10,000 clock cycles
+  * 예외적인 상황에서만 쓸것
+
+--------
+
+보강할때엔 출석 안부름
+
+Idempotent operation
+
+> 시프 예제 다 쳐보기
