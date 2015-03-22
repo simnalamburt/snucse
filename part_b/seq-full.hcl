@@ -107,13 +107,13 @@ int ifun = [
 	1: imem_ifun;		# Default: get from instruction memory
 ];
 
-bool instr_valid = icode in 
+bool instr_valid = icode in
 	{ INOP, IHALT, IRRMOVL, IIRMOVL, IRMMOVL, IMRMOVL,
 	       IOPL, IJXX, ICALL, IRET, IPUSHL, IPOPL };
 
 # Does fetched instruction require a regid byte?
 bool need_regids =
-	icode in { IRRMOVL, IOPL, IPUSHL, IPOPL, 
+	icode in { IRRMOVL, IOPL, IPUSHL, IPOPL,
 		     IIRMOVL, IRMMOVL, IMRMOVL };
 
 # Does fetched instruction require a constant word?
@@ -163,7 +163,7 @@ int aluA = [
 
 ## Select input B to ALU
 int aluB = [
-	icode in { IRMMOVL, IMRMOVL, IOPL, ICALL, 
+	icode in { IRMMOVL, IMRMOVL, IOPL, ICALL,
 		      IPUSHL, IRET, IPOPL } : valB;
 	icode in { IRRMOVL, IIRMOVL } : 0;
 	# Other instructions don't need ALU
