@@ -1,0 +1,63 @@
+  .pos 0
+init:
+  irmovl    Stack, %esp
+  irmovl    Stack, %ebp
+  call      main
+  halt
+
+
+main:
+  pushl     %ebp
+  rrmovl    %esp, %ebp
+
+  irmovl    ele1, %eax      # pushl     ele1
+  pushl     %eax            # (2)
+  call      rsum_list
+
+  leave
+  ret
+
+
+rsum_list:
+  pushl     %ebp
+  rrmovl    %esp, %ebp
+
+  irmovl    $40, %eax       # subl      $40, %esp
+  subl      %eax, %esp      # (2)
+  irmovl    $0, %eax        # cmpl  $0, 8(%ebp)
+  mrmovl    8(%ebp), %ebx   # (2)
+  subl      %eax, %ebx      # (3)
+  jne       Case0
+  irmovl    $0, %eax        # TODO: opti
+  jmp       Case1
+Case0:
+  mrmovl    8(%ebp), %eax
+  mrmovl    (%eax), %eax
+  rmmovl    %eax, -16(%ebp)
+  mrmovl    8(%ebp), %eax
+  mrmovl    4(%eax), %eax
+  rmmovl    %eax, (%esp)
+  call      rsum_list
+  rmmovl    %eax, -12(%ebp)
+  mrmovl    -12(%ebp), %eax
+  mrmovl    -16(%ebp), %edx
+  addl      %edx, %eax
+Case1:
+
+  leave
+  ret
+
+
+.align 4
+ele1:
+  .long 0x00a
+  .long ele2
+ele2:
+  .long 0x0b0
+  .long ele3
+ele3:
+  .long 0xc00
+  .long 0
+
+  .pos 0x1000
+Stack:
