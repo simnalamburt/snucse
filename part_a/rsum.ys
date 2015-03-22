@@ -27,10 +27,7 @@ rsum_list:
   irmovl    $0, %eax        # cmpl  $0, 8(%ebp)
   mrmovl    8(%ebp), %ebx   # (2)
   subl      %eax, %ebx      # (3)
-  jne       Case0
-  irmovl    $0, %eax        # TODO: opti
-  jmp       Case1
-Case0:
+  je        Quit
   mrmovl    8(%ebp), %eax
   mrmovl    (%eax), %eax
   rmmovl    %eax, -16(%ebp)
@@ -42,7 +39,7 @@ Case0:
   mrmovl    -12(%ebp), %eax
   mrmovl    -16(%ebp), %edx
   addl      %edx, %eax
-Case1:
+Quit:
 
   leave
   ret

@@ -58,5 +58,5 @@ ele3:
   .long 0xc00
   .long 0
 
-  .pos 0x100
+  .pos 0x1000
 Stack:
