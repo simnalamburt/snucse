@@ -11,7 +11,7 @@
 # iaddl 명령어의 opcode는 아래와 같은 형태를 띈다.
 #
 #     0        1        2        3        4        5        6
-#     |0xC  0x0|0xF `rB`|            immediate Val          |
+#     |0xC  0x0|0xF `rB`|          Immediate Value          |
 #
 #
 # LEAVE
@@ -26,7 +26,7 @@
 # leave 명령어의 opcode는 아래와 같은 형태를 띈다.
 #
 #     0        1
-#     |        |
+#     |0xD  0x0|
 
 
 #/* $begin seq-all-hcl */
@@ -140,7 +140,7 @@ int ifun = [
 
 bool instr_valid = icode in
 	{ INOP, IHALT, IRRMOVL, IIRMOVL, IRMMOVL, IMRMOVL,
-	       IOPL, IJXX, ICALL, IRET, IPUSHL, IPOPL, IIADDL };
+	       IOPL, IJXX, ICALL, IRET, IPUSHL, IPOPL, IIADDL, ILEAVE };
 
 # Does fetched instruction require a regid byte?
 bool need_regids =
@@ -164,6 +164,7 @@ int srcA = [
 int srcB = [
 	icode in { IOPL, IRMMOVL, IMRMOVL, IIADDL } : rB;
 	icode in { IPUSHL, IPOPL, ICALL, IRET } : RESP;
+	icode in { ILEAVE } : REBP;
 	1 : RNONE;  # Don't need register
 ];
 
@@ -171,13 +172,14 @@ int srcB = [
 int dstE = [
 	icode in { IRRMOVL } && Cnd : rB;
 	icode in { IIRMOVL, IOPL, IIADDL } : rB;
-	icode in { IPUSHL, IPOPL, ICALL, IRET } : RESP;
+	icode in { IPUSHL, IPOPL, ICALL, IRET, ILEAVE } : RESP;
 	1 : RNONE;  # Don't write any register
 ];
 
 ## What register should be used as the M destination?
 int dstM = [
 	icode in { IMRMOVL, IPOPL } : rA;
+	icode in { ILEAVE } : REBP;
 	1 : RNONE;  # Don't write any register
 ];
 
@@ -188,14 +190,14 @@ int aluA = [
 	icode in { IRRMOVL, IOPL } : valA;
 	icode in { IIRMOVL, IRMMOVL, IMRMOVL, IIADDL } : valC;
 	icode in { ICALL, IPUSHL } : -4;
-	icode in { IRET, IPOPL } : 4;
+	icode in { IRET, IPOPL, ILEAVE } : 4;
 	# Other instructions don't need ALU
 ];
 
 ## Select input B to ALU
 int aluB = [
 	icode in { IRMMOVL, IMRMOVL, IOPL, ICALL,
-		      IPUSHL, IRET, IPOPL, IIADDL } : valB;
+		      IPUSHL, IRET, IPOPL, IIADDL, ILEAVE } : valB;
 	icode in { IRRMOVL, IIRMOVL } : 0;
 	# Other instructions don't need ALU
 ];
@@ -212,7 +214,7 @@ bool set_cc = icode in { IOPL, IIADDL };
 ################ Memory Stage    ###################################
 
 ## Set read control signal
-bool mem_read = icode in { IMRMOVL, IPOPL, IRET };
+bool mem_read = icode in { IMRMOVL, IPOPL, IRET, ILEAVE };
 
 ## Set write control signal
 bool mem_write = icode in { IRMMOVL, IPUSHL, ICALL };
@@ -221,6 +223,7 @@ bool mem_write = icode in { IRMMOVL, IPUSHL, ICALL };
 int mem_addr = [
 	icode in { IRMMOVL, IPUSHL, ICALL, IMRMOVL } : valE;
 	icode in { IPOPL, IRET } : valA;
+	icode in { ILEAVE } : valB;
 	# Other instructions don't need address
 ];
 
