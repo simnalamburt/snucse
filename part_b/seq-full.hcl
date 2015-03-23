@@ -27,6 +27,38 @@
 #
 #     0        1
 #     |0xD  0x0|
+#
+# leave 명령의 구현은 아래와 같은 수식으로 요약될 수 있다.
+#
+#     esp` = ebp + 4
+#     ebp` = [ebp]
+#
+#
+# Sequential Implementation of `iaddl` and `leave`
+# --------
+#
+# `iaddl` 명령와 `leave` 명령어의 구현과정은 아래와 같이 정리될 수 있다.
+#
+# --------------------------------------------------------
+# Stage       `iaddl V, rB`           `leave`
+# ---------- ----------------------- ---------------------
+# Fetch       icode:ifun ← M1[PC]     icode:ifun ← M1[PC]
+#             rA:rB ← M1[PC + 1]
+#             valC ← M4[PC + 2]
+#             valP ← PC + 6           valP ← PC + 1
+#
+# Decode      valB ← R[rB]            valB ← R[%ebp]
+#
+# Execute     valE ← valC + valB      valE ← 4 + valB
+#             Set CC
+#
+# Memory                              valM ← M4[valB]
+#
+# Write back  R[rB] ← valE            R[%esp] ← valE
+#                                     R[%ebp] ← valM
+#
+# PC update   PC ← valP               PC ← valP
+# --------------------------------------------------------
 
 
 #/* $begin seq-all-hcl */
