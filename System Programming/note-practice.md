@@ -6,7 +6,7 @@
 ```
 To: tskim@dcslab.snu.ac.kr
 CC: sjpark@dcslab.snu.ac.kr
-Subject: spp#_2013-11392_HyeonKim
+Subject: sp_practices#_2013-11392_김지현
 ```
 
 실습 서버: **sp02@sp.snucse.org**
