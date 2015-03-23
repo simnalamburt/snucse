@@ -1,3 +1,34 @@
+# 김지현, 2013-11392
+#
+# IADDL
+# --------
+#
+# iaddl 명령어는 아래와 같은 형태로 사용할 수 있다.
+#
+#     iaddl  $4,%ecx
+#     iaddl  $-1,%edx
+#
+# iaddl 명령어의 opcode는 아래와 같은 형태를 띈다.
+#
+#     0        1        2        3        4        5        6
+#     |0xC  0x0|0xF `rB`|            immediate Val          |
+#
+#
+# LEAVE
+# --------
+#
+# leave 명령어는 함수 호출의 마지막에서 사용되는 명령어로, 아래의 두 어셈블리
+# 코드와 동치이다
+#
+#     movl %ebp %esp
+#     popl %ebp
+#
+# leave 명령어의 opcode는 아래와 같은 형태를 띈다.
+#
+#     0        1
+#     |        |
+
+
 #/* $begin seq-all-hcl */
 ####################################################################
 #  HCL Description of Control for Single Cycle Y86 Processor SEQ   #
@@ -109,16 +140,16 @@ int ifun = [
 
 bool instr_valid = icode in
 	{ INOP, IHALT, IRRMOVL, IIRMOVL, IRMMOVL, IMRMOVL,
-	       IOPL, IJXX, ICALL, IRET, IPUSHL, IPOPL };
+	       IOPL, IJXX, ICALL, IRET, IPUSHL, IPOPL, IIADDL };
 
 # Does fetched instruction require a regid byte?
 bool need_regids =
 	icode in { IRRMOVL, IOPL, IPUSHL, IPOPL,
-		     IIRMOVL, IRMMOVL, IMRMOVL };
+		     IIRMOVL, IRMMOVL, IMRMOVL, IIADDL };
 
 # Does fetched instruction require a constant word?
 bool need_valC =
-	icode in { IIRMOVL, IRMMOVL, IMRMOVL, IJXX, ICALL };
+	icode in { IIRMOVL, IRMMOVL, IMRMOVL, IJXX, ICALL, IIADDL };
 
 ################ Decode Stage    ###################################
 
@@ -131,7 +162,7 @@ int srcA = [
 
 ## What register should be used as the B source?
 int srcB = [
-	icode in { IOPL, IRMMOVL, IMRMOVL  } : rB;
+	icode in { IOPL, IRMMOVL, IMRMOVL, IIADDL } : rB;
 	icode in { IPUSHL, IPOPL, ICALL, IRET } : RESP;
 	1 : RNONE;  # Don't need register
 ];
@@ -139,7 +170,7 @@ int srcB = [
 ## What register should be used as the E destination?
 int dstE = [
 	icode in { IRRMOVL } && Cnd : rB;
-	icode in { IIRMOVL, IOPL} : rB;
+	icode in { IIRMOVL, IOPL, IIADDL } : rB;
 	icode in { IPUSHL, IPOPL, ICALL, IRET } : RESP;
 	1 : RNONE;  # Don't write any register
 ];
@@ -155,7 +186,7 @@ int dstM = [
 ## Select input A to ALU
 int aluA = [
 	icode in { IRRMOVL, IOPL } : valA;
-	icode in { IIRMOVL, IRMMOVL, IMRMOVL } : valC;
+	icode in { IIRMOVL, IRMMOVL, IMRMOVL, IIADDL } : valC;
 	icode in { ICALL, IPUSHL } : -4;
 	icode in { IRET, IPOPL } : 4;
 	# Other instructions don't need ALU
@@ -164,7 +195,7 @@ int aluA = [
 ## Select input B to ALU
 int aluB = [
 	icode in { IRMMOVL, IMRMOVL, IOPL, ICALL,
-		      IPUSHL, IRET, IPOPL } : valB;
+		      IPUSHL, IRET, IPOPL, IIADDL } : valB;
 	icode in { IRRMOVL, IIRMOVL } : 0;
 	# Other instructions don't need ALU
 ];
@@ -176,7 +207,7 @@ int alufun = [
 ];
 
 ## Should the condition codes be updated?
-bool set_cc = icode in { IOPL };
+bool set_cc = icode in { IOPL, IIADDL };
 
 ################ Memory Stage    ###################################
 
