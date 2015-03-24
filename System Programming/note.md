@@ -1291,3 +1291,165 @@ Works within stack discipline
 Idempotent operation
 
 > 시프 예제 다 쳐보기
+
+--------
+
+> 3월 24일
+
+System I/O
+--------
+
+### Unix Files
+
+In Unix
+
+* **file** 은 m 바이트의 시퀀스.
+* 모든 I/O 장치는, 파일로 표현된다.
+  * `/dev/sda2`, `/usr` disk partition
+  * `/dev/tty2`, 터미널
+* 커널도 파일로 표현된다
+  * `/dev/kmem`, 커널 메모리 이미지
+  * `/proc`, 커널 데이터 구조
+
+### Unix File Types
+* Regular file
+* Directory file
+* Character special and block special files
+  * 터미널 (캐릭터 스페셜), 디스크 (블럭 스페셜)
+  * RW의 단위가 한 캐릭터씩/한 블럭씩 이러한 차이가 있다.
+  * 캐릭터 스페셜은 읽고 쓰는 위치가 없다. 항상 그 위치에서 새 캐릭터가 들어오고
+    나갈뿐, 블럭 스페셜은 몇번째 블락을 읽고, 어느 위치에 써라 이런게 있음.
+* FIFO (named pipe)
+  * IPC을 위해 쓰임
+* Socket
+  * Network communication을 위해 쓰임
+
+### Unix I/O
+
+* `open()` and `close()`
+* `read()` and `write()`
+
+Open을 하면 current file position이라는게 생기고, `seek()`으로 그 위치를 바꿀 수
+있음.
+
+### Opening Files
+파일을 열면 File descripter가 나옴. 에러일경우 `-1`. 프로세스가 시작할경우 0, 1,
+2 파일 디스크립터는 이미 정의가 되어있고, 파일을 그 이후로 셀때마다 3 이후로
+파일 디스크립터가 늘어남.
+
+* 0: stdin, STDIN_FILENO
+* 1: stdout
+* 2: stderr
+
+그리고 커널 안에 파일 디스크립터 테이블이 있어서, 어느 엔트리가 어느 파일을
+가리키는지가 저장됨.
+
+파일 디스크립터 테이블은 프로세스마다 하나씩 할당됨.
+
+### Closing Files
+역할이 끝난 파일 닫기.
+
+이미 Close된 파일을 또 닫으면 문제의 시작.
+
+Moral: Always check return codes, even for seemingly benign functions such as
+`close()`
+
+### R/W Files
+
+N바이트 읽으라고 요구해도, 요구한것보다 작게 읽는 수가 있음. N바이트 쓰라고해도,
+요구한것보다 작게 쓰는수가 있음. 이를 Short-count 라고 함
+
+임피던스 미스매치
+
+### Short Counts
+쇼트카운터가 생기는 경우
+
+* 읽다가 EOF 만났을때
+* 터미널에서 텍스트 라인을 읽고있는경우
+* 유닉스 파이프나 네트워크 소켓을 읽고 쓰는경우
+
+쇼트카운트가 절대 생기지 않는경우
+
+* 디스크 파일에서 읽는경우 (EOF가 아닌이상)
+* 디스크 파일을 쓰는경우
+
+쇼트카운트를 처리하는 방법
+
+* RIO(Robust I/O) 패키지를 쓰삼
+* 기운찬 입출력
+
+디스크에 파일을 쓰는경우, `write()` 함수가 리턴된다고 해서 그게 지금 디스크에
+들어있다는 뜻은 아님. (커널 버퍼에 들어있다던가, 등..) 확실하게 할 수 있는
+경우는 `flush()`를 써서 버퍼를 전부 비우고 디스크에 써지기를 기다리는수밖에
+없음. 근데 그렇다고 해서 그게 디스크에 있는거지, 하드디스크 전의 디스크 버퍼에
+있는건지 알수없음.
+
+레귤러 파일은 읽고 쓸때 short count가 일어나지 않음.
+
+### Robust I/O
+http://csapp.cs.cmu.edu/public/code.html
+
+쇼트카운터가 안나게 만들어놓은 패키지임.
+
+* `rio_readn`, `rio_writen`
+  * Unbuffered RIO
+
+##### Buffered I/O: Motivation
+실제 `read()`, `write()` 호출 횟수를 줄이자. 커널 다녀오면 10000 사이클 이상이
+소모됨.
+
+* `rio_readlineb`, 텍스트 라인 한줄이 끝날때까지 읽음.
+* `rio_readnb`, N 바이트 읽기
+
+### File Metadata
+Metadata는 데이터에 대한 데이터라는뜻이다. 이경우 파일에 대한 데이터를 의미함.
+파일들의 메타데이터는 커널에 의해 관리됨. `stat`, `fstat`으로 볼 수 있음
+
+* device
+* inode
+* 액세스 시간
+* 블락 크기
+* 할당된 블락 갯수
+* UID, GUID
+* 하드링크 갯수
+* ...
+
+modification time이랑 change time의 차이? 오너가 바뀌거나 퍼미션이 바뀌거나는
+change이고, 그게 아닌것은 modification
+
+### Accessing Directories
+* `opendir()`, 디렉토리의 내용을 여는 권장되는 방법.
+* `readdir()` 함수를 사용해 디렉토리 안에있는 파일들의 내용을 디렉토리 엔트리
+  구조체에 저장해서 볼 수 있음.
+
+### Unix Kernel이 Open File을 나타내는 방법
+* 프로세스마다 파일 디스크립터 테이블이 있음
+* 커널 스페이스에 'Open File table'이라는게 있음. 파일 디스크립터들은 오픈파일
+  테이블들을 가리킴. 오픈파일 테이블에 파일 위치와 레퍼런스 카운터가 있음.
+* v-node table
+
+### File Sharing
+같은 파일을 `open()` 두번함: openfile table에 파일이 두개가 생기고, 둘이 v-node
+table의 같은 파일을 가리킴.
+
+### Share files: `fork()`
+(PPT 참고)
+
+Open file table, v-node table은 클론되지 않고, Descriptor table만 클론됨. 각
+파일 디스크립터들이 한 Open file table을 가르키게되고, open file table의
+레퍼런스 카운터가 1이 늘어남.
+
+포크 외에 같은 Open file table을 가리키는 파일 디스크립터가 두개 생기는경우가
+있을까? 있다.
+
+### I/O Redirection
+쉘이 아래 문장을 어떻게 구현할까?
+
+```sh
+ls > foo.txt
+```
+
+`dup2(oldfd, newfd)`
+
+하나의 프로세스 안에서 일어나는 일임. oldfd가 가리키는 파일을 닫아버리고
+(`close()`, 레퍼런스 카운터도 줄음) newfd의 값으로 oldfd를 오버라이트 해버림.
