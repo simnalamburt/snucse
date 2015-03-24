@@ -370,3 +370,75 @@ seq-full.hcl
 sp_practices2-1_2013-11392_김지현.zip
 
 23일(월) 자정까지
+
+--------
+
+Pipeline
+--------
+Overlapped Execution
+
+### Problem of SEQ
+* 모든 명령어가 한 클럭 안에 끝남
+  * 일부 명령의 게이트딜레이때문에 클럭속도가 제한받음
+* Not every unit be fully utilized
+  * 일부 명령어를 쓸때 안쓰고 노는 유닛들이 많음
+
+### Multi-cycle Execution
+한 명령어 실행을 여러 사이클로 나눔
+
+Fetch -> Decode -> Execution
+
+### Pipelining
+### Pipelining: Non-uniform Cycles
+Throughput is limited by slowest stage
+
+### Pipelining Steps and Throughput
+* 요즘 프로세서들은 15 스테이지를 씀
+  * 프로세서 클락수를 높임
+  * 디자이너들은 파이프라인 레지스터 딜레이를 줄이기위해 아주 조심스럽게 디자인함
+
+### Branch Prediction & Roll back
+
+### Dependence
+* Flow dependence (true dependence)
+* Anti dependence
+* Output dependence
+* Input dependence
+
+* Data hazard
+* Structural hazard
+* Control hazard
+
+### Resolving dependence
+1.  Stalling
+
+    Bubble 끼워넣기
+
+1.  Forwarding
+
+    Write Back을 잘게 두개로 쪼개서, 계산을 하자마자 바로 그 결과를 필요한곳에
+    넘겨주기
+
+### Assignment
+
+런타임을 줄여보자.
+
+`ncopy.ys`, `pipe-full.hcl` 을 수정하여 어떻게 빠르게 만들었는지, 왜 빨라지는지,
+얼마나 빨라졌는지 등을 설명하기
+
+* PIPE에 새 명령어 구현
+* Re-order instruction of ncopy
+* Loop unrolling on ncopy
+* Replace groups of instructions with single instructions
+* Delete some instructions
+
+##### Rules
+1.  `ncopy.ys`는 임의의 크기에 대해 작동해야함
+2.  `ncopy.ys`는 `yis`와 함께도 잘 돌아가야함
+    * `src`에서 `dst`로 잘 데이터가 복사되어야함.
+    * 올바른 반환값이 `%eax`에 들어있어야함.
+3.  `ncopy.ys`를 `yas`로 컴파일한 결과물이 1000바이트를 넘으면 안됨.
+    * `./check-len.pl < ncopy.yo`
+4.  `pipe-full.hcl`은 리그레션 테스트를 전부 통과해야함.
+
+원래 CPE 10까지 줄이는게 기준이었음.
