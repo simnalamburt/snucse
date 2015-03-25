@@ -1,3 +1,5 @@
 error
-fma
-no-fma
+fma-y
+fma-n
+fma-error-y
+fma-error-n
