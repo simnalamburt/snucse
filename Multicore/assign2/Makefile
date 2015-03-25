@@ -1,6 +1,11 @@
-all: error fma
+all: error no-fma fma
 
 error: error.rs
-	rustc $< -C opt-level=3
-fma: fma.rs
-	rustc $< -C opt-level=3
+	rustc $< -o $@ -C opt-level=3 -C lto -C link-args=-s
+
+CXXFLAGS = -std=c++11 -O3
+
+no-fma: fma.cpp
+	g++ $< -o $@ $(CXXFLAGS)
+fma: fma.cpp
+	g++ $< -o $@ $(CXXFLAGS) -mfma
