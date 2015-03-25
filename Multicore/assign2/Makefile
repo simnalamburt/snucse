@@ -1,7 +1,7 @@
 all: error fma-y fma-n fma-error-y fma-error-n
 
 error: error.rs
-	rustc $< -o $@ -C opt-level=3 -C lto -C link-args=-s
+	rustc $< -o $@ -C opt-level=3
 
 fma-n: fma.cpp
 	g++ $< -o $@ -std=c++1y -O3
