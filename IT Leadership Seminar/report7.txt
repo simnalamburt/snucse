@@ -1,0 +1,43 @@
+Seminar Category [일반/4과/외부/기타]: 4과
+Name of Speaker: 김현진 서울대학교 기계항공공학부 교수
+Title of Presentation: 뛰는 로봇 위에 나는 드론?
+Date: 2015년 3월 26일 목요일
+Time: 오후 5:00 ~ 6:00
+Submission Date: 3월 26일
+Place: 301동 118호
+Evaluator's Name / Student id / Email: 김지현 / 2013-11392 / simnalamburt@gmail.com
+
+
+Abstract (less than 100 words):
+  오래 전부터 있었지만 최근 각광받기 시작한 UAV 기술에 대해 소개되었다. 원래
+  군용도로만 쓰이던 UAV 기술이 어떻게 최근에 다시 각광받기 시작하였는지, 군용도
+  이외의 용도가 무엇이 있는지, 미래의 드론 기술의 발전방향이 어떠한지가
+  소개되었다.
+
+Strong Points in the Contents (less than 100 words):
+  먼저 지금까지의 발표들과는 매우 차별적이게도, 직접 드론을 들고오셔서 시연을
+  해주시고, 사람이 직접 조종하지 않고 드론이 스스로 정지비행을 하거나 여러
+  구동을 하는 모습을 보여주셔서 훨씬 발표에 몰입할 수 있었다. 아주 유익하고
+  재밌는 시간이었다.
+
+Weak Points in the Contents (less than 100 words):
+  발표가 전반적으로 만족스러웠고 불만적인 부분은 딱히 없었으나, 전공학생을
+  대상으로 하는 만큼 조금 더 내용이 전문적이었어도 좋았을것 같았다는 느낌이
+  들었다.
+
+
+Mark the presentation skills
+(1-insufficient, 2-limited, 3-good, 4-very good, 5-excellent)
+Body language and eye contact ...............................(4)
+Correct language ............................................(5)
+Understandable (rhythm, intonation, accent) .................(4)
+Spoken loud enough ..........................................(4)
+Overview of presentation in the beginning ...................(3)
+Objectives clearly stated ...................................(4)
+Logically well-organized ....................................(5)
+The presenter masters the material thoroughly ...............(4)
+Well prepared slides ........................................(3)
+Proper use of color, multimedia, graphics ...................(4)
+Slides easy to understand ...................................(5)
+Q&A well managed ............................................(4)
+Overall (will you recommend it to others ?) .................(3)
