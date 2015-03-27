@@ -1453,3 +1453,112 @@ ls > foo.txt
 
 하나의 프로세스 안에서 일어나는 일임. oldfd가 가리키는 파일을 닫아버리고
 (`close()`, 레퍼런스 카운터도 줄음) newfd의 값으로 oldfd를 오버라이트 해버림.
+
+--------
+
+> 3월 27일 금요일 (보강)
+
+캐쉬
+
+### End-to-end Core i7 Address Translation
+
+### Core i7 Level 1-3 Page Table Entries
+
+### Core i7 Page Table Translation
+Virtual address -> Physical address
+
+### Cute Trick for Speeding Up L1 Access
+* Virtually indexed, physically tagged
+
+### Virtual Memory of a Linux Process
+
+### Linux organizes VM as Collection of Areas
+* `task_struct`가 `mm_struct`를 가짐
+* `mm_struct`가 `vm_area_struct`의 첫 노드를 가짐
+* `vm_area_struct`가 링크드리스트로 만들어져있음
+
+### Linux Page Fault Handling
+`vm_area_struct`에 `vm_end`, `vm_start`가 적여있어서 어디부터 어디까지 읽어도
+되는지가 저장되어있음. 이걸로 이상한데 읽으면 페이지폴트
+
+`vm_area_struct`에 읽기전용인지 여부도 써있어서 쓰려고 시도하면 또 페이지폴트.
+
+### Memory Mapping
+Disk object로 만들어진 VM area. mmap은 아래와같은 두 종류가 있는데
+
+* Regular file
+
+  디스크에 있는 파일로 만들어진 메모리맵
+
+* Anonymous file
+
+  처음에 메모리맵을 하면 0으로 채워진 페이지가 나옴 (demand-zero page). 여기에
+  뭔가를 쓰면 (dirtied), 다른 페이지처럼 작동함
+
+Dirty page들은 스왑파일을 통해 메모리로 복사된다
+
+### Demand paging
+*   Key point: No virtual pages are copied into physical memory until they arer
+    referenced
+
+    이를 Demand paging이라고 한다. 메모리맵을 하고 R/W를 안하면, 메모리가
+    사용되지 않는것
+
+### Sharing Revisited: Shared Objects
+프로세스 1, 2의 버추얼 메모리가 있고 셰어드 오브젝트가 한 있을때
+
+1.  Process 1이 메모리에 shared object를 mmap함.
+
+    물리 메모리에 올라가고, VM에도 매핑됨
+
+2.  Process 2가 같은 shared object를 mmap 함.
+
+    물리 메모리에 이미 있는 shared object가 다른 프로세스의 VM에 매핑됨.
+
+### Sharing Revisited: Private Copy-on-write Objects
+두 프로세스가 한 CoW 오브젝트를 공유하는상황
+
+1.  양쪽에서 아직 읽기밖에 하지 않은 상황에선 앞의 경우와 같이 그냥 같은 물리
+    메모리를 매핑 해서 씀
+
+2.  Write가 발생하면, 그순간 그 페이지를 다른곳으로 복사해서 그부분만 따로
+    매핑함. 전체 오브젝트를 다 복사하는게 아니라 변경이 일어난 페이지만
+    복사하는것이 뽀인트
+
+최대한 늦게 카피하기
+
+### `fork()` Revisited
+프로세스의 포크가 일어날때, 처음 시작하자마자 모든 메모리를 다 복사하지 않는다.
+
+포크할때도 똑같이, 물리 메모리들은 냅두고 페이지테이블들만 다 복사하고,
+read-only로 마크를 함. 그리고 `vm_area_struct`들을 양쪽 프로세스에 모두 private
+COW로 지정한다.
+
+### `execve()` Revisited
+원래 갖고있던 `vm_area_struct`를 전부 버리고, 새 `vm_area_struct`를 가져오고
+PC를 옮김
+
+### User-Level Memory Mapping
+```c
+void *mmap(void *start, int len, int prot, int flags, int fd, int offset);
+```
+
+* start: may be 0 for 'pick an address'
+* prot: 프로텍션 (read only, write only, ...)
+
+파일디스크립터의 특정부분을 메모리에 입혀버리기
+
+### Using `mmap` to Copy files
+이런거 웹서버들이 많이함. 웹서버가 하는일의 가장 기본적인 일이 바로 Static File
+Serving임. 디스크에 있는 파일을 일단 커널버퍼로 읽어들이고, 이걸 유저스페이스
+버퍼로 옮기고, 이걸 다시 커널버퍼로 옮기고, 이를 그 다음에 네트웍으로
+보내는건데, 이건 불필요하게 카피가 두번되는거임. 그래서 좀 똑똑한 웹서버들은
+디스크에서 커널버퍼로 읽으면, 이를 바로 네트웍 카드로 보냄. 좀 더 잘하면
+디스크에서 바로 네트웍 카드로 보냄 (Zero copy).
+
+웹서버 만들때 보통 이런거 하는게 큰 이슈가 됨. mmap을 쓰면 바로 이걸 할 수 있음.
+```c
+void *bufp = mmap(NULL, size, PROT_READ, MAP_PRIVATE, fd_in, 0);
+write(fd_out, bufp, size);
+// mmap 하자마자 바로 바로 write 시스템콜을 함, 카피가 없음
+```
