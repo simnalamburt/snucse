@@ -1,0 +1,2 @@
+#!/bin/sh
+(cd ~/sim/pipe && ./benchmark.pl)
