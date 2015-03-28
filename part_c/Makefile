@@ -12,9 +12,9 @@ test: rebuild
 	./check-len.pl < ncopy.yo &&\
 	./correctness.pl &&\
 	(cd ../y86-code; make testpsim) &&\
+	(cd ../ptest; make SIM=../pipe/psim TFLAGS=-i) &&\
 	./correctness.pl -p
 
-# (cd ../ptest; make SIM=../pipe/psim TFLAGS=-i) &&\
 
 
 score: rebuild

@@ -13,10 +13,9 @@
 # 저장될것이므로, 파라미터들은 %esp에서 16, 20, 24바이트 떨어진곳에 있다.
 #
 # 그리고 FLAGS를 재활용하지않고 쓸데없이 리셋시켜서 계산을 한번 더 하게 하는
-# 코드를 최적화시키고
+# 코드를 최적화시키고, 거의 필수적인 명령어인 `iaddl`을 구현하였다.
 
 
-#/* $begin ncopy-ys */
 ncopy:
 # Function prologue (don't touch)
   pushl %esi              # Save callee-save regs
@@ -36,16 +35,12 @@ Loop:
   rmmovl %esi, (%ecx)     # ...and store it to dst
   andl %esi, %esi         # val <= 0?
   jle Npos                # if so, goto Npos:
-  irmovl $1, %edi
-  addl %edi, %eax         # count++
+  iaddl $1, %eax          # count++
 Npos:
-  irmovl $4, %edi
-  addl %edi, %ebx         # src++
-  addl %edi, %ecx         # dst++
-  andl %edx,%edx          # len > 0?
-  irmovl $1, %edi
-  subl %edi, %edx         # len--
-  jne Loop                # if so, goto Loop:
+  iaddl $4, %ebx          # ++src
+  iaddl $4, %ecx          # ++dst
+  iaddl $-1, %edx         # --len
+  jne Loop                # if still (len > 0) is true, loop
 Done:
 
 # Function epilogue (don't touch)
@@ -54,4 +49,3 @@ Done:
   popl %esi
   ret
 End: # This label is required
-#/* $end ncopy-ys */
