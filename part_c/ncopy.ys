@@ -11,6 +11,9 @@
 # 아니라 %esp 기준이 되도록 수정한다. %esi, %ebx, %edi 레지스터를 저장해줘야
 # 하므로 12바이트가 쓰이고, 함수가 호출될때 스택에 return address가
 # 저장될것이므로, 파라미터들은 %esp에서 16, 20, 24바이트 떨어진곳에 있다.
+#
+# 그리고 FLAGS를 재활용하지않고 쓸데없이 리셋시켜서 계산을 한번 더 하게 하는
+# 코드를 최적화시키고
 
 
 #/* $begin ncopy-ys */
@@ -36,16 +39,16 @@ Loop:
   irmovl $1, %edi
   addl %edi, %eax         # count++
 Npos:
-  irmovl $1, %edi
-  subl %edi, %edx         # len--
   irmovl $4, %edi
   addl %edi, %ebx         # src++
   addl %edi, %ecx         # dst++
   andl %edx,%edx          # len > 0?
-  jg Loop                 # if so, goto Loop:
+  irmovl $1, %edi
+  subl %edi, %edx         # len--
+  jne Loop                # if so, goto Loop:
+Done:
 
 # Function epilogue (don't touch)
-Done:
   popl %edi               # Restore callee-save registers
   popl %ebx
   popl %esi
