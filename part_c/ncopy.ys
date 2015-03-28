@@ -3,19 +3,25 @@
 #
 # 2013-11392 김지현
 #
+# 먼저, ncopy 함수는 스택프레임에 저장해야할정도로 많은 지역변수를 쓰지 않는다.
+# y86은 calling convention은 callee가 스택을 쌓고 정리하며, callee의 함수 스택이
+# 별도로 필요하지 않은경우 "스택을 쌓지 않아도 된다"는 것이 이러한 정책의
+# 장점이다. 지금 이 문제는 이러한 장점을 살릴 수 있는 경우이므로, 스택을 쌓고
+# 정리하는 코드를 지우고, 함수 파라미터(src, len, dst)를 얻어오는 코드를 %ebp가
+# 아니라 %esp 기준이 되도록 수정한다. %esi, %ebx, %edi 레지스터를 저장해줘야
+# 하므로 12바이트가 쓰이고, 함수가 호출될때 스택에 return address가
+# 저장될것이므로, 파라미터들은 %esp에서 16, 20, 24바이트 떨어진곳에 있다.
 
 
 #/* $begin ncopy-ys */
 ncopy:
 # Function prologue (don't touch)
-  pushl %ebp              # Save old frame pointer
-  rrmovl %esp, %ebp       # Set up new frame pointer
   pushl %esi              # Save callee-save regs
   pushl %ebx
   pushl %edi
-  mrmovl 08(%ebp), %ebx   # src
-  mrmovl 16(%ebp), %edx   # len
-  mrmovl 12(%ebp), %ecx   # dst
+  mrmovl 24(%esp), %edx   # len
+  mrmovl 16(%esp), %ebx   # src
+  mrmovl 20(%esp), %ecx   # dst
 
 # Function body
   xorl %eax,%eax          # count = 0;
@@ -43,8 +49,6 @@ Done:
   popl %edi               # Restore callee-save registers
   popl %ebx
   popl %esi
-  rrmovl %ebp, %esp
-  popl %ebp
   ret
 End: # This label is required
 #/* $end ncopy-ys */
