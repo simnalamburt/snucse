@@ -4,6 +4,6 @@
 [submodule "System Programming/assign1"]
 	path = System Programming/assign1
 	url = git@github.com:simnalamburt/snucse.buflab.git
-[submodule "System Programming/assign2-1"]
-	path = System Programming/assign2-1
+[submodule "System Programming/assign2"]
+	path = System Programming/assign2
 	url = git@github.com:simnalamburt/snucse.archlab.git
