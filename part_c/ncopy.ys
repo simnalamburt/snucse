@@ -31,8 +31,12 @@ ncopy:
 # Body
   xorl      %eax, %eax # count = 0;
   iaddl     $-1, %edx
+  jg        Loop
   je        One
-  jl        Done
+  popl      %ebx # Branch prediction
+  popl      %esi
+  popl      %edi
+  ret
 
 Loop:
   mrmovl    (%ecx), %esi
