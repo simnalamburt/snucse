@@ -1,0 +1,41 @@
+Seminar Category [일반/4과/외부/기타]: 일반
+Name of Speaker: 포모컴 김윤기 대표이사
+Title of Presentation: 일본의 기술문화
+Date: 2015년 3월 30일
+Time: 오후 3:30 ~ 5:10
+Submission Date: 2015년 3월 31일
+Place: 301동 118호
+Evaluator's Name / Student id / Email: 김지현 / 2013-11392 / simnalamburt@gmail.com
+
+
+Abstract (less than 100 words):
+  일본의 과학기술 연구문화가 우리나라에 있어 어떻게 차이가 나는지 설명된
+  발표이다. 우리나라 사람들은 이러한 상황에선 보통 어떠어떠하지만 일본사람들은
+  어떠어떠하다는 식으로 발표가 이어졌고, 기술문화와 관련된것들 외에도 우리가 잘
+  모르는 일본의 역사와 전통에 대한 설명이 있었다.
+
+Strong Points in the Contents (less than 100 words):
+  과학기술뿐만이 아니라 일반적인 생활양식에 있어서도 어떻게 차이가 있는지
+  설명해주셔서 발표 내용이 지루하지 않았다.
+
+Weak Points in the Contents (less than 100 words):
+  제목과는 달리 주제가 IT, 기술과 관련이 매우 희박했다. 심지어 발표가 대부분
+  한국과 일본이 어떻게 다른지가 아니라, 일본이 한국과 비교해 어떻게 더 나은지
+  위주였는데다 일부분은 틀린내용을 말씀하시기까지 하셨다.
+
+
+Mark the presentation skills
+(1-insufficient, 2-limited, 3-good, 4-very good, 5-excellent)
+Body language and eye contact ...............................(4)
+Correct language ............................................(2)
+Understandable (rhythm, intonation, accent) .................(3)
+Spoken loud enough ..........................................(4)
+Overview of presentation in the beginning ...................(4)
+Objectives clearly stated ...................................(5)
+Logically well-organized ....................................(4)
+The presenter masters the material thoroughly ...............(5)
+Well prepared slides ........................................(3)
+Proper use of color, multimedia, graphics ...................(3)
+Slides easy to understand ...................................(4)
+Q&A well managed ............................................(2)
+Overall (will you recommend it to others ?) .................(2)
