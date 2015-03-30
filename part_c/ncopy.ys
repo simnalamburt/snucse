@@ -15,7 +15,8 @@
 # 그리고 FLAGS를 재활용하지않고 쓸데없이 리셋시켜서 계산을 한번 더 하게 하는
 # 코드를 최적화시키고, 거의 필수적인 명령어인 `iaddl`을 구현하였다.
 #
-# 그리고 한번에 8개씩 검사하도록 Loop unrolling을 하였다
+# 그리고 Loop unrolling을 하였다. 8개로 처음 시도해봤는데, 오히려 성능이 더
+# 나빠져서 2개로 줄였다.
 
 
 ncopy:
@@ -28,106 +29,41 @@ ncopy:
   mrmovl    20(%esp), %ebx # dst
 
 # Body
-  xorl      %edi, %edi # count = 0;
-  andl      %edx, %edx # if (len > 0) is true
-  jg        Start # Start loop
-  jmp       Done # Otherwise, done
+  xorl      %eax, %eax # count = 0;
+  iaddl     $-1, %edx
+  je        One
+  jl        Done
 
-# Loop 0
 Loop:
-  mrmovl    4(%ecx), %esi
-  xorl      %eax, %eax
+  mrmovl    (%ecx), %esi
+  mrmovl    4(%ecx), %edi
   andl      %esi, %esi
   jle       N0
-  iaddl     $1, %edi
+  iaddl     $1, %eax
 N0:
-  rmmovl    %esi, 4(%ebx)
-  iaddl     $-1, %edx
-  je        Done
-
-# Loop 1
-  mrmovl    8(%ecx), %esi
-  xorl      %eax, %eax
-  andl      %esi, %esi
-  jle       N1
-  iaddl     $1, %edi
-N1:
-  rmmovl    %esi, 8(%ebx)
-  iaddl     $-1, %edx
-  je        Done
-
-# Loop 2
-  mrmovl    12(%ecx), %esi
-  xorl      %eax, %eax
-  andl      %esi, %esi
-  jle       N2
-  iaddl     $1, %edi
-N2:
-  rmmovl    %esi, 12(%ebx)
-  iaddl     $-1, %edx
-  je        Done
-
-# Loop 3
-  mrmovl    16(%ecx), %esi
-  xorl      %eax, %eax
-  andl      %esi, %esi
-  jle       N3
-  iaddl     $1, %edi
-N3:
-  rmmovl    %esi, 16(%ebx)
-  iaddl     $-1, %edx
-  je        Done
-
-# Loop 4
-  mrmovl    20(%ecx), %esi
-  xorl      %eax, %eax
-  andl      %esi, %esi
-  jle       N4
-  iaddl     $1, %edi
-N4:
-  rmmovl    %esi, 20(%ebx)
-  iaddl     $-1, %edx
-  je        Done
-
-# Loop 5
-  mrmovl    24(%ecx), %esi
-  xorl      %eax, %eax
-  andl      %esi, %esi
-  jle       N5
-  iaddl     $1, %edi
-N5:
-  rmmovl    %esi, 24(%ebx)
-  iaddl     $-1, %edx
-  je        Done
-
-# Loop 6
-  mrmovl    28(%ecx), %esi
-  xorl      %eax, %eax
-  andl      %esi, %esi
-  jle       N6
-  iaddl     $1, %edi
-N6:
-  rmmovl    %esi, 28(%ebx)
-  iaddl     $-1, %edx
-  je        Done
-
-  iaddl     $32, %ecx
-  iaddl     $32, %ebx
-
-# Loop 7
-Start:
-  mrmovl    (%ecx), %esi
-  xorl      %eax, %eax
-  andl      %esi, %esi
-  jle       N7
-  iaddl     $1, %edi
-N7:
+  rmmovl    %edi, 4(%ebx)
   rmmovl    %esi, (%ebx)
-  iaddl     $-1, %edx
-  jne       Loop
-Done:
+  andl      %edi, %edi
+  jle       N1
+  iaddl     $1, %eax
+N1:
+  iaddl     $8, %ecx
+  iaddl     $8, %ebx
+  iaddl     $-2, %edx
+  jg        Loop
+  jl        Done
 
-  rrmovl    %edi, %eax
+One:
+  iaddl     $4, %ebx          # dst++
+  mrmovl    (%ecx), %esi      # read val from src...
+  iaddl     $4, %ecx          # src++
+  rmmovl    %esi, -4(%ebx)    # ...and store it to dst
+  andl      %esi, %esi        # val <= 0?
+  jle       N2                # if so, goto N2:
+  iaddl     $1, %eax          # count++
+N2:
+  iaddl     $-1, %edx         # len--
+Done:
 
 # Epilogue
   popl      %ebx
@@ -135,6 +71,3 @@ Done:
   popl      %edi
   ret
 End: # don't remove
-
-# TODO
-# 왜 계속 xorl eax eax 하는거임
