@@ -56,12 +56,12 @@ Loop:
   jle       N0
   iaddl     $1, %eax
 N0:
-  rmmovl    %edi, 4(%ebx)
-  rmmovl    %esi, (%ebx)
   andl      %edi, %edi
   jle       N1
   iaddl     $1, %eax
 N1:
+  rmmovl    %edi, 4(%ebx)
+  rmmovl    %esi, (%ebx)
   iaddl     $8, %ecx
   iaddl     $8, %ebx
   iaddl     $-2, %edx
