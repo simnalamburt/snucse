@@ -442,3 +442,183 @@ Throughput is limited by slowest stage
 4.  `pipe-full.hcl`은 리그레션 테스트를 전부 통과해야함.
 
 원래 CPE 10까지 줄이는게 기준이었음.
+
+--------
+
+> 3월 31일 화요일
+
+캐쉬
+--------
+
+CPU 속도는 크게 증가했는데, 메모리 속도는 더디게 진화
+
+### Memory Hierarchies
+보통 빠를수록 용량이 작아짐 (trade-off)
+
+일정 이상 속도의 메모리들은 휘발적이기도 함
+
+전통적으로 있어왔던 구조. 폰노이만도 이런 구조가 생길것을 예상했음
+
+### Cache
+캐시 안에 셋이 여럿, 셋 안에 라인이 여럿.
+
+한 라인 = Valid bit + 태그 + 캐쉬 내용
+
+### Direct-Mapped Caches
+하나의 셋에 하나의 라인만 있는 캐쉬. 데이터를 찾기 아주 간단하다. 셋 인덱스가
+있으면, 추가연산 필요없이 valid bit만 보면 되기때문. 구현이 간단 -> 하드웨어적인
+리소스가 적다 -> 싸다.
+
+단점: Confilct에 의한 미스가 쉽게 발생한다.
+
+Cache Trasing
+
+컨플릭을 해결하는법: 패딩을 추가하여, 같은 셋 인덱스를 여러 변수가 공유하게 하지
+않는다.
+
+Eviction
+
+### 왜 중간 비트를 셋 인덱스로 쓰는가?
+Spacial locality
+
+Locality? 한 메모리에 접근했다면 그 근처 메모리를 다시 접근할 확률이 높을경우,
+이를 로컬리티가 높은 프로그램이라고 한다.
+
+High-order bit를 인덱스로 쓰면 시퀀셜하게 메모리를 액세스하면 계속 캐시 미스가
+남.
+
+### Set associative caches
+한 셋에 여러 라인이 들어감
+
+1 < E < C / B
+
+E: 한 셋당 라인 갯수
+C: 캐패시티
+B: 블록 사이즈
+
+E-way associative cache
+
+라인 선택이 느려지고 복잡해질 수 있다. 셋을 고른 후 태그를 비교해서 라인을 고름.
+하드웨어를 써서 병렬적으로 비교하긴 하지만, 하드웨어가 복잡해진다. Eviction을
+늦출 수 있다.
+
+way의 값이 커질수록 태그 비교하는게 어려워지고 복잡해진다.
+
+### Eviction Policy
+* Not every conflict means eviction
+* Eviction victim: cache line that will not be used soon
+* 누구를 떨굴지 정하는 정책
+  * LFU: Least Frequently Used
+  * LRU: Least Recently Used
+  * pseudo LRU
+
+### Fully Associative Caches
+E = C/B
+
+셋이 하나뿐. Low eviction chance, complex line matching
+
+TLB 캐쉬와 같이 아주 작은 cache에 쓰인다.
+
+### Write Policy of Caches
+내가 쓰려는 블럭이 캐쉬에 올라와있을수도있고, 그렇지 않았을수도 있다.
+
+힛이 났다면 -> 캐쉬에 데이터 쓰고 잊으면 됨. 근데 캐쉬에 쓴 데이터는 언제
+RAM으로 내려갈까?
+
+##### Write-through
+캐쉬에 쓸때 RAM에도 바로 써버린다
+
+구현이 간단해짐, 그러나 데이터 트래픽이 증가함
+
+##### Write-back
+캐쉬에 쓰고, 나중에 eviction이 될때 RAM에 쓰자
+
+트래픽이 최소화되지만, 하드웨어가 복잡해짐
+
+##### Write-allocate
+
+
+##### No-write-allocate
+캐시가 미스되었을때, 캐쉬는 bypass 시켜버리고 바로 아래 레이어에 써버림. 주로
+write-through와 함께 쓰임. 로컬리티가 나빠짐
+
+### Intel i7 Cache Hierarchy
+코어마다 L1 i-cache, L1-d-cache, L2 unified cache가 있고
+모든 코어가 공유하는 L3 unified cache가 있음
+
+i-cache와 d-cache를 나누는것의 장점
+
+* 데이터랑 인스트럭션이 분리되어있어 좋긴함
+* 캐쉬 히트율이 낮아짐
+* 인스트럭션과 데이터가 동시에 액세스 가능해짐
+* 두 캐쉬가 두 캐쉬의 특성에 맞게 최적화될 수 있음
+
+### Performance and Cache Parameters
+* 캐쉬가 클수록
+  * 히트율이 증가
+  * 하지만 히트타임이 감소
+* 블록이 클수록
+  * 스페이셜 로컬리티에 의한 히트율 증가
+  * 템포러리 로컬리티에 의한 히트율 감소
+  * 트래픽 증가 -> 미스 패널티 증가
+* 어소시에이티비티가 클수록
+  * ?
+
+이번 과제
+--------
+캐쉬 시뮬레이터를 짤거임
+
+```
+valgrind --log-fd=1 --tool=lackey -v --trace-mem=yes pwd
+```
+
+트레이스 포맷
+
+operation, address, size
+
+* I: 명령어 로드
+* M: 데이터 수정
+* L: 데이터 로드
+* S: 데이터 저장
+
+I로 시작하는것은 무시
+
+### csim-ref
+우리가 과제로 만들것의 레퍼런스 구현체
+
+valgrind로 만들어진 메모리 트레이스를 입력으로 받아, 캐쉬 히트, 미스, eviction
+횟수를 출력해준다.
+
+### Task
+`csim-ref`와 같은 작동을 하는 프로그램을 `csim`이라는 이름으로 만들면 된다.
+
+### Programming Rules
+* 위에 주석으로 내 이름 학번 쓰고
+* 어떻게 짰는지 설명을 쓰고
+* 워닝 없이 컴파일 되도록 하고
+* Instruction cache는 무시하고, data cache만 시뮬레이션 하면 되겠음
+* 모든 접근이 한 블럭에 들어간다고 가정한다
+* 8개의 케이스에 대해서만 올바른지 검사함, 케이스별로 3점씩, 마지막것은 6점,
+  총 27점
+* 코딩스타일 점수
+* `.csim_results`는 안만들어도 됨
+* `-v`랑 `-h` 옵션은 옵셔널임
+
+`test-csim`, 채점기계임
+
+### 힌트
+* `traces/dave.trace`가 아주 짧은 트레이스임, 이걸 디버그할때 쓰셈
+* 레퍼런스 프로그램같은경우 `-v` 옵션을 주면 왜 이게 히트이고 왜 이게 미스인지
+  설명됨
+* `getopt` 함수가 파라미터 파싱하는데에 좋음
+* `L`, `S`와는 달리 `M`은 2히트 혹은 2미스, 등등 이렇게 될 수 있음
+
+```
+sp_practices3-1_2013-11392_김지현/
+ - csim.c
+
+sp_practices3-1_2013-11392_김지현.zip
+
+to : tskim
+cc : sjpark
+```
