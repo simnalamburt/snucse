@@ -1562,3 +1562,101 @@ void *bufp = mmap(NULL, size, PROT_READ, MAP_PRIVATE, fd_in, 0);
 write(fd_out, bufp, size);
 // mmap 하자마자 바로 바로 write 시스템콜을 함, 카피가 없음
 ```
+
+--------
+
+> 4월 2일 목요일
+
+### Garbage Collection
+메모리 매니저가 어떻게 어느 메모리가 free 될 수 있는지 어떻게 아나?
+
+GC를 할때, 까는 가정
+
+* 어떤 값을 하나 주면, 시스템에서 그 값이 포인터인지 아닌지 알 수 있다고 가정
+* 모든 포인터는 메모리블럭의 시작점을 가리킨다
+* 포인터를 감출 수 없다
+
+### Classical GC Algorithms
+연도 | 설명
+-----|-----
+1960 | Mark and sweep
+1960 | Reference counting
+198x | Generational collection
+
+### Memory as a Graph
+메모리를 유향그래프로 그린다고 쳐보자
+
+- 각 블럭은 노드
+- 각 에지는 포인터
+
+### Mark and Sweep
+루트노드부터 시작해서 재귀적으로 전부 마크한뒤 (graph traversal), 노드를 전부
+돌면서 마크가 안된애를 지움
+
+```
+ptr mark(ptr p) {
+    if (!is_ptr(p)) return;
+    if (markBitSet(p)) return;
+    setMartBit(p);
+    for (i = 0; i < length(p); ++i) {
+        mark(p[i]);
+    }
+}
+```
+
+### Conservative Mark & Sweep in C
+C 포이너들은 블럭의 중간을 가리키고있을수도 있음
+
+블럭의 헤더를 어떻게 찾느냐? 블럭들을 바이너리 밸런스드 트리로 보관하기
+
+### Memory-related perils and pitfalls
+- (PPT 보면 많음)
+
+### C Pointer declarations
+```c
+int *p;               // 정수에 대한 포인터
+int *p[10];           // 배열에 대한 포인터
+int *(p[10]);         // 배열에 대한 포인터
+int **p;              // 2차 포인터
+int (*p)[10];         // 포인터들의 배열
+int *f();             // 리턴값이 포인터인 함수
+int (*f)();           // 함수포인터
+```
+
+```c
+int (*(*f90)[10])();
+```
+f is a function returning ptr to an array[13] of
+pointers to functions returning int
+
+```c
+int (*(*x[3])())[5];
+```
+
+### Deref Bad pointer
+```
+int val;
+scanf("%d", val);
+```
+
+이거 한번도 안해본사람은 뭔가 잘못된사람이야
+
+### Read uninitialized memory
+### Overwriting memory
+
+```c
+char s[8];
+gets(s); // read more than 8
+```
+
+- 포인터 연산 실수
+- 실수로 포인터 deref를 안함
+
+### Referencing Nonexistent Variables
+### Referencing Freed Blocks
+### Memory Leak
+
+### Dealing With Memory Bugs
+* gdb
+* malloc만 디버깅 하는 툴도 많음
+* 바이너리 트랜슬레이터: valgrind (리눅스), Purify
