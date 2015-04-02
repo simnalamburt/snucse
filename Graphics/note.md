@@ -374,3 +374,133 @@ xyz, xyx, xzy, xzx, 등 12가지 방법으로 오일러각도를 만들 수 있�
 * 애니메이션
 
 학과 사무실에 있는 3D 프린터 내(이제희 교수님) 핑계 대고 막 쓰세요
+
+--------
+
+### 3D Object repr
+- 바운더리 레프리젠테이션
+  - 너무 유명한 그것
+- Space partitioning
+  - 복셀. CT사진
+- Procedural methods
+  - 수식으로 모델 표현
+- 컨스트럭티브 솔리드 죠메트리
+- 피지컬리 베이스드 모델링
+
+### 뭘 골라야할까?
+- 계산 코스트
+  - 저장용량
+  - 컨스트럭션 타임
+  - 디스플레이 타임
+
+남들이 뭘 할때 비웃을때엔 조심해야해요.
+10년만 지나도 세상이 변해요.
+처음 복셀렌더링 나왔을때 사람들이 모두 비웃었어요.
+
+- 특정 피노미나를 얼마나 효과적으로 표현할 수 있는가
+  - 시뮬레이션의 정확도
+  - Looks good
+- 구현 복잡도
+  - 프리미티브가 얼마나 많고, 복잡한가
+
+### Polyhedra
+모든 폴리히드라는 Planar graph로 표현가능
+
+오일러 포뮬라
+```
+V - E + F = 2
+```
+
+오일러 푸앙카레 포뮬라
+```
+V - E + F - L = 2(S - G)
+```
+푸앙카레가 뭐한사람인지 알아요?
+추측한 사람이요.
+푸앙카레는 지독히도 계산을 못했던 사람이에요
+두자리수 곱하기 두자리수 계산은
+이사람에게는 불가능하게 느껴졌대요
+수학시험을 보면 항상 0점 비슷한 점수를 받지않겠어요?
+프랑스 모 대학에서 수학을 0점을 받고
+이 이후로 너무도 유명한 사람이 되니까
+그래서 학교 입학시험에 예외규정이 들어감
+너무 특이한 성적의 사람은 셤 한번 더볼수있음
+
+### Functional Repr
+Explicit
+```
+z = f(x, y)
+```
+
+Implicit
+```
+f(x, y, z) = 0
+```
+
+Parametric
+```
+(x(t), y(t), z(t)) for t in [a, b]
+```
+
+##### Issues
+- Repr power
+  - Explicit이 제일 제한됨 (지형), Implicit이랑 Parameter는 경우에 따라 양쪽이
+    더 나은 표현력을 가진 경우가 있음.
+- Easy to render
+  - Explicit이랑 Parametric은 그리기 아주 쉽지만, Implicit은 그리기 매우 힘듬
+- Manupulate (translate, rotate, ...)
+  - Imlicit이 제일 어려움
+
+결과적으로 파라메트릭 repr이 제일 보편적임. 표준화된 방법. OpenGL에도 parametric
+form들은 제공됨.
+
+### Implicit Surfaces
+- Quadric surfaces
+  - 코닉 섹션(원뿔 곡선)이 진화된 Quadrics. 제일 차수가 낮은 곡면이라서 배움.
+- Superquadric surfaces
+- Blobby objects
+
+### Superquadrics
+```
+(x/a)**(2/S) + (y/b)**(2/S) = 1
+```
+
+### Blobby Objects (metaballs)
+A collection of density functions
+
+### Spatial partitioning
+복셀
+
+파티셔닝을 넌유니폼하게 수행, 옥트리를 그려서 메모리를 절약. 근데 대충구현하면
+별로 효과가 없음. 복셀들마다 링크드리스트 만드는게 오히려 시간 더걸림
+
+##### Binary Space Partitioning tree
+공간을 한번에 하나의 기울기와 위치가 자유로운 Plain으로 나눔.
+
+컴퓨터 게임엔진에 굉장히 많이 들어감. 던전 딱 들어가면 자동문 달려있고, 어디
+부터 어디까지 보이고 이런거 할때 쓰임. Visible polygon이랑 Invisible polygon
+구분하는데에 많이 쓰임
+
+### Constructive Solid Geometry
+이도 저도 아닌 중간쯤. 기본적으로 간단한 프리미티브를 갖고있고, 이
+프리미티브들로 불리언 오퍼레이션을 해서 새 쉐입을 만듬. 쉐입은 트리로 표현됨.
+
+트리의 leaf엔 리프노드와 리프노트에 대한 트랜스포메이션이 있고, 인터널 노드엔
+오퍼레이터가 들어있음. 저장효율이 매우 뛰어남, 그리는데에 시간이 너무 오래걸림.
+
+보통 렌더링할때 레이캐스팅을 씀. 레이를 공간상에 그어놓고, 불리언 오퍼레이션을
+1차원 상에서 함.
+
+기계설계하는 캐드시스템에 많이 들어있음
+
+### Procedural Method
+자기유사성 프랙탈, Demensionality에 대한 새로운 인식.
+
+Space filling curve. 원래 얘 본질이 뭐냐에 상관없이, 얘가 어떤 절차를 거치느냐에
+따라 차원이 달라질수 있다, 1.x 차원도 될 수 있다.
+
+Terrain by random perturbation. 절차적 지형생성.
+
+### Physically Based Modeling
+파티클 시스템. 모델링과 애니메이션을 구분하지 않음. 물리에 기반해 현상을
+시뮬레이션함. 물, 불, 옷감, 바람, 천체 시뮬레이션, ...
