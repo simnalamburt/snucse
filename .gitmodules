@@ -7,3 +7,6 @@
 [submodule "System Programming/assign2"]
 	path = System Programming/assign2
 	url = git@github.com:simnalamburt/snucse.archlab.git
+[submodule "System Programming/cachelab"]
+	path = System Programming/cachelab
+	url = git@github.com:simnalamburt/snucse.cachelab.git
