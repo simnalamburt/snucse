@@ -2149,3 +2149,239 @@ Update based protocol에선 이런일이 없음. 근데 Invalidate based protoco
 일어나지.
 
 C volatile은 실제 메모리장벽을 전혀 안쌓아줌. 내 박사논문이 이거야
+
+--------
+
+> 4월 6일
+
+GPU 아키텍처
+--------
+GPU 아키텍처들은 밑에단 공개가 잘 안되어있어. 이유가 뭘까? 이유가 자주 바뀌기
+떄문이 맞아. 근데 왜 이걸 공개를 안할까? 밑에 레벨을 공개를 해놓으면 그걸
+이용해서 소프트웨어를 만들어버려. 그럼 다음 아키텍처로 넘어가면 그게 돌아가?
+안돌아가. 그래서 굉장히 하이레벨로 개발하도록 강제를 하는거야.
+
+그래서 이쪽 알아내는게 굉장히 힘들어요. 캐쉬 어떻게되어있고 이런거 다 역공학으로
+알아내야돼. 그래서 세계 그 어느 누구보다도 우리 학생들이 더 잘 알고있어. 이게
+경험과 피나는 노력을 통해서 아는거야. 그런걸 아는게 왜 중요할거같애. 시스템을
+알아야 좋은 소프트웨어를 만들 수 있어서 그래.
+
+지금 삼성에서도 모바일용 GPU 만들고있죠. 근데 디자인을 미국 연구소에서
+주도하고있으니까 답답한거야. 우리 학생들한테 맡기면 6개월정도면 만들텐데.
+
+너네도 다 똑같애. 다 할 수 있어. 자기의 능력을 의심하지마. 다 우리가 똑같이 할
+수 있는거에요.
+
+### Rendering
+렌더링이 뭐에요? "Process of generating an image from a 3D model"
+
+2차원에서, 모든 폴리곤은 전부 삼각형으로 나눌수 있죠. 이렇게 삼각형으로 잘게
+쪼개 모델링해서 처리를 하는거야. 고게 3D 모델링이고 고걸로 이미지를 만드는게
+렌더링
+
+### Rendering pipeline
+1.  Vertex processing
+1.  Geometry processing
+1.  Rasterization
+1.  Pixel processing
+1.  Output merging
+
+하드웨어로 만들어버리면 속도는 빠른데 뭐가 안좋아? 범용성이 떨어지지
+
+### Shaders
+GPU를 그래픽스만 처리할 수 있는 기계로 만들지말고, 범용 기계장치로 만들자. 그
+GPU에 올리는 프로그램을 셰이더라고 부르고, 이게 돌아가는 코어를 셰이더 코어라고
+부른다.
+
+### General purpose CPU
+보통 CPU는 실제 엑스큐션에 필요한 레지스터보다 그 외의 레지스터가 훨~ 씬 많음.
+성능 높이려고.
+
+### Shader cores
+* Very simple programmable
+* No architecture components that make a single instruction stream run fast
+* Logical graphics pipeline
+  * Vertex shader, Geometry shader, Fragment shader, etc
+
+### GPU 아키텍처
+아키텍처를 디자인할때엔 뭐가 중요하다고? 실제 어플리케이션을 봐야돼. 어떻게
+쓰일지. GPU는 코어간의 디펜던스가 없어. 그리고 삼각형이랑 픽셀이 수백만개야.
+
+"Massivly parallel processing"
+
+```
+<@sg126> 파이프라이닝도 하고 스케쥴링도 함
+<@sg126> 근데 파이프라이닝도 하고 스케쥴링도 하는거 맞음
+<@김젼> 그렇군
+<@sg126> 내가 스냅드래곤 개발자한테 직접 들음
+<@김젼> 어떤 스케쥴링을 하지?
+<@sg126> 그림을 쪼개서 타일을 만들고
+<@sg126> 타일별로 어떤 타일을 어느 타이밍에 어떤 명령어를 컨슘할지
+<@sg126> 내부적으로 스케쥴링함
+<@sg126> 그래서 메모리 타이트한 상황에서 잘못쓰면 메모리할당을 못해서 그림을 못 그리는데
+<@sg126> 그게 타일별로 나타남
+<@김젼> 그러쿤
+<@sg126> 타일 크기는 드라이버제작자가 설정해서 줬는데 어쨌든 파워오브2로 줬던거 같고
+```
+
+### Exploting Massive Parallelism
+각 픽셀마다 같은 오퍼레이션만 적용한다.
+
+SIMT: Single Instruction Multiple Thread
+
+* Single Fetch/Decode logic
+* Multiple ALU & Context
+* shared context data
+
+인스트럭션 하나를 카피해서 여럿한테 돌림.
+
+### Executing Branches
+한 브랜치 실행하는동안 다른 브랜치는 그냥 멈춰버림.
+
+* Conditional execution in a warp
+* Hardware automatically handles divergence
+
+### Hardware Context Switch
+* To avoid stalls caused by high latency operations
+* A single SM can run more than one warp
+
+L1 캐쉬 액세스하는데 서너사이클 걸림. 근데 메모리 액세스하는데엔 30사이클
+넘게걸림. 이런걸 High latency operation 이라고 부르면 됨.
+
+### Multiple Streaming Multiprocessors
+
+### 전반적인 구조
+스칼라 프로세서, 로드 스토어 유닛이 아주 많다. 이것들 네개당 SFU(스페셜 펑셔널
+유닛)이 드문드문있고, 얘네들이 모두 하나의 L1 캐쉬, 셰어드 메모리를 공유하고 그
+밖에 L2 캐쉬 있고 글로벌 메모리가 있음.
+
+### GPU Summary
+* Data parallelism
+* Hardware context switch to tolerate high latencies
+
+메모리 컨시스턴시
+--------
+캐시 코히어런스와의 차이점.
+
+컴파일러는 inter-thread 디펜던시를 따지지 않음. 이게 문제임. 컴파일러와
+아키텍처가 OoE 하면서 리오더링을 할 수 있고, 이게 네트워크로 연결된 롱 레이턴시
+멀티프로세스 시스템에서 실행되면 메모리 레이턴스때문에 메모리에 도달하는 순서가
+바뀔 수 있음. 여러가지 이유때문에 리오더링이 발생할 수 있음.
+
+어떻게 리오더링이 안되게 해야할까? 리오더링이 발생하면 안되는 지점을 명시적으로
+지정해햐아한다.
+
+캐쉬 코히어런스는 하나의 메모리 로케이션을 액세스하는 문제임. 근데 메모리
+컨시스턴시는 메모리를 액세스하는 순서의 문제임.
+
+### Memory consistency models
+상대적으로 메모리 액세스가 일어나는 순서 자체가 어떤 순서로 일어나야 되느냐 에
+대한 제약사항을 말함.
+
+일단 셰어드 메모리, 싱글 프로세서를 가정하고 배우자.
+
+한 업데이트에 대한 메모리가 언제 다른 프로세서에게 보일까?
+
+1.  프로그래머에게 있어서 프로그래밍을 얼마나 공격적으로 할 수 있는가의 기준이 됨.
+1.  얼마나 많은 액세스가 리오더 될 수 있느냐를 결정할 수 있는 기준이 된다.
+
+대표적으로 네가지 메모리 컨시스턴시 모델이 있고, 이걸 쪼금씩 쪼끔씩 고쳐서
+쓰는거임.
+
+* Sequential consistency (Correctness criteria)
+* Relaxed memory consistency models
+  * Processor consistenty
+  * Weak ordering
+  * Release consistency
+  * ...
+
+복잡할수록 틀린거임.
+
+### Sequential Consistency
+멀티스레디드 프로그램 P의 실행결과는, P를 일렬로 늘여세워서 만든 싱글스레드
+프로그램의 실행결과와 같아야함.
+
+A total order between operations is defined (atomic operations).
+
+컨시스턴시에 있어 제일 강력한 컨스트레인트.
+
+### Program Order
+Order in which operations appear in source code
+
+* 어셈블리 코드로의, 소스코드의 자명한 변환
+* At most one memory operation per instruction
+
+하지만 컴파일러에 최적화될 수 있기때문에, 실제로 실행되는 순서와는 다름.
+
+### Reasoning Based on SC
+
+### SC Violation
+내가 업데이트한것이 업데이트가 느리게되어서 생기는 문제.
+
+### Relaxed Memory Consistency Models
+인스트럭션 사이에 Fence Instruction을 집어넣음. 그 펜스 인스트럭션 범위를
+넘어서는 리오더링이 못일어나게함.
+
+### Performed with respect to ...
+
+### Processor Consistency (PC)
+Write buffer가 뭐게. write를 시퀀셜하게 죽 하는데 하나씩 메모리에 가면 시간이
+무지 오래걸리지? 그렇게 하지 말고 write buffer에 모았다가 한번에 보내면 메모리
+트랜잭션 하나로 여러 write를 할 수 있지. 근데 이 write buffer를 하려면 프로세스
+컨시스턴시가 필요해.
+
+write 버퍼를 하드웨어에 넣으려다보니 만들어진거임.
+
+근데 이거 거의 안쓰여.
+
+Read is allowd to perform with respect to any other processor, all previous read
+must be performed
+
+이게 무슨뜻이냐면
+
+> read -> read (다른 메모리 로케이션 접근할때)
+
+가 지켜져야한다는 뜻임.
+
+Before a write is allowed to perform with respect to any other processor all
+prvious accesses must be performed
+
+> read -> write
+> write -> write
+> ~~write -> read~~ (relaxed)
+
+라는 뜻임
+
+86~88년에 쓰임.
+
+##### Relaxing write -> read order
+Processor consistent 하지만 not sequentiall consistent 할 수 있는 상황이 있음.
+
+### Weak Ordering
+Relax all program order. 하지만 Synchronization operation들 사이의 시퀀셜
+컨시스턴시는 지켜줘야하고, 싱크로나이제이션 오퍼레이션 전후로는 모든 메모리
+I/O가 끝나야함.
+
+이러한 특징때문에, 프로세서 하나에선 싱크 오퍼레이션은 항상 하나에만 일어남.
+
+IBM PowerPC가 위크 오더링을 따름.
+
+### Release Consistency
+Releax all program orders, but not w.r.t. sync operations
+
+Two separate synchronization operations
+
+* Acquire: A read operation such as lock
+* Release: A write operation such as unlock
+
+Acquire가 나오고 뒤에 read, write가 나오면 어콰이어 앞으로 못감.
+
+Release가 나오고 앞에 read, write가 나오면 릴리즈 뒤로 못감.
+
+Acquire, release 싱크 오퍼레이션들끼리는 모두 시퀀셜리 컨시스턴스 (혹은 프로세서
+컨시스턴트) 근데 프로세서 컨시스턴시보다 시퀀셜 컨시스턴시가 더 나옴.
+
+91년도에 나온거임. x86에서 쓰는거임.
+
+메모리 컨시스턴시 모델이 왜나왔어. 리오더링을 하면 우리가 원하는 결과가
+안나오기때문에 그런거지.
