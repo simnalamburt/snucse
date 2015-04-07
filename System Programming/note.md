@@ -1660,3 +1660,90 @@ gets(s); // read more than 8
 * gdb
 * malloc만 디버깅 하는 툴도 많음
 * 바이너리 트랜슬레이터: valgrind (리눅스), Purify
+
+--------
+
+Internetworking
+--------
+### A Client-Server Transaction
+
+### Hardware organization of a network host
+
+### Computer Networks
+* SAN (System Area Netwrok)
+  * Cluster, Machine room, ...
+* LAN
+  * Building ore campus. "Ethernet"
+* WAN
+  * Country or world.
+
+"Global IP Internet" is most famous example of an internet.
+
+### Lowest Level: Ethernet segment
+* Hub, broadcast network
+  * 들어오는 요청을 전부 echo함. 패킷이 동시에 하나밖에 못지나감.
+* Collision
+  * 부딪치면, 서로 랜덤한 시간 이후로 리트라이
+* Ethernet header
+  * 보내는 사람의 주소, 받는 사람의 주소가 있음. 48-bit unique address, MAC
+    address임. MAC address를 관리하는 국제 기관이 있음.
+* Switch
+  * 들어오는 요청 맥어드레스를 보고, 패킷을 어느 허브로 보낼지를 정해줌. 동시에
+    여러 커넥션이 있을 수 있음.
+
+### Next Level: Bridged ethernet segment
+* Spans building or campus
+* 선택적으로 프레임을 복사한다.
+
+### Next Level: Internet
+* Router
+  * 라우터에서는 맥어드레스가 소용이 없음. IP 어드레스가 필요해짐.
+
+### Logical Structure of an internet
+* Ad hoc interconnection of networks
+
+### The Notion of an internet Protocol
+어떻게 IP만 가지고 패킷이 길을 찾아갈까?
+
+* Host addresses
+* Standard transfer unit: packet
+  * Header + Payload
+
+큰 패킷도 작은 패킷 여러개로 잘라서 보낼 수 있음. 나중에 합치면 되니까.
+
+### Transferring Data over an internet
+1. Data
+1. (Data + internet packet header) + LAN1 frame header1
+1. `Router`
+1. (Data + internet packet header) + LAN2 frame header1
+1. Data
+
+### Other Issues
+* (큰) 라우터 만들때 IP주소 어떻게 저장하는지
+  * Content Addressable Memory
+* 라우터가 프레임을 어디로 포워딩할지 어떻게 아는가?
+* 네트워크 토폴로지가 변하면 어떻게하는가?
+
+### Global IP Internet
+
+### Hardware and Software Organization(Abstraction) of an Internet Application
+(피피티에 그림있음)
+
+Application Level에선 system call로 추상화됨
+
+### Basic Internet Components
+* Internet backbone
+* Network Access Point (NAP)
+* Regional networks
+* Point of presence (POP)
+* Internet Service Providers
+
+### NAP based internet architecture
+
+### Internet Connection Hierarchy
+(피피티)
+
+### Naming and Communicating on the Internet
+* 원래는
+  * 인터넷을 이렇게 많이쓸지 몰랐음. 모든 노드에 글로벌 IP를 하나씩 주려고했음.
+  * 보안성 아예 없음.
