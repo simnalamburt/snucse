@@ -187,6 +187,7 @@ L2 크기가 얼마나 되는지 미루어 짐작할수 있겠지.
 
 링킹
 --------
+시험범위 시작
 
 메인이라는 함수가 있고 스왑이라는 함수가 있다. 어떻게 이 두개를 하나의
 프로그램으로 붙일까? 그냥 소스를 하나로 concat 할수도있겠지. 근데 그러면 큰
@@ -1746,4 +1747,85 @@ Application Level에선 system call로 추상화됨
 ### Naming and Communicating on the Internet
 * 원래는
   * 인터넷을 이렇게 많이쓸지 몰랐음. 모든 노드에 글로벌 IP를 하나씩 주려고했음.
+    * 2^32 개를 다 쓰지도 못하고, 점점 모자라감
   * 보안성 아예 없음.
+
+> 4월 9일
+
+### Evolution of Internet: Naming
+* Dynamic address assignment
+  * 내가 어떤 IP를 받는다고, 그걸 하루종일 쓰는게 아님. 인터넷 끊는동안 IP를
+    반환하기.
+  * 클라이언트의 경우엔 고정된 IP를 쓸 필요가 없음.
+
+Network address translation: 이 어드레스를 예약해놓고, 이 어드레스는 서버로 쓸
+수 없다.
+
+### Evolution of Internet: Firewall
+* 들어오면 안되는건 막아버리기, 나가면 안되는걸 막아버리기
+* 패킷 감청 외에도, 불필요한 정보가 밖으로 나가는걸 막음
+  * LAN에 있는 노드 갯수 숨기기, 등..
+
+Firewall이랑 Network address translation은 같은 레이어에서 일어남
+
+Port address translation: 같은 IP 포트 여럿이 서로 비켜서 나눠쓰기
+
+### Virtual Private Networks
+VPN 쓸때, Firewall 반대편 유저가 나인지 아닌지 알아야됨. 인증과정을 거치기
+
+내가 아이피가 XXXX인데, VPN으로 마치 YYYY 인것처럼 행세한다던가.
+
+### DNS
+
+### IP Address
+port address: 16byte unsigned short
+
+Host/Network Byte Order. htonl, htons, ntohl, ntohs
+
+인텔은 리틀엔디언, 네트웍은 빅엔디언.
+
+### Dotted Decimal Notation
+
+### IP Address Structure
+* Class A: 64 개
+* Class B
+* Class C: 16,000,000개
+* Class D: 멀티캐스트
+* Class E: Reserved for 실험
+
+(그림 참고)
+
+종종 Class A와 B 사이로 쪼개서 쓰기도 함
+
+Unrouted (private) IP
+
+* 10.0.0.0/8
+* 172.16.0.0/12
+* 192.168.0.0/16
+
+### Internet domain names
+트리구조
+
+### DNS
+* 도메인네임 하나에 여러 아이피가 있을 수 있다.
+* 모든 호스트에는 루프백 어드레스가 있다 (127.0.0.1)
+* 여러 도메인이 같은 아이피일 수 있다.
+
+도메인 네임만 보고 이게 valid 한지 아닌지 알 수 없다.
+
+`gethostbyaddr`, `gethostbyname`
+
+### Domain Information Groper (dig)
+DNS에 커맨드라인으로 쿼리하는거임
+
+### Internet connections
+Point-to-point
+
+* port
+  * Ephemeral port: 클라에서 자동으로 할당되는 포트번호
+  * Well-known port: 잘 알려진 포트번호
+
+Well-known 포트로 연결이 들어오면, 그 연결을 다른 포트로 옮겨버리고 원래 포트를
+빨리 비워주는 경우도 있음
+
+> 시험범위: 링커~인터넷
