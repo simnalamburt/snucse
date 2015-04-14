@@ -5,14 +5,18 @@ when 'test'
   system 'cd ~/cachelab-handout2 && make'
   exit $?.exitstatus
 when 'score'
-  system <<-SCORE
-    cd ~/cachelab-handout2 &&
-    make &&
-    ./test-trans -M 32 -N 32 &&
-    ./test-trans -M 64 -N 64 &&
-    ./test-trans -M 61 -N 67
-  SCORE
-  exit $?.exitstatus
+  system 'cd ~/cachelab-handout2 && make'
+  exit unless $?.success?
+
+  def test m, n
+    result = `cd ~/cachelab-handout2 && ./test-trans -M #{m} -N #{n}`
+    /^TEST_TRANS_RESULTS=1:(.*)$/.match(result)[1]
+  end
+
+  puts " 300 < #{test(32, 32)} <  600"
+  puts "1300 < #{test(64, 64)} < 2000"
+  puts "2000 < #{test(61, 67)} < 3000"
+  exit
 else
   puts <<-HELP
 Usage: ./do <command>
