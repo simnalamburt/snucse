@@ -4,8 +4,8 @@
 [submodule "System Programming/buflab"]
 	path = System Programming/buflab
 	url = git@github.com:simnalamburt/snucse.buflab.git
-[submodule "System Programming/assign2"]
-	path = System Programming/assign2
+[submodule "System Programming/archlab"]
+	path = System Programming/archlab
 	url = git@github.com:simnalamburt/snucse.archlab.git
 [submodule "System Programming/cachelab"]
 	path = System Programming/cachelab
