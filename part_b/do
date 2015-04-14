@@ -6,16 +6,16 @@ when 'test'
   exit $?.exitstatus
 when 'score'
   system 'cd ~/cachelab-handout2 && make'
-  exit unless $?.success?
+  exit $?.exitstatus unless $?.success?
 
   def test m, n
     result = `cd ~/cachelab-handout2 && ./test-trans -M #{m} -N #{n}`
     /^TEST_TRANS_RESULTS=1:(.*)$/.match(result)[1]
   end
 
-  puts " 300 < #{test(32, 32)} <  600"
-  puts "1300 < #{test(64, 64)} < 2000"
-  puts "2000 < #{test(61, 67)} < 3000"
+  puts "     300 <  #{test(32, 32)} <  600"
+  puts "    1300 < #{test(64, 64)} < 2000"
+  puts "    2000 < #{test(61, 67)} < 3000"
   exit
 else
   puts <<-HELP
