@@ -1,8 +1,8 @@
 [submodule "System Programming/assign0"]
 	path = System Programming/assign0
 	url = git@github.com:simnalamburt/snucse.mountain.git
-[submodule "System Programming/assign1"]
-	path = System Programming/assign1
+[submodule "System Programming/buflab"]
+	path = System Programming/buflab
 	url = git@github.com:simnalamburt/snucse.buflab.git
 [submodule "System Programming/assign2"]
 	path = System Programming/assign2
