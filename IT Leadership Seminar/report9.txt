@@ -1,0 +1,45 @@
+Seminar Category [일반/4과/외부/기타]: 일반
+Name of Speaker: 진은숙 NHNe 이사님
+Title of Presentation: NHN Entertainment 기술설명회
+Date: 2015년 4월 17일
+Time: 오후 3시
+Submission Date: 2015년 4월 17일
+Place: 302동 208호
+Evaluator's Name / Student id / Email: 김지현 / 2013-11392 / simnalamburt@gmail.com
+
+
+Abstract (less than 100 words):
+  NHNe 회사가 어떠한 비전으로 창설되고, 어떠한 역사를 거쳐서 현재에 이르고 현재
+  어떤 모습으로 운영되고있는지를 설명해주셨고, NHNe가 대외적으로는 게임회사라고
+  알려져있지만 내부적으로 연구하고있는 기술적인 문제가 무엇인지, 회사 이야기뿐만
+  아니라 현재 인터넷 산업계의 트렌드와 그 트렌드 속에서 NHNe는 어떤 모습으로
+  나아가고자 하는지에 대해 설명해주셨다.
+
+Strong Points in the Contents (less than 100 words):
+  발표하신분이 이사님이심에도 불구하고, 흔히 말하는 다른 대기업 이사들과는
+  다르게 인사/경영/기술 통틀어서 회사의 모든 분야에 대해 자세히 알고계셔서
+  놀라웠다. 회사 설명, 산업계 트렌드 설명 모두 구체적이고 와닿게 잘 설명해주셔서
+  너무 유익했고, NHNe가 원하는 인재상 모습도 피상적인 설명이 아니라 컴퓨터공학과
+  선배님답게 구체적이고 잘 설명해주셔서 좋았다.
+
+Weak Points in the Contents (less than 100 words):
+  하고싶은 이야기가 많으신데 1시간 안에 담느라 잘린 이야기가 많다는 느낌을
+  받았고, 이건 사실 좋았던점이기도 한데 발표 주제인 NHNe에 관한 이야기보다는
+  그냥 산업 전반에 관한 이야기가 많았다.
+
+
+Mark the presentation skills
+(1-insufficient, 2-limited, 3-good, 4-very good, 5-excellent)
+Body language and eye contact ...............................(4)
+Correct language ............................................(5)
+Understandable (rhythm, intonation, accent) .................(5)
+Spoken loud enough ..........................................(5)
+Overview of presentation in the beginning ...................(2)
+Objectives clearly stated ...................................(3)
+Logically well-organized ....................................(4)
+The presenter masters the material thoroughly ...............(5)
+Well prepared slides ........................................(5)
+Proper use of color, multimedia, graphics ...................(5)
+Slides easy to understand ...................................(5)
+Q&A well managed ............................................(3)
+Overall (will you recommend it to others ?) .................(5)

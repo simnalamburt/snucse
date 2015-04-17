@@ -1,0 +1,44 @@
+Seminar Category [일반/4과/외부/기타]: 일반
+Name of Speaker: 전윤호 CTO님
+Title of Presentation: SK Planet 기술설명회
+Date: 2015년 4월 17일
+Time: 오후 2시
+Submission Date: 2015년 4월 17일
+Place: 302동 208호
+Evaluator's Name / Student id / Email: 김지현 / 2013-11392 / simnalamburt@gmail.com
+
+
+Abstract (less than 100 words):
+  SK Planet이 어떤 회사인가에 관한 간략한 설명과, 최근 SK Planet이 주로 연구하고
+  있는 딥러닝에 대한 설명이 이뤄졌다. 최근 많이 화자되는 빅데이터기술과 머신러닝
+  기술이, 현장에선 어떻게 쓰이는지를 설명해주셨고, SK Planet이 어떻게 일하는지의
+  보여주는 예시로 기계학습으로 신용카드 번호를 인식시키는 AI를 만드는 과정, 그
+  과정에서 맞딱뜨린 문제와 이를 해결해나가는 과정을 설명해주셨다.
+
+Strong Points in the Contents (less than 100 words):
+  외부에 잘 홍보되지 않은 SK Planet 회사에 설명이 있어서 좋았다. 그냥
+  어플리케이션 개발하는 회사로만 알려진 SK Planet이 내부적으로는 어떤 일을
+  하는지 설명해주셔서 좋았고, CTO님께서 사람이 많지만 대기업이 아니라
+  스타트업처럼 일하려는 회사다 라고 하시면서 어떻게 일하는지 사례를 보여주셨는데
+  학생들이 궁금해하는 부분을 많이 체크해주셔서 좋았다.
+
+Weak Points in the Contents (less than 100 words):
+  좋은 발표여서 단점을 찾기 힘들었지만, 굳이 하나를 꼽자면 시간이 충분하지
+  않아서 하고싶으신 이야기를 다 풀지 못한것이 안타까웠다.
+
+
+Mark the presentation skills
+(1-insufficient, 2-limited, 3-good, 4-very good, 5-excellent)
+Body language and eye contact ...............................(4)
+Correct language ............................................(4)
+Understandable (rhythm, intonation, accent) .................(5)
+Spoken loud enough ..........................................(5)
+Overview of presentation in the beginning ...................(5)
+Objectives clearly stated ...................................(4)
+Logically well-organized ....................................(5)
+The presenter masters the material thoroughly ...............(5)
+Well prepared slides ........................................(3)
+Proper use of color, multimedia, graphics ...................(3)
+Slides easy to understand ...................................(3)
+Q&A well managed ............................................(2)
+Overall (will you recommend it to others ?) .................(4)
