@@ -1829,3 +1829,57 @@ Well-known 포트로 연결이 들어오면, 그 연결을 다른 포트로 옮�
 빨리 비워주는 경우도 있음
 
 > 시험범위: 링커~인터넷
+
+--------
+
+> 4월 16일
+
+### Sockets Interface
+
+Web Services
+--------
+하이퍼텍스트
+
+Memex라는 개념이 제시됨. 이책 저책 이리저리 알아보는 과정을 편하게 하자.
+
+### Web History
+
+### Web Content
+* Multipurpose Internet Mail Extensions, MIME
+  * `text/html`
+  * `application/postscript`
+  * `image/jpeg`
+  * ...
+
+메일에 아스키코드밖에 못쓰니까, 익스텐션을 만든거임.
+
+### Static content vs Dynamic content
+
+### URLs
+
+### How clients and servers user URLs
+```
+http://www.cmu.edu:80/index.html
+```
+
+* Clients use `http://www.cmu.edu:80` to infer
+  * Protocol
+  * Server location (`www.cmu.edu`)
+  * Port number (`80`)
+* Servers use `/index.html` to
+  * Determine which to serve
+
+### HTTP
+요청 한번 할때마다 TCP를 맺음
+
+### HTTP Requests
+```
+<method> <uri> <version>
+GET /index.html HTTP/1.1
+```
+
+### HTTP/1.1
+* `Connection: Keep-Alive`
+* `Host: www.cmu.edu`
+* `Transfer-Encoding: chunked`
+*
