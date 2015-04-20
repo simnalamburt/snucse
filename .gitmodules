@@ -10,3 +10,6 @@
 [submodule "System Programming/cachelab"]
 	path = System Programming/cachelab
 	url = git@github.com:simnalamburt/snucse.cachelab.git
+[submodule "System Programming/perflab"]
+	path = System Programming/perflab
+	url = git@github.com:simnalamburt/snucse.perflab.git
