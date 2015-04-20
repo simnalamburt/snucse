@@ -8,18 +8,15 @@ void register_rotate_functions() { add_rotate_function(rotate, ""); }
 void rotate(int dim, pixel *src, pixel *dst) {
   const int block = 32;
   const int dim_1 = dim - 1;
+  int block_i, block_j, i, j;
 
-  int block_j;
-  for (block_j = 0; block_j < dim; block_j += block) {
-    int block_i;
-    for (block_i = 0; block_i < dim; block_i += block) {
-      int j;
-      for (j = 0; j < block; ++j) {
-        const int x = block_j + j;
-        int i;
-        for (i = 0; i < block; ++i) {
-          const int y = block_i + i;
-          dst[(dim_1 - x)*dim + y] = src[y*dim + x];
+  for (block_i = 0; block_i < dim; block_i += block) {
+    for (block_j = 0; block_j < dim; block_j += block) {
+      const int i_end = block_i + block;
+      for (i = block_i; i < i_end; ++i) {
+        const int j_end = block_j + block;
+        for (j = block_j; j < j_end; ++j) {
+          dst[(dim_1 - i)*dim + j] = src[j*dim + i];
         }
       }
     }
