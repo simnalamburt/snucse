@@ -1882,4 +1882,121 @@ GET /index.html HTTP/1.1
 * `Connection: Keep-Alive`
 * `Host: www.cmu.edu`
 * `Transfer-Encoding: chunked`
-*
+* ~
+
+> 4월 21일
+
+### Serving Dynamic Content With GET
+포크, execve
+
+environment variable에 파라미터가 저장됨. `getenv`로 받아옴
+
+### Additional CGI Environment Variables
+```
+SERVER_SOFTWARE
+SERVER_NAME
+GATEWAY_INTERFACE
+...
+```
+
+## Even More CGI Environment Variables
+```
+HTTP_ACCEPT
+...
+```
+
+### Serving Dynamic Content With GET
+sprintf, printf로 길이재고 이리저리 해서 막 함
+
+### Data Transfer Mechanisms
+* Standard
+  * Specify total length with content-length
+  * Requires that program buffer entire message
+* Chunked
+  * Break into blocks
+  * Prefix each block with number of bytes (Hexademical)
+  * 맨 마지막 chunck는 0 크기로 표시됨
+
+### Proxies
+프락치
+
+인터넷 안좋던시절 HTTP에서 쓰던거.
+
+캐슁, 로깅, IP 우회, DDoS, 트랜스코딩, ...
+
+--------
+
+Concurrent Programming
+--------
+PC 성능이 발전하면서 클락스피드가 공짜로 늘어나니까 프로그램을 복잡하고 무겁게
+만들어갔음
+
+근데 이제 단일코어 성능향상이 끝나고 멀티코어로만 발전하고있음. 그래서 이제
+컨커런트한 프로그래밍을 해야된다
+
+### Concurrent Programming is Hard
+* 사람은 보통 시퀀셜로 생각함
+* 시간 전후관계 따지는게 굉장히 헷갈림
+* 레이스 컨디션
+
+컨커런트 프로그래밍은 딱딱하다
+
+* Races
+* Deadlock
+* Livelock: 둘이 계속 열심히 뭔가 하는데 쓰잘데기 없는짓만 하고있음
+* Starvation / Fairness: 기회가 특정 한놈한테만 돌아가서 나머지놈이 굶주림,
+    Fair하지 못함
+
+스케줄링 문제떄문에 컨커런트 프로그램은 비결정적일떄가 많음.
+
+### Iterative Server
+어셉트하는 스레드에서 일을 다 처리하면, 다른 클라이언트가 못들어옴.
+
+컨커런트 써버를 써야됨 -> 어셉트하는 스레드에서 일을 처리하지말고, 어셉트하는
+스레드에선 어셉트 하자마자 일을 다른 스레드한테 넘김
+
+### Making Concurrent Flows
+1. Processes
+1. Threads
+1. I/O multiplexing with `select()`: Logical flow를 수동으로 interleave 할 수
+있다. 코어가 많을떄엔 별로 좋은 생각이 아니다. 코어가 하나일때엔 제일 효율적임.
+
+### Process based concurrent server
+Reap all zombie children
+
+fork를 하고 부모프로세스는 connfd 한걸 반드시 닫는다
+
+### View from Server's TCP Manager
+Port Demultiplexing
+
+서버는 내부적으로 이게 어느 아이피/포트 쌍에서 온건지를 다 갖고있음
+
+### 프로세스 기반 디자인의 장단점
+장점
+
+* 여러 커넥션을 컨커런트하게 관리함
+* 셰어링 모델이 깔끔함
+  * 디스크립터 (노)
+  * 파일 테이블 (예스)
+  * 전역변수 (노)
+* 간단하고 직관적임
+
+단점
+
+* 프로세스 컨트롤에 오버헤드가 들어감
+* 프로세스간 통신이 어려움
+
+커넥션 들어올때 포크가 일어나면 그게 느림. 프리 포킹을 함 (루비의 unicorn이
+이거) connfd가 들어오면 바로 서비스하고 놀고 이럼
+
+### 멀티플 스레드
+
+멀티플 프로세스랑 굉장히 비슷한데, 프로세스 대신에 스레드 쓰는거.
+
+메모리가 공유되어있음.
+
+일반적인 프로그램의 모습: 프로그램 컨텍스트 + 커널 컨텍스트
+
+프로세스 = 스레드 + 코드, 데이터, 커널 컨텍스트
+
+
