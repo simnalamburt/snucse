@@ -1,0 +1,32 @@
+Seminar Category [일반/4과/외부/기타]: 일반
+Name of Speaker: Brandon Myers
+Title of Presentation: Integrating query processing with parallel languages
+Date: 2015년 4월 21일
+Time: 오후 2시
+Submission Date: 2015년 4월 21일
+Place: 302동 308호
+Evaluator's Name / Student id / Email: 김지현 / 2013-11392 / simnalamburt@gmail.com
+
+
+Abstract (less than 100 words):
+
+Strong Points in the Contents (less than 100 words):
+
+Weak Points in the Contents (less than 100 words):
+
+
+Mark the presentation skills
+(1-insufficient, 2-limited, 3-good, 4-very good, 5-excellent)
+Body language and eye contact ...............................(4)
+Correct language ............................................(4)
+Understandable (rhythm, intonation, accent) .................(4)
+Spoken loud enough ..........................................(3)
+Overview of presentation in the beginning ...................(4)
+Objectives clearly stated ...................................(5)
+Logically well-organized ....................................(5)
+The presenter masters the material thoroughly ...............(5)
+Well prepared slides ........................................(4)
+Proper use of color, multimedia, graphics ...................(3)
+Slides easy to understand ...................................(3)
+Q&A well managed ............................................(3)
+Overall (will you recommend it to others ?) .................(4)
