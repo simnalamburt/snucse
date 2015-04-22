@@ -3,16 +3,28 @@ Name of Speaker: Brandon Myers
 Title of Presentation: Integrating query processing with parallel languages
 Date: 2015년 4월 21일
 Time: 오후 2시
-Submission Date: 2015년 4월 21일
+Submission Date: 2015년 4월 22일
 Place: 302동 308호
 Evaluator's Name / Student id / Email: 김지현 / 2013-11392 / simnalamburt@gmail.com
 
 
 Abstract (less than 100 words):
+  이 세미나는 정말 몇 안되는 전기과나 공대 세미나가 아닌, 컴퓨터 공학과
+  세미나이고 그러니만큼, 굉장히 전문적인 내용을 다루고있다. 병렬 프로그래밍
+  언어로 DB 쿼리를 최적화하는 연구에 대해 발표하였으며, 앞으로 다룰 문제로
+  실제로 어플리케이션에서 사용할때 남아있는 최적화에대한 여지를 설명하였다.
 
 Strong Points in the Contents (less than 100 words):
+  정말 찾아보기 힘든 컴퓨터공학 관련 발표여서 좋았고, 다른 발표들처럼 추상적인
+  내용을 겉핥기식으로 다룬 발표가 아니라 학문의 최신을 달리는 내용이 아주
+  구체적으로 설명되어있어서 좋았다. IT 리더십 세미나 수업을 위해 들은
+  세미나중에, 보고서를 쓰는 현재 기준으로 실제로 뭔가를 얻어가는게 있다는 느낌이
+  드는 유일한 세미나였다.
 
 Weak Points in the Contents (less than 100 words):
+  발표가 영어여서 알아듣기 힘들었고, 이 연구가 필요한 이유와 같이 컨텍스트에
+  대한 설명이 부족하여, 이 분야에 관심이 없는 사람은 알아듣기 힘들겠구나 라는
+  생각이 들었다.
 
 
 Mark the presentation skills
