@@ -3311,3 +3311,30 @@ Busy-wait으로 critical section 구현함.
 
 ### Mutual Exclusion using Exchange
 Atomic Exchange로 뮤텍스 구현하기
+
+--------
+
+> 4월 22일
+
+### Matrix Multiplication
+순서에 따라 달라지는 미스율
+
+### Strip Mining
+
+### Tiling
+시프에서 질리도록 한거
+
+### Tiling for Matrix Multiply
+매트릭스 곱을 여러개로 쪼갤 수 있음
+
+원래 캐시미스는 `N^2/m + N^3` 인데, `2N^3/(Bm)`로 변함. `N`은 매트릭스 크기,
+`m`은 캐쉬라인 크기, `B`는 블럭 크기, 이때 `B` 바이트가 전부 캐쉬에 올라갈 수
+있다고 가정.
+
+```
+세계에서 다섯손가락 안에 들어가는사람이 헤매잖아
+실험을 해봐야되지 않겠냐
+
+내가 대학다닐때엔 웹 브라우저가 모자익이 전부였는데
+요즘은 어려운문제 내면 다 나와서 애들이 스스로 공부를 안해
+```
