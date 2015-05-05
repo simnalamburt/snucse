@@ -13,3 +13,6 @@
 [submodule "System Programming/perflab"]
 	path = System Programming/perflab
 	url = git@github.com:simnalamburt/snucse.perflab.git
+[submodule "System Programming/shlab"]
+	path = System Programming/shlab
+	url = git@github.com:simnalamburt/snucse.shlab.git
