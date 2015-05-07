@@ -16,3 +16,9 @@
 [submodule "System Programming/shlab"]
 	path = System Programming/shlab
 	url = git@github.com:simnalamburt/snucse.shlab.git
+[submodule "Multicore/k-means"]
+	path = Multicore/k-means
+	url = git@github.com:simnalamburt/snucse.k-means.git
+[submodule "Multicore/matmul"]
+	path = Multicore/matmul
+	url = git@github.com:simnalamburt/snucse.matmul.git
