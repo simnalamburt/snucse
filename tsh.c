@@ -173,17 +173,22 @@ void eval(char *cmdline) {
 
   // Codes for child process
   if (!pid) {
+    // Set pgid as 0
     setpgid(0, 0);
     execve(argv[0], argv, environ);
+
+    // `execve` returns only on error cases
     printf("%s: Command not found\n", argv[0]);
     exit(1);
   }
 
   if (is_foreground) {
     addjob(jobs, pid, FG, cmdline);
+    // Wait until foreground job finishes
     waitfg(pid);
   } else {
     addjob(jobs, pid, BG, cmdline);
+    // Print information of the background job and proceed
     printf("[%d] (%d) %s", pid2jid(pid), pid, cmdline);
   }
 }
@@ -247,18 +252,24 @@ int parseline(const char *cmdline, char **argv) {
 // If the user has typed a built-in command then execute it immediately.
 //
 int builtin_cmd(char *argv[]) {
+  // Match argv[0] with build-in commands
   if (!strcmp(argv[0], "quit")) {
+    // Exit
     exit(0);
   } else if (!strcmp(argv[0], "fg")) {
+    // Call running background job to foreground
     do_bgfg(argv);
     return 1;
   } else if (!strcmp(argv[0], "bg")) {
+    // Resume stopped background job
     do_bgfg(argv);
     return 1;
   } else if (!strcmp(argv[0], "jobs")) {
+    // List all jobs
     listjobs(jobs);
     return 1;
   } else {
+    // argv[0] is not a built-in command
     return 0;
   }
 }
@@ -278,7 +289,7 @@ void do_bgfg(char *argv[]) {
 
   char *p = strstr(argv[1], "%");
   if (p) {
-    // %<jobid>
+    // argv[1] was '%<jobid>'
     int jobid = atoi(p + 1);
     p_job = getjobjid(jobs, jobid);
 
@@ -289,7 +300,7 @@ void do_bgfg(char *argv[]) {
 
     pid = p_job->pid;
   } else if (isdigit(argv[1][0])) {
-    // <pid>
+    // argv[1] was '<pid>'
     pid = atoi(argv[1]);
     p_job = getjobpid(jobs, pid);
 
@@ -307,9 +318,11 @@ void do_bgfg(char *argv[]) {
 
   if (!strcmp(argv[0], "fg")) {
     p_job->state = FG;
+    // Wait until foreground job finishes
     waitfg(pid);
   } else {
     p_job->state = BG;
+    // Print information of the background job and proceed
     printf("[%d] (%d) %s", p_job->jid, p_job->pid, p_job->cmdline);
   }
 }
@@ -320,7 +333,7 @@ void do_bgfg(char *argv[]) {
 void waitfg(pid_t pid) {
   struct job_t *p_job = getjobpid(jobs, pid);
   if (!p_job) { return; }
-  // Busy wait
+  // Busy wait until p_job goes to background or finishes
   while (p_job->state == FG) { sleep(1); }
 }
 
@@ -340,9 +353,11 @@ void sigchld_handler(int sig) {
   int status = -1;
   pid_t pid;
   while ((pid = waitpid(-1, &status, WNOHANG | WUNTRACED)) > 0) {
+    // Check how given process is terminated or stopped
     struct job_t *p_job = getjobpid(jobs, pid);
+
     if (WIFEXITED(status)) {
-      // Exited normally
+      // Exited normally, print no message
       deletejob(jobs,pid);
     } else if (WIFSIGNALED(status)) {
       // Terminated with signal
@@ -351,7 +366,7 @@ void sigchld_handler(int sig) {
     } else if (WIFSTOPPED(status)) {
       // Stopped by signal
       printf("Job [%d] (%d) stopped by signal 20\n", p_job->jid, p_job->pid);
-      p_job->state = 3;
+      p_job->state = ST;
     }
   }
 }
