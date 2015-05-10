@@ -163,8 +163,29 @@ int main(int argc, char **argv) {
 // when we type ctrl-c (ctrl-z) at the keyboard.
 //
 void eval(char *cmdline) {
-  // TODO
-  return;
+  char *argv[MAXARGS];
+  const bool is_foreground = !parseline(cmdline, argv);
+
+  // Ignore empty input and built-in command
+  if (!argv[0] || builtin_cmd(argv)) { return; }
+
+  pid_t pid = fork();
+
+  // Codes for child process
+  if (!pid) {
+    setpgid(0, 0);
+    execve(argv[0], argv, environ);
+    printf("%s: Command not found\n", argv[0]);
+    exit(1);
+  }
+
+  if (is_foreground) {
+    addjob(jobs, pid, FG, cmdline);
+    waitfg(pid);
+  } else {
+    addjob(jobs, pid, BG, cmdline);
+    printf("[%d] (%d) %s", pid2jid(pid), pid, cmdline);
+  }
 }
 
 //
@@ -225,25 +246,82 @@ int parseline(const char *cmdline, char **argv) {
 //
 // If the user has typed a built-in command then execute it immediately.
 //
-int builtin_cmd(char **argv) {
-  // TODO
-  return 0;     // not a builtin command
+int builtin_cmd(char *argv[]) {
+  if (!strcmp(argv[0], "quit")) {
+    exit(0);
+  } else if (!strcmp(argv[0], "fg")) {
+    do_bgfg(argv);
+    return 1;
+  } else if (!strcmp(argv[0], "bg")) {
+    do_bgfg(argv);
+    return 1;
+  } else if (!strcmp(argv[0], "jobs")) {
+    listjobs(jobs);
+    return 1;
+  } else {
+    return 0;
+  }
 }
 
 //
 // Execute the builtin bg and fg commands
 //
-void do_bgfg(char **argv) {
-  // TODO
-  return;
+void do_bgfg(char *argv[]) {
+  // Requires parameter
+  if (!argv[1]) {
+    printf("%s command requires PID or %%jobid argument\n", argv[0]);
+    return;
+  }
+
+  int pid;
+  struct job_t *p_job;
+
+  char *p = strstr(argv[1], "%");
+  if (p) {
+    // %<jobid>
+    int jobid = atoi(p + 1);
+    p_job = getjobjid(jobs, jobid);
+
+    if (!p_job) {
+      printf("%%%d: No such job\n", jobid);
+      return;
+    }
+
+    pid = p_job->pid;
+  } else if (isdigit(argv[1][0])) {
+    // <pid>
+    pid = atoi(argv[1]);
+    p_job = getjobpid(jobs, pid);
+
+    if (!p_job) {
+      printf("(%d): No such process\n", pid);
+      return;
+    }
+  } else {
+    printf("%s: argument must be a PID or %%jobid\n", argv[0]);
+    return;
+  }
+
+  // Resume the stopped execution
+  kill(-pid, SIGCONT);
+
+  if (!strcmp(argv[0], "fg")) {
+    p_job->state = FG;
+    waitfg(pid);
+  } else {
+    p_job->state = BG;
+    printf("[%d] (%d) %s", p_job->jid, p_job->pid, p_job->cmdline);
+  }
 }
 
 //
 // Block until process pid is no longer the foreground process
 //
 void waitfg(pid_t pid) {
-  // TODO
-  return;
+  struct job_t *p_job = getjobpid(jobs, pid);
+  if (!p_job) { return; }
+  // Busy wait
+  while (p_job->state == FG) { sleep(1); }
 }
 
 
@@ -259,28 +337,35 @@ void waitfg(pid_t pid) {
 //     currently running children to terminate.
 //
 void sigchld_handler(int sig) {
-  // TODO
-  return;
+  int status = -1;
+  pid_t pid;
+  while ((pid = waitpid(-1, &status, WNOHANG | WUNTRACED)) > 0) {
+    struct job_t *p_job = getjobpid(jobs, pid);
+    if (WIFEXITED(status)) {
+      // Exited normally
+      deletejob(jobs,pid);
+    } else if (WIFSIGNALED(status)) {
+      // Terminated with signal
+      printf("Job [%d] (%d) terminated by signal 2\n", p_job->jid, p_job->pid);
+      deletejob(jobs,pid);
+    } else if (WIFSTOPPED(status)) {
+      // Stopped by signal
+      printf("Job [%d] (%d) stopped by signal 20\n", p_job->jid, p_job->pid);
+      p_job->state = 3;
+    }
+  }
 }
 
-//
-// sigint_handler - The kernel sends a SIGINT to the shell whenver the
-//    user types ctrl-c at the keyboard.  Catch it and send it along
-//    to the foreground job.
-//
+// Catch ^C (SIGINT) and send it to the foreground job.
 void sigint_handler(int sig) {
-  // TODO
-  return;
+  pid_t pid = fgpid(jobs);
+  if (pid) { kill(-pid, SIGINT); }
 }
 
-//
-// sigtstp_handler - The kernel sends a SIGTSTP to the shell whenever
-//     the user types ctrl-z at the keyboard. Catch it and suspend the
-//     foreground job by sending it a SIGTSTP.
-//
+// Catch ^Z (SIGTSTP) and send it to the foreground job.
 void sigtstp_handler(int sig) {
-  // TODO
-  return;
+  pid_t pid = fgpid(jobs);
+  if (pid) { kill(-pid, SIGTSTP); }
 }
 
 
