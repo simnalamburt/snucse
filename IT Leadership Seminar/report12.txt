@@ -1,0 +1,46 @@
+Seminar Category [일반/4과/외부/기타]: 일반
+Name of Speaker: Dr. Xavier Rival
+Title of Presentation: Static Analysis of Spreadsheet Applications for Type-Unsafe Operations Detection
+Date: 2015년 5월 7일 목요일
+Time: AM 10:30
+Submission Date: 5월 11일
+Place: 302동 309호
+Evaluator's Name / Student id / Email: 김지현 / 2013-11392 / simnalamburt@gmail.com
+
+
+Abstract (less than 100 words):
+  요즘 널리 쓰이는 대부분의 스프레드시트 프로그램(ex. 엑셀)에는 함수와 같은
+  프로그래밍 기능이 거의 대부분 내장되어있다. 하지만 대부분 이들 함수들은
+  입력값으로 주어지는 타입을 체크하지 못한다. 왜냐하면 엑셀과 같은 프로그램에
+  쓰이는 자료형은 프로그래밍 언어처럼 단순히 정수, 실수 등으로 나눌 수 있는것이
+  아니라 화폐단위, 면적단위, 길이단위, 혹은 참거짓, 등 필요에 따라 다양하기
+  때문이다. Xavier Rival 박사는 이들 프로그램에 범용적으로 적용될 수 있는 타입
+  체커를 고안하여 만드는 과정을 공유하였다.
+
+Strong Points in the Contents (less than 100 words):
+  컴퓨터공학과 세미나여서 개인적으로 흥미로웠고, 내용 자체도 굉장히 수준있었다.
+  방법을 굉장히 구체적으로 설명해주셨고 세미나 자체도 2시간으로 넉넉하게
+  잡혀있어서 아쉬움없이 설명을 충분히 자세히 들을 수 있었다.
+
+Weak Points in the Contents (less than 100 words):
+  세미나실이 너무 좁아서 불편했다. 영어발표여서 알아듣기 좀 힘들긴 했지만 큰
+  무리는 없었다. 대학원생을 주로 대상으로 한 세미나여서 학부생이 듣기엔 내용에
+  난이도가 있긴 했다. 미리 발표자료나 유인물이 나눠졌었다면 좀더 준비되어서 들을
+  수 있었을지도 몰랐겠다 하는 생각이 든다.
+
+
+Mark the presentation skills
+(1-insufficient, 2-limited, 3-good, 4-very good, 5-excellent)
+Body language and eye contact ...............................(3)
+Correct language ............................................(3)
+Understandable (rhythm, intonation, accent) .................(3)
+Spoken loud enough ..........................................(4)
+Overview of presentation in the beginning ...................(5)
+Objectives clearly stated ...................................(5)
+Logically well-organized ....................................(5)
+The presenter masters the material thoroughly ...............(5)
+Well prepared slides ........................................(5)
+Proper use of color, multimedia, graphics ...................(4)
+Slides easy to understand ...................................(3)
+Q&A well managed ............................................(2)
+Overall (will you recommend it to others ?) .................(4)
