@@ -54,8 +54,16 @@ static char prompt[] = "tsh> ";
 static bool verbose = false;
 // next job ID to allocate
 static int nextjid = 1;
+
 // The job list
 static job_t jobs[MAXJOBS] = {};
+static void addjob(pid_t pid, int state, char *cmdline);
+static void deletejob(pid_t pid);
+static pid_t fgpid();
+static job_t *getjobpid(pid_t pid);
+static job_t *getjobjid(int jid);
+static int pid2jid(pid_t pid);
+static void listjobs();
 
 
 // Function prototypes
@@ -71,14 +79,6 @@ static void sigint_handler(int sig);
 static bool parseline(const char *cmdline, char *argv[]);
 static void sigquit_handler(int sig);
 
-static int maxjid(job_t *jobs);
-static void addjob(job_t *jobs, pid_t pid, int state, char *cmdline);
-static void deletejob(job_t *jobs, pid_t pid);
-static pid_t fgpid(job_t *jobs);
-static job_t *getjobpid(job_t *jobs, pid_t pid);
-static job_t *getjobjid(job_t *jobs, int jid);
-static int pid2jid(pid_t pid);
-static void listjobs(job_t *jobs);
 
 static int check(int, const char *msg);
 
@@ -180,7 +180,7 @@ void eval(char *cmdline) {
     exit(1);
   }
 
-  addjob(jobs, pid, is_foreground ? FG : BG, cmdline);
+  addjob(pid, is_foreground ? FG : BG, cmdline);
   check(sigprocmask(SIG_UNBLOCK, &set, NULL), "sigprocmask() failed");
   if (is_foreground) {
     // Wait until foreground job finishes
@@ -259,7 +259,7 @@ bool builtin_cmd(char *argv[]) {
     do_bgfg(argv);
   } else if (!strcmp(argv[0], "jobs")) {
     // List all jobs
-    listjobs(jobs);
+    listjobs();
   } else {
     // argv[0] is not a built-in command
     return false;
@@ -284,7 +284,7 @@ void do_bgfg(char *argv[]) {
   if (p) {
     // argv[1] was '%<jobid>'
     int jobid = atoi(p + 1);
-    p_job = getjobjid(jobs, jobid);
+    p_job = getjobjid(jobid);
 
     if (!p_job) {
       printf("%%%d: No such job\n", jobid);
@@ -295,7 +295,7 @@ void do_bgfg(char *argv[]) {
   } else if (isdigit(argv[1][0])) {
     // argv[1] was '<pid>'
     pid = atoi(argv[1]);
-    p_job = getjobpid(jobs, pid);
+    p_job = getjobpid(pid);
 
     if (!p_job) {
       printf("(%d): No such process\n", pid);
@@ -324,7 +324,7 @@ void do_bgfg(char *argv[]) {
 // Block until process pid is no longer the foreground process
 //
 void waitfg(pid_t pid) {
-  job_t *p_job = getjobpid(jobs, pid);
+  job_t *p_job = getjobpid(pid);
   if (!p_job) { return; }
   // Busy wait until p_job goes to background or finishes
   while (p_job->state == FG) { sleep(1); }
@@ -347,15 +347,15 @@ void sigchld_handler(int sig) {
   pid_t pid;
   while ((pid = waitpid(-1, &status, WNOHANG | WUNTRACED)) > 0) {
     // Check how given process is terminated or stopped
-    job_t *p_job = getjobpid(jobs, pid);
+    job_t *p_job = getjobpid(pid);
 
     if (WIFEXITED(status)) {
       // Exited normally, print no message
-      deletejob(jobs,pid);
+      deletejob(pid);
     } else if (WIFSIGNALED(status)) {
       // Terminated with signal
       printf("Job [%d] (%d) terminated by signal 2\n", p_job->jid, p_job->pid);
-      deletejob(jobs,pid);
+      deletejob(pid);
     } else if (WIFSTOPPED(status)) {
       // Stopped by signal
       printf("Job [%d] (%d) stopped by signal 20\n", p_job->jid, p_job->pid);
@@ -368,14 +368,14 @@ void sigchld_handler(int sig) {
 
 // Catch ^C (SIGINT) and send it to the foreground job.
 void sigint_handler(int sig) {
-  pid_t pid = fgpid(jobs);
+  pid_t pid = fgpid();
   if (!pid) { return; }
   check(kill(-pid, SIGINT), "Failed to send SIGINT signal");
 }
 
 // Catch ^Z (SIGTSTP) and send it to the foreground job.
 void sigtstp_handler(int sig) {
-  pid_t pid = fgpid(jobs);
+  pid_t pid = fgpid();
   if (!pid) { return; }
   check(kill(-pid, SIGTSTP), "Failed to send SIGTSTP signal");
 }
@@ -386,21 +386,8 @@ void sigtstp_handler(int sig) {
 // Helper routines that manipulate the job list
 //
 
-// Returns largest allocated job ID
-int maxjid(job_t *jobs) {
-  int max = 0;
-
-  int i;
-  for (i = 0; i < MAXJOBS; ++i) {
-    if (jobs[i].jid <= max) { continue; }
-    max = jobs[i].jid;
-  }
-
-  return max;
-}
-
 // Add a job to the job list
-void addjob(job_t *jobs, pid_t pid, int state, char *cmdline) {
+void addjob(pid_t pid, int state, char *cmdline) {
   if (pid <= 0) { return; }
 
   int i;
@@ -421,19 +408,31 @@ void addjob(job_t *jobs, pid_t pid, int state, char *cmdline) {
 }
 
 // deletejob - Delete a job whose PID=pid from the job list
-void deletejob(job_t *jobs, pid_t pid) {
+void deletejob(pid_t pid) {
+  // Reject negative pid
   if (pid <= 0) { return; }
 
+  // Find target job object with pid
   int i;
   for (i = 0; i < MAXJOBS; ++i) {
     if (jobs[i].pid != pid) { continue; }
+
+    // Delete found job
     memset(&jobs[i], 0, sizeof jobs[i]);
-    nextjid = maxjid(jobs)+1;
+
+    // Update nextjid as 'max(jid) + 1'
+    nextjid = 0;
+    for (i = 0; i < MAXJOBS; ++i) {
+      if (jobs[i].jid <= nextjid) { continue; }
+      nextjid = jobs[i].jid;
+    }
+    ++nextjid;
+    return;
   }
 }
 
 // fgpid - Return PID of current foreground job, 0 if no such job
-pid_t fgpid(job_t *jobs) {
+pid_t fgpid() {
   int i;
   for (i = 0; i < MAXJOBS; ++i) {
     if (jobs[i].state != FG) { continue; }
@@ -444,7 +443,7 @@ pid_t fgpid(job_t *jobs) {
 }
 
 // getjobpid  - Find a job (by PID) on the job list
-job_t *getjobpid(job_t *jobs, pid_t pid) {
+job_t *getjobpid(pid_t pid) {
   if (pid <= 0) { return NULL; }
 
   int i;
@@ -457,7 +456,7 @@ job_t *getjobpid(job_t *jobs, pid_t pid) {
 }
 
 // getjobjid  - Find a job (by JID) on the job list
-job_t *getjobjid(job_t *jobs, int jid) {
+job_t *getjobjid(int jid) {
   if (jid <= 0) { return NULL; }
 
   int i;
@@ -471,12 +470,12 @@ job_t *getjobjid(job_t *jobs, int jid) {
 
 // pid2jid - Map process ID to job ID
 int pid2jid(pid_t pid) {
-  job_t *p_job = getjobpid(jobs, pid);
+  job_t *p_job = getjobpid(pid);
   return p_job ? p_job->jid : 0;
 }
 
 // listjobs - Print the job list
-void listjobs(job_t *jobs) {
+void listjobs() {
   int i;
   for (i = 0; i < MAXJOBS; ++i) {
     if (!jobs[i].pid) { continue; }
