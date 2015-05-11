@@ -38,55 +38,54 @@
 
 // Global variables
 extern char **environ;      // defined in libc
-char prompt[] = "tsh> ";    // command line prompt (DO NOT CHANGE)
-int verbose = 0;            // if true, print additional output
-int nextjid = 1;            // next job ID to allocate
-char sbuf[MAXLINE];         // for composing sprintf messages
+static char prompt[] = "tsh> ";    // command line prompt (DO NOT CHANGE)
+static int verbose = 0;            // if true, print additional output
+static int nextjid = 1;            // next job ID to allocate
 
-struct job_t {              // The job struct
+typedef struct {              // The job struct
   pid_t pid;                // job PID
   int jid;                  // job ID [1, 2, ...]
   int state;                // UNDEF, BG, FG, or ST
   char cmdline[MAXLINE];    // command line
-};
-struct job_t jobs[MAXJOBS]; // The job list
+} job_t;
+static job_t jobs[MAXJOBS]; // The job list
 // End global variables
 
 
 // Function prototypes
 
 // Here are the functions that you will implement
-void eval(char *cmdline);
-int builtin_cmd(char **argv);
-void do_bgfg(char **argv);
-void waitfg(pid_t pid);
+static void eval(char *cmdline);
+static int builtin_cmd(char **argv);
+static void do_bgfg(char **argv);
+static void waitfg(pid_t pid);
 
-void sigchld_handler(int sig);
-void sigtstp_handler(int sig);
-void sigint_handler(int sig);
+static void sigchld_handler(int sig);
+static void sigtstp_handler(int sig);
+static void sigint_handler(int sig);
 
 // Here are helper routines that we've provided for you
-int parseline(const char *cmdline, char **argv);
-void sigquit_handler(int sig);
+static int parseline(const char *cmdline, char **argv);
+static void sigquit_handler(int sig);
 
-void clearjob(struct job_t *job);
-void initjobs(struct job_t *jobs);
-int maxjid(struct job_t *jobs);
-int addjob(struct job_t *jobs, pid_t pid, int state, char *cmdline);
-int deletejob(struct job_t *jobs, pid_t pid);
-pid_t fgpid(struct job_t *jobs);
-struct job_t *getjobpid(struct job_t *jobs, pid_t pid);
-struct job_t *getjobjid(struct job_t *jobs, int jid);
-int pid2jid(pid_t pid);
-void listjobs(struct job_t *jobs);
+static void clearjob(job_t *job);
+static void initjobs(job_t *jobs);
+static int maxjid(job_t *jobs);
+static int addjob(job_t *jobs, pid_t pid, int state, char *cmdline);
+static int deletejob(job_t *jobs, pid_t pid);
+static pid_t fgpid(job_t *jobs);
+static job_t *getjobpid(job_t *jobs, pid_t pid);
+static job_t *getjobjid(job_t *jobs, int jid);
+static int pid2jid(pid_t pid);
+static void listjobs(job_t *jobs);
 
-void usage(void);
-int check(int, const char *msg);
-void unix_error(const char *msg);
-void app_error(const char *msg);
+static void usage(void);
+static int check(int, const char *msg);
+static void unix_error(const char *msg);
+static void app_error(const char *msg);
 
 typedef void handler_t(int);
-handler_t *Signal(int signum, handler_t *handler);
+static handler_t *Signal(int signum, handler_t *handler);
 
 //
 // main - The shell's main routine
@@ -292,7 +291,7 @@ void do_bgfg(char *argv[]) {
   }
 
   int pid;
-  struct job_t *p_job;
+  job_t *p_job;
 
   char *p = strstr(argv[1], "%");
   if (p) {
@@ -338,7 +337,7 @@ void do_bgfg(char *argv[]) {
 // Block until process pid is no longer the foreground process
 //
 void waitfg(pid_t pid) {
-  struct job_t *p_job = getjobpid(jobs, pid);
+  job_t *p_job = getjobpid(jobs, pid);
   if (!p_job) { return; }
   // Busy wait until p_job goes to background or finishes
   while (p_job->state == FG) { sleep(1); }
@@ -361,7 +360,7 @@ void sigchld_handler(int sig) {
   pid_t pid;
   while ((pid = waitpid(-1, &status, WNOHANG | WUNTRACED)) > 0) {
     // Check how given process is terminated or stopped
-    struct job_t *p_job = getjobpid(jobs, pid);
+    job_t *p_job = getjobpid(jobs, pid);
 
     if (WIFEXITED(status)) {
       // Exited normally, print no message
@@ -401,7 +400,7 @@ void sigtstp_handler(int sig) {
 //
 
 // Clear the entries in a job struct
-void clearjob(struct job_t *job) {
+void clearjob(job_t *job) {
   job->pid = 0;
   job->jid = 0;
   job->state = UNDEF;
@@ -409,7 +408,7 @@ void clearjob(struct job_t *job) {
 }
 
 // Initialize the job list
-void initjobs(struct job_t *jobs) {
+void initjobs(job_t *jobs) {
   int i;
 
   for (i = 0; i < MAXJOBS; i++) {
@@ -418,7 +417,7 @@ void initjobs(struct job_t *jobs) {
 }
 
 // Returns largest allocated job ID
-int maxjid(struct job_t *jobs) {
+int maxjid(job_t *jobs) {
   int i, max=0;
 
   for (i = 0; i < MAXJOBS; i++)
@@ -428,7 +427,7 @@ int maxjid(struct job_t *jobs) {
 }
 
 // Add a job to the job list
-int addjob(struct job_t *jobs, pid_t pid, int state, char *cmdline)
+int addjob(job_t *jobs, pid_t pid, int state, char *cmdline)
 {
   int i;
 
@@ -454,7 +453,7 @@ int addjob(struct job_t *jobs, pid_t pid, int state, char *cmdline)
 }
 
 // deletejob - Delete a job whose PID=pid from the job list
-int deletejob(struct job_t *jobs, pid_t pid)
+int deletejob(job_t *jobs, pid_t pid)
 {
   int i;
 
@@ -472,7 +471,7 @@ int deletejob(struct job_t *jobs, pid_t pid)
 }
 
 // fgpid - Return PID of current foreground job, 0 if no such job
-pid_t fgpid(struct job_t *jobs) {
+pid_t fgpid(job_t *jobs) {
   int i;
 
   for (i = 0; i < MAXJOBS; i++)
@@ -482,7 +481,7 @@ pid_t fgpid(struct job_t *jobs) {
 }
 
 // getjobpid  - Find a job (by PID) on the job list
-struct job_t *getjobpid(struct job_t *jobs, pid_t pid) {
+job_t *getjobpid(job_t *jobs, pid_t pid) {
   int i;
 
   if (pid < 1)
@@ -494,7 +493,7 @@ struct job_t *getjobpid(struct job_t *jobs, pid_t pid) {
 }
 
 // getjobjid  - Find a job (by JID) on the job list
-struct job_t *getjobjid(struct job_t *jobs, int jid) {
+job_t *getjobjid(job_t *jobs, int jid) {
   int i;
 
   if (jid < 1)
@@ -519,7 +518,7 @@ int pid2jid(pid_t pid) {
 }
 
 // listjobs - Print the job list
-void listjobs(struct job_t *jobs) {
+void listjobs(job_t *jobs) {
   int i;
 
   for (i = 0; i < MAXJOBS; i++) {
