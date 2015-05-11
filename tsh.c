@@ -88,7 +88,6 @@ static void Signal(int signum, void (*handler)(int));
 // main - The shell's main routine
 //
 int main(int argc, char *argv[]) {
-
   // Redirect stderr to stdout (so that driver will get all output
   // on the pipe connected to stdout)
   dup2(STDOUT_FILENO, STDERR_FILENO);
@@ -114,17 +113,12 @@ int main(int argc, char *argv[]) {
     }
   }
 
-  // Install the signal handlers
-
-  // These are the ones you will need to implement
-  Signal(SIGINT,  sigint_handler);   // ctrl-c
-  Signal(SIGTSTP, sigtstp_handler);  // ctrl-z
-  Signal(SIGCHLD, sigchld_handler);  // Terminated or stopped child
-
-  // This one provides a clean way to kill the shell
+  Signal(SIGINT,  sigint_handler);
+  Signal(SIGTSTP, sigtstp_handler);
+  Signal(SIGCHLD, sigchld_handler);
   Signal(SIGQUIT, sigquit_handler);
 
-  // Execute the shell's REPL
+  // REPL
   while (true) {
     if (emit_prompt) {
       fputs(prompt, stdout);
