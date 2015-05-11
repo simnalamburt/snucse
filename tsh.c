@@ -58,7 +58,7 @@ static job_t jobs[MAXJOBS] = {}; // The job list
 
 // Here are the functions that you will implement
 static void eval(char *cmdline);
-static int builtin_cmd(char **argv);
+static bool builtin_cmd(char **argv);
 static void do_bgfg(char **argv);
 static void waitfg(pid_t pid);
 
@@ -67,7 +67,7 @@ static void sigtstp_handler(int sig);
 static void sigint_handler(int sig);
 
 // Here are helper routines that we've provided for you
-static int parseline(const char *cmdline, char **argv);
+static bool parseline(const char *cmdline, char **argv);
 static void sigquit_handler(int sig);
 
 static int maxjid(job_t *jobs);
@@ -89,7 +89,6 @@ static handler_t *Signal(int signum, handler_t *handler);
 // main - The shell's main routine
 //
 int main(int argc, char **argv) {
-  int emit_prompt = 1; // emit prompt (default)
 
   // Redirect stderr to stdout (so that driver will get all output
   // on the pipe connected to stdout)
@@ -97,6 +96,7 @@ int main(int argc, char **argv) {
 
   // Parse the command line
   char c;
+  bool emit_prompt = true;
   while ((c = getopt(argc, argv, "hvp")) != EOF) {
     switch (c) {
     case 'h':           // print help message
@@ -106,7 +106,7 @@ int main(int argc, char **argv) {
       verbose = true;
       break;
     case 'p':           // don't print a prompt
-      emit_prompt = 0;  // handy for automatic testing
+      emit_prompt = false;  // handy for automatic testing
       break;
     default:
       usage();
@@ -203,12 +203,11 @@ void eval(char *cmdline) {
 // argument.  Return true if the user has requested a BG job, false if
 // the user has requested a FG job.
 //
-int parseline(const char *cmdline, char **argv) {
+bool parseline(const char *cmdline, char **argv) {
   static char array[MAXLINE];   // holds local copy of command line
   char *buf = array;            // ptr that traverses command line
   char *delim;                  // points to first space delimiter
   int argc;                     // number of args
-  int bg;                       // background job?
 
   strcpy(buf, cmdline);
   buf[strlen(buf)-1] = ' ';     // replace trailing '\n' with space
@@ -245,16 +244,15 @@ int parseline(const char *cmdline, char **argv) {
   if (argc == 0) { return 1; }
 
   // should the job run in the background?
-  if ((bg = (*argv[argc-1] == '&')) != 0) {
-    argv[--argc] = NULL;
-  }
+  bool bg = *argv[argc-1] == '&';
+  if (bg) { argv[--argc] = NULL; }
   return bg;
 }
 
 //
 // If the user has typed a built-in command then execute it immediately.
 //
-int builtin_cmd(char *argv[]) {
+bool builtin_cmd(char *argv[]) {
   // Match argv[0] with build-in commands
   if (!strcmp(argv[0], "quit")) {
     // Exit
@@ -262,19 +260,17 @@ int builtin_cmd(char *argv[]) {
   } else if (!strcmp(argv[0], "fg")) {
     // Call running background job to foreground
     do_bgfg(argv);
-    return 1;
   } else if (!strcmp(argv[0], "bg")) {
     // Resume stopped background job
     do_bgfg(argv);
-    return 1;
   } else if (!strcmp(argv[0], "jobs")) {
     // List all jobs
     listjobs(jobs);
-    return 1;
   } else {
     // argv[0] is not a built-in command
-    return 0;
+    return false;
   }
+  return true;
 }
 
 //
