@@ -18,7 +18,6 @@
 #define MAXLINE    1024   // max line size
 #define MAXARGS     128   // max args on a command line
 #define MAXJOBS      16   // max jobs at any point in time
-#define MAXJID    1<<16   // max job ID
 
 // Job states
 typedef enum {
@@ -83,7 +82,7 @@ static void usage(void);
 static int check(int, const char *msg);
 
 typedef void handler_t(int);
-static handler_t *Signal(int signum, handler_t *handler);
+static void Signal(int signum, handler_t *handler);
 
 //
 // main - The shell's main routine
@@ -527,13 +526,12 @@ int check(int ret, const char* msg) {
 }
 
 // wrapper for the sigaction function
-handler_t *Signal(int signum, handler_t *handler) {
+void Signal(int signum, handler_t *handler) {
   struct sigaction action, old_action;
   action.sa_handler = handler;
   action.sa_flags = SA_RESTART; // restart syscalls if possible
   sigemptyset(&action.sa_mask); // block sigs of type being handled
   check(sigaction(signum, &action, &old_action), "Signal error");
-  return old_action.sa_handler;
 }
 
 // SIGQUIT signal handler
