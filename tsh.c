@@ -3,6 +3,17 @@
 //
 // 2013-11392, Hyeon Kim
 //
+
+//
+// Jobs states: FG (foreground), BG (background), ST (stopped)
+// Job state transitions and enabling actions:
+//     FG -> ST  : ctrl-z
+//     ST -> FG  : fg command
+//     ST -> BG  : bg command
+//     BG -> FG  : fg command
+// At most 1 job can be in the FG state.
+//
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
@@ -19,7 +30,7 @@
 #define MAXARGS     128   // max args on a command line
 #define MAXJOBS      16   // max jobs at any point in time
 
-// Job states
+// Job status
 typedef enum {
   UNDEF, // undefined
   FG, // running in foreground
@@ -27,35 +38,27 @@ typedef enum {
   ST, // stopped
 } job_status;
 
-//
-// Jobs states: FG (foreground), BG (background), ST (stopped)
-// Job state transitions and enabling actions:
-//     FG -> ST  : ctrl-z
-//     ST -> FG  : fg command
-//     ST -> BG  : bg command
-//     BG -> FG  : fg command
-// At most 1 job can be in the FG state.
-//
-
-// Global variables
-extern char **environ;      // defined in libc
-static char prompt[] = "tsh> ";    // command line prompt (DO NOT CHANGE)
-static bool verbose = false;            // if true, print additional output
-static int nextjid = 1;            // next job ID to allocate
-
-typedef struct {              // The job struct
-  pid_t pid;                // job PID
-  int jid;                  // job ID [1, 2, ...]
-  job_status state;                // UNDEF, BG, FG, or ST
-  char cmdline[MAXLINE];    // command line
+// Job struct
+typedef struct {
+  pid_t pid;
+  int jid; // Job ID (1, 2, ...)
+  job_status state;
+  char cmdline[MAXLINE]; // command line
 } job_t;
-static job_t jobs[MAXJOBS] = {}; // The job list
-// End global variables
+
+extern char **environ; // defined in libc
+
+// command line prompt (DO NOT CHANGE)
+static char prompt[] = "tsh> ";
+// if true, print additional output
+static bool verbose = false;
+// next job ID to allocate
+static int nextjid = 1;
+// The job list
+static job_t jobs[MAXJOBS] = {};
 
 
 // Function prototypes
-
-// Here are the functions that you will implement
 static void eval(char *cmdline);
 static bool builtin_cmd(char **argv);
 static void do_bgfg(char **argv);
@@ -65,7 +68,6 @@ static void sigchld_handler(int sig);
 static void sigtstp_handler(int sig);
 static void sigint_handler(int sig);
 
-// Here are helper routines that we've provided for you
 static bool parseline(const char *cmdline, char **argv);
 static void sigquit_handler(int sig);
 
@@ -78,11 +80,9 @@ static job_t *getjobjid(job_t *jobs, int jid);
 static int pid2jid(pid_t pid);
 static void listjobs(job_t *jobs);
 
-static void usage(void);
 static int check(int, const char *msg);
 
-typedef void handler_t(int);
-static void Signal(int signum, handler_t *handler);
+static void Signal(int signum, void (*handler)(int));
 
 //
 // main - The shell's main routine
@@ -98,17 +98,19 @@ int main(int argc, char **argv) {
   bool emit_prompt = true;
   while ((c = getopt(argc, argv, "hvp")) != EOF) {
     switch (c) {
-    case 'h':           // print help message
-      usage();
-      break;
     case 'v':           // emit additional diagnostic info
       verbose = true;
       break;
     case 'p':           // don't print a prompt
       emit_prompt = false;  // handy for automatic testing
       break;
+    case 'h':           // print help message
     default:
-      usage();
+      puts("Usage: shell [-hvp]\n"
+           "    -h   print this message\n"
+           "    -v   print additional diagnostic information\n"
+           "    -p   do not emit a command prompt");
+      exit(c != 'h');
     }
   }
 
@@ -393,11 +395,14 @@ void sigtstp_handler(int sig) {
 
 // Returns largest allocated job ID
 int maxjid(job_t *jobs) {
-  int i, max=0;
+  int max = 0;
 
-  for (i = 0; i < MAXJOBS; i++)
-    if (jobs[i].jid > max)
-      max = jobs[i].jid;
+  int i;
+  for (i = 0; i < MAXJOBS; ++i) {
+    if (jobs[i].jid <= max) { continue; }
+    max = jobs[i].jid;
+  }
+
   return max;
 }
 
@@ -414,14 +419,11 @@ void addjob(job_t *jobs, pid_t pid, int state, char *cmdline) {
     jobs[i].jid = nextjid++;
     strcpy(jobs[i].cmdline, cmdline);
     if (nextjid > MAXJOBS) { nextjid = 1; }
-
     if (verbose) {
       printf("Added job [%d] %d %s\n", jobs[i].jid, jobs[i].pid, jobs[i].cmdline);
     }
-
     return;
   }
-
   check(-1, "Job list overflow");
 }
 
@@ -509,16 +511,6 @@ void listjobs(job_t *jobs) {
 // Other helper routines
 //
 
-// Print a help message
-void usage(void) {
-  puts(
-      "Usage: shell [-hvp]\n"
-      "   -h   print this message\n"
-      "   -v   print additional diagnostic information\n"
-      "   -p   do not emit a command prompt");
-  exit(1);
-}
-
 int check(int ret, const char* msg) {
   if (ret != -1) { return ret; }
   printf("%s: %s\n", msg, strerror(errno));
@@ -526,7 +518,7 @@ int check(int ret, const char* msg) {
 }
 
 // wrapper for the sigaction function
-void Signal(int signum, handler_t *handler) {
+void Signal(int signum, void (*handler)(int)) {
   struct sigaction action, old_action;
   action.sa_handler = handler;
   action.sa_flags = SA_RESTART; // restart syscalls if possible
