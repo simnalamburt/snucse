@@ -207,8 +207,6 @@ void eval(char *cmdline) {
 bool parseline(const char *cmdline, char *argv[]) {
   static char array[MAXLINE];   // holds local copy of command line
   char *buf = array;            // ptr that traverses command line
-  char *delim;                  // points to first space delimiter
-  int argc;                     // number of args
 
   strcpy(buf, cmdline);
   buf[strlen(buf)-1] = ' ';     // replace trailing '\n' with space
@@ -216,9 +214,10 @@ bool parseline(const char *cmdline, char *argv[]) {
     buf++;
 
   // Build the argv list
-  argc = 0;
+  int argc = 0;
+  char *delim;                  // points to first space delimiter
   if (*buf == '\'') {
-    buf++;
+    ++buf;
     delim = strchr(buf, '\'');
   } else {
     delim = strchr(buf, ' ');
@@ -230,10 +229,10 @@ bool parseline(const char *cmdline, char *argv[]) {
     buf = delim + 1;
 
     // ignore spaces
-    while (*buf && (*buf == ' ')) { buf++; }
+    while (*buf && (*buf == ' ')) { ++buf; }
 
     if (*buf == '\'') {
-      buf++;
+      ++buf;
       delim = strchr(buf, '\'');
     } else {
       delim = strchr(buf, ' ');
@@ -242,7 +241,7 @@ bool parseline(const char *cmdline, char *argv[]) {
   argv[argc] = NULL;
 
   // ignore blank line
-  if (argc == 0) { return 1; }
+  if (argc == 0) { return true; }
 
   // should the job run in the background?
   bool bg = *argv[argc-1] == '&';
