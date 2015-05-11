@@ -46,7 +46,7 @@ typedef struct {
   char cmdline[MAXLINE]; // command line
 } job_t;
 
-extern char **environ; // defined in libc
+extern char *environ[]; // defined in libc
 
 // command line prompt (DO NOT CHANGE)
 static char prompt[] = "tsh> ";
@@ -60,15 +60,15 @@ static job_t jobs[MAXJOBS] = {};
 
 // Function prototypes
 static void eval(char *cmdline);
-static bool builtin_cmd(char **argv);
-static void do_bgfg(char **argv);
+static bool builtin_cmd(char *argv[]);
+static void do_bgfg(char *argv[]);
 static void waitfg(pid_t pid);
 
 static void sigchld_handler(int sig);
 static void sigtstp_handler(int sig);
 static void sigint_handler(int sig);
 
-static bool parseline(const char *cmdline, char **argv);
+static bool parseline(const char *cmdline, char *argv[]);
 static void sigquit_handler(int sig);
 
 static int maxjid(job_t *jobs);
@@ -87,7 +87,7 @@ static void Signal(int signum, void (*handler)(int));
 //
 // main - The shell's main routine
 //
-int main(int argc, char **argv) {
+int main(int argc, char *argv[]) {
 
   // Redirect stderr to stdout (so that driver will get all output
   // on the pipe connected to stdout)
@@ -204,7 +204,7 @@ void eval(char *cmdline) {
 // argument.  Return true if the user has requested a BG job, false if
 // the user has requested a FG job.
 //
-bool parseline(const char *cmdline, char **argv) {
+bool parseline(const char *cmdline, char *argv[]) {
   static char array[MAXLINE];   // holds local copy of command line
   char *buf = array;            // ptr that traverses command line
   char *delim;                  // points to first space delimiter
