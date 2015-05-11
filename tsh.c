@@ -81,8 +81,10 @@ int pid2jid(pid_t pid);
 void listjobs(struct job_t *jobs);
 
 void usage(void);
-void unix_error(char *msg);
-void app_error(char *msg);
+int check(int, const char *msg);
+void unix_error(const char *msg);
+void app_error(const char *msg);
+
 typedef void handler_t(int);
 handler_t *Signal(int signum, handler_t *handler);
 
@@ -169,25 +171,30 @@ void eval(char *cmdline) {
   // Ignore empty input and built-in command
   if (!argv[0] || builtin_cmd(argv)) { return; }
 
-  pid_t pid = fork();
+  sigset_t set = {};
+  check(sigemptyset(&set), "sigemptyset() failed");
+  check(sigaddset(&set, SIGCHLD), "sigaddset() failed");
+  check(sigprocmask(SIG_BLOCK, &set, NULL), "sigprocmask() failed");
+
+  pid_t pid = check(fork(), "fork() system call failed");
 
   // Codes for child process
   if (!pid) {
     // Set pgid as 0
-    setpgid(0, 0);
+    check(setpgid(0, 0), "setpgid() system call failed");
+    check(sigprocmask(SIG_UNBLOCK, &set, NULL), "sigprocmask() failed");
     execve(argv[0], argv, environ);
-
     // `execve` returns only on error cases
     printf("%s: Command not found\n", argv[0]);
     exit(1);
   }
 
+  addjob(jobs, pid, is_foreground ? FG : BG, cmdline);
+  check(sigprocmask(SIG_UNBLOCK, &set, NULL), "sigprocmask() failed");
   if (is_foreground) {
-    addjob(jobs, pid, FG, cmdline);
     // Wait until foreground job finishes
     waitfg(pid);
   } else {
-    addjob(jobs, pid, BG, cmdline);
     // Print information of the background job and proceed
     printf("[%d] (%d) %s", pid2jid(pid), pid, cmdline);
   }
@@ -314,7 +321,7 @@ void do_bgfg(char *argv[]) {
   }
 
   // Resume the stopped execution
-  kill(-pid, SIGCONT);
+  check(kill(-pid, SIGCONT), "Failed to send SIGCONT signal");
 
   if (!strcmp(argv[0], "fg")) {
     p_job->state = FG;
@@ -369,24 +376,23 @@ void sigchld_handler(int sig) {
       p_job->state = ST;
     }
   }
+
+  if (pid == -1 && errno != ECHILD) { unix_error("waitpid() system call failed"); }
 }
 
 // Catch ^C (SIGINT) and send it to the foreground job.
 void sigint_handler(int sig) {
   pid_t pid = fgpid(jobs);
-  if (pid) { kill(-pid, SIGINT); }
+  if (!pid) { return; }
+  check(kill(-pid, SIGINT), "Failed to send SIGINT signal");
 }
 
 // Catch ^Z (SIGTSTP) and send it to the foreground job.
 void sigtstp_handler(int sig) {
   pid_t pid = fgpid(jobs);
-  if (pid) { kill(-pid, SIGTSTP); }
+  if (!pid) { return; }
+  check(kill(-pid, SIGTSTP), "Failed to send SIGTSTP signal");
 }
-
-
-//
-// End signal handlers
-//
 
 
 
@@ -552,15 +558,21 @@ void usage(void)
   exit(1);
 }
 
+int check(int ret, const char* msg) {
+  if (ret != -1) { return ret; }
+  unix_error(msg);
+  return -1;
+}
+
 // Unix-style error routine
-void unix_error(char *msg)
+void unix_error(const char *msg)
 {
   fprintf(stdout, "%s: %s\n", msg, strerror(errno));
   exit(1);
 }
 
 // Application-style error routine
-void app_error(char *msg) {
+void app_error(const char *msg) {
   fprintf(stdout, "%s\n", msg);
   exit(1);
 }
