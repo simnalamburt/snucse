@@ -519,11 +519,11 @@ int check(int ret, const char* msg) {
 
 // wrapper for the sigaction function
 void Signal(int signum, void (*handler)(int)) {
-  struct sigaction action, old_action;
-  action.sa_handler = handler;
-  action.sa_flags = SA_RESTART; // restart syscalls if possible
-  sigemptyset(&action.sa_mask); // block sigs of type being handled
-  check(sigaction(signum, &action, &old_action), "Signal error");
+  struct sigaction new, old;
+  new.sa_handler = handler;
+  new.sa_flags = SA_RESTART; // restart syscalls if possible
+  sigemptyset(&new.sa_mask); // block sigs of type being handled
+  check(sigaction(signum, &new, &old), "Signal error");
 }
 
 // SIGQUIT signal handler
