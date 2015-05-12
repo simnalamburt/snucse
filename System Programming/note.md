@@ -1999,4 +1999,61 @@ Port Demultiplexing
 
 프로세스 = 스레드 + 코드, 데이터, 커널 컨텍스트
 
+--------
 
+> 5월 12일
+
+Synchronization: Advanced
+--------
+### Producer-consumer problem
+```
+( Producer thread ) ==> / Shared buffer / ==> ( Consumer thread )
+                 enqueue                dequeue
+```
+
+enqueue, dequeue를 각자 한 프로세스들이 하면 락 없이 할 수 있다.
+
+락은 필요없는데 메모리펜스는 필요함.
+
+메모리 펜스 없이하면, 인큐하자마자 디큐했을때 쓰이지 않은 빈 값을 읽으려고
+시도할 수 있음.
+
+### Readers-Writers Problem
+일반화된 상호배제 문제
+
+자주 일어남
+
+#### First readers-writes problem (favors readers)
+리드가 안끝났는데 리드가 또 들어오면 그냥 리드를 계속 함.
+
+라이트가 스타베이션 될 수 있음.
+
+아토믹 연산으로 락을 절약할 수 있음.
+
+#### Second readers-writes problem (favors writers)
+라이트가 예약된 상황에서 리드가 또 들어오면 리드를 라이트 뒤에 함.
+
+1.  라이트중일때 라이트가 또 오면, 라이트를 리드보다 앞서서 함
+
+    노 스타베이션
+
+1.  라이트중일때 라이트가 또 와도 리드를 다 하고 라이트를 함
+
+### Prethreaded Concurrent Server
+
+### Crucial concept: Thread Safety
+Functions called from a thread must be *thread-safe*
+
+스레드 언세이프한놈들
+
+1.  Unprotected shared variables.
+2.  Keep state across multiple invocations.
+3.  Return a pointer to a static variable.
+4.  Calls thread-unsafe functions.
+
+### Reentrant Functions
+스테이트가 필요 없고, 주어진 정보만 가지고 다 리턴되는 함수.
+
+같은 인풋엔 항상 같은 아웃풋이 나옴. Stateless
+
+*숙제*: 1-element 짜리 shared buffer. 목요일까지.
