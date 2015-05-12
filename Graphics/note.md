@@ -656,3 +656,66 @@ fluid sim도 하다가
 익숙하지 않은걸 즐길 준비를 하십시오.
 
 물 시뮬레이션 제대로된거 처음 나온게 벅스라이프
+
+--------
+
+> 5월 12일
+
+Chromaticity Diagram
+
+### CIE XYZ Color Space
+색깔을 원색을 섞은걸로 표현하려고 하면 negative coefficient가 있음.
+
+그래서 물리적으로 존재할 수 없는 가상의 X, Y, Z 색을 만듬. 얘네는 positive
+coefficient만 있고 이걸 섞으면 모든 색이 표현됨.
+
+x = X/(X+Y+Z), y = Y/(X+Y+Z)로 만든다음에 이걸로 Colorspace diagram을 그릴 수
+있음.
+
+CIE XYZ 다이어그램, 제일 흰 색 기준이 좀 애매함. 그래서 걍 임의로 정해놨음.
+사람들 문화에 따라 제일 흰색이 뭐다 받아들이는 기준이 다름.
+
+CIE XYZ 컬러스페이스는 linearity가 만족됨.
+
+sRGB는 color gamut이 좁아서, 아주 붉은색이나 아주 녹색은 범위 밖임.
+
+보통 Adobe RGB를 씀. 어도비 RGB 지원하는 모니터는 좀 더 잘보임. 근데 sRGB
+모니터에 비해 가격이 너무 비쌈. 이런애들은 모니터 옆에 가림막 있고 터무니없이
+비싸고 그럼.
+
+Illuminant C, 이걸 기준으로 보색을 정의함
+
+Dominant Wavelength
+
+### CIELAB, CIE Lab
+Perceptuallc Uniform color space
+
+### CCD
+Bayer filter
+
+녹색 민감도가 높다고 믿어지고 있음. 그래서 그냥 녹색 CCD를 많이 넣음.
+
+경계가 깨끗하게 나오지 못함.
+
+### White Balance
+Chromatic adaptation
+
+사람의 눈은 절대적인 값보단 상대적인거에 민감. 사람의 의식은, 세상에 대한 모델을
+구축한다.
+
+오토매틱 화이트밸런스는, 사람이 보고싶은 영상을 보여줘야함. 이게 똑바로 될리가
+없다.
+
+### The infamous gamma curve
+감마 조절.
+
+### Color quantization gamma
+http://en.wikipedia.org/wiki/Weber%E2%80%93Fechner_law
+```
+<@지현> 오늘 이제희 교수님 명언
+<@지현> "고문은 익스포넨셜 하게 해야지"
+<@지현> "이 친구가 느끼는 고통이 리니어하게 증가해요"
+<@지현> 인지과학
+```
+
+### HDR
