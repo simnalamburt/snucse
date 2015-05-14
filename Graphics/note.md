@@ -719,3 +719,69 @@ http://en.wikipedia.org/wiki/Weber%E2%80%93Fechner_law
 ```
 
 ### HDR
+
+--------
+
+> 5월 14일 목요일
+
+### Halftoning
+출판물에서 쓰임. 색의 표현범위가 적을떄 이를 표현하는 방법.
+
+### 디더링
+
+Ray Tracing
+--------
+### LI vs GI
+GI
+* Ray tracing
+* Radiosity
+* Photon mapping
+
+### Forward Ray Tracing
+### Backward Ray Tracing
+빤짝빤짝 꺠끗하고 깔끔하게 비춰보이고 그래요. Specular reflection/refraction이
+계산하기 쉬워서.
+
+### Binary Ray-Tracing Tree
+### Ray-surface Intersections
+### Ray-Implicit Surface Intersections
+### Ray-Polygon Intersections
+### 안/밖 판단
+재수없으면 꼭지점을 지나서 에러가 남.
+
+해결법
+1.  여러번 해보기
+2.  임의의 에지의 중점쪽으로 쏨
+
+### Acceleration Techniques
+김명수 교수님
+
+김명수 교수님
+세상의 누구보다도
+인터섹션에 대해 제일 많이 아는 분이셔요
+
+* Space-subdivision
+  - Uniform subdivision
+  - Adaptive subdivision (Octrees)
+  - BSP trees
+* Ray classification
+  - Classify 5D ray space
+  - Can be reduced to 4D ray space
+
+지난 30~40년동안 죽도록 이뤄진 연구. 여러분이 요만한 이미지를 그려서
+레이트레이싱 돌리는데 5시간 걸렸는데, 똑바로 하는사람은 그걸 리얼타임으로 해요
+
+요즘은
+레이트레이싱도
+리얼타임으로 돌아가요
+근데 여러분은 잘 못할거에요
+의지고 있고
+시간이 남고
+정력이 남으면 한번 빠르게 해보세요
+
+### Camera Obscura
+### 회절
+### 렌즈
+
+자네는 어디서 카메라에 대해 열심히 배웠구나
+고등학교 물리를 열심히 공부했습니다
