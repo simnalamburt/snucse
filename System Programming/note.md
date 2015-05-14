@@ -2057,3 +2057,53 @@ Functions called from a thread must be *thread-safe*
 같은 인풋엔 항상 같은 아웃풋이 나옴. Stateless
 
 *숙제*: 1-element 짜리 shared buffer. 목요일까지.
+
+--------
+
+> 5월 14일 목요일
+
+Mutex
+--------
+### Events
+### Threads
+### Threads are State Machines
+### States
+* Thread State
+  - Program counter
+  - Local variables
+* System State
+  - etc
+
+### Concurrency
+### Interleaving
+### Intervals
+### Intervals may overlap
+### Precedence Ordering
+### Partial Orders
+* Irreflexive
+* Antisymmetric
+* Transitive
+
+### Total Orders
+
+### Implementing a Counter
+### Using Locks
+### Mutual Exclusion
+
+### Deadlock-Free
+### Starvation-Free
+
+### LockOne
+### Deadlock Freedom
+### LockTwo
+### Peterson's Algorithm
+Starvation-free
+
+스레드가 둘뿐인 경우
+
+### The Filter Algorithm for n Threads
+### No Starvation
+### Bakery Algorithm
+### Bakery Y2**32K Bug
+
+
