@@ -3,15 +3,23 @@
 #include <thread>
 #include <mutex>
 
+#include <unistd.h>
+
 using namespace std;
 
 static int var = 0;
 
-int main() {
-  const size_t n = 8;
+int main(int argc, char *argv[]) {
+  size_t n = 8;
+
+  int opt;
+  while((opt = getopt(argc, argv, "n:")) != -1) {
+    n = atoi(optarg);
+  }
+
+  cout << "Calculating with " << n << " threads... " << flush;
 
   mutex mutex;
-
   auto threads = vector<thread>();
   for (size_t i = 0; i < n; ++i) {
     threads.emplace_back([&](){
@@ -27,6 +35,7 @@ int main() {
     thread.join();
   }
 
+  cout << "Done!" << endl;
   cout << "var : " << var << endl;
   return 0;
 }
