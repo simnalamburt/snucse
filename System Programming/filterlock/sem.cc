@@ -15,7 +15,7 @@ int main() {
   auto threads = vector<thread>();
   for (size_t i = 0; i < n; ++i) {
     threads.emplace_back([&](){
-      for (size_t _ = 0; _ < 1000000/n; ++_) {
+      for (size_t _ = 0; _ < 10000000/n; ++_) {
         mutex.lock();
         var += 1;
         mutex.unlock();

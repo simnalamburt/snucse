@@ -15,7 +15,7 @@ fn main() {
     for id in 0..n {
         threads.push(thread::spawn(move || {
             let filter = unsafe { &mut *(addr as *mut Filter) };
-            for _ in 0..100_0000/n {
+            for _ in 0..1000_0000/n {
                 filter.lock(id);
                 unsafe { var += 1 }
                 filter.unlock(id);
