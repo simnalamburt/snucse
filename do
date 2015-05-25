@@ -32,15 +32,15 @@ begin
     end
   when 'h', 'help', '-h', '--help'
     puts <<-HELP
-  Try compile your work.
+Try compile your work.
 
-  Usage: ./do [<param>]
+Usage: ./do [<param>]
 
-  Parameters:
-      (nothing)       Build the source codes
-      test            Run all test suites
-      test <n>        Run n-th test suite
-      help            Get this message
+Parameters:
+    (nothing)       Build the source codes
+    test            Run all test suites
+    test <n>        Run n-th test suite
+    help            Get this message
     HELP
   else
     print `cd ~/shlab-handout && make`
