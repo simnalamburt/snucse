@@ -2106,4 +2106,49 @@ Starvation-free
 ### Bakery Algorithm
 ### Bakery Y2**32K Bug
 
+--------
 
+> 5월 28일
+
+### Total Store Order
+멀티코어가 아니고, 싱글코어만 쓴다. 멀티코어라 하더라도 각각의 코어들이 다
+똑같다 하면 문제가 없죠. 캐쉬에서 읽어오나, 메모리에서 읽어오나 항상 같은 값을
+읽어오니까.
+
+그래서 이게 싱글코어일떄엔 문제가 안되는데, 멀티코어일때엔 문제가 됨. L1, L2를
+따로 갖고있고, L3를 쉐어한다던가 등..
+
+* SPARC
+* X86
+
+읽는것보다, write가 오래걸려서 씀.
+
+Store가 있은 후 Load를 수행할때 이 순서가 바뀌는것을 허용함.
+
+Wait-Free Implementation
+--------
+Lock 없이 컨커런트 프로그래밍 하기
+
+### Rationale for wait-freedom
+왜 락이 안좋은가?
+
+#### Heterogeneouse
+특정 프로세스만 엄청 느리다던가
+
+#### Fault-tolerance
+한놈이 락을 잡은채로 죽어버리면?
+
+실제로는 보통 타임아웃을 씀. 죽은것같으면 락을 강제로 풀고 나옴.
+
+하고싶은것: Wait-free 한 구현을 쓰자
+
+레지스터만 가지고는, Wait-free 한 무언가를 만들수는 없다.
+
+### The Consensus Hierarchy
+CAS는 강력하고 비쌈. 락을 안쓴다고 했지만, 소프트웨어적으로 안썼을 뿐이지,
+하드웨어에선 BUS를 락으로 걸어버림.
+
+### LL & SC
+Load locked, store conditional.
+
+이게 조금더 Lightweight 하고, 더 acceptile한데, 인텔에서는 특허때문에 못쓰는거임
