@@ -1,8 +1,14 @@
 //
 // mm.c - Tiny malloc library
 //
-// NOTE TO STUDENTS: Replace this header comment with your own header
-// comment that gives a high level description of your solution.
+// Block은 아래와 같이 생겼음
+//
+// 0 ______ 4 _________________________________________ size+4 ___ size+8
+// |  head  |                       payload                |  tail  |
+// """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+//
+// head와 tail에는 payload의 길이(바이트)가 들어있다.
+// 그리고 LSB에 allocated 여부가 저장되어있다.
 //
 #include <stdio.h>
 #include <stdlib.h>
@@ -37,10 +43,18 @@ void *mm_malloc(size_t size) {
     size += 8;
   }
 
-  void *p = mem_sbrk(size + 8);
-  if (p == (void*)-1) { return NULL; }
+  assert(size % 8 == 0);
 
-  return (void*)((uintptr_t)p + 4);
+  void *mem = mem_sbrk(size + 8);
+  if (mem == (void*)-1) { return NULL; }
+
+  uint32_t *head = mem;
+  uint32_t *tail = (uint32_t*)((uintptr_t)mem + 4 + size);
+
+  *head = size | 1;
+  *tail = size | 1;
+
+  return (void*)((uintptr_t)mem + 4);
 }
 
 
@@ -54,11 +68,14 @@ void mm_free(void *ptr) {
 //
 // Implemented simply in terms of mm_malloc and mm_free
 //
-void *mm_realloc(void *ptr, size_t size) {
-  void *newptr = mm_malloc(size);
-  if (newptr == NULL) { return NULL; }
+void *mm_realloc(void *old, size_t size) {
+  void *new = mm_malloc(size);
+  if (new == NULL) { return NULL; }
 
-  memcpy(newptr, ptr, size);
-  mm_free(ptr);
-  return newptr;
+  uint32_t *head = (uint32_t*)((uintptr_t)old - 4);
+  uint32_t oldsize = (*head & ~1);
+  memcpy(new, old, oldsize);
+
+  mm_free(old);
+  return new;
 }
