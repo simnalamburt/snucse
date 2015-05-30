@@ -6,8 +6,8 @@
 //
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdint.h>
 #include <assert.h>
-#include <unistd.h>
 #include <string.h>
 
 #include "mm.h"
@@ -16,18 +16,13 @@
 student_t student = { "Hyeon Kim", "2013-11392" };
 
 
-// Single word (4) or double word (8) alignment
-#define ALIGNMENT 8
-// Rounds up to the nearest multiple of ALIGNMENT
-#define ALIGN(size) (((size) + (ALIGNMENT-1)) & ~0x7)
-// Size of size_t
-#define SIZE_T_SIZE (ALIGN(sizeof(size_t)))
-
-
 //
 // Initialize the malloc package.
 //
 int mm_init(void) {
+  uintptr_t end = (uintptr_t)mem_heap_hi() + 1;
+  uintptr_t target = ((end + 3)/8 + 1)*8 - 4;
+  mem_sbrk(target - end);
   return 0;
 }
 
@@ -37,14 +32,15 @@ int mm_init(void) {
 // whose size is a multiple of the alignment.
 //
 void *mm_malloc(size_t size) {
-  int newsize = ALIGN(size + SIZE_T_SIZE);
-  void *p = mem_sbrk(newsize);
-  if (p == (void *)-1) {
-    return NULL;
-  } else {
-    *(size_t *)p = size;
-    return (void *)((char *)p + SIZE_T_SIZE);
+  if (size & 0x7) {
+    size &= ~0x7;
+    size += 8;
   }
+
+  void *p = mem_sbrk(size + 8);
+  if (p == (void*)-1) { return NULL; }
+
+  return (void*)((uintptr_t)p + 4);
 }
 
 
@@ -62,10 +58,7 @@ void *mm_realloc(void *ptr, size_t size) {
   void *newptr = mm_malloc(size);
   if (newptr == NULL) { return NULL; }
 
-  size_t copySize = *(size_t *)((char *)ptr - SIZE_T_SIZE);
-  if (size < copySize) { copySize = size; }
-
-  memcpy(newptr, ptr, copySize);
+  memcpy(newptr, ptr, size);
   mm_free(ptr);
   return newptr;
 }
