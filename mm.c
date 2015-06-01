@@ -122,15 +122,23 @@ void *mm_malloc(size_t size) {
   }
   assert(size % 8 == 0);
 
-  // Allocate memory from heap
-  void *mem = mem_sbrk(size + 8);
-  if ((intptr_t)mem == -1) { return NULL; }
+  // Try reuse existing free block
+  node_t *prev = best_fit(root, size);
+  if (prev != NULL) {
+    // Reuse existing free block
+    delete(&root, prev);
+    return prev;
+  } else {
+    // No adequate free block, allocate memory from heap
+    void *mem = mem_sbrk(size + 8);
+    if ((intptr_t)mem == -1) { return NULL; }
 
-  node_t *payload = (void*)((uintptr_t)mem + 4);
-  set_data(payload, size);
-  set_allocated(payload, true);
+    node_t *payload = (void*)((uintptr_t)mem + 4);
+    set_data(payload, size);
+    set_allocated(payload, true);
 
-  return payload;
+    return payload;
+  }
 }
 
 
