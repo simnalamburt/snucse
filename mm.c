@@ -135,6 +135,7 @@ void *mm_malloc(size_t size) {
   if (prev != NULL) {
     // Reuse existing free block
     delete(&root, prev);
+    set_allocated(prev, true);
 
     // Split existing free block if size is enough
     uint32_t prevsize = get_data(prev);
@@ -180,8 +181,8 @@ void *mm_malloc(size_t size) {
 //
 // Freeing a block does nothing.
 //
-void mm_free(void *ptr) {
-  node_t *n = ptr;
+void mm_free(void *_n) {
+  node_t *n = _n;
   n->left = n->right = n->parent = NULL;
   set_allocated(n, false);
   assert(get_data(n) >= sizeof(node_t));
