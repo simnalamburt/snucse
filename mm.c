@@ -189,7 +189,7 @@ void mm_free(void *_n) {
   //
   // Coalesce right
   //
-  uintptr_t end = (uintptr_t)(mem_heap_hi()) + 1;
+  uintptr_t end = (uintptr_t)mem_heap_hi() + 1;
   node_t *right = (node_t*)((uintptr_t)n + size + 8);
   if ((uintptr_t)right < end && !get_allocated(right)) {
     uint32_t size_right = get_data(right);
@@ -197,6 +197,24 @@ void mm_free(void *_n) {
 
     size += 8 + size_right;
     set_data(n, size);
+  }
+
+  //
+  // Coalesce left
+  //
+  uintptr_t begin = (uintptr_t)mem_heap_lo();
+  uintptr_t tag_left = (uintptr_t)n - 8;
+  if (begin + 4 + sizeof(node_t) <= tag_left) {
+    uint32_t size_left = (*(uint32_t*)tag_left) & ~1;
+    node_t *left = (node_t*)(tag_left - size_left);
+    assert(get_data(left) == size_left);
+    if (!get_allocated(left)) {
+      delete(&root, left);
+
+      size += size_left + 8;
+      n = left;
+      set_data(n, size);
+    }
   }
 
   n->left = n->right = n->parent = NULL;
