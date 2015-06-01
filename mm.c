@@ -183,9 +183,24 @@ void *mm_malloc(size_t size) {
 //
 void mm_free(void *_n) {
   node_t *n = _n;
+  uint32_t size = get_data(n);
+  assert(size >= sizeof(node_t));
+
+  //
+  // Coalesce right
+  //
+  uintptr_t end = (uintptr_t)(mem_heap_hi()) + 1;
+  node_t *right = (node_t*)((uintptr_t)n + size + 8);
+  if ((uintptr_t)right < end && !get_allocated(right)) {
+    uint32_t size_right = get_data(right);
+    delete(&root, right);
+
+    size += 8 + size_right;
+    set_data(n, size);
+  }
+
   n->left = n->right = n->parent = NULL;
   set_allocated(n, false);
-  assert(get_data(n) >= sizeof(node_t));
 
   // Insert free block into the red-black tree
   insert(&root, n);
