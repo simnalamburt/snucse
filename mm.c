@@ -199,9 +199,8 @@ void *mm_realloc(void *old, size_t size) {
   void *new = mm_malloc(size);
   if (new == NULL) { return NULL; }
 
-  uint32_t *head = (uint32_t*)((uintptr_t)old - 4);
-  uint32_t oldsize = (*head & ~1);
-  memcpy(new, old, oldsize);
+  uint32_t len = get_data(old);
+  memcpy(new, old, len);
 
   mm_free(old);
   return new;
