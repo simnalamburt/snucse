@@ -179,42 +179,57 @@ void *mm_malloc(size_t size) {
 
 
 //
+// Helper functions
+//
+static node_t *left_node(const node_t* n) {
+  uintptr_t begin = (uintptr_t)mem_heap_lo();
+  uintptr_t tag_left = (uintptr_t)n - 8;
+  if (tag_left < begin + 4 + sizeof(node_t)) { return NULL; }
+  uint32_t size_left = (*(uint32_t*)tag_left) & ~1;
+  node_t *left = (node_t*)(tag_left - size_left);
+  assert(get_data(left) == size_left);
+  if (get_allocated(left)) { return NULL; }
+  return left;
+}
+
+static node_t *right_node(const node_t* n) {
+  uintptr_t end = (uintptr_t)mem_heap_hi() + 1;
+  node_t *right = (node_t*)((uintptr_t)n + get_data(n) + 8);
+  if (end <= (uintptr_t)right || get_allocated(right)) { return NULL; }
+  return right;
+}
+
+
+//
 // Freeing a block does nothing.
 //
+
 void mm_free(void *_n) {
   node_t *n = _n;
   uint32_t size = get_data(n);
   assert(size >= sizeof(node_t));
 
   //
-  // Coalesce right
+  // Coalescing
   //
-  uintptr_t end = (uintptr_t)mem_heap_hi() + 1;
-  node_t *right = (node_t*)((uintptr_t)n + size + 8);
-  if ((uintptr_t)right < end && !get_allocated(right)) {
+  node_t *left = left_node(n);
+  node_t *right = right_node(n);
+
+  if (left != NULL) {
+    uint32_t size_left = get_data(left);
+    delete(&root, left);
+
+    size += size_left + 8;
+    n = left;
+    set_data(n, size);
+  }
+
+  if (right != NULL) {
     uint32_t size_right = get_data(right);
     delete(&root, right);
 
     size += 8 + size_right;
     set_data(n, size);
-  }
-
-  //
-  // Coalesce left
-  //
-  uintptr_t begin = (uintptr_t)mem_heap_lo();
-  uintptr_t tag_left = (uintptr_t)n - 8;
-  if (begin + 4 + sizeof(node_t) <= tag_left) {
-    uint32_t size_left = (*(uint32_t*)tag_left) & ~1;
-    node_t *left = (node_t*)(tag_left - size_left);
-    assert(get_data(left) == size_left);
-    if (!get_allocated(left)) {
-      delete(&root, left);
-
-      size += size_left + 8;
-      n = left;
-      set_data(n, size);
-    }
   }
 
   n->left = n->right = n->parent = NULL;
