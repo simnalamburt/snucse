@@ -196,12 +196,12 @@ void mm_free(void *_n) {
 // Implemented simply in terms of mm_malloc and mm_free
 //
 void *mm_realloc(void *old, size_t size) {
+  uint32_t len = get_data(old);
+  if (len >= size) { return old; }
+
   void *new = mm_malloc(size);
   if (new == NULL) { return NULL; }
-
-  uint32_t len = get_data(old);
   memcpy(new, old, len);
-
   mm_free(old);
   return new;
 }
