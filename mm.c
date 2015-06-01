@@ -34,20 +34,48 @@ typedef struct node {
 
 static inline data_t get_data(const node_t* this) {
   uintptr_t payload = (uintptr_t)this;
-  uintptr_t block = payload - 4;
-  uint32_t *head = (uint32_t*)block;
+  uint32_t *head = (uint32_t*)(payload - 4);
+  uint32_t size = (*head) & ~1;
+  uint32_t *tail = (uint32_t*)(payload + size);
+  assert(size == ((*tail) & ~1));
 
-  return (*head) & ~1;
+  return size;
 }
-static inline void set_data(node_t* this, data_t data) {
-  assert((data & 1) == 0);
+static inline void set_data(node_t* this, data_t size) {
+  assert((size & 1) == 0);
 
   uintptr_t payload = (uintptr_t)this;
-  uintptr_t block = payload - 4;
-  uint32_t *head = (uint32_t*)block;
+  uint32_t *head = (uint32_t*)(payload - 4);
+  uint32_t *tail = (uint32_t*)(payload + size);
 
   bool bit = (*head) & 1;
-  *head = data | bit;
+  *head = size | bit;
+  *tail = size | bit;
+}
+
+static inline bool get_allocated(const node_t *this) {
+  uintptr_t payload = (uintptr_t)this;
+  uint32_t *head = (uint32_t*)(payload - 4);
+  uint32_t size = (*head) & ~1;
+  uint32_t *tail = (uint32_t*)(payload + size);
+  bool bit = (*head) & 1;
+  assert(bit == ((*tail) & 1));
+
+  return bit;
+}
+static inline void set_allocated(node_t *this, bool allocated) {
+  uintptr_t payload = (uintptr_t)this;
+  uint32_t *head = (uint32_t*)(payload - 4);
+  uint32_t size = (*head) & ~1;
+  uint32_t *tail = (uint32_t*)(payload + size);
+
+  if (allocated) {
+    *head |= 1;
+    *tail |= 1;
+  } else {
+    *head &= ~1;
+    *tail &= ~1;
+  }
 }
 
 static inline color_t get_color(const node_t *this) { return this == NULL ? BLACK : this->_color; }
@@ -96,14 +124,11 @@ void *mm_malloc(size_t size) {
 
   // Allocate memory from heap
   void *mem = mem_sbrk(size + 8);
-  if (mem == (void*)-1) { return NULL; }
+  if ((intptr_t)mem == -1) { return NULL; }
 
-  uint32_t *head = mem;
-  void *payload = (void*)((uintptr_t)mem + 4);
-  uint32_t *tail = (uint32_t*)((uintptr_t)mem + 4 + size);
-
-  *head = size | 1;
-  *tail = size | 1;
+  node_t *payload = (void*)((uintptr_t)mem + 4);
+  set_data(payload, size);
+  set_allocated(payload, true);
 
   return payload;
 }
@@ -115,6 +140,7 @@ void *mm_malloc(size_t size) {
 void mm_free(void *ptr) {
   node_t *n = ptr;
   n->left = n->right = n->parent = NULL;
+  set_allocated(n, false);
   assert(get_data(n) >= sizeof(node_t));
 
   // Insert free block into the red-black tree
