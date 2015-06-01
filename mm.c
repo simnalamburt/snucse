@@ -1,7 +1,7 @@
 //
 // mm.c - Tiny malloc library
 //
-// Block은 아래와 같이 생겼음
+// 한 Allocation block은 아래와 같은 형태를 갖고있다.
 //
 // 0 ______ 4 _________________________________________ size+4 ___ size+8
 // |  head  |                       payload                |  tail  |
@@ -10,13 +10,34 @@
 // head와 tail에는 payload의 길이(바이트)가 들어있다.
 // 그리고 LSB에 allocated 여부가 저장되어있다.
 //
+// 본 구현체는 기본적으로 free block 관리를 위해 Red-black tree를 사용한다.
+//
 // mm_free() 가 호출될때마다, free block들이 레드블랙트리에 삽입된다.
 //
 // mm_malloc()이 호출되면, free block들 중에서 요구된 size보다 큰 최소크기의
-// free block을 찾으며(best-fit), 그러한 free block이 없을경우 새로 sbrk()
+// free block을 찾는다(best-fit). 그러한 free block이 없을경우 새로 sbrk()
 // 함수를 호출하며, 있을경우 그 블럭을 재활용한다. free block이 충분히 큰 경우
 // free block을 쪼개어 남는부분을 다시 free block으로 만들어 레드블랙트리에
 // 삽입한다.
+//
+// 본 구현체는 기본적으로 모든 free block을 만들때마다 코얼레싱을 시도한다.
+// mm_free()가 호출되었을때, mm_malloc()이나 mm_realloc()이 호출된 도중
+// allocation block의 스플리팅이 발생할때, 등 모든 free block이 생성될 때 마다
+// 코얼레싱을 시도하기때문에 결과적으로 본 구현체에서는 절대 두 free block이
+// 인접하여 위치하는 경우가 발생하지 않는다.
+//
+// mm_realloc()의 경우, 작아지는경우와 커지는 경우가 처리가 다르다.
+//
+// 작아지는 realloc의 경우 mm_alloc()때와 마찬가지로, 블럭을 줄어든 크기에 맞게
+// 스플리팅한다. 이때 역시 스플리팅되어 생성된 free block은 오른쪽으로
+// 코얼리싱을 시도한다.
+//
+// 커지는 realloc의 경우, 인접한 free block으로 코얼리싱을 시도하여 코얼리싱을
+// 수행함으로써 realloc의 완수가 가능한경우 추가적인 메모리할당 없이
+// 코얼리싱만으로 realloc을 수행하며, 불가능한경우엔 새로이 mm_malloc()을
+// 호출한다. 이때 양쪽 모든 방향으로 코얼리싱이 가능한경우, 오른쪽방향이
+// 우선되어 수행되는데 이는 왼쪽으로 코얼리싱할경우 저장되어있던 데이터를
+// 이동시켜주는 연산이 필요하기때문이다.
 //
 #include <stdio.h>
 #include <stdlib.h>
