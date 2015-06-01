@@ -263,6 +263,12 @@ void *mm_realloc(void *prev, size_t size) {
     return prev;
   } else if (prevsize < size) {
     // Enlarged
+    node_t *right = right_node(prev);
+    if (right != NULL && size <= prevsize + 8 + get_data(right)) {
+      coalesce_right(prev);
+      return prev;
+    }
+
     void *new = mm_malloc(size);
     if (new == NULL) { return NULL; }
     memcpy(new, prev, prevsize);
