@@ -68,6 +68,8 @@ static node_t *root = NULL;
 // Initialize the malloc package.
 //
 int mm_init(void) {
+  root = NULL;
+
   // Preparation for 8 bytes alignment
   uintptr_t end = (uintptr_t)mem_heap_hi() + 1;
   uintptr_t target = ((end + 3)/8 + 1)*8 - 4;
