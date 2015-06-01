@@ -10,6 +10,14 @@
 // head와 tail에는 payload의 길이(바이트)가 들어있다.
 // 그리고 LSB에 allocated 여부가 저장되어있다.
 //
+// mm_free() 가 호출될때마다, free block들이 레드블랙트리에 삽입된다.
+//
+// mm_malloc()이 호출되면, free block들 중에서 요구된 size보다 큰 최소크기의
+// free block을 찾으며(best-fit), 그러한 free block이 없을경우 새로 sbrk()
+// 함수를 호출하며, 있을경우 그 블럭을 재활용한다. free block이 충분히 큰 경우
+// free block을 쪼개어 남는부분을 다시 free block으로 만들어 레드블랙트리에
+// 삽입한다.
+//
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
