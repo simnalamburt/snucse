@@ -200,6 +200,7 @@ void *mm_malloc(size_t size) {
       n->left = n->right = n->parent = NULL;
       set_data(n, prevsize - size - 8);
       set_allocated(n, false);
+      coalesce_right(n);
       insert(&root, n);
 
       //
@@ -233,8 +234,7 @@ void *mm_malloc(size_t size) {
 
 void mm_free(void *_n) {
   node_t *n = _n;
-  uint32_t size = get_data(n);
-  assert(size >= sizeof(node_t));
+  assert(get_data(n) >= sizeof(node_t));
 
   // Coalescing
   coalesce_right(n);
