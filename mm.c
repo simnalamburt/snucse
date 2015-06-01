@@ -118,7 +118,7 @@ int mm_init(void) {
 // Allocate a block by incrementing the brk pointer. Always allocate a block
 // whose size is a multiple of the alignment.
 //
-void *mm_malloc(size_t size) {
+static inline size_t align(size_t size) {
   // Minimal size of payload
   if (size < sizeof(node_t)) {
     size = sizeof(node_t);
@@ -129,6 +129,11 @@ void *mm_malloc(size_t size) {
     size += 8;
   }
   assert(size % 8 == 0);
+  return size;
+}
+
+void *mm_malloc(size_t size) {
+  size = align(size);
 
   // Try reuse existing free block
   node_t *prev = best_fit(root, size);
@@ -243,15 +248,24 @@ void mm_free(void *_n) {
 //
 // Implemented simply in terms of mm_malloc and mm_free
 //
-void *mm_realloc(void *old, size_t size) {
-  uint32_t len = get_data(old);
-  if (len >= size) { return old; }
+void *mm_realloc(void *prev, size_t size) {
+  size = align(size);
+  uint32_t prevsize = get_data(prev);
 
-  void *new = mm_malloc(size);
-  if (new == NULL) { return NULL; }
-  memcpy(new, old, len);
-  mm_free(old);
-  return new;
+  if (prevsize > size) {
+    // Shrinking
+    return prev;
+  } else if (prevsize < size) {
+    // Enlarged
+    void *new = mm_malloc(size);
+    if (new == NULL) { return NULL; }
+    memcpy(new, prev, prevsize);
+    mm_free(prev);
+    return new;
+  } else {
+    // Same
+    return prev;
+  }
 }
 
 
