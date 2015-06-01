@@ -266,7 +266,19 @@ void *mm_realloc(void *prev, size_t size) {
     node_t *right = right_node(prev);
     if (right != NULL && size <= prevsize + 8 + get_data(right)) {
       coalesce_right(prev);
+      try_split(prev, size);
       return prev;
+    }
+
+    node_t *left = left_node(prev);
+    if ((left != NULL && size <= prevsize + 8 + get_data(left)) ||
+        (right != NULL && left != NULL && size <= get_data(left) + 8 + prevsize + 8 + get_data(right)))
+    {
+      coalesce_left(prev);
+      memmove(left, prev, prevsize);
+      set_allocated(left, true);
+      try_split(left, size);
+      return left;
     }
 
     void *new = mm_malloc(size);
