@@ -127,6 +127,33 @@ void *mm_malloc(size_t size) {
   if (prev != NULL) {
     // Reuse existing free block
     delete(&root, prev);
+
+    // Split existing free block if size is enough
+    uint32_t prevsize = get_data(prev);
+    uintptr_t new = (uintptr_t)prev + size + 8;
+    assert(sizeof(node_t) % 8 == 0);
+    if (new + sizeof(node_t) <= (uintptr_t)prev + prevsize) {
+      // Resize existing free block
+      set_data(prev, size);
+      set_allocated(prev, true);
+
+      // Initialize remaining free block
+      node_t *n = (node_t*)new;
+      n->left = n->right = n->parent = NULL;
+      set_data(n, prevsize - size - 8);
+      set_allocated(n, false);
+      insert(&root, n);
+
+      //
+      // Split된 이후의 block 은 아래와 같이 변한다
+      //
+      //                                    size   size+4   size+8      prevsize
+      // 0_____________________________________|______|______|_______________|
+      // |                  prev               | tail | head |      new      |
+      // """""""""""""""""""""""""""""""""""""""""""""|"""""""""""""""""""""""
+      //
+    }
+
     return prev;
   } else {
     // No adequate free block, allocate memory from heap
