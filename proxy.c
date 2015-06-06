@@ -8,7 +8,16 @@
 // must also provide a header comment at the beginning of each
 // function that describes what that function does.
 //
-#include "csapp.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdbool.h>
+#include <stdint.h>
+#include <string.h>
+#include <time.h>
+#include <arpa/inet.h>
+
+// Max text line length
+#define MAXLINE 8192
 
 
 //
