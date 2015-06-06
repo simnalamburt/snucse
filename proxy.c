@@ -88,9 +88,12 @@ int main(int argc, char **argv) {
     char path[MAXLINE] = {};
     int port;
     ret = parse_uri(strstr(buf, "http://"), hostname, path, &port);
-    if (ret == -1) { perror("parse_uri"); continue; }
-    printf("hostname : %s\n", hostname);
-    printf("path     : %s\n", path);
+    if (ret != -1) {
+      printf("hostname : %s\n", hostname);
+      printf("path     : %s\n", path);
+    } else {
+      perror("parse_uri");
+    }
 
     // Read the rest
     size_t len = strlen(buf);
@@ -126,7 +129,7 @@ int main(int argc, char **argv) {
 // bytes. Return -1 if there are any problems.
 //
 int parse_uri(char *uri, char *hostname, char *pathname, int *port) {
-  if (strncasecmp(uri, "http://", 7) != 0) {
+  if (uri == NULL || strncasecmp(uri, "http://", 7) != 0) {
     hostname[0] = '\0';
     pathname[0] = '\0';
     return -1;
@@ -148,7 +151,8 @@ int parse_uri(char *uri, char *hostname, char *pathname, int *port) {
   // Extract the path
   char *pathbegin = strchr(hostbegin, '/');
   if (pathbegin == NULL) {
-    pathname[0] = '\0';
+    pathname[0] = '/';
+    pathname[1] = '\0';
   } else {
     char *pathend = strpbrk(pathbegin, " \r\n\0");
     strncpy(pathname, pathbegin, (uintptr_t)pathend - (uintptr_t)pathbegin);
