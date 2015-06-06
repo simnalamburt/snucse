@@ -42,13 +42,19 @@
 
 
 //
+// Global variable
+//
+static FILE *log;
+
+
+//
 // Function prototypes
 //
+static void per_connection(int client);
 static ssize_t read_all(int fd, void *buf, size_t bufsize);
 static ssize_t read_header(int fd, void *buf, size_t bufsize);
 static ssize_t write_all(int fd, const void *buf, size_t count);
 static int parse_uri(char *uri, char *target_addr, int *port);
-static void logging(FILE* file, struct sockaddr_in *sockaddr, const char *uri, size_t size);
 
 
 static inline int yes(int ret) {
@@ -69,7 +75,7 @@ int main(int argc, char **argv) {
   }
 
   // Open log file
-  FILE *log = fopen("proxy.log", "a");
+  log = fopen("proxy.log", "a");
 
   // Initialize incoming socket
   struct sockaddr_in addr;
@@ -85,97 +91,118 @@ int main(int argc, char **argv) {
   yes(bind(sock, (struct sockaddr*)&addr, sizeof addr));
   yes(listen(sock, SOMAXCONN));
 
-  // Initialize read/write buffer
-  size_t bufsize = 2 * 1024 * 1024;
-  void *const buf = malloc(bufsize);
-
   while (true) {
-    int ret;
-
     // 클라이언트와 커넥션 맺을때까지 대기
     struct sockaddr_in client_addr;
     socklen_t client_len = sizeof client_addr;
     int client = accept(sock, (struct sockaddr*)&client_addr, &client_len);
     if (client == -1) { perror("accept"); continue; }
 
-    // Read header
-    ssize_t count = read_header(client, buf, bufsize);
+    // 로그
+    time_t now = time(NULL);
+    char time_str[MAXLINE];
+    strftime(time_str, MAXLINE, "%a %d %b %y %h:%m:%s %z", localtime(&now));
 
-    // "Connection: keep-alive" -> "Connection: close"
-    char needle[] = "Connection: keep-alive\r\n";
-    size_t needle_len = sizeof needle - 1;
-    void *pos = memmem(buf, count, needle, needle_len);
-    if (pos != NULL) {
-      char overwrite[] = "Connection: close\r\n";
-      size_t overwrite_len = sizeof overwrite - 1;
-      memcpy(pos, overwrite, overwrite_len);
+    // return the formatted log entry string
+    char addr_txt[INET_ADDRSTRLEN];
+    inet_ntop(client_addr.sin_family, &client_addr.sin_addr, addr_txt, sizeof addr_txt);
+    fprintf(log, "%s: %s ", time_str, addr_txt);
 
-      void *end = (void*)((uintptr_t)pos + overwrite_len);
-      void *next = (void*)((uintptr_t)pos + needle_len);
-      size_t remain = (uintptr_t)buf + bufsize - (uintptr_t)next;
-      memmove(end, next, remain);
-      bufsize -= needle_len - overwrite_len;
-    }
+    // 처리
+    per_connection(client);
 
-    // Extract URI
-    char *uri_begin = memmem(buf, count, "http://", 7);
-    char *uri_end = memchr(uri_begin, ' ', bufsize - ((uintptr_t)uri_end - (uintptr_t)buf));
-    size_t uri_len = (uintptr_t)uri_end - (uintptr_t)uri_begin;
-    char uri[MAXLINE] = {};
-    memcpy(uri, uri_begin, uri_len);
-
-    // Parse URI
-    char hostname[MAXLINE] = {};
-    int port;
-    ret = parse_uri(uri, hostname, &port);
-    if (ret == -1) { fprintf(stderr, "  There was no \"http://\" on the first line of the payload\n"); goto close_client; }
-
-    // DNS Lookup
-    struct addrinfo *result;
-    ret = getaddrinfo(hostname, NULL, NULL, &result);
-    if (ret) { fprintf(stderr, "getaddrinfo() Failed\n"); goto close_client; }
-
-    // Set port number
-    struct sockaddr_in *addr = (struct sockaddr_in*)result->ai_addr;
-    addr->sin_port = htons(port);
-
-    // Make a new connection toward the server
-    const int server = socket(result->ai_family, result->ai_socktype, 0);
-    if (server == -1) { perror("socket"); goto free_result; }
-    ret = connect(server, result->ai_addr, result->ai_addrlen);
-    if (ret == -1) { perror("connect"); goto close_server; }
-
-    // Upload the request header
-    ret = write_all(server, buf, count);
-    if (ret == -1) { perror("write_all"); goto close_server; }
-
-    // Download the response
-    size_t size = 0;
-    while (true) {
-      count = read_all(server, buf, bufsize);
-      if (count == 0) { break; }
-      ret = write_all(client, buf, count);
-      if (ret == -1) { perror("write_all"); goto close_server; }
-      size += count;
-    }
-
-    // Log
-    logging(log, &client_addr, uri, size);
-
-close_server:
-    close(server);
-free_result:
-    freeaddrinfo(result);
-close_client:
+    // 연결 종료
     close(client);
   }
 
   // Release resources
-  free(buf);
   yes(close(sock));
   yes(fclose(log));
   return 0;
 }
+
+
+//
+// 한 커넥션마다 실행될 함수
+//
+void per_connection(int client) {
+  // Initialize read/write buffer
+  size_t bufsize = 2 * 1024 * 1024;
+  void *const buf = malloc(bufsize);
+
+  // Read header
+  ssize_t count = read_header(client, buf, bufsize);
+
+  // "Connection: keep-alive" -> "Connection: close"
+  char needle[] = "Connection: keep-alive\r\n";
+  size_t needle_len = sizeof needle - 1;
+  void *pos = memmem(buf, count, needle, needle_len);
+  if (pos != NULL) {
+    char overwrite[] = "Connection: close\r\n";
+    size_t overwrite_len = sizeof overwrite - 1;
+    memcpy(pos, overwrite, overwrite_len);
+
+    void *end = (void*)((uintptr_t)pos + overwrite_len);
+    void *next = (void*)((uintptr_t)pos + needle_len);
+    size_t remain = (uintptr_t)buf + bufsize - (uintptr_t)next;
+    memmove(end, next, remain);
+    bufsize -= needle_len - overwrite_len;
+  }
+
+  // Extract URI
+  char *uri_begin = memmem(buf, count, "http://", 7);
+  char *uri_end = memchr(uri_begin, ' ', bufsize - ((uintptr_t)uri_begin - (uintptr_t)buf));
+  size_t uri_len = (uintptr_t)uri_end - (uintptr_t)uri_begin;
+  char uri[MAXLINE] = {};
+  memcpy(uri, uri_begin, uri_len);
+
+  // Parse URI
+  char hostname[MAXLINE] = {};
+  int port, ret;
+  ret = parse_uri(uri, hostname, &port);
+  if (ret == -1) { fprintf(stderr, "  There was no \"http://\" on the first line of the payload\n"); goto free_buf; }
+
+  // DNS Lookup
+  struct addrinfo *result;
+  ret = getaddrinfo(hostname, NULL, NULL, &result);
+  if (ret) { fprintf(stderr, "getaddrinfo() Failed\n"); goto free_buf; }
+
+  // Set port number
+  struct sockaddr_in *addr = (struct sockaddr_in*)result->ai_addr;
+  addr->sin_port = htons(port);
+
+  // Make a new connection toward the server
+  const int server = socket(result->ai_family, result->ai_socktype, 0);
+  if (server == -1) { perror("socket"); goto free_result; }
+  ret = connect(server, result->ai_addr, result->ai_addrlen);
+  if (ret == -1) { perror("connect"); goto close_server; }
+
+  // Upload the request header
+  ret = write_all(server, buf, count);
+  if (ret == -1) { perror("write_all"); goto close_server; }
+
+  // Download the response
+  size_t size = 0;
+  while (true) {
+    count = read_all(server, buf, bufsize);
+    if (count == 0) { break; }
+    ret = write_all(client, buf, count);
+    if (ret == -1) { perror("write_all"); goto close_server; }
+    size += count;
+  }
+
+  // Log
+  fprintf(log, "%s %lu\n", uri, size);
+  fflush(log);
+
+close_server:
+  close(server);
+free_result:
+  freeaddrinfo(result);
+free_buf:
+  free(buf);
+}
+
 
 
 //
@@ -278,23 +305,4 @@ int parse_uri(char *uri, char *hostname, int *port) {
   if (*hostend == ':') { *port = atoi(hostend + 1); }
 
   return 0;
-}
-
-
-//
-// 과제 스펙에 맞춰 프록시 로그를 출력한다.
-//
-// 스레드세이프함.
-//
-void logging(FILE* file, struct sockaddr_in *addr, const char *uri, size_t size) {
-  // Get a formatted time string
-  time_t now = time(NULL);
-  char time_str[MAXLINE];
-  strftime(time_str, MAXLINE, "%a %d %b %Y %H:%M:%S %Z", localtime(&now));
-
-  // Return the formatted log entry string
-  char addr_txt[INET_ADDRSTRLEN];
-  inet_ntop(addr->sin_family, &addr->sin_addr, addr_txt, sizeof addr_txt);
-  fprintf(file, "%s: %s %s %lu\n", time_str, addr_txt, uri, size);
-  fflush(file);
 }
