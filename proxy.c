@@ -89,6 +89,15 @@ int main(int argc, char **argv) {
     fflush(stdout);
     printf("\e[0m\n(%ld bytes)\n", count);
 
+    // Parse URI
+    char hostname[MAXLINE] = {};
+    char path[MAXLINE] = {};
+    int port;
+    ret = parse_uri(strstr(buf, "http://"), hostname, path, &port);
+    if (ret == -1) { perror("parse_uri"); continue; }
+    printf("hostname : %s\n", hostname);
+    printf("path     : %s\n", path);
+
     // Close socket
     ret = close(sock);
     if (ret == -1) { perror("close"); continue; }
@@ -111,35 +120,32 @@ int main(int argc, char **argv) {
 // bytes. Return -1 if there are any problems.
 //
 int parse_uri(char *uri, char *hostname, char *pathname, int *port) {
-  char *hostbegin;
-  char *hostend;
-  char *pathbegin;
-  int len;
-
   if (strncasecmp(uri, "http://", 7) != 0) {
     hostname[0] = '\0';
+    pathname[0] = '\0';
     return -1;
   }
 
   // Extract the host name
-  hostbegin = uri + 7;
-  hostend = strpbrk(hostbegin, " :/\r\n\0");
-  len = hostend - hostbegin;
+  char *hostbegin = uri + 7;
+  char *hostend = strpbrk(hostbegin, " :/\r\n\0");
+  int len = hostend - hostbegin;
   strncpy(hostname, hostbegin, len);
   hostname[len] = '\0';
 
   // Extract the port number
-  *port = 80; // default
-  if (*hostend == ':')
+  *port = 80;
+  if (*hostend == ':') {
     *port = atoi(hostend + 1);
+  }
 
   // Extract the path
-  pathbegin = strchr(hostbegin, '/');
+  char *pathbegin = strchr(hostbegin, '/');
   if (pathbegin == NULL) {
     pathname[0] = '\0';
   } else {
-    pathbegin++;
-    strcpy(pathname, pathbegin);
+    char *pathend = strpbrk(pathbegin, " \r\n\0");
+    strncpy(pathname, pathbegin, (uintptr_t)pathend - (uintptr_t)pathbegin);
   }
 
   return 0;
