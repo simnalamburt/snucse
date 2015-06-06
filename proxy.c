@@ -143,7 +143,23 @@ int main(int argc, char **argv) {
     if (len == -1) { perror("splice"); goto close_pipe_up; }
     printf("              pipe -> server    (%ld bytes)\n", len);
 
+    int down[2];
+    ret = pipe(down);
+    if (ret == -1) { perror("pipe"); goto close_pipe_up; }
+
+    len = splice(sock, NULL, down[1], NULL, 10000, SPLICE_F_MOVE | SPLICE_F_MORE);
+    if (len == -1) { perror("splice"); goto close_pipe_down; }
+    printf("              pipe <- server    (%ld bytes)\n", len);
+
+    len = splice(down[0], NULL, client, NULL, 10000, SPLICE_F_MOVE | SPLICE_F_MORE);
+    if (len == -1) { perror("splice"); goto close_pipe_down; }
+    printf("    client <- pipe              (%ld bytes)\n", len);
+
+
     // Release resources
+close_pipe_down:
+    close(down[0]);
+    close(down[1]);
 close_pipe_up:
     close(up[0]);
     close(up[1]);
