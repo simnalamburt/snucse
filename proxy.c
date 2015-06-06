@@ -84,8 +84,10 @@ int main(int argc, char **argv) {
     size_t count = fread(buf, 1, bufsize, input);
 
     // Print payload
-    printf("\e[32m%.*s\e[0m\n", (int)count, (char*)buf);
-    printf("(%ld bytes)\n", count);
+    printf("\e[32m");
+    fwrite(buf, 1, count, stdout);
+    fflush(stdout);
+    printf("\e[0m\n(%ld bytes)\n", count);
 
     // Close socket
     ret = close(sock);
