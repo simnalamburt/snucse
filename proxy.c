@@ -80,14 +80,8 @@ int main(int argc, char **argv) {
     // Convert fd into FILE*
     FILE *input = fdopen(client, "r");
 
-    // Read until EOF
-    size_t count = fread(buf, 1, bufsize, input);
-
-    // Print payload
-    printf("\e[32m");
-    fwrite(buf, 1, count, stdout);
-    fflush(stdout);
-    printf("\e[0m\n(%ld bytes)\n", count);
+    // Read first line
+    fgets(buf, bufsize, input);
 
     // Parse URI
     char hostname[MAXLINE] = {};
@@ -97,6 +91,18 @@ int main(int argc, char **argv) {
     if (ret == -1) { perror("parse_uri"); continue; }
     printf("hostname : %s\n", hostname);
     printf("path     : %s\n", path);
+
+    // Read the rest
+    size_t len = strlen(buf);
+    size_t count = len + fread((void*)((uintptr_t)buf + len), 1, bufsize - len, input);
+
+
+    // Print payload
+    printf("\e[32m");
+    fwrite(buf, 1, count, stdout);
+    fflush(stdout);
+    printf("\e[0m\n(%ld bytes)\n", count);
+
 
     // Close socket
     ret = close(sock);
