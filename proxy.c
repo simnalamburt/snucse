@@ -79,7 +79,7 @@ int main(int argc, char **argv) {
   printf("Listening on \e[33m%s:%d\e[0m ...\n\n", inet_ntoa(addr.sin_addr), ntohs(addr.sin_port));
 
   // Initialize read/write buffer
-  const size_t bufsize = 2 * 1024 * 1024;
+  size_t bufsize = 2 * 1024 * 1024;
   void *const buf = malloc(bufsize);
 
   while (true) {
@@ -90,9 +90,9 @@ int main(int argc, char **argv) {
     socklen_t client_len = sizeof(client_addr);
     int client = accept(sock, (struct sockaddr*)&client_addr, &client_len);
     if (client == -1) { perror("accept"); continue; }
-    printf("Connected\n  %s:%d", inet_ntoa(client_addr.sin_addr), ntohs(client_addr.sin_port));
+    printf("Connected\n");
 
-    // Read first line
+    // Read header
     ssize_t count = read_header(client, buf, bufsize);
 
     // Parse URI
@@ -111,7 +111,21 @@ int main(int argc, char **argv) {
     addr->sin_port = htons(port);
 
     // Print lookup result
-    printf(" -> \e[36m%s\e[0m (%s:%d)\n", hostname, inet_ntoa(addr->sin_addr), ntohs(addr->sin_port));
+    printf("  %s:%d -> \e[36m%s\e[0m (%s:%d)\n",
+        inet_ntoa(client_addr.sin_addr), ntohs(client_addr.sin_port),
+        hostname, inet_ntoa(addr->sin_addr), ntohs(addr->sin_port));
+
+    // Remove 'Connection: keep-alive'
+    char needle[] = "Connection: keep-alive\r\n";
+    size_t needle_len = sizeof needle - 1;
+    void *pos = memmem(buf, count, needle, needle_len);
+    if (pos != NULL) {
+      printf("    Removed \"Connection: keep-alive\"\n");
+      void *next = (void*)((uintptr_t)pos + needle_len);
+      size_t remain = (uintptr_t)buf + bufsize - (uintptr_t)next;
+      memmove(pos, next, remain);
+      bufsize -= needle_len;
+    }
 
     // Make a new connection toward the server
     const int server = socket(result->ai_family, result->ai_socktype, 0);
