@@ -73,7 +73,7 @@ int main(int argc, char **argv) {
 
   // Initialize incoming socket
   struct sockaddr_in addr;
-  memset(&addr, 0, sizeof(addr));
+  memset(&addr, 0, sizeof addr);
   addr.sin_family = AF_INET;
   addr.sin_port = htons(atoi(argv[1]));
   addr.sin_addr.s_addr = htonl(INADDR_ANY);
@@ -81,12 +81,14 @@ int main(int argc, char **argv) {
   const int sock = yes(socket(addr.sin_family, SOCK_STREAM, 0));
 
   const int opt = true;
-  yes(setsockopt(sock, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt)));
-  yes(bind(sock, (struct sockaddr*)&addr, sizeof(addr)));
+  yes(setsockopt(sock, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof opt));
+  yes(bind(sock, (struct sockaddr*)&addr, sizeof addr));
   yes(listen(sock, SOMAXCONN));
 
   // Print message
-  printf("Listening on \e[33m%s:%d\e[0m ...\n\n", inet_ntoa(addr.sin_addr), ntohs(addr.sin_port));
+  char addr_txt[INET_ADDRSTRLEN];
+  inet_ntop(addr.sin_family, &addr.sin_addr, addr_txt, sizeof addr_txt);
+  printf("Listening on \e[33m%s:%d\e[0m ...\n\n", addr_txt, ntohs(addr.sin_port));
 
   // Initialize read/write buffer
   size_t bufsize = 2 * 1024 * 1024;
@@ -97,7 +99,7 @@ int main(int argc, char **argv) {
 
     // 클라이언트와 커넥션 맺을때까지 대기
     struct sockaddr_in client_addr;
-    socklen_t client_len = sizeof(client_addr);
+    socklen_t client_len = sizeof client_addr;
     int client = accept(sock, (struct sockaddr*)&client_addr, &client_len);
     if (client == -1) { perror("accept"); continue; }
     printf("Connected\n");
@@ -139,22 +141,17 @@ int main(int argc, char **argv) {
     // DNS Lookup
     struct addrinfo *result;
     ret = getaddrinfo(hostname, NULL, NULL, &result);
-    if (ret) { fprintf(stderr, "getaddrinfo: %s\n", gai_strerror(ret)); goto close_client; }
+    if (ret) { fprintf(stderr, "getaddrinfo() Failed\n"); goto close_client; }
 
     // Set port number
     struct sockaddr_in *addr = (struct sockaddr_in*)result->ai_addr;
     addr->sin_port = htons(port);
 
-    // Print lookup result
-    printf("  %s:%d -> \e[36m%s\e[0m (%s:%d)\n",
-        inet_ntoa(client_addr.sin_addr), ntohs(client_addr.sin_port),
-        hostname, inet_ntoa(addr->sin_addr), ntohs(addr->sin_port));
-
     // Make a new connection toward the server
     const int server = socket(result->ai_family, result->ai_socktype, 0);
-    if (server == -1) { perror("socket"); freeaddrinfo(result); goto free_result; }
+    if (server == -1) { perror("socket"); goto free_result; }
     ret = connect(server, result->ai_addr, result->ai_addrlen);
-    if (ret == -1) { perror("connect"); freeaddrinfo(result); goto close_server; }
+    if (ret == -1) { perror("connect"); goto close_server; }
 
     // Upload the request header
     ret = write_all(server, buf, count);
@@ -198,6 +195,8 @@ close_client:
 // If return value == bufsize, the buffer is full
 // Otherwise, met EOF or error
 //
+// 스레드세이프함.
+//
 static ssize_t read_all(int fd, void *buf, size_t bufsize) {
   void *current = buf;
   size_t remain = bufsize;
@@ -218,6 +217,8 @@ static ssize_t read_all(int fd, void *buf, size_t bufsize) {
 //
 // If return value == bufsize, the buffer is full
 // Otherwise, met EOF, "CRLFCRLF" or error
+//
+// 스레드세이프함.
 //
 static ssize_t read_header(int fd, void *buf, size_t bufsize) {
   void *current = buf;
@@ -244,6 +245,8 @@ static ssize_t read_header(int fd, void *buf, size_t bufsize) {
 // If return value == count, successfully wrote everything
 // Otherwise, error
 //
+// 스레드세이프함.
+//
 static ssize_t write_all(int fd, const void *buf, size_t count) {
   const void *current = buf;
   size_t remain = count;
@@ -265,6 +268,8 @@ static ssize_t write_all(int fd, const void *buf, size_t count) {
 // Given a URI from an HTTP proxy GET request (i.e., a URL), extract the host
 // name and port. The memory for hostname must already be allocated and should
 // be at least MAXLINE bytes. Return -1 if there are any problems.
+//
+// 스레드세이프함.
 //
 int parse_uri(char *uri, char *hostname, int *port) {
   if (uri == NULL || strncasecmp(uri, "http://", 7) != 0) {
@@ -290,6 +295,8 @@ int parse_uri(char *uri, char *hostname, int *port) {
 //
 // 과제 스펙에 맞춰 프록시 로그를 출력한다.
 //
+// 스레드세이프함.
+//
 void logging(FILE* file, struct sockaddr_in *addr, const char *uri, size_t size) {
   // Get a formatted time string
   time_t now = time(NULL);
@@ -297,6 +304,8 @@ void logging(FILE* file, struct sockaddr_in *addr, const char *uri, size_t size)
   strftime(time_str, MAXLINE, "%a %d %b %Y %H:%M:%S %Z", localtime(&now));
 
   // Return the formatted log entry string
-  fprintf(file, "%s: %s %s %lu\n", time_str, inet_ntoa(addr->sin_addr), uri, size);
+  char addr_txt[INET_ADDRSTRLEN];
+  inet_ntop(addr->sin_family, &addr->sin_addr, addr_txt, sizeof addr_txt);
+  fprintf(file, "%s: %s %s %lu\n", time_str, addr_txt, uri, size);
   fflush(file);
 }
