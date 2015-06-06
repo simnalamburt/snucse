@@ -14,7 +14,9 @@
 //     읽었던 첫번째줄 뒤에 붙인다. 이것으로 클라이언트가 전송한 온전한
 //     payload를 버퍼에 저장하였다.
 // 5.  클라이언트와 연결을 종료한다.
+// 6.  1번으로 돌아간다.
 //
+#define _GNU_SOURCE
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
@@ -34,6 +36,7 @@
 //
 // Function prototypes
 //
+static ssize_t read_line(int fd, void *buf, size_t bufsize);
 static int parse_uri(char *uri, char *target_addr, char *path, int *port);
 static void format_log_entry(char *logstring, struct sockaddr_in *sockaddr, const char *uri, size_t size);
 
@@ -85,17 +88,14 @@ int main(int argc, char **argv) {
     if (client == -1) { perror("accept"); continue; }
     printf("Connection established with \e[36m%s:%d\e[0m\n", inet_ntoa(client_addr.sin_addr), ntohs(client_addr.sin_port));
 
-    // Convert fd into FILE*
-    FILE *input = fdopen(client, "r");
-
     // Read first line
-    fgets(buf, bufsize, input);
+    ssize_t count = read_line(client, buf, bufsize);
 
     // Parse URI
     char hostname[MAXLINE] = {};
     char path[MAXLINE] = {};
     int port;
-    ret = parse_uri(strstr(buf, "http://"), hostname, path, &port);
+    ret = parse_uri(memmem(buf, count, "http://", 7), hostname, path, &port);
     if (ret != -1) {
       // DNS Lookup
       struct addrinfo *result;
@@ -128,21 +128,9 @@ int main(int argc, char **argv) {
       fprintf(stderr, "parse_uri: There was no \"http://\" on the first line of the payload\n");
     }
 
-    // Read the rest
-    size_t len = strlen(buf);
-    size_t count = len + fread((void*)((uintptr_t)buf + len), 1, bufsize - len, input);
-
-
-    // Print payload
-    printf("\e[32m");
-    fwrite(buf, 1, count, stdout);
-    fflush(stdout);
-    printf("\e[0m\n(%ld bytes)\n", count);
-
-
     // Close the connection
-    ret = fclose(input);
-    if (ret) { perror("fclose"); continue; }
+    ret = close(client);
+    if (ret) { perror("close"); continue; }
     printf("Closed connection with \e[36m%s:%d\e[0m\n", inet_ntoa(client_addr.sin_addr), ntohs(client_addr.sin_port));
   }
 
@@ -152,6 +140,36 @@ int main(int argc, char **argv) {
   if (ret == -1) { perror("close"); return -1; }
 
   return 0;
+}
+
+
+
+
+
+//
+// 주어진 버퍼가 다 차거나, fd에서 EOF나 LF를 줄때까지 읽기를 계속한다. 이
+// 함수의 실행결과는 아래 셋 중 하나이다
+//
+// 1. 버퍼가 꽉참
+// 2. 다읽었음
+// 3. 에러
+//
+static ssize_t read_line(int fd, void *buf, size_t bufsize) {
+  void *current = buf;
+  size_t remain = bufsize;
+  bool newline = false;
+
+  do {
+    ssize_t count = read(fd, current, remain);
+    if (count == 0 || count == -1) { break; }
+
+    void *pos = memchr(current, '\n', count);
+    if (pos != NULL) { newline = true; }
+
+    remain -= count;
+    current = (void*)((uintptr_t)current + count);
+  } while (remain > 0 && !newline);
+  return bufsize - remain;
 }
 
 
