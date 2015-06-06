@@ -24,6 +24,7 @@
 #include <string.h>
 #include <unistd.h>
 #include <time.h>
+#include <fcntl.h>
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netdb.h>
@@ -37,6 +38,7 @@
 // Function prototypes
 //
 static ssize_t read_line(int fd, void *buf, size_t bufsize);
+static ssize_t write_all(int fd, const void *buf, size_t count);
 static int parse_uri(char *uri, char *target_addr, char *path, int *port);
 static void format_log_entry(char *logstring, struct sockaddr_in *sockaddr, const char *uri, size_t size);
 
@@ -77,7 +79,7 @@ int main(int argc, char **argv) {
   printf("Listening on \e[33m%s:%d\e[0m ...\n\n", inet_ntoa(addr.sin_addr), ntohs(addr.sin_port));
 
   // Initialize read/write buffer
-  const size_t bufsize = 100 * 1024; // 100KB
+  const size_t bufsize = 100; // 100KB
   void *const buf = malloc(bufsize);
 
   while (true) {
@@ -86,7 +88,7 @@ int main(int argc, char **argv) {
     socklen_t client_len = sizeof(client_addr);
     int client = accept(sock, (struct sockaddr*)&client_addr, &client_len);
     if (client == -1) { perror("accept"); continue; }
-    printf("Connection established with \e[36m%s:%d\e[0m\n", inet_ntoa(client_addr.sin_addr), ntohs(client_addr.sin_port));
+    printf("Connected\n  %s:%d", inet_ntoa(client_addr.sin_addr), ntohs(client_addr.sin_port));
 
     // Read first line
     ssize_t count = read_line(client, buf, bufsize);
@@ -96,42 +98,72 @@ int main(int argc, char **argv) {
     char path[MAXLINE] = {};
     int port;
     ret = parse_uri(memmem(buf, count, "http://", 7), hostname, path, &port);
-    if (ret != -1) {
-      // DNS Lookup
-      struct addrinfo *result;
-      ret = getaddrinfo(hostname, NULL, NULL, &result);
-      if (ret) { fprintf(stderr, "getaddrinfo: %s\n", gai_strerror(ret)); continue; }
-
-      // Set port number
-      struct sockaddr_in *addr = (struct sockaddr_in*)result->ai_addr;
-      addr->sin_port = htons(port);
-
-      // Print lookup result
-      printf("hostname : %s\n", hostname);
-      printf("host IP  : %s\n", inet_ntoa(addr->sin_addr));
-      printf("port     : %d\n", ntohs(addr->sin_port));
-      printf("path     : %s\n", path);
-
-      // Make a new connection toward the server
-      const int sock = socket(result->ai_family, result->ai_socktype, 0);
-      if (sock == -1) { perror("socket"); continue; }
-      ret = connect(sock, result->ai_addr, result->ai_addrlen);
-      if (ret == -1) { perror("connect"); continue; }
-
-      // Deallocate DNS Lookup result
-      freeaddrinfo(result);
-
-      // Close the server socket
-      ret = close(sock);
-      if (ret == -1) { perror("close"); continue; }
-    } else {
+    if (ret == -1) {
       fprintf(stderr, "parse_uri: There was no \"http://\" on the first line of the payload\n");
+    } else {
+      do {
+        // DNS Lookup
+        struct addrinfo *result;
+        ret = getaddrinfo(hostname, NULL, NULL, &result);
+        if (ret) { fprintf(stderr, "getaddrinfo: %s\n", gai_strerror(ret)); break; }
+
+        // Set port number
+        struct sockaddr_in *addr = (struct sockaddr_in*)result->ai_addr;
+        addr->sin_port = htons(port);
+
+        // Print lookup result
+        printf(" -> \e[36mhttp://%s%s\e[0m (%s:%d)\n", hostname, path, inet_ntoa(addr->sin_addr), ntohs(addr->sin_port));
+
+        // Make a new connection toward the server
+        const int sock = socket(result->ai_family, result->ai_socktype, 0);
+        if (sock == -1) { perror("socket"); freeaddrinfo(result); break; }
+        do {
+          ret = connect(sock, result->ai_addr, result->ai_addrlen);
+          if (ret == -1) { perror("connect"); freeaddrinfo(result); break; }
+
+          // Deallocate DNS Lookup result
+          freeaddrinfo(result);
+
+          // Proxy the payload
+          ret = write_all(sock, buf, count);
+          if (ret == -1) { perror("write_all"); break; }
+          printf("    client     ->     server    (%ld bytes)\n", count);
+
+          int proxy[2];
+          ret = pipe(proxy);
+          if (ret == -1) { perror("pipe"); break; }
+
+          do {
+            ssize_t len = 0;
+            while (true) {
+              ssize_t count = splice(client, NULL, proxy[1], NULL, 100, SPLICE_F_MOVE | SPLICE_F_MORE);
+              if (count == 0) { break; }
+              if (count == -1) { perror("splice"); break; }
+              len += count;
+            }
+            printf("    client -> pipe              (%ld bytes)\n", len);
+
+            len = splice(proxy[0], NULL, sock, NULL, len, SPLICE_F_MOVE | SPLICE_F_MORE);
+            if (count == -1) { perror("splice"); break; }
+            printf("              pipe -> server    (%ld bytes)\n", len);
+          } while (false);
+
+          ret = close(proxy[0]);
+          if (ret == -1) { perror("close"); break; }
+          ret = close(proxy[1]);
+          if (ret == -1) { perror("close"); break; }
+        } while (false);
+
+        // Close the server socket
+        ret = close(sock);
+        if (ret == -1) { perror("close"); break; }
+      } while (false);
     }
 
     // Close the connection
     ret = close(client);
     if (ret) { perror("close"); continue; }
-    printf("Closed connection with \e[36m%s:%d\e[0m\n", inet_ntoa(client_addr.sin_addr), ntohs(client_addr.sin_port));
+    printf("Closed\n\n");
   }
 
   // Release resources
@@ -143,16 +175,11 @@ int main(int argc, char **argv) {
 }
 
 
-
-
-
 //
-// 주어진 버퍼가 다 차거나, fd에서 EOF나 LF를 줄때까지 읽기를 계속한다. 이
-// 함수의 실행결과는 아래 셋 중 하나이다
+// 주어진 버퍼가 다 차거나, fd에서 EOF나 LF를 줄때까지 읽기를 계속한다.
 //
-// 1. 버퍼가 꽉참
-// 2. 다읽었음
-// 3. 에러
+// If return value == bufsize, the buffer is full
+// Otherwise, met EOF or error
 //
 static ssize_t read_line(int fd, void *buf, size_t bufsize) {
   void *current = buf;
@@ -170,6 +197,27 @@ static ssize_t read_line(int fd, void *buf, size_t bufsize) {
     current = (void*)((uintptr_t)current + count);
   } while (remain > 0 && !newline);
   return bufsize - remain;
+}
+
+
+//
+// 버퍼에 있는 모든 내용물을 fd에 쓴다.
+//
+// If return value == count, successfully wrote everything
+// Otherwise, error
+//
+static ssize_t write_all(int fd, const void *buf, size_t count) {
+  const void *current = buf;
+  size_t remain = count;
+
+  do {
+    ssize_t count = write(fd, current, remain);
+    if (count == -1) { return -1; }
+
+    remain -= count;
+    current = (void*)((uintptr_t)current + count);
+  } while (remain > 0);
+  return count - remain;
 }
 
 
