@@ -31,6 +31,7 @@
 #include <unistd.h>
 #include <time.h>
 #include <signal.h>
+#include <pthread.h>
 #include <netdb.h>
 #include <arpa/inet.h>
 
@@ -47,7 +48,7 @@ static FILE *log;
 //
 // Function prototypes
 //
-static void per_connection(int client);
+static void *per_connection(void *client);
 static ssize_t read_all(int fd, void *buf, size_t bufsize);
 static ssize_t read_header(int fd, void *buf, size_t bufsize);
 static ssize_t write_all(int fd, const void *buf, size_t count);
@@ -112,10 +113,12 @@ int main(int argc, char **argv) {
     fprintf(log, "%s: %s ", time_str, addr_txt);
 
     // 처리
-    per_connection(client);
+    pthread_attr_t attr;
+    pthread_attr_init(&attr);
+    pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_DETACHED);
 
-    // 연결 종료
-    close(client);
+    pthread_t thread;
+    pthread_create(&thread, &attr, per_connection, (void*)(intptr_t)client);
   }
 
   // Release resources
@@ -128,7 +131,9 @@ int main(int argc, char **argv) {
 //
 // 한 커넥션마다 실행될 함수
 //
-void per_connection(int client) {
+void *per_connection(void *_client) {
+  int client = (int)(intptr_t)_client;
+
   // Initialize read/write buffer
   size_t bufsize = 2 * 1024 * 1024;
   void *const buf = malloc(bufsize);
@@ -204,6 +209,8 @@ free_result:
   freeaddrinfo(result);
 free_buf:
   free(buf);
+  close(client);
+  return NULL;
 }
 
 
