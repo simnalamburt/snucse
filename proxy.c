@@ -134,17 +134,17 @@ int main(int argc, char **argv) {
           if (ret == -1) { perror("pipe"); break; }
 
           do {
-            ssize_t len = 0;
-            while (true) {
-              ssize_t count = splice(client, NULL, proxy[1], NULL, 100, SPLICE_F_MOVE | SPLICE_F_MORE);
-              if (count == 0) { break; }
-              if (count == -1) { perror("splice"); break; }
-              len += count;
-            }
+            int flags = fcntl(client, F_GETFL, 0);
+            if (flags == -1) { perror("fcntl"); break; }
+            ret = fcntl(client, F_SETFL, flags | O_NONBLOCK);
+            if (ret == -1) { perror("fcntl"); break; }
+
+            ssize_t len = splice(client, NULL, proxy[1], NULL, 10000, SPLICE_F_MOVE | SPLICE_F_MORE);
+            if (len == -1) { perror("splice"); break; }
             printf("    client -> pipe              (%ld bytes)\n", len);
 
             len = splice(proxy[0], NULL, sock, NULL, len, SPLICE_F_MOVE | SPLICE_F_MORE);
-            if (count == -1) { perror("splice"); break; }
+            if (len == -1) { perror("splice"); break; }
             printf("              pipe -> server    (%ld bytes)\n", len);
           } while (false);
 
