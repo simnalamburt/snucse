@@ -85,11 +85,6 @@ int main(int argc, char **argv) {
   yes(bind(sock, (struct sockaddr*)&addr, sizeof addr));
   yes(listen(sock, SOMAXCONN));
 
-  // Print message
-  char addr_txt[INET_ADDRSTRLEN];
-  inet_ntop(addr.sin_family, &addr.sin_addr, addr_txt, sizeof addr_txt);
-  printf("Listening on \e[33m%s:%d\e[0m ...\n\n", addr_txt, ntohs(addr.sin_port));
-
   // Initialize read/write buffer
   size_t bufsize = 2 * 1024 * 1024;
   void *const buf = malloc(bufsize);
@@ -102,7 +97,6 @@ int main(int argc, char **argv) {
     socklen_t client_len = sizeof client_addr;
     int client = accept(sock, (struct sockaddr*)&client_addr, &client_len);
     if (client == -1) { perror("accept"); continue; }
-    printf("Connected\n");
 
     // Read header
     ssize_t count = read_header(client, buf, bufsize);
@@ -121,8 +115,6 @@ int main(int argc, char **argv) {
       size_t remain = (uintptr_t)buf + bufsize - (uintptr_t)next;
       memmove(end, next, remain);
       bufsize -= needle_len - overwrite_len;
-
-      printf("  Removed \"Connection: keep-alive\"\n");
     }
 
     // Extract URI
@@ -156,7 +148,6 @@ int main(int argc, char **argv) {
     // Upload the request header
     ret = write_all(server, buf, count);
     if (ret == -1) { perror("write_all"); goto close_server; }
-    printf("    client -> server    (%ld bytes)\n", count);
 
     // Download the response
     size_t size = 0;
@@ -165,7 +156,6 @@ int main(int argc, char **argv) {
       if (count == 0) { break; }
       ret = write_all(client, buf, count);
       if (ret == -1) { perror("write_all"); goto close_server; }
-      printf("    client <- server    (%ld bytes)\n", count);
       size += count;
     }
 
@@ -178,7 +168,6 @@ free_result:
     freeaddrinfo(result);
 close_client:
     close(client);
-    printf("Closed\n\n");
   }
 
   // Release resources
