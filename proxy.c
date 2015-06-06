@@ -30,6 +30,7 @@
 #include <string.h>
 #include <unistd.h>
 #include <time.h>
+#include <signal.h>
 #include <netdb.h>
 #include <arpa/inet.h>
 
@@ -72,6 +73,9 @@ int main(int argc, char **argv) {
     fprintf(stderr, "Usage: %s <port number>\n", argv[0]);
     return 1;
   }
+
+  // Ignore SIGPIPE
+  signal(SIGPIPE, SIG_IGN);
 
   // Open log file
   log = fopen("proxy.log", "a");
