@@ -4,9 +4,16 @@
 // Student Information:
 //     김지현, 2013-11392
 //
-// IMPORTANT: Give a high level description of your code here. You
-// must also provide a header comment at the beginning of each
-// function that describes what that function does.
+// 0.  argv[1]에서 프록시를 작동시킬 포트 번호를 얻어낸다.
+// 1.  소켓 하나를 초기화시켜 연결이 들어올때까지 기다린다.
+// 2.  연결이 맺어질경우 맨 첫번째줄만 먼저 읽은다음 거기서 URI를 얻어낸다.
+//     얻어낸 URI를 hostname과 포트번호, path로 분리한다음, hostname에 대응되는
+//     IP주소가 몇인지 DNS Lookup을 수행한다.
+// 3.  freeaddrinfo() 를 호출해 DNS Lookup 결과를 정리한다.
+// 4.  클라이언트쪽 소켓으로부터 EOF에 도달할때까지 모든 정보를 읽어서, 2번에서
+//     읽었던 첫번째줄 뒤에 붙인다. 이것으로 클라이언트가 전송한 온전한
+//     payload를 버퍼에 저장하였다.
+// 5.  클라이언트와 연결을 종료한다.
 //
 #include <stdio.h>
 #include <stdlib.h>
@@ -93,7 +100,7 @@ int main(int argc, char **argv) {
       // DNS Lookup
       struct addrinfo *result;
       ret = getaddrinfo(hostname, NULL, NULL, &result);
-      if (ret) { perror("getaddrinfo"); continue; }
+      if (ret) { fprintf(stderr, "getaddrinfo: %s\n", gai_strerror(ret)); continue; }
 
       // Print lookup result
       printf("hostname : %s\n", hostname);
@@ -104,7 +111,7 @@ int main(int argc, char **argv) {
       // Deallocate DNS Lookup result
       freeaddrinfo(result);
     } else {
-      perror("parse_uri");
+      fprintf(stderr, "parse_uri: There was no \"http://\" on the first line of the payload\n");
     }
 
     // Read the rest
