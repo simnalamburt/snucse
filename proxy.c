@@ -31,6 +31,31 @@ static void format_log_entry(char *logstring, struct sockaddr_in *sockaddr, cons
 
 
 //
+// 주어진 버퍼가 다 차거나, fd에서 EOF를 줄때까지 읽기를 계속한다. 이 함수의
+// 실행결과는 아래 셋 중 하나이다
+//
+// 1. 버퍼가 꽉참
+// 2. 다읽었음
+// 3. 에러
+//
+static ssize_t read_all(int fd, void *buf, size_t size) {
+  void *current = buf;
+  size_t remain = size;
+
+  do {
+    ssize_t count = read(fd, current, remain);
+    if (count == 0) { break; }
+    if (count == -1) { return -1; }
+
+    remain -= count;
+    current = (void*)((uintptr_t)current + count);
+  } while (remain > 0);
+
+  return size - remain;
+}
+
+
+//
 // Main routine for the proxy program
 //
 int main(int argc, char **argv) {
@@ -42,6 +67,7 @@ int main(int argc, char **argv) {
 
   int ret;
 
+  // Initialize incoming socket
   struct sockaddr_in addr;
   memset(&addr, 0, sizeof(addr));
   addr.sin_family = AF_INET;
@@ -64,15 +90,34 @@ int main(int argc, char **argv) {
   // Print message
   printf("Listening on \e[33m%s:%d\e[0m ...\n\n", inet_ntoa(addr.sin_addr), ntohs(addr.sin_port));
 
-  do {
-    struct sockaddr client;
-    socklen_t client_len;
-    ret = accept(sock, &client, &client_len);
-    if (ret == -1) { perror("accept"); continue; }
+  // Initialize read/write buffer
+  const size_t bufsize = 100 * 1024; // 100KB
+  void *const buf = malloc(bufsize);
 
+  do {
+    // 클라이언트와 커넥션 맺을때까지 대기
+    struct sockaddr_in client_addr;
+    socklen_t client_len = sizeof(client_addr);
+    int client = accept(sock, (struct sockaddr*)&client_addr, &client_len);
+    if (client == -1) { perror("accept"); continue; }
+    printf("Connection established with \e[36m%s:%d\e[0m\n", inet_ntoa(client_addr.sin_addr), ntohs(client_addr.sin_port));
+
+    // Read until EOF
+    ssize_t count = read_all(client, buf, bufsize);
+    if (count == -1) { perror("read"); continue; }
+
+    // Print payload
+    printf("\e[32m%.*s\e[0m\n", (int)count, (char*)buf);
+    printf("(%ld bytes)\n", count);
+
+    // Close socket
     ret = close(sock);
     if (ret == -1) { perror("close"); continue; }
+    printf("Closed connection with \e[36m%s:%d\e[0m\n", inet_ntoa(client_addr.sin_addr), ntohs(client_addr.sin_port));
   } while (false);
+
+  // Deallocate buffer
+  free(buf);
 
   return 0;
 }
