@@ -68,6 +68,9 @@ int main(int argc, char **argv) {
     return 1;
   }
 
+  // Open log file
+  FILE *log = fopen("proxy.log", "a");
+
   // Initialize incoming socket
   struct sockaddr_in addr;
   memset(&addr, 0, sizeof(addr));
@@ -120,12 +123,18 @@ int main(int argc, char **argv) {
       printf("  Removed \"Connection: keep-alive\"\n");
     }
 
+    // Extract URI
+    char *uri_begin = memmem(buf, count, "http://", 7);
+    char *uri_end = memchr(uri_begin, ' ', bufsize - ((uintptr_t)uri_end - (uintptr_t)buf));
+    size_t uri_len = (uintptr_t)uri_end - (uintptr_t)uri_begin;
+    char uri[MAXLINE] = {};
+    memcpy(uri, uri_begin, uri_len);
 
     // Parse URI
     char hostname[MAXLINE] = {};
     int port;
-    ret = parse_uri(memmem(buf, count, "http://", 7), hostname, &port);
-    if (ret == -1) { fprintf(stderr, "parse_uri: There was no \"http://\" on the first line of the payload\n"); goto close_client; }
+    ret = parse_uri(uri, hostname, &port);
+    if (ret == -1) { fprintf(stderr, "  There was no \"http://\" on the first line of the payload\n"); goto close_client; }
 
     // DNS Lookup
     struct addrinfo *result;
@@ -153,13 +162,18 @@ int main(int argc, char **argv) {
     printf("    client -> server    (%ld bytes)\n", count);
 
     // Download the response
+    size_t size = 0;
     while (true) {
       count = read_all(server, buf, bufsize);
       if (count == 0) { break; }
       ret = write_all(client, buf, count);
       if (ret == -1) { perror("write_all"); goto close_server; }
       printf("    client <- server    (%ld bytes)\n", count);
+      size += count;
     }
+
+    // Log
+    logging(log, &client_addr, uri, size);
 
 close_server:
     close(server);
@@ -173,6 +187,7 @@ close_client:
   // Release resources
   free(buf);
   yes(close(sock));
+  yes(fclose(log));
   return 0;
 }
 
@@ -282,5 +297,6 @@ void logging(FILE* file, struct sockaddr_in *addr, const char *uri, size_t size)
   strftime(time_str, MAXLINE, "%a %d %b %Y %H:%M:%S %Z", localtime(&now));
 
   // Return the formatted log entry string
-  fprintf(file, "%s: %s %s %lu", time_str, inet_ntoa(addr->sin_addr), uri, size);
+  fprintf(file, "%s: %s %s %lu\n", time_str, inet_ntoa(addr->sin_addr), uri, size);
+  fflush(file);
 }
