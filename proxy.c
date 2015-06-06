@@ -148,10 +148,13 @@ int main(int argc, char **argv) {
     printf("    client -> server    (%ld bytes)\n", count);
 
     // Download the response
-    count = read_all(server, buf, bufsize);
-    ret = write_all(client, buf, count);
-    if (ret == -1) { perror("write_all"); goto close_server; }
-    printf("    client <- server    (%ld bytes)\n", count);
+    while (true) {
+      count = read_all(server, buf, bufsize);
+      if (count == 0) { break; }
+      ret = write_all(client, buf, count);
+      if (ret == -1) { perror("write_all"); goto close_server; }
+      printf("    client <- server    (%ld bytes)\n", count);
+    }
 
 close_server:
     close(server);
