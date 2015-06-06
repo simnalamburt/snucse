@@ -48,10 +48,10 @@ static ssize_t read_all(int fd, void *buf, size_t bufsize);
 static ssize_t read_header(int fd, void *buf, size_t bufsize);
 static ssize_t write_all(int fd, const void *buf, size_t count);
 static int parse_uri(char *uri, char *target_addr, int *port);
-static void format_log_entry(char *logstring, struct sockaddr_in *sockaddr, const char *uri, size_t size);
+static void logging(FILE* file, struct sockaddr_in *sockaddr, const char *uri, size_t size);
 
 
-static int yes(int ret) {
+static inline int yes(int ret) {
   if (ret != -1) { return ret; }
   perror("Critical error");
   exit(1);
@@ -273,18 +273,14 @@ int parse_uri(char *uri, char *hostname, int *port) {
 
 
 //
-// format_log_entry - Create a formatted log entry in logstring.
+// 과제 스펙에 맞춰 프록시 로그를 출력한다.
 //
-// The inputs are the socket address of the requesting client
-// (sockaddr), the URI from the request (uri), and the size in bytes
-// of the response from the server (size).
-//
-void format_log_entry(char *logstring, struct sockaddr_in *addr, const char *uri, size_t size) {
+void logging(FILE* file, struct sockaddr_in *addr, const char *uri, size_t size) {
   // Get a formatted time string
   time_t now = time(NULL);
   char time_str[MAXLINE];
   strftime(time_str, MAXLINE, "%a %d %b %Y %H:%M:%S %Z", localtime(&now));
 
   // Return the formatted log entry string
-  sprintf(logstring, "%s: %s %s %lu", time_str, inet_ntoa(addr->sin_addr), uri, size);
+  fprintf(file, "%s: %s %s %lu", time_str, inet_ntoa(addr->sin_addr), uri, size);
 }
