@@ -13,7 +13,10 @@
 #include <stdbool.h>
 #include <stdint.h>
 #include <string.h>
+#include <unistd.h>
 #include <time.h>
+#include <sys/types.h>
+#include <sys/socket.h>
 #include <arpa/inet.h>
 
 // Max text line length
@@ -36,6 +39,42 @@ int main(int argc, char **argv) {
     fprintf(stderr, "Usage: %s <port number>\n", argv[0]);
     return 1;
   }
+
+  int ret;
+
+  struct sockaddr_in addr;
+  memset(&addr, 0, sizeof(addr));
+  addr.sin_family = AF_INET;
+  addr.sin_port = htons(atoi(argv[1]));
+  addr.sin_addr.s_addr = htonl(INADDR_ANY);
+
+  const int sock = socket(addr.sin_family, SOCK_STREAM, 0);
+  if (sock == -1) { perror("socket"); return 1; }
+
+  const int opt = true;
+  ret = setsockopt(sock, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt));
+  if (ret == -1) { perror("setsockopt"); return 1; }
+
+  ret = bind(sock, (struct sockaddr*)&addr, sizeof(addr));
+  if (ret == -1) { perror("bind"); return 1; }
+
+  ret = listen(sock, SOMAXCONN);
+  if (ret == -1) { perror("listen"); return 1; }
+
+  // Print message
+  uint32_t a = ntohl(addr.sin_addr.s_addr);
+  printf("Listening on \e[33m%d.%d.%d.%d:%d\e[0m ...\n\n",
+      a >> 24, (a >> 16) & 0xff, (a >> 8) & 0xff, a & 0xff, ntohs(addr.sin_port));
+
+  do {
+    struct sockaddr client;
+    socklen_t client_len;
+    ret = accept(sock, &client, &client_len);
+    if (ret == -1) { perror("accept"); continue; }
+
+    ret = close(sock);
+    if (ret == -1) { perror("close"); continue; }
+  } while (false);
 
   return 0;
 }
