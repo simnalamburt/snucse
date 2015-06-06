@@ -43,6 +43,13 @@ static int parse_uri(char *uri, char *target_addr, char *path, int *port);
 static void format_log_entry(char *logstring, struct sockaddr_in *sockaddr, const char *uri, size_t size);
 
 
+static int yes(int ret) {
+  if (ret != -1) { return ret; }
+  perror("Critical error");
+  exit(1);
+}
+
+
 //
 // Main routine for the proxy program
 //
@@ -53,8 +60,6 @@ int main(int argc, char **argv) {
     return 1;
   }
 
-  int ret;
-
   // Initialize incoming socket
   struct sockaddr_in addr;
   memset(&addr, 0, sizeof(addr));
@@ -62,18 +67,12 @@ int main(int argc, char **argv) {
   addr.sin_port = htons(atoi(argv[1]));
   addr.sin_addr.s_addr = htonl(INADDR_ANY);
 
-  const int sock = socket(addr.sin_family, SOCK_STREAM, 0);
-  if (sock == -1) { perror("socket"); return 1; }
+  const int sock = yes(socket(addr.sin_family, SOCK_STREAM, 0));
 
   const int opt = true;
-  ret = setsockopt(sock, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt));
-  if (ret == -1) { perror("setsockopt"); return 1; }
-
-  ret = bind(sock, (struct sockaddr*)&addr, sizeof(addr));
-  if (ret == -1) { perror("bind"); return 1; }
-
-  ret = listen(sock, SOMAXCONN);
-  if (ret == -1) { perror("listen"); return 1; }
+  yes(setsockopt(sock, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt)));
+  yes(bind(sock, (struct sockaddr*)&addr, sizeof(addr)));
+  yes(listen(sock, SOMAXCONN));
 
   // Print message
   printf("Listening on \e[33m%s:%d\e[0m ...\n\n", inet_ntoa(addr.sin_addr), ntohs(addr.sin_port));
@@ -83,6 +82,8 @@ int main(int argc, char **argv) {
   void *const buf = malloc(bufsize);
 
   while (true) {
+    int ret;
+
     // 클라이언트와 커넥션 맺을때까지 대기
     struct sockaddr_in client_addr;
     socklen_t client_len = sizeof(client_addr);
@@ -168,9 +169,7 @@ int main(int argc, char **argv) {
 
   // Release resources
   free(buf);
-  ret = close(sock);
-  if (ret == -1) { perror("close"); return -1; }
-
+  yes(close(sock));
   return 0;
 }
 
