@@ -37,6 +37,7 @@
 //
 // Function prototypes
 //
+static ssize_t read_all(int fd, void *buf, size_t bufsize);
 static ssize_t read_header(int fd, void *buf, size_t bufsize);
 static ssize_t write_all(int fd, const void *buf, size_t count);
 static int parse_uri(char *uri, char *target_addr, int *port);
@@ -127,22 +128,11 @@ int main(int argc, char **argv) {
     printf("    client -> server    (%ld bytes)\n", count);
 
     // Download the response
-    int down[2];
-    ret = pipe(down);
-    if (ret == -1) { perror("pipe"); goto close_sock; }
+    count = read_all(sock, buf, bufsize);
+    ret = write_all(client, buf, count);
+    if (ret == -1) { perror("write_all"); goto close_sock; }
+    printf("    client <- server    (%ld bytes)\n", count);
 
-    ssize_t len = splice(sock, NULL, down[1], NULL, 10000, SPLICE_F_MOVE | SPLICE_F_MORE);
-    if (len == -1) { perror("splice"); goto close_pipe_down; }
-    printf("              pipe <- server    (%ld bytes)\n", len);
-
-    len = splice(down[0], NULL, client, NULL, 10000, SPLICE_F_MOVE | SPLICE_F_MORE);
-    if (len == -1) { perror("splice"); goto close_pipe_down; }
-    printf("    client <- pipe              (%ld bytes)\n", len);
-
-    // Release resources
-close_pipe_down:
-    close(down[0]);
-    close(down[1]);
 close_sock:
     close(sock);
 close_client:
@@ -158,10 +148,31 @@ close_client:
 
 
 //
-// 주어진 버퍼가 다 차거나, fd에서 EOF나 "CRLFCRLF"를 줄때까지 읽기를 계속한다.
+// 주어진 버퍼가 다 차거나, fd에서 EOF를 줄때까지 읽기를 계속한다.
 //
 // If return value == bufsize, the buffer is full
 // Otherwise, met EOF or error
+//
+static ssize_t read_all(int fd, void *buf, size_t bufsize) {
+  void *current = buf;
+  size_t remain = bufsize;
+
+  do {
+    ssize_t count = read(fd, current, remain);
+    if (count == 0 || count == -1) { break; }
+
+    remain -= count;
+    current = (void*)((uintptr_t)current + count);
+  } while (remain > 0);
+  return bufsize - remain;
+}
+
+
+//
+// 주어진 버퍼가 다 차거나, fd에서 EOF나 "CRLFCRLF"를 줄때까지 읽기를 계속한다.
+//
+// If return value == bufsize, the buffer is full
+// Otherwise, met EOF, "CRLFCRLF" or error
 //
 static ssize_t read_header(int fd, void *buf, size_t bufsize) {
   void *current = buf;
