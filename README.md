@@ -4,3 +4,4 @@ Web Proxy
 * Lab Assignment 7: Web Proxy 1/2
 * Assigned: May 26
 * Due: June 8, 11:59PM
+* Port range: **10200 ~ 10299**
