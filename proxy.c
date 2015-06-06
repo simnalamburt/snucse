@@ -37,7 +37,7 @@
 //
 // Function prototypes
 //
-static ssize_t read_line(int fd, void *buf, size_t bufsize);
+static ssize_t read_header(int fd, void *buf, size_t bufsize);
 static ssize_t write_all(int fd, const void *buf, size_t count);
 static int parse_uri(char *uri, char *target_addr, int *port);
 static void format_log_entry(char *logstring, struct sockaddr_in *sockaddr, const char *uri, size_t size);
@@ -78,7 +78,7 @@ int main(int argc, char **argv) {
   printf("Listening on \e[33m%s:%d\e[0m ...\n\n", inet_ntoa(addr.sin_addr), ntohs(addr.sin_port));
 
   // Initialize read/write buffer
-  const size_t bufsize = 100;
+  const size_t bufsize = 2 * 1024 * 1024;
   void *const buf = malloc(bufsize);
 
   while (true) {
@@ -92,7 +92,7 @@ int main(int argc, char **argv) {
     printf("Connected\n  %s:%d", inet_ntoa(client_addr.sin_addr), ntohs(client_addr.sin_port));
 
     // Read first line
-    ssize_t count = read_line(client, buf, bufsize);
+    ssize_t count = read_header(client, buf, bufsize);
 
     // Parse URI
     char hostname[MAXLINE] = {};
@@ -121,33 +121,17 @@ int main(int argc, char **argv) {
     // Deallocate DNS Lookup result
     freeaddrinfo(result);
 
-    // Proxy the first line
+    // Upload the request header
     ret = write_all(sock, buf, count);
     if (ret == -1) { perror("write_all"); goto close_sock; }
-    printf("    client     ->     server    (%ld bytes)\n", count);
+    printf("    client -> server    (%ld bytes)\n", count);
 
-    int up[2];
-    ret = pipe(up);
-    if (ret == -1) { perror("pipe"); goto close_sock; }
-
-    int flags = fcntl(client, F_GETFL, 0);
-    if (flags == -1) { perror("fcntl"); goto close_pipe_up; }
-    ret = fcntl(client, F_SETFL, flags | O_NONBLOCK);
-    if (ret == -1) { perror("fcntl"); goto close_pipe_up; }
-
-    ssize_t len = splice(client, NULL, up[1], NULL, 10000, SPLICE_F_MOVE | SPLICE_F_MORE);
-    if (len == -1) { perror("splice"); goto close_pipe_up; }
-    printf("    client -> pipe              (%ld bytes)\n", len);
-
-    len = splice(up[0], NULL, sock, NULL, len, SPLICE_F_MOVE | SPLICE_F_MORE);
-    if (len == -1) { perror("splice"); goto close_pipe_up; }
-    printf("              pipe -> server    (%ld bytes)\n", len);
-
+    // Download the response
     int down[2];
     ret = pipe(down);
-    if (ret == -1) { perror("pipe"); goto close_pipe_up; }
+    if (ret == -1) { perror("pipe"); goto close_sock; }
 
-    len = splice(sock, NULL, down[1], NULL, 10000, SPLICE_F_MOVE | SPLICE_F_MORE);
+    ssize_t len = splice(sock, NULL, down[1], NULL, 10000, SPLICE_F_MOVE | SPLICE_F_MORE);
     if (len == -1) { perror("splice"); goto close_pipe_down; }
     printf("              pipe <- server    (%ld bytes)\n", len);
 
@@ -155,14 +139,10 @@ int main(int argc, char **argv) {
     if (len == -1) { perror("splice"); goto close_pipe_down; }
     printf("    client <- pipe              (%ld bytes)\n", len);
 
-
     // Release resources
 close_pipe_down:
     close(down[0]);
     close(down[1]);
-close_pipe_up:
-    close(up[0]);
-    close(up[1]);
 close_sock:
     close(sock);
 close_client:
@@ -178,26 +158,26 @@ close_client:
 
 
 //
-// 주어진 버퍼가 다 차거나, fd에서 EOF나 LF를 줄때까지 읽기를 계속한다.
+// 주어진 버퍼가 다 차거나, fd에서 EOF나 "CRLFCRLF"를 줄때까지 읽기를 계속한다.
 //
 // If return value == bufsize, the buffer is full
 // Otherwise, met EOF or error
 //
-static ssize_t read_line(int fd, void *buf, size_t bufsize) {
+static ssize_t read_header(int fd, void *buf, size_t bufsize) {
   void *current = buf;
   size_t remain = bufsize;
-  bool newline = false;
+  bool end = false;
 
   do {
     ssize_t count = read(fd, current, remain);
     if (count == 0 || count == -1) { break; }
 
-    void *pos = memchr(current, '\n', count);
-    if (pos != NULL) { newline = true; }
+    void *pos = memmem(current, count, "\r\n\r\n", 4);
+    if (pos != NULL) { end = true; }
 
     remain -= count;
     current = (void*)((uintptr_t)current + count);
-  } while (remain > 0 && !newline);
+  } while (remain > 0 && !end);
   return bufsize - remain;
 }
 
