@@ -78,7 +78,7 @@ int main(int argc, char **argv) {
   printf("Listening on \e[33m%s:%d\e[0m ...\n\n", inet_ntoa(addr.sin_addr), ntohs(addr.sin_port));
 
   // Initialize read/write buffer
-  const size_t bufsize = 100; // 100KB
+  const size_t bufsize = 100;
   void *const buf = malloc(bufsize);
 
   while (true) {
@@ -99,71 +99,59 @@ int main(int argc, char **argv) {
     char path[MAXLINE] = {};
     int port;
     ret = parse_uri(memmem(buf, count, "http://", 7), hostname, path, &port);
-    if (ret == -1) {
-      fprintf(stderr, "parse_uri: There was no \"http://\" on the first line of the payload\n");
-    } else {
-      do {
-        // DNS Lookup
-        struct addrinfo *result;
-        ret = getaddrinfo(hostname, NULL, NULL, &result);
-        if (ret) { fprintf(stderr, "getaddrinfo: %s\n", gai_strerror(ret)); break; }
+    if (ret == -1) { fprintf(stderr, "parse_uri: There was no \"http://\" on the first line of the payload\n"); goto close_client; }
 
-        // Set port number
-        struct sockaddr_in *addr = (struct sockaddr_in*)result->ai_addr;
-        addr->sin_port = htons(port);
+    // DNS Lookup
+    struct addrinfo *result;
+    ret = getaddrinfo(hostname, NULL, NULL, &result);
+    if (ret) { fprintf(stderr, "getaddrinfo: %s\n", gai_strerror(ret)); goto close_client; }
 
-        // Print lookup result
-        printf(" -> \e[36mhttp://%s%s\e[0m (%s:%d)\n", hostname, path, inet_ntoa(addr->sin_addr), ntohs(addr->sin_port));
+    // Set port number
+    struct sockaddr_in *addr = (struct sockaddr_in*)result->ai_addr;
+    addr->sin_port = htons(port);
 
-        // Make a new connection toward the server
-        const int sock = socket(result->ai_family, result->ai_socktype, 0);
-        if (sock == -1) { perror("socket"); freeaddrinfo(result); break; }
-        do {
-          ret = connect(sock, result->ai_addr, result->ai_addrlen);
-          if (ret == -1) { perror("connect"); freeaddrinfo(result); break; }
+    // Print lookup result
+    printf(" -> \e[36mhttp://%s%s\e[0m (%s:%d)\n", hostname, path, inet_ntoa(addr->sin_addr), ntohs(addr->sin_port));
 
-          // Deallocate DNS Lookup result
-          freeaddrinfo(result);
+    // Make a new connection toward the server
+    const int sock = socket(result->ai_family, result->ai_socktype, 0);
+    if (sock == -1) { perror("socket"); freeaddrinfo(result); goto close_client; }
+    ret = connect(sock, result->ai_addr, result->ai_addrlen);
+    if (ret == -1) { perror("connect"); freeaddrinfo(result); goto close_sock; }
 
-          // Proxy the payload
-          ret = write_all(sock, buf, count);
-          if (ret == -1) { perror("write_all"); break; }
-          printf("    client     ->     server    (%ld bytes)\n", count);
+    // Deallocate DNS Lookup result
+    freeaddrinfo(result);
 
-          int up[2];
-          ret = pipe(up);
-          if (ret == -1) { perror("pipe"); break; }
+    // Proxy the first line
+    ret = write_all(sock, buf, count);
+    if (ret == -1) { perror("write_all"); goto close_sock; }
+    printf("    client     ->     server    (%ld bytes)\n", count);
 
-          do {
-            int flags = fcntl(client, F_GETFL, 0);
-            if (flags == -1) { perror("fcntl"); break; }
-            ret = fcntl(client, F_SETFL, flags | O_NONBLOCK);
-            if (ret == -1) { perror("fcntl"); break; }
+    int up[2];
+    ret = pipe(up);
+    if (ret == -1) { perror("pipe"); goto close_sock; }
 
-            ssize_t len = splice(client, NULL, up[1], NULL, 10000, SPLICE_F_MOVE | SPLICE_F_MORE);
-            if (len == -1) { perror("splice"); break; }
-            printf("    client -> pipe              (%ld bytes)\n", len);
+    int flags = fcntl(client, F_GETFL, 0);
+    if (flags == -1) { perror("fcntl"); goto close_pipe_up; }
+    ret = fcntl(client, F_SETFL, flags | O_NONBLOCK);
+    if (ret == -1) { perror("fcntl"); goto close_pipe_up; }
 
-            len = splice(up[0], NULL, sock, NULL, len, SPLICE_F_MOVE | SPLICE_F_MORE);
-            if (len == -1) { perror("splice"); break; }
-            printf("              pipe -> server    (%ld bytes)\n", len);
-          } while (false);
+    ssize_t len = splice(client, NULL, up[1], NULL, 10000, SPLICE_F_MOVE | SPLICE_F_MORE);
+    if (len == -1) { perror("splice"); goto close_pipe_up; }
+    printf("    client -> pipe              (%ld bytes)\n", len);
 
-          ret = close(up[0]);
-          if (ret == -1) { perror("close"); break; }
-          ret = close(up[1]);
-          if (ret == -1) { perror("close"); break; }
-        } while (false);
+    len = splice(up[0], NULL, sock, NULL, len, SPLICE_F_MOVE | SPLICE_F_MORE);
+    if (len == -1) { perror("splice"); goto close_pipe_up; }
+    printf("              pipe -> server    (%ld bytes)\n", len);
 
-        // Close the server socket
-        ret = close(sock);
-        if (ret == -1) { perror("close"); break; }
-      } while (false);
-    }
-
-    // Close the connection
-    ret = close(client);
-    if (ret) { perror("close"); continue; }
+    // Release resources
+close_pipe_up:
+    close(up[0]);
+    close(up[1]);
+close_sock:
+    close(sock);
+close_client:
+    close(client);
     printf("Closed\n\n");
   }
 
