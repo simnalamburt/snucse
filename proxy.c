@@ -115,16 +115,22 @@ int main(int argc, char **argv) {
         inet_ntoa(client_addr.sin_addr), ntohs(client_addr.sin_port),
         hostname, inet_ntoa(addr->sin_addr), ntohs(addr->sin_port));
 
-    // Remove 'Connection: keep-alive'
+    // "Connection: keep-alive" -> "Connection: close"
     char needle[] = "Connection: keep-alive\r\n";
     size_t needle_len = sizeof needle - 1;
     void *pos = memmem(buf, count, needle, needle_len);
     if (pos != NULL) {
-      printf("    Removed \"Connection: keep-alive\"\n");
+      char overwrite[] = "Connection: close\r\n";
+      size_t overwrite_len = sizeof overwrite - 1;
+      memcpy(pos, overwrite, overwrite_len);
+
+      void *end = (void*)((uintptr_t)pos + overwrite_len);
       void *next = (void*)((uintptr_t)pos + needle_len);
       size_t remain = (uintptr_t)buf + bufsize - (uintptr_t)next;
-      memmove(pos, next, remain);
-      bufsize -= needle_len;
+      memmove(end, next, remain);
+      bufsize -= needle_len - overwrite_len;
+
+      printf("    Removed \"Connection: keep-alive\"\n");
     }
 
     // Make a new connection toward the server
