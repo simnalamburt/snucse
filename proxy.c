@@ -39,7 +39,7 @@
 //
 static ssize_t read_line(int fd, void *buf, size_t bufsize);
 static ssize_t write_all(int fd, const void *buf, size_t count);
-static int parse_uri(char *uri, char *target_addr, char *path, int *port);
+static int parse_uri(char *uri, char *target_addr, int *port);
 static void format_log_entry(char *logstring, struct sockaddr_in *sockaddr, const char *uri, size_t size);
 
 
@@ -96,9 +96,8 @@ int main(int argc, char **argv) {
 
     // Parse URI
     char hostname[MAXLINE] = {};
-    char path[MAXLINE] = {};
     int port;
-    ret = parse_uri(memmem(buf, count, "http://", 7), hostname, path, &port);
+    ret = parse_uri(memmem(buf, count, "http://", 7), hostname, &port);
     if (ret == -1) { fprintf(stderr, "parse_uri: There was no \"http://\" on the first line of the payload\n"); goto close_client; }
 
     // DNS Lookup
@@ -111,7 +110,7 @@ int main(int argc, char **argv) {
     addr->sin_port = htons(port);
 
     // Print lookup result
-    printf(" -> \e[36mhttp://%s%s\e[0m (%s:%d)\n", hostname, path, inet_ntoa(addr->sin_addr), ntohs(addr->sin_port));
+    printf(" -> \e[36m%s\e[0m (%s:%d)\n", hostname, inet_ntoa(addr->sin_addr), ntohs(addr->sin_port));
 
     // Make a new connection toward the server
     const int sock = socket(result->ai_family, result->ai_socktype, 0);
@@ -211,15 +210,13 @@ static ssize_t write_all(int fd, const void *buf, size_t count) {
 //
 // parse_uri - URI parser
 //
-// Given a URI from an HTTP proxy GET request (i.e., a URL), extract
-// the host name, path name, and port.  The memory for hostname and
-// pathname must already be allocated and should be at least MAXLINE
-// bytes. Return -1 if there are any problems.
+// Given a URI from an HTTP proxy GET request (i.e., a URL), extract the host
+// name and port. The memory for hostname must already be allocated and should
+// be at least MAXLINE bytes. Return -1 if there are any problems.
 //
-int parse_uri(char *uri, char *hostname, char *pathname, int *port) {
+int parse_uri(char *uri, char *hostname, int *port) {
   if (uri == NULL || strncasecmp(uri, "http://", 7) != 0) {
     hostname[0] = '\0';
-    pathname[0] = '\0';
     return -1;
   }
 
@@ -232,19 +229,7 @@ int parse_uri(char *uri, char *hostname, char *pathname, int *port) {
 
   // Extract the port number
   *port = 80;
-  if (*hostend == ':') {
-    *port = atoi(hostend + 1);
-  }
-
-  // Extract the path
-  char *pathbegin = strchr(hostbegin, '/');
-  if (pathbegin == NULL) {
-    pathname[0] = '/';
-    pathname[1] = '\0';
-  } else {
-    char *pathend = strpbrk(pathbegin, " \r\n\0");
-    strncpy(pathname, pathbegin, (uintptr_t)pathend - (uintptr_t)pathbegin);
-  }
+  if (*hostend == ':') { *port = atoi(hostend + 1); }
 
   return 0;
 }
