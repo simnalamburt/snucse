@@ -31,31 +31,6 @@ static void format_log_entry(char *logstring, struct sockaddr_in *sockaddr, cons
 
 
 //
-// 주어진 버퍼가 다 차거나, fd에서 EOF를 줄때까지 읽기를 계속한다. 이 함수의
-// 실행결과는 아래 셋 중 하나이다
-//
-// 1. 버퍼가 꽉참
-// 2. 다읽었음
-// 3. 에러
-//
-static ssize_t read_all(int fd, void *buf, size_t size) {
-  void *current = buf;
-  size_t remain = size;
-
-  do {
-    ssize_t count = read(fd, current, remain);
-    if (count == 0) { break; }
-    if (count == -1) { return -1; }
-
-    remain -= count;
-    current = (void*)((uintptr_t)current + count);
-  } while (remain > 0);
-
-  return size - remain;
-}
-
-
-//
 // Main routine for the proxy program
 //
 int main(int argc, char **argv) {
@@ -102,9 +77,11 @@ int main(int argc, char **argv) {
     if (client == -1) { perror("accept"); continue; }
     printf("Connection established with \e[36m%s:%d\e[0m\n", inet_ntoa(client_addr.sin_addr), ntohs(client_addr.sin_port));
 
+    // Convert fd into FILE*
+    FILE *input = fdopen(client, "r");
+
     // Read until EOF
-    ssize_t count = read_all(client, buf, bufsize);
-    if (count == -1) { perror("read"); continue; }
+    size_t count = fread(buf, 1, bufsize, input);
 
     // Print payload
     printf("\e[32m%.*s\e[0m\n", (int)count, (char*)buf);
