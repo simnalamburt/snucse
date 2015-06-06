@@ -114,27 +114,27 @@ int main(int argc, char **argv) {
     printf(" -> \e[36m%s\e[0m (%s:%d)\n", hostname, inet_ntoa(addr->sin_addr), ntohs(addr->sin_port));
 
     // Make a new connection toward the server
-    const int sock = socket(result->ai_family, result->ai_socktype, 0);
-    if (sock == -1) { perror("socket"); freeaddrinfo(result); goto close_client; }
-    ret = connect(sock, result->ai_addr, result->ai_addrlen);
-    if (ret == -1) { perror("connect"); freeaddrinfo(result); goto close_sock; }
+    const int server = socket(result->ai_family, result->ai_socktype, 0);
+    if (server == -1) { perror("socket"); freeaddrinfo(result); goto close_client; }
+    ret = connect(server, result->ai_addr, result->ai_addrlen);
+    if (ret == -1) { perror("connect"); freeaddrinfo(result); goto close_server; }
 
     // Deallocate DNS Lookup result
     freeaddrinfo(result);
 
     // Upload the request header
-    ret = write_all(sock, buf, count);
-    if (ret == -1) { perror("write_all"); goto close_sock; }
+    ret = write_all(server, buf, count);
+    if (ret == -1) { perror("write_all"); goto close_server; }
     printf("    client -> server    (%ld bytes)\n", count);
 
     // Download the response
-    count = read_all(sock, buf, bufsize);
+    count = read_all(server, buf, bufsize);
     ret = write_all(client, buf, count);
-    if (ret == -1) { perror("write_all"); goto close_sock; }
+    if (ret == -1) { perror("write_all"); goto close_server; }
     printf("    client <- server    (%ld bytes)\n", count);
 
-close_sock:
-    close(sock);
+close_server:
+    close(server);
 close_client:
     close(client);
     printf("Closed\n\n");
