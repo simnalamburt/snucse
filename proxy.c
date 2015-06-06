@@ -48,6 +48,11 @@ static FILE *log;
 //
 // Function prototypes
 //
+typedef struct {
+  int client;
+  char addr_txt[INET_ADDRSTRLEN];
+} data_t;
+
 static void *per_connection(void *client);
 static ssize_t read_all(int fd, void *buf, size_t bufsize);
 static ssize_t read_header(int fd, void *buf, size_t bufsize);
@@ -103,14 +108,9 @@ int main(int argc, char **argv) {
     if (client == -1) { perror("accept"); continue; }
 
     // 로그
-    time_t now = time(NULL);
-    char time_str[MAXLINE];
-    strftime(time_str, MAXLINE, "%a %d %b %y %h:%m:%s %z", localtime(&now));
-
-    // return the formatted log entry string
-    char addr_txt[INET_ADDRSTRLEN];
-    inet_ntop(client_addr.sin_family, &client_addr.sin_addr, addr_txt, sizeof addr_txt);
-    fprintf(log, "%s: %s ", time_str, addr_txt);
+    data_t *data = malloc(sizeof(data_t));
+    data->client = client;
+    inet_ntop(client_addr.sin_family, &client_addr.sin_addr, data->addr_txt, sizeof data->addr_txt);
 
     // 처리
     pthread_attr_t attr;
@@ -118,7 +118,7 @@ int main(int argc, char **argv) {
     pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_DETACHED);
 
     pthread_t thread;
-    pthread_create(&thread, &attr, per_connection, (void*)(intptr_t)client);
+    pthread_create(&thread, &attr, per_connection, data);
   }
 
   // Release resources
@@ -131,8 +131,9 @@ int main(int argc, char **argv) {
 //
 // 한 커넥션마다 실행될 함수
 //
-void *per_connection(void *_client) {
-  int client = (int)(intptr_t)_client;
+void *per_connection(void *_data) {
+  data_t *data = _data;
+  int client = data->client;
 
   // Initialize read/write buffer
   size_t bufsize = 2 * 1024 * 1024;
@@ -200,7 +201,11 @@ void *per_connection(void *_client) {
   }
 
   // Log
-  fprintf(log, "%s %lu\n", uri, size);
+  time_t now = time(NULL);
+  char time_str[MAXLINE];
+  strftime(time_str, MAXLINE, "%a %d %b %y %h:%m:%s %z", localtime(&now));
+
+  fprintf(log, "%s: %s %s %lu\n", time_str, data->addr_txt, uri, size);
   fflush(log);
 
 close_server:
@@ -210,6 +215,7 @@ free_result:
 free_buf:
   free(buf);
   close(client);
+  free(data);
   return NULL;
 }
 
