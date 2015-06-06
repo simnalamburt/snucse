@@ -27,7 +27,7 @@
 // Function prototypes
 //
 static int parse_uri(char *uri, char *target_addr, char *path, int *port);
-static void format_log_entry(char *logstring, struct sockaddr_in *sockaddr, char *uri, size_t size);
+static void format_log_entry(char *logstring, struct sockaddr_in *sockaddr, const char *uri, size_t size);
 
 
 //
@@ -62,9 +62,7 @@ int main(int argc, char **argv) {
   if (ret == -1) { perror("listen"); return 1; }
 
   // Print message
-  uint32_t a = ntohl(addr.sin_addr.s_addr);
-  printf("Listening on \e[33m%d.%d.%d.%d:%d\e[0m ...\n\n",
-      a >> 24, (a >> 16) & 0xff, (a >> 8) & 0xff, a & 0xff, ntohs(addr.sin_port));
+  printf("Listening on \e[33m%s:%d\e[0m ...\n\n", inet_ntoa(addr.sin_addr), ntohs(addr.sin_port));
 
   do {
     struct sockaddr client;
@@ -131,28 +129,12 @@ int parse_uri(char *uri, char *hostname, char *pathname, int *port) {
 // (sockaddr), the URI from the request (uri), and the size in bytes
 // of the response from the server (size).
 //
-void format_log_entry(char *logstring, struct sockaddr_in *sockaddr, char *uri, size_t size) {
-  time_t now;
-  char time_str[MAXLINE];
-  unsigned long host;
-  unsigned char a, b, c, d;
-
+void format_log_entry(char *logstring, struct sockaddr_in *addr, const char *uri, size_t size) {
   // Get a formatted time string
-  now = time(NULL);
+  time_t now = time(NULL);
+  char time_str[MAXLINE];
   strftime(time_str, MAXLINE, "%a %d %b %Y %H:%M:%S %Z", localtime(&now));
 
-  //
-  // Convert the IP address in network byte order to dotted decimal
-  // form. Note that we could have used inet_ntoa, but chose not to
-  // because inet_ntoa is a Class 3 thread unsafe function that
-  // returns a pointer to a static variable (Ch 13, CS:APP).
-  //
-  host = ntohl(sockaddr->sin_addr.s_addr);
-  a = host >> 24;
-  b = (host >> 16) & 0xff;
-  c = (host >> 8) & 0xff;
-  d = host & 0xff;
-
   // Return the formatted log entry string
-  sprintf(logstring, "%s: %d.%d.%d.%d %s %lu", time_str, a, b, c, d, uri, size);
+  sprintf(logstring, "%s: %s %s %lu", time_str, inet_ntoa(addr->sin_addr), uri, size);
 }
