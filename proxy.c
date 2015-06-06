@@ -129,8 +129,8 @@ int main(int argc, char **argv) {
           if (ret == -1) { perror("write_all"); break; }
           printf("    client     ->     server    (%ld bytes)\n", count);
 
-          int proxy[2];
-          ret = pipe(proxy);
+          int up[2];
+          ret = pipe(up);
           if (ret == -1) { perror("pipe"); break; }
 
           do {
@@ -139,18 +139,18 @@ int main(int argc, char **argv) {
             ret = fcntl(client, F_SETFL, flags | O_NONBLOCK);
             if (ret == -1) { perror("fcntl"); break; }
 
-            ssize_t len = splice(client, NULL, proxy[1], NULL, 10000, SPLICE_F_MOVE | SPLICE_F_MORE);
+            ssize_t len = splice(client, NULL, up[1], NULL, 10000, SPLICE_F_MOVE | SPLICE_F_MORE);
             if (len == -1) { perror("splice"); break; }
             printf("    client -> pipe              (%ld bytes)\n", len);
 
-            len = splice(proxy[0], NULL, sock, NULL, len, SPLICE_F_MOVE | SPLICE_F_MORE);
+            len = splice(up[0], NULL, sock, NULL, len, SPLICE_F_MOVE | SPLICE_F_MORE);
             if (len == -1) { perror("splice"); break; }
             printf("              pipe -> server    (%ld bytes)\n", len);
           } while (false);
 
-          ret = close(proxy[0]);
+          ret = close(up[0]);
           if (ret == -1) { perror("close"); break; }
-          ret = close(proxy[1]);
+          ret = close(up[1]);
           if (ret == -1) { perror("close"); break; }
         } while (false);
 
