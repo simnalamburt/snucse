@@ -69,7 +69,7 @@ int main(int argc, char **argv) {
   const size_t bufsize = 100 * 1024; // 100KB
   void *const buf = malloc(bufsize);
 
-  do {
+  while (true) {
     // 클라이언트와 커넥션 맺을때까지 대기
     struct sockaddr_in client_addr;
     socklen_t client_len = sizeof(client_addr);
@@ -107,11 +107,11 @@ int main(int argc, char **argv) {
     printf("\e[0m\n(%ld bytes)\n", count);
 
 
-    // Close socket
-    ret = close(sock);
-    if (ret == -1) { perror("close"); continue; }
+    // Close the connection
+    ret = fclose(input);
+    if (ret) { perror("fclose"); continue; }
     printf("Closed connection with \e[36m%s:%d\e[0m\n", inet_ntoa(client_addr.sin_addr), ntohs(client_addr.sin_port));
-  } while (false);
+  }
 
   // Deallocate buffer
   free(buf);
