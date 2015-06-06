@@ -102,14 +102,28 @@ int main(int argc, char **argv) {
       ret = getaddrinfo(hostname, NULL, NULL, &result);
       if (ret) { fprintf(stderr, "getaddrinfo: %s\n", gai_strerror(ret)); continue; }
 
+      // Set port number
+      struct sockaddr_in *addr = (struct sockaddr_in*)result->ai_addr;
+      addr->sin_port = htons(port);
+
       // Print lookup result
       printf("hostname : %s\n", hostname);
-      printf("host IP  : %s\n", inet_ntoa(((struct sockaddr_in*)result->ai_addr)->sin_addr));
-      printf("port     : %d\n", port);
+      printf("host IP  : %s\n", inet_ntoa(addr->sin_addr));
+      printf("port     : %d\n", ntohs(addr->sin_port));
       printf("path     : %s\n", path);
+
+      // Make a new connection toward the server
+      const int sock = socket(result->ai_family, result->ai_socktype, 0);
+      if (sock == -1) { perror("socket"); continue; }
+      ret = connect(sock, result->ai_addr, result->ai_addrlen);
+      if (ret == -1) { perror("connect"); continue; }
 
       // Deallocate DNS Lookup result
       freeaddrinfo(result);
+
+      // Close the server socket
+      ret = close(sock);
+      if (ret == -1) { perror("close"); continue; }
     } else {
       fprintf(stderr, "parse_uri: There was no \"http://\" on the first line of the payload\n");
     }
