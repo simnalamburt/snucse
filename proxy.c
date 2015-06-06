@@ -132,8 +132,10 @@ int main(int argc, char **argv) {
     printf("Closed connection with \e[36m%s:%d\e[0m\n", inet_ntoa(client_addr.sin_addr), ntohs(client_addr.sin_port));
   }
 
-  // Deallocate buffer
+  // Release resources
   free(buf);
+  ret = close(sock);
+  if (ret == -1) { perror("close"); return -1; }
 
   return 0;
 }
