@@ -15,7 +15,7 @@
 // Function prototypes
 //
 static int parse_uri(char *uri, char *target_addr, char *path, int *port);
-static void format_log_entry(char *logstring, struct sockaddr_in *sockaddr, char *uri, int size);
+static void format_log_entry(char *logstring, struct sockaddr_in *sockaddr, char *uri, size_t size);
 
 
 //
@@ -83,7 +83,7 @@ int parse_uri(char *uri, char *hostname, char *pathname, int *port) {
 // (sockaddr), the URI from the request (uri), and the size in bytes
 // of the response from the server (size).
 //
-void format_log_entry(char *logstring, struct sockaddr_in *sockaddr, char *uri, int size) {
+void format_log_entry(char *logstring, struct sockaddr_in *sockaddr, char *uri, size_t size) {
   time_t now;
   char time_str[MAXLINE];
   unsigned long host;
@@ -106,5 +106,5 @@ void format_log_entry(char *logstring, struct sockaddr_in *sockaddr, char *uri, 
   d = host & 0xff;
 
   // Return the formatted log entry string
-  sprintf(logstring, "%s: %d.%d.%d.%d %s", time_str, a, b, c, d, uri);
+  sprintf(logstring, "%s: %d.%d.%d.%d %s %lu", time_str, a, b, c, d, uri, size);
 }
