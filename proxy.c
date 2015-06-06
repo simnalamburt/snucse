@@ -6,15 +6,22 @@
 //
 // 0.  argv[1]에서 프록시를 작동시킬 포트 번호를 얻어낸다.
 // 1.  소켓 하나를 초기화시켜 연결이 들어올때까지 기다린다.
-// 2.  연결이 맺어질경우 맨 첫번째줄만 먼저 읽은다음 거기서 URI를 얻어낸다.
-//     얻어낸 URI를 hostname과 포트번호, path로 분리한다음, hostname에 대응되는
-//     IP주소가 몇인지 DNS Lookup을 수행한다.
-// 3.  freeaddrinfo() 를 호출해 DNS Lookup 결과를 정리한다.
-// 4.  클라이언트쪽 소켓으로부터 EOF에 도달할때까지 모든 정보를 읽어서, 2번에서
-//     읽었던 첫번째줄 뒤에 붙인다. 이것으로 클라이언트가 전송한 온전한
-//     payload를 버퍼에 저장하였다.
-// 5.  클라이언트와 연결을 종료한다.
-// 6.  1번으로 돌아간다.
+// 2.  연결이 맺어질경우 "\r\n\r\n"을 받을때까지 읽어서 request header를 받는다.
+//
+// 3.  얻어낸 Request header에서, "Connection: keep-alive" 라는 문자열을 찾아
+//     "Connection: close"로 치환한다. 이때 길이가 변하는데, memmove() 함수로
+//     처리한다.
+//
+// 4.  Request header에 적혀있는 서버 URI를 hostname과 포트번호, path로
+//     분리한다음, hostname에 대응되는 IP주소가 몇인지 DNS Lookup을 수행한다.
+//
+// 5.  DNS Lookup으로 알아낸 IP 주소를 통해, 웹서버와 커넥션을 맺는다. 버퍼에
+//     저장된 Request header를 서버로 보낸다.
+//
+// 6.  웹서버가 연결을 종료할때까지 웹서버가 전송하는 모든 데이터를
+//     클라이언트에게 보낸다.
+//
+// 1~6을 반복한다.
 //
 #define _GNU_SOURCE
 #include <stdio.h>
@@ -95,6 +102,25 @@ int main(int argc, char **argv) {
     // Read header
     ssize_t count = read_header(client, buf, bufsize);
 
+    // "Connection: keep-alive" -> "Connection: close"
+    char needle[] = "Connection: keep-alive\r\n";
+    size_t needle_len = sizeof needle - 1;
+    void *pos = memmem(buf, count, needle, needle_len);
+    if (pos != NULL) {
+      char overwrite[] = "Connection: close\r\n";
+      size_t overwrite_len = sizeof overwrite - 1;
+      memcpy(pos, overwrite, overwrite_len);
+
+      void *end = (void*)((uintptr_t)pos + overwrite_len);
+      void *next = (void*)((uintptr_t)pos + needle_len);
+      size_t remain = (uintptr_t)buf + bufsize - (uintptr_t)next;
+      memmove(end, next, remain);
+      bufsize -= needle_len - overwrite_len;
+
+      printf("  Removed \"Connection: keep-alive\"\n");
+    }
+
+
     // Parse URI
     char hostname[MAXLINE] = {};
     int port;
@@ -115,32 +141,11 @@ int main(int argc, char **argv) {
         inet_ntoa(client_addr.sin_addr), ntohs(client_addr.sin_port),
         hostname, inet_ntoa(addr->sin_addr), ntohs(addr->sin_port));
 
-    // "Connection: keep-alive" -> "Connection: close"
-    char needle[] = "Connection: keep-alive\r\n";
-    size_t needle_len = sizeof needle - 1;
-    void *pos = memmem(buf, count, needle, needle_len);
-    if (pos != NULL) {
-      char overwrite[] = "Connection: close\r\n";
-      size_t overwrite_len = sizeof overwrite - 1;
-      memcpy(pos, overwrite, overwrite_len);
-
-      void *end = (void*)((uintptr_t)pos + overwrite_len);
-      void *next = (void*)((uintptr_t)pos + needle_len);
-      size_t remain = (uintptr_t)buf + bufsize - (uintptr_t)next;
-      memmove(end, next, remain);
-      bufsize -= needle_len - overwrite_len;
-
-      printf("    Removed \"Connection: keep-alive\"\n");
-    }
-
     // Make a new connection toward the server
     const int server = socket(result->ai_family, result->ai_socktype, 0);
-    if (server == -1) { perror("socket"); freeaddrinfo(result); goto close_client; }
+    if (server == -1) { perror("socket"); freeaddrinfo(result); goto free_result; }
     ret = connect(server, result->ai_addr, result->ai_addrlen);
     if (ret == -1) { perror("connect"); freeaddrinfo(result); goto close_server; }
-
-    // Deallocate DNS Lookup result
-    freeaddrinfo(result);
 
     // Upload the request header
     ret = write_all(server, buf, count);
@@ -158,6 +163,8 @@ int main(int argc, char **argv) {
 
 close_server:
     close(server);
+free_result:
+    freeaddrinfo(result);
 close_client:
     close(client);
     printf("Closed\n\n");
