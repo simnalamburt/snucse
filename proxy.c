@@ -17,6 +17,7 @@
 #include <time.h>
 #include <sys/types.h>
 #include <sys/socket.h>
+#include <netdb.h>
 #include <arpa/inet.h>
 
 // Max text line length
@@ -89,8 +90,19 @@ int main(int argc, char **argv) {
     int port;
     ret = parse_uri(strstr(buf, "http://"), hostname, path, &port);
     if (ret != -1) {
+      // DNS Lookup
+      struct addrinfo *result;
+      ret = getaddrinfo(hostname, NULL, NULL, &result);
+      if (ret) { perror("getaddrinfo"); continue; }
+
+      // Print lookup result
       printf("hostname : %s\n", hostname);
+      printf("host IP  : %s\n", inet_ntoa(((struct sockaddr_in*)result->ai_addr)->sin_addr));
+      printf("port     : %d\n", port);
       printf("path     : %s\n", path);
+
+      // Deallocate DNS Lookup result
+      freeaddrinfo(result);
     } else {
       perror("parse_uri");
     }
