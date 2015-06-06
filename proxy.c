@@ -53,6 +53,9 @@ static ssize_t write_all(int fd, const void *buf, size_t count);
 static int parse_uri(char *uri, char *target_addr, int *port);
 
 
+//
+// 시스템콜 반환값 검사하는 함수.
+//
 static inline int yes(int ret) {
   if (ret != -1) { return ret; }
   perror("Critical error");
