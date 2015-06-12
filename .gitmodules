@@ -22,3 +22,9 @@
 [submodule "Multicore/matmul"]
 	path = Multicore/matmul
 	url = git@github.com:simnalamburt/snucse.matmul.git
+[submodule "System Programming/malloclab"]
+	path = System Programming/malloclab
+	url = git@github.com:simnalamburt/snucse.malloclab.git
+[submodule "System Programming/proxylab"]
+	path = System Programming/proxylab
+	url = git@github.com:simnalamburt/snucse.proxylab.git
