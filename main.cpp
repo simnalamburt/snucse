@@ -6,24 +6,15 @@
 //
 // Routines to compute various security prices using HJM framework (via Simulation).
 //
-#include <stdio.h>
-#include <stdlib.h>
-#include <math.h>
-#include <iostream>
-#include <string.h>
-#include <assert.h>
-#ifdef ENABLE_THREADS
+#include <cstdio>
+#include <cstdlib>
+#include <cmath>
+#include <cstring>
+#include <cassert>
 #include <pthread.h>
-#endif
 #include "type.h"
 #include "helper.h"
 #include "swaption.h"
-
-
-#define BLOCK_SIZE 16 // Blocking to allow better caching
-#ifdef ENABLE_THREADS
-#define MAX_THREAD 1024
-#endif
 
 
 namespace {
@@ -63,12 +54,13 @@ namespace {
     const int end = tid != nThreads - 1 ? (tid + 1)*chunksize : nSwaptions;
     FTYPE pdSwaptionPrice[2];
     for (int i = beg; i < end; ++i) {
+      int block_size = 16;
       int iSuccess = swaption(pdSwaptionPrice,  swaptions[i].dStrike,
           swaptions[i].dCompounding, swaptions[i].dMaturity,
           swaptions[i].dTenor, swaptions[i].dPaymentInterval,
           swaptions[i].iN, swaptions[i].iFactors, swaptions[i].dYears,
           swaptions[i].pdYield, swaptions[i].ppdFactors,
-          100, NUM_TRIALS, BLOCK_SIZE, 0);
+          100, NUM_TRIALS, block_size, 0);
       assert(iSuccess == 1);
       swaptions[i].dSimSwaptionMeanPrice = pdSwaptionPrice[0];
       swaptions[i].dSimSwaptionStdError = pdSwaptionPrice[1];
@@ -107,6 +99,10 @@ int main(int argc, char *argv[]) {
           "\t-nt [number of threads]\n");
     }
   }
+  if (nThreads < 1) {
+    fprintf(stderr,"Number of threads must be greater than 1.\n");
+    exit(1);
+  }
 
   if(nSwaptions < nThreads) {
     nSwaptions = nThreads;
@@ -114,32 +110,13 @@ int main(int argc, char *argv[]) {
 
   printf("Number of Simulations: %d,  Number of threads: %d Number of swaptions: %d\n", NUM_TRIALS, nThreads, nSwaptions);
 
-#ifdef ENABLE_THREADS
   pthread_t      *threads;
   pthread_attr_t  pthread_custom_attr;
 
-  if ((nThreads < 1) || (nThreads > MAX_THREAD))
-  {
-    fprintf(stderr,"Number of threads must be between 1 and %d.\n", MAX_THREAD);
-    exit(1);
-  }
+
   threads = (pthread_t *) malloc(nThreads * sizeof(pthread_t));
   pthread_attr_init(&pthread_custom_attr);
 
-
-  if ((nThreads < 1) || (nThreads > MAX_THREAD))
-  {
-    fprintf(stderr,"Number of threads must be between 1 and %d.\n", MAX_THREAD);
-    exit(1);
-  }
-
-#else
-  if (nThreads != 1)
-  {
-    fprintf(stderr,"Number of threads must be 1 (serial version)\n");
-    exit(1);
-  }
-#endif //ENABLE_THREADS
 
   // Initialize input dataset
   FTYPE **factors = dmatrix(0, iFactors-1, 0, iN-2);
@@ -211,7 +188,6 @@ int main(int argc, char *argv[]) {
   //
   // Calling the Swaption Pricing Routine
   //
-#ifdef ENABLE_THREADS
   int threadIDs[nThreads];
   for (int i = 0; i < nThreads; ++i) {
     threadIDs[i] = i;
@@ -222,10 +198,6 @@ int main(int argc, char *argv[]) {
   }
 
   free(threads);
-#else
-  int threadID=0;
-  worker(&threadID);
-#endif //ENABLE_THREADS
 
   for (int i = 0; i < nSwaptions; ++i) {
     fprintf(stderr, "Swaption%d: [SwaptionPrice: %.10lf StdError: %.10lf] \n",

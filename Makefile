@@ -1,10 +1,11 @@
 CXXFLAGS = -W -Wall -Wextra -Wunused -Wunreachable-code -std=c++0x -g
 
 ifdef version
-  ifeq "$(version)" "pthreads"
-    CXXFLAGS += -DENABLE_THREADS
-    LDFLAGS += -pthread
+  ifeq "$(version)" "cpu"
+    CXXFLAGS += -DCPU
   endif
+else
+  LDFLAGS += -pthread
 endif
 
 BIN=bin
