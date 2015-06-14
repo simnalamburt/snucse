@@ -6,12 +6,10 @@
 //
 // Routines to compute various security prices using HJM framework (via Simulation).
 //
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
 #include <iostream>
-
 #include "nr_routines.h"
 #include "HJM.h"
 #include "main.h"
@@ -21,10 +19,6 @@
 #include <pthread.h>
 #define MAX_THREAD 1024
 #endif //ENABLE_THREADS
-
-#ifdef ENABLE_PARSEC_HOOKS
-#include <hooks.h>
-#endif
 
 
 //
@@ -73,23 +67,6 @@ void *worker(void *arg) {
 // Adding 0.5 ensures that this does not happen. Therefore we use (int) (X/Y + 0.5); instead of (int) (X/Y);
 //
 int main(int argc, char *argv[]) {
-  int iSuccess = 0;
-
-  FTYPE **factors=NULL;
-
-#ifdef PARSEC_VERSION
-#define __PARSEC_STRING(x) #x
-#define __PARSEC_XSTRING(x) __PARSEC_STRING(x)
-  printf("PARSEC Benchmark Suite Version "__PARSEC_XSTRING(PARSEC_VERSION)"\n");
-  fflush(NULL);
-#else
-  printf("PARSEC Benchmark Suite\n");
-  fflush(NULL);
-#endif //PARSEC_VERSION
-#ifdef ENABLE_PARSEC_HOOKS
-  __parsec_bench_begin(__parsec_swaptions);
-#endif
-
   if (argc == 1) {
     fprintf(stderr,
         " usage: \n"
@@ -146,7 +123,7 @@ int main(int argc, char *argv[]) {
 #endif //ENABLE_THREADS
 
   // initialize input dataset
-  factors = dmatrix(0, iFactors-1, 0, iN-2);
+  FTYPE **factors = dmatrix(0, iFactors-1, 0, iN-2);
   //the three rows store vol data for the three factors
   factors[0][0]= 0.01;
   factors[0][1]= 0.01;
@@ -215,10 +192,6 @@ int main(int argc, char *argv[]) {
   //
   // Calling the Swaption Pricing Routine
   //
-#ifdef ENABLE_PARSEC_HOOKS
-  __parsec_roi_begin();
-#endif
-
 #ifdef ENABLE_THREADS
   int threadIDs[nThreads];
   for (int i = 0; i < nThreads; ++i) {
@@ -235,14 +208,9 @@ int main(int argc, char *argv[]) {
   worker(&threadID);
 #endif //ENABLE_THREADS
 
-#ifdef ENABLE_PARSEC_HOOKS
-  __parsec_roi_end();
-#endif
-
   for (int i = 0; i < nSwaptions; ++i) {
     fprintf(stderr, "Swaption%d: [SwaptionPrice: %.10lf StdError: %.10lf] \n",
         i, swaptions[i].dSimSwaptionMeanPrice, swaptions[i].dSimSwaptionStdError);
-
   }
 
   for (int i = 0; i < nSwaptions; ++i) {
@@ -250,13 +218,6 @@ int main(int argc, char *argv[]) {
     free_dmatrix(swaptions[i].ppdFactors, 0, swaptions[i].iFactors-1, 0, swaptions[i].iN-2);
   }
 
-
   free(swaptions);
-
-  // -----------------------------------------------------------
-
-#ifdef ENABLE_PARSEC_HOOKS
-  __parsec_bench_end();
-#endif
-  return iSuccess;
+  return 0;
 }
