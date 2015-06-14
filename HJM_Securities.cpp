@@ -17,15 +17,6 @@
 #include <pthread.h>
 #define MAX_THREAD 1024
 
-#ifdef TBB_VERSION
-#include "tbb/task_scheduler_init.h"
-#include "tbb/blocked_range.h"
-#include "tbb/parallel_for.h"
-#include "tbb/cache_aligned_allocator.h"
-tbb::cache_aligned_allocator<FTYPE> memory_ftype;
-tbb::cache_aligned_allocator<parm> memory_parm;
-#define TBB_GRAINSIZE 1
-#endif // TBB_VERSION
 #endif //ENABLE_THREADS
 
 
@@ -47,33 +38,6 @@ FTYPE *dSumSquareSimSwaptionPrice_global_ptr;
 int chunksize;
 
 
-#ifdef TBB_VERSION
-struct Worker {
-  Worker(){}
-  void operator()(const tbb::blocked_range<int> &range) const {
-    FTYPE pdSwaptionPrice[2];
-    int begin = range.begin();
-    int end   = range.end();
-
-    for(int i=begin; i!=end; i++) {
-      int iSuccess = HJM_Swaption_Blocking(pdSwaptionPrice,  swaptions[i].dStrike,
-					   swaptions[i].dCompounding, swaptions[i].dMaturity,
-					   swaptions[i].dTenor, swaptions[i].dPaymentInterval,
-					   swaptions[i].iN, swaptions[i].iFactors, swaptions[i].dYears,
-					   swaptions[i].pdYield, swaptions[i].ppdFactors,
-					   100, NUM_TRIALS, BLOCK_SIZE, 0);
-      assert(iSuccess == 1);
-      swaptions[i].dSimSwaptionMeanPrice = pdSwaptionPrice[0];
-      swaptions[i].dSimSwaptionStdError = pdSwaptionPrice[1];
-
-    }
-
-
-
-  }
-};
-
-#endif //TBB_VERSION
 
 
 void * worker(void *arg){
@@ -151,9 +115,6 @@ int main(int argc, char *argv[])
 
 #ifdef ENABLE_THREADS
 
-#ifdef TBB_VERSION
-	tbb::task_scheduler_init init(nThreads);
-#else
 	pthread_t      *threads;
 	pthread_attr_t  pthread_custom_attr;
 
@@ -165,7 +126,6 @@ int main(int argc, char *argv[])
 	threads = (pthread_t *) malloc(nThreads * sizeof(pthread_t));
 	pthread_attr_init(&pthread_custom_attr);
 
-#endif // TBB_VERSION
 
 	if ((nThreads < 1) || (nThreads > MAX_THREAD))
 	{
@@ -219,11 +179,7 @@ int main(int argc, char *argv[])
 
         // setting up multiple swaptions
         swaptions =
-#ifdef TBB_VERSION
-	  (parm *)memory_parm.allocate(sizeof(parm)*nSwaptions, NULL);
-#else
 	  (parm *)malloc(sizeof(parm)*nSwaptions);
-#endif
 
         int k;
         for (i = 0; i < nSwaptions; i++) {
@@ -257,10 +213,6 @@ int main(int argc, char *argv[])
 
 #ifdef ENABLE_THREADS
 
-#ifdef TBB_VERSION
-	Worker w;
-	tbb::parallel_for(tbb::blocked_range<int>(0,nSwaptions,TBB_GRAINSIZE),w);
-#else
 
 	int threadIDs[nThreads];
         for (i = 0; i < nThreads; i++) {
@@ -273,7 +225,6 @@ int main(int argc, char *argv[])
 
 	free(threads);
 
-#endif // TBB_VERSION
 
 #else
 	int threadID=0;
@@ -296,11 +247,7 @@ int main(int argc, char *argv[])
         }
 
 
-#ifdef TBB_VERSION
-	memory_parm.deallocate(swaptions, sizeof(parm));
-#else
         free(swaptions);
-#endif // TBB_VERSION
 
 	//***********************************************************
 

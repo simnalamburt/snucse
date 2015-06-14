@@ -8,10 +8,6 @@ ifdef version
     DEF := $(DEF) -DENABLE_THREADS
     CXXFLAGS := $(CXXFLAGS) -pthread
   endif
-  ifeq "$(version)" "tbb"
-    DEF := $(DEF) -DENABLE_THREADS -DTBB_VERSION
-    LIBS := $(LIBS) -ltbb
-  endif
 endif
 
 OBJS=CumNormalInv.o MaxFunction.o RanUnif.o nr_routines.o icdf.o \
