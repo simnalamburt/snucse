@@ -26,8 +26,8 @@ int Discount_Factors_Blocking_SSE(FTYPE *pdDiscountFactors, int iN, FTYPE dYears
 int HJM_Swaption_Blocking_SSE(FTYPE *pdSwaptionPrice, //Output vector that will store simulation results in the form:
 			                              //Swaption Price
 			                              //Swaption Standard Error
-			      //Swaption Parameters 
-			      FTYPE dStrike,				  
+			      //Swaption Parameters
+			      FTYPE dStrike,
 			      FTYPE dCompounding,     //Compounding convention used for quoting the strike (0 => continuous,
 			      //0.5 => semi-annual, 1 => annual).
 			      FTYPE dMaturity,	      //Maturity of the swaption (time to expiration)
@@ -35,20 +35,20 @@ int HJM_Swaption_Blocking_SSE(FTYPE *pdSwaptionPrice, //Output vector that will 
 			      FTYPE dPaymentInterval, //frequency of swap payments e.g. dPaymentInterval = 0.5 implies a swap payment every half
 		                              //year
 			      //HJM Framework Parameters (please refer HJM.cpp for explanation of variables and functions)
-			      int iN,						
-			      int iFactors, 
-			      FTYPE dYears, 
-			      FTYPE *pdYield, 
+			      int iN,
+			      int iFactors,
+			      FTYPE dYears,
+			      FTYPE *pdYield,
 			      FTYPE **ppdFactors,
 			      //Simulation Parameters
-			      long iRndSeed, 
+			      long iRndSeed,
 			      long lTrials, int blocksize, int tid);
- 
+
 int HJM_Swaption_Blocking(FTYPE *pdSwaptionPrice, //Output vector that will store simulation results in the form:
 			                              //Swaption Price
 			                              //Swaption Standard Error
-			      //Swaption Parameters 
-			      FTYPE dStrike,				  
+			      //Swaption Parameters
+			      FTYPE dStrike,
 			      FTYPE dCompounding,     //Compounding convention used for quoting the strike (0 => continuous,
 			      //0.5 => semi-annual, 1 => annual).
 			      FTYPE dMaturity,	      //Maturity of the swaption (time to expiration)
@@ -56,13 +56,13 @@ int HJM_Swaption_Blocking(FTYPE *pdSwaptionPrice, //Output vector that will stor
 			      FTYPE dPaymentInterval, //frequency of swap payments e.g. dPaymentInterval = 0.5 implies a swap payment every half
 		                              //year
 			      //HJM Framework Parameters (please refer HJM.cpp for explanation of variables and functions)
-			      int iN,						
-			      int iFactors, 
-			      FTYPE dYears, 
-			      FTYPE *pdYield, 
+			      int iN,
+			      int iFactors,
+			      FTYPE dYears,
+			      FTYPE *pdYield,
 			      FTYPE **ppdFactors,
 			      //Simulation Parameters
-			      long iRndSeed, 
+			      long iRndSeed,
 			      long lTrials, int blocksize, int tid);
 /*
 extern "C" FTYPE *dvector( long nl, long nh );

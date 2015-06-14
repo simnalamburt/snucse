@@ -1,6 +1,6 @@
 //HJM.cpp
 //Routine to setup HJM framework.
-//Authors: Mark Broadie, Jatin Dewanwala, Columbia University 
+//Authors: Mark Broadie, Jatin Dewanwala, Columbia University
 //Collaborator: Mikhail Smelyanskiy, Intel
 //Based on hjm_simn.xls created by Mark Broadie
 
@@ -38,7 +38,7 @@ int HJM_SimPath_Yield(FTYPE **ppdHJMPath,  //Matrix that stores generated HJM pa
 //This function returns a single generated HJM Path for the given inputs
 
 	int iSuccess = 0;						//return variable
-	
+
 	FTYPE *pdForward;						//Vector that will store forward curve computed from given yield curve
 	FTYPE **ppdDrifts;						//Matrix that will store drifts for different maturities for each factor
 	FTYPE *pdTotalDrift;					//Vector that stores total drift for each maturity
@@ -46,7 +46,7 @@ int HJM_SimPath_Yield(FTYPE **ppdHJMPath,  //Matrix that stores generated HJM pa
 	pdForward = dvector(0, iN-1);
 	ppdDrifts = dmatrix(0, iFactors-1, 0, iN-2);
 	pdTotalDrift = dvector(0, iN-2);
-    	
+
 	//generating forward curve at t=0 from supplied yield curve
 	iSuccess = HJM_Yield_to_Forward(pdForward, iN, pdYield);
 	if (iSuccess!=1)
@@ -66,7 +66,7 @@ int HJM_SimPath_Yield(FTYPE **ppdHJMPath,  //Matrix that stores generated HJM pa
 		free_dvector(pdTotalDrift, 0, iN-1);
 		return iSuccess;
 	}
-	
+
 	//generating HJM Path
 	iSuccess = HJM_SimPath_Forward(ppdHJMPath, iN, iFactors, dYears, pdForward, pdTotalDrift,ppdFactors, lRndSeed);
 	if (iSuccess!=1)
@@ -87,7 +87,7 @@ int HJM_SimPath_Yield(FTYPE **ppdHJMPath,  //Matrix that stores generated HJM pa
 
 int HJM_Yield_to_Forward (FTYPE *pdForward,	//Forward curve to be outputted
 						 int iN,				//Number of time-steps
-						 FTYPE *pdYield)		//Input yield curve 
+						 FTYPE *pdYield)		//Input yield curve
 {
 //This function computes forward rates from supplied yield rates.
 
@@ -106,8 +106,8 @@ int HJM_Yield_to_Forward (FTYPE *pdForward,	//Forward curve to be outputted
 
 
 int HJM_Factors(FTYPE **ppdFactors,	//Output matrix that stores factor volatilities for different maturities
-				int iN,					
-				int iFactors, 
+				int iN,
+				int iFactors,
 				FTYPE *pdVol,			//Input vector of total volatilities for different maturities
 				FTYPE **ppdFacBreak)	//Input matrix of factor weights for each maturity
 {
@@ -115,7 +115,7 @@ int HJM_Factors(FTYPE **ppdFactors,	//Output matrix that stores factor volatilit
 //The function is called when the user inputs total volatility data and the weight distribution
 //according to which the total variance has to be split accross various factors.
 
-//For instance, the user may supply				   Maturity:	1	   2	  3      4		
+//For instance, the user may supply				   Maturity:	1	   2	  3      4
 //total vol (pdVol) as								  Sigma:  1.35%, 1.30%, 1.25%, 1.20%,....
 //and the weight breakdown (ppdFacBreak) as        Factor 1:   0.55,  0.60,  0.65,  0.69,....
 //												   Factor 2:   0.44,  0.39,  0.34,  0.30,....
@@ -123,7 +123,7 @@ int HJM_Factors(FTYPE **ppdFactors,	//Output matrix that stores factor volatilit
 //Note that the weights add up to 1 in each case. Also, the weights are based on variance not volatility.
 
 //Based on these inputs, the function will calculate individual volatilties for each factor for each maturity.
-//The output (ppdFactors) may look something like: Maturity:	1	   2	  3      4		
+//The output (ppdFactors) may look something like: Maturity:	1	   2	  3      4
 //												   Factor 1:  1.00%  1.00%  1.00%  1.00%
 //												   Factor 2:  0.90%  0.82%  0.74%  0.67%
 //												   Factor 3:  0.10%  0.08%  0.05%  0.03%
@@ -131,12 +131,12 @@ int HJM_Factors(FTYPE **ppdFactors,	//Output matrix that stores factor volatilit
 
 	int i,j; //looping variables
 	int iSuccess = 0;
-	
+
 	//Computation of factor volatilities
 	for(i = 0; i<=iFactors-1; ++i)
 		for(j=0; j<=iN-2;++j)
 			ppdFactors[i][j] = sqrt((ppdFacBreak[i][j])*(pdVol[j])*(pdVol[j]));
-	
+
 	iSuccess =1;
 	return iSuccess;
 }
@@ -144,7 +144,7 @@ int HJM_Factors(FTYPE **ppdFactors,	//Output matrix that stores factor volatilit
 
 int HJM_Drifts(FTYPE *pdTotalDrift,	//Output vector that stores the total drift correction for each maturity
 			   FTYPE **ppdDrifts,		//Output matrix that stores drift correction for each factor for each maturity
-			   int iN, 
+			   int iN,
 			   int iFactors,
 			   FTYPE dYears,
 			   FTYPE **ppdFactors)		//Input factor volatilities
@@ -155,11 +155,11 @@ int HJM_Drifts(FTYPE *pdTotalDrift,	//Output vector that stores the total drift 
 	int i, j, l; //looping variables
 	FTYPE ddelt = (FTYPE) (dYears/iN);
 	FTYPE dSumVol;
-	
+
 	//computation of factor drifts for shortest maturity
 	for (i=0; i<=iFactors-1; ++i)
 		ppdDrifts[i][0] = 0.5*ddelt*(ppdFactors[i][0])*(ppdFactors[i][0]);
-	
+
 	//computation of factor drifts for other maturities
 	for (i=0; i<=iFactors-1;++i)
 		for (j=1; j<=iN-2; ++j)
@@ -172,7 +172,7 @@ int HJM_Drifts(FTYPE *pdTotalDrift,	//Output vector that stores the total drift 
 				dSumVol += ppdFactors[i][l];
 			ppdDrifts[i][j] += 0.5*ddelt*(dSumVol)*(dSumVol);
 		}
-	
+
 	//computation of total drifts for all maturities
 	for(i=0;i<=iN-2;++i)
 	{
@@ -193,18 +193,18 @@ int HJM_SimPath_Forward(FTYPE **ppdHJMPath,	//Matrix that stores generated HJM p
 						FTYPE *pdTotalDrift,	//Vector containing total drift corrections for different maturities
 						FTYPE **ppdFactors,	//Factor volatilities
 						long *lRndSeed)			//Random number seed
-{	
+{
 //This function computes and stores an HJM Path for given inputs
 
 	int iSuccess = 0;
 	int i,j,l; //looping variables
-	
+
 	FTYPE ddelt; //length of time steps
 	FTYPE dTotalShock; //total shock by which the forward curve is hit at (t, T-t)
 	FTYPE *pdZ; //vector to store random normals
-	
+
 	ddelt = (FTYPE)(dYears/iN);
-	
+
 	pdZ = dvector(0, iFactors -1); //assigning memory
 
 	for(i=0;i<=iN-1;++i)
@@ -213,8 +213,8 @@ int HJM_SimPath_Forward(FTYPE **ppdHJMPath,	//Matrix that stores generated HJM p
 
 	//t=0 forward curve stored iN first row of ppdHJMPath
 	for(i=0;i<=iN-1; ++i)
-		ppdHJMPath[0][i] = pdForward[i]; 
-	
+		ppdHJMPath[0][i] = pdForward[i];
+
 	//Generation of HJM Path
 	for (j=1;j<=iN-1;++j)
 	{
@@ -231,7 +231,7 @@ int HJM_SimPath_Forward(FTYPE **ppdHJMPath,	//Matrix that stores generated HJM p
 		  //as per formula
 		}
 	}
-	
+
 	free_dvector(pdZ, 0, iFactors -1);
 	iSuccess = 1;
 	return iSuccess;
@@ -241,8 +241,8 @@ int HJM_SimPath_Forward(FTYPE **ppdHJMPath,	//Matrix that stores generated HJM p
 
 
 int HJM_Correlations(FTYPE **ppdHJMCorr,//Matrix that stores correlations among factor volatilities for different maturities
-					 int iN, 
-					 int iFactors, 
+					 int iN,
+					 int iFactors,
 					 FTYPE **ppdFactors)
 {
 //This function is based on factor.xls created by Mark Broadie
@@ -252,10 +252,10 @@ int HJM_Correlations(FTYPE **ppdHJMCorr,//Matrix that stores correlations among 
 	int i, j, l; //looping variables
 	FTYPE *pdTotalVol; //vector that stores total volatility data for different maturities
 	FTYPE **ppdWeights; //matrix that stores ratio of each factor to total volatility for different maturities
-	
+
 	pdTotalVol = dvector(0,iN-2);
 	ppdWeights = dmatrix(0, iFactors-1,0, iN-2);
-	
+
 	//Total Volatility computed from given factor volatilities
 	for(i=0;i<=iN-2;++i)
 	{
@@ -264,7 +264,7 @@ int HJM_Correlations(FTYPE **ppdHJMCorr,//Matrix that stores correlations among 
 			pdTotalVol[i] += ppdFactors[j][i]*ppdFactors[j][i];
 		pdTotalVol[i] = sqrt(pdTotalVol[i]);
 	}
-	
+
 	//Weights computed
 	for(i=0;i<=iN-2;++i)
 		for(j=0;j<=iFactors-1;++j)
@@ -274,13 +274,13 @@ int HJM_Correlations(FTYPE **ppdHJMCorr,//Matrix that stores correlations among 
 	for(i=0;i<=iN-2;++i)
 		for(j=0;j<=iN-2;++j)
 			ppdHJMCorr[i][j]=0;
-	
+
 	//Correlations computed
 	for(i=0;i<=iN-2;++i)
 		for(j=i;j<=iN-2;++j)
 			for(l=0;l<=iFactors-1;++l)
 				ppdHJMCorr[i][j] += ppdWeights[l][i]*ppdWeights[l][j];
-	
+
 	free_dvector(pdTotalVol, 0,iN-2);
 	free_dmatrix(ppdWeights, 0, iFactors-1,0, iN-2);
 	iSuccess = 1;
@@ -306,9 +306,9 @@ int HJM_Forward_to_Yield (FTYPE *pdYield,	//Output yield curve
 	return iSuccess;
 }
 
-int Discount_Factors(FTYPE *pdDiscountFactors, 
-                     int iN, 
-                     FTYPE dYears, 
+int Discount_Factors(FTYPE *pdDiscountFactors,
+                     int iN,
+                     FTYPE dYears,
                      FTYPE *pdRatePath)
 {
         int i,j;                                //looping variables
@@ -329,14 +329,14 @@ int Discount_Factors(FTYPE *pdDiscountFactors,
         return iSuccess;
 }
 
-int Discount_Factors_opt(FTYPE *pdDiscountFactors, 
-		     int iN, 
-		     FTYPE dYears, 
+int Discount_Factors_opt(FTYPE *pdDiscountFactors,
+		     int iN,
+		     FTYPE dYears,
 		     FTYPE *pdRatePath)
 {
 	int i,j;				//looping variables
 	int iSuccess;			//return variable
-	
+
 	FTYPE ddelt;			//HJM time-step length
 	ddelt = (FTYPE) (dYears/iN);
 
@@ -350,11 +350,11 @@ int Discount_Factors_opt(FTYPE *pdDiscountFactors,
 	//precompute the exponientials
 	for (j=0; j<=(i-2); ++j){ pdexpRes[j] = -pdRatePath[j]*ddelt; }
 	for (j=0; j<=(i-2); ++j){ pdexpRes[j] = exp(pdexpRes[j]);  }
-	
+
 	for (i=1; i<=iN-1; ++i)
 	  for (j=0; j<=i-1; ++j)
 	    pdDiscountFactors[i] *= pdexpRes[j];
-		
+
 	free_dvector(pdexpRes, 0, iN-2);
 	iSuccess = 1;
 	return iSuccess;
@@ -364,15 +364,15 @@ int Discount_Factors_opt(FTYPE *pdDiscountFactors,
 // ***********************************************************************
 // ***********************************************************************
 // ***********************************************************************
-int Discount_Factors_Blocking(FTYPE *pdDiscountFactors, 
-			      int iN, 
-			      FTYPE dYears, 
+int Discount_Factors_Blocking(FTYPE *pdDiscountFactors,
+			      int iN,
+			      FTYPE dYears,
 			      FTYPE *pdRatePath,
 			      int BLOCKSIZE)
 {
 	int i,j,b;				//looping variables
 	int iSuccess;			//return variable
-	
+
 	FTYPE ddelt;			//HJM time-step length
 	ddelt = (FTYPE) (dYears/iN);
 
@@ -381,7 +381,7 @@ int Discount_Factors_Blocking(FTYPE *pdDiscountFactors,
 	//precompute the exponientials
 	for (j=0; j<=(iN-1)*BLOCKSIZE-1; ++j){ pdexpRes[j] = -pdRatePath[j]*ddelt; }
 	for (j=0; j<=(iN-1)*BLOCKSIZE-1; ++j){ pdexpRes[j] = exp(pdexpRes[j]);  }
-	
+
 
 	//initializing the discount factor vector
 	for (i=0; i<(iN)*BLOCKSIZE; ++i)
@@ -396,7 +396,7 @@ int Discount_Factors_Blocking(FTYPE *pdDiscountFactors,
 	      //printf("(%f) ",pdexpRes[j*BLOCKSIZE + b]);
 	    }
 	  } // end Block loop
-	} 
+	}
 
 	free_dvector(pdexpRes, 0,(iN-1)*BLOCKSIZE-1);
 	iSuccess = 1;

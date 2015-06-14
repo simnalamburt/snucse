@@ -1,10 +1,10 @@
 DEF =
 INCLUDE =
 
-EXEC = swaptions 
+EXEC = swaptions
 
 ifdef version
-  ifeq "$(version)" "pthreads" 
+  ifeq "$(version)" "pthreads"
     DEF := $(DEF) -DENABLE_THREADS
     CXXFLAGS := $(CXXFLAGS) -pthread
   endif
@@ -31,4 +31,3 @@ $(EXEC): $(OBJS)
 
 clean:
 	rm -f $(OBJS) $(EXEC)
-

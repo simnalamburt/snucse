@@ -36,9 +36,9 @@ tbb::cache_aligned_allocator<parm> memory_parm;
 int NUM_TRIALS = DEFAULT_NUM_TRIALS;
 int nThreads = 1;
 int nSwaptions = 1;
-int iN = 11; 
-FTYPE dYears = 5.5; 
-int iFactors = 3; 
+int iN = 11;
+FTYPE dYears = 5.5;
+int iFactors = 3;
 parm *swaptions;
 
 // =================================================
@@ -56,10 +56,10 @@ struct Worker {
     int end   = range.end();
 
     for(int i=begin; i!=end; i++) {
-      int iSuccess = HJM_Swaption_Blocking(pdSwaptionPrice,  swaptions[i].dStrike, 
-					   swaptions[i].dCompounding, swaptions[i].dMaturity, 
+      int iSuccess = HJM_Swaption_Blocking(pdSwaptionPrice,  swaptions[i].dStrike,
+					   swaptions[i].dCompounding, swaptions[i].dMaturity,
 					   swaptions[i].dTenor, swaptions[i].dPaymentInterval,
-					   swaptions[i].iN, swaptions[i].iFactors, swaptions[i].dYears, 
+					   swaptions[i].iN, swaptions[i].iFactors, swaptions[i].dYears,
 					   swaptions[i].pdYield, swaptions[i].ppdFactors,
 					   100, NUM_TRIALS, BLOCK_SIZE, 0);
       assert(iSuccess == 1);
@@ -67,7 +67,7 @@ struct Worker {
       swaptions[i].dSimSwaptionStdError = pdSwaptionPrice[1];
 
     }
-     
+
 
 
   }
@@ -87,10 +87,10 @@ void * worker(void *arg){
     end = nSwaptions;
 
   for(int i=beg; i < end; i++) {
-     int iSuccess = HJM_Swaption_Blocking(pdSwaptionPrice,  swaptions[i].dStrike, 
-                                       swaptions[i].dCompounding, swaptions[i].dMaturity, 
+     int iSuccess = HJM_Swaption_Blocking(pdSwaptionPrice,  swaptions[i].dStrike,
+                                       swaptions[i].dCompounding, swaptions[i].dMaturity,
                                        swaptions[i].dTenor, swaptions[i].dPaymentInterval,
-                                       swaptions[i].iN, swaptions[i].iFactors, swaptions[i].dYears, 
+                                       swaptions[i].iN, swaptions[i].iFactors, swaptions[i].dYears,
                                        swaptions[i].pdYield, swaptions[i].ppdFactors,
                                        100, NUM_TRIALS, BLOCK_SIZE, 0);
      assert(iSuccess == 1);
@@ -98,13 +98,13 @@ void * worker(void *arg){
      swaptions[i].dSimSwaptionStdError = pdSwaptionPrice[1];
    }
 
-   return NULL;    
+   return NULL;
 }
 
 
 
 
-//Please note: Whenever we type-cast to (int), we add 0.5 to ensure that the value is rounded to the correct number. 
+//Please note: Whenever we type-cast to (int), we add 0.5 to ensure that the value is rounded to the correct number.
 //For instance, if X/Y = 0.999 then (int) (X/Y) will equal 0 and not 1 (as (int) rounds down).
 //Adding 0.5 ensures that this does not happen. Therefore we use (int) (X/Y + 0.5); instead of (int) (X/Y);
 
@@ -112,13 +112,13 @@ int main(int argc, char *argv[])
 {
 	int iSuccess = 0;
 	int i,j;
-	
+
 	FTYPE **factors=NULL;
 
 #ifdef PARSEC_VERSION
 #define __PARSEC_STRING(x) #x
 #define __PARSEC_XSTRING(x) __PARSEC_STRING(x)
-        printf("PARSEC Benchmark Suite Version "__PARSEC_XSTRING(PARSEC_VERSION)"\n"); 
+        printf("PARSEC Benchmark Suite Version "__PARSEC_XSTRING(PARSEC_VERSION)"\n");
 	fflush(NULL);
 #else
         printf("PARSEC Benchmark Suite\n");
@@ -127,24 +127,24 @@ int main(int argc, char *argv[])
 #ifdef ENABLE_PARSEC_HOOKS
 	__parsec_bench_begin(__parsec_swaptions);
 #endif
-	
+
         if(argc == 1)
         {
-          fprintf(stderr," usage: \n\t-ns [number of swaptions (should be > number of threads]\n\t-sm [number of simulations]\n\t-nt [number of threads]\n"); 
+          fprintf(stderr," usage: \n\t-ns [number of swaptions (should be > number of threads]\n\t-sm [number of simulations]\n\t-nt [number of threads]\n");
           exit(1);
         }
 
         for (int j=1; j<argc; j++) {
 	  if (!strcmp("-sm", argv[j])) {NUM_TRIALS = atoi(argv[++j]);}
-	  else if (!strcmp("-nt", argv[j])) {nThreads = atoi(argv[++j]);} 
-	  else if (!strcmp("-ns", argv[j])) {nSwaptions = atoi(argv[++j]);} 
+	  else if (!strcmp("-nt", argv[j])) {nThreads = atoi(argv[++j]);}
+	  else if (!strcmp("-ns", argv[j])) {nSwaptions = atoi(argv[++j]);}
           else {
-            fprintf(stderr," usage: \n\t-ns [number of swaptions (should be > number of threads]\n\t-sm [number of simulations]\n\t-nt [number of threads]\n"); 
+            fprintf(stderr," usage: \n\t-ns [number of swaptions (should be > number of threads]\n\t-sm [number of simulations]\n\t-nt [number of threads]\n");
           }
         }
 
         if(nSwaptions < nThreads) {
-	  nSwaptions = nThreads; 
+	  nSwaptions = nThreads;
         }
 
         printf("Number of Simulations: %d,  Number of threads: %d Number of swaptions: %d\n", NUM_TRIALS, nThreads, nSwaptions);
@@ -216,9 +216,9 @@ int main(int argc, char *argv[])
 	factors[2][7]= -.000750;
 	factors[2][8]= -.001000;
 	factors[2][9]= -.001250;
-	
+
         // setting up multiple swaptions
-        swaptions = 
+        swaptions =
 #ifdef TBB_VERSION
 	  (parm *)memory_parm.allocate(sizeof(parm)*nSwaptions, NULL);
 #else
@@ -232,7 +232,7 @@ int main(int argc, char *argv[])
           swaptions[i].iFactors = iFactors;
           swaptions[i].dYears = dYears;
 
-          swaptions[i].dStrike =  .1; 
+          swaptions[i].dStrike =  .1;
           swaptions[i].dCompounding =  0;
           swaptions[i].dMaturity =  1;
           swaptions[i].dTenor =  2.0;
@@ -261,7 +261,7 @@ int main(int argc, char *argv[])
 	Worker w;
 	tbb::parallel_for(tbb::blocked_range<int>(0,nSwaptions,TBB_GRAINSIZE),w);
 #else
-	
+
 	int threadIDs[nThreads];
         for (i = 0; i < nThreads; i++) {
           threadIDs[i] = i;
@@ -273,7 +273,7 @@ int main(int argc, char *argv[])
 
 	free(threads);
 
-#endif // TBB_VERSION	
+#endif // TBB_VERSION
 
 #else
 	int threadID=0;
@@ -285,7 +285,7 @@ int main(int argc, char *argv[])
 #endif
 
         for (i = 0; i < nSwaptions; i++) {
-          fprintf(stderr,"Swaption%d: [SwaptionPrice: %.10lf StdError: %.10lf] \n", 
+          fprintf(stderr,"Swaption%d: [SwaptionPrice: %.10lf StdError: %.10lf] \n",
                    i, swaptions[i].dSimSwaptionMeanPrice, swaptions[i].dSimSwaptionStdError);
 
         }

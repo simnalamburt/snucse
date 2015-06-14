@@ -41,29 +41,29 @@ FTYPE CumNormalInv( FTYPE u )
 {
   // Returns the inverse of cumulative normal distribution function.
   // Reference: Moro, B., 1995, "The Full Monte," RISK (February), 57-58.
-  
+
   FTYPE x, r;
-  
+
   x = u - 0.5;
   if( fabs (x) < 0.42 )
-  { 
+  {
     r = x * x;
     r = x * ((( a[3]*r + a[2]) * r + a[1]) * r + a[0])/
           ((((b[3] * r+ b[2]) * r + b[1]) * r + b[0]) * r + 1.0);
     return (r);
   }
-  
+
   r = u;
   if( x > 0.0 ) r = 1.0 - u;
   r = log(-log(r));
-  r = c[0] + r * (c[1] + r * 
-       (c[2] + r * (c[3] + r * 
+  r = c[0] + r * (c[1] + r *
+       (c[2] + r * (c[3] + r *
        (c[4] + r * (c[5] + r * (c[6] + r * (c[7] + r*c[8])))))));
   if( x < 0.0 ) r = -r;
-  
+
   return (r);
-  
+
 } // end of CumNormalInv
 
 /**********************************************************************/
-// end of CumNormalInv.c  
+// end of CumNormalInv.c

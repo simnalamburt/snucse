@@ -31,8 +31,8 @@ int choldc(FTYPE **a, int n)
 		}
 	}
 
-   for (i=1;i<=n-1;i++) 
-		for (j=i+1;j<=n;j++) 
+   for (i=1;i<=n-1;i++)
+		for (j=i+1;j<=n;j++)
 			a[i][j] = 0.0;
 
    return(1);
@@ -171,7 +171,7 @@ FTYPE **dmatrix( long nrl, long nrh, long ncl, long nch )
   // return pointer to array of pointers to rows
 	return m;
 
-} // end of dmatrix 
+} // end of dmatrix
 
 /**********************************************************************/
 void free_dmatrix( FTYPE **m, long nrl, long nrh, long ncl, long nch )
@@ -184,4 +184,3 @@ void free_dmatrix( FTYPE **m, long nrl, long nrh, long ncl, long nch )
 } // end of free_dmatrix
 
 // end of nr_routines.c
-

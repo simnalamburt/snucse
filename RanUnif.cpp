@@ -10,13 +10,12 @@
 
 FTYPE RanUnif( long *s );
 
-FTYPE RanUnif( long *s )
-{
+FTYPE RanUnif( long *s ) {
   // uniform random number generator
 
   long   ix, k1;
   FTYPE dRes;
-  
+
   ix = *s;
   k1 = ix/127773L;
   ix = 16807L*( ix - k1*127773L ) - k1 * 2836L;
@@ -24,5 +23,4 @@ FTYPE RanUnif( long *s )
   *s   = ix;
   dRes = (ix * 4.656612875e-10);
   return (dRes);
-  
 } // end of RanUnif

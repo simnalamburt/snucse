@@ -28,7 +28,5 @@ typedef struct
   FTYPE *pdYield;
   FTYPE **ppdFactors;
 } parm;
- 
-
 
 #endif //__TYPE__

@@ -29,7 +29,7 @@ struct ParallelB {
     pdZ = pdZ_;
     randZ = randZ_;
     BLOCKSIZE = BLOCKSIZE_;
-    iN = iN_; 
+    iN = iN_;
     /*fprintf(stderr,"(Construction object) pdZ=0x%08x, randZ=0x%08x\n",
       pdZ, randZ);*/
 
@@ -60,7 +60,7 @@ struct ParallelB {
 void serialB(FTYPE **pdZ, FTYPE **randZ, int BLOCKSIZE, int iN, int iFactors)
 {
 
-  
+
   for(int l=0;l<=iFactors-1;++l){
     for(int b=0; b<BLOCKSIZE; b++){
       for (int j=1;j<=iN-1;++j){
@@ -79,7 +79,7 @@ int HJM_SimPath_Forward_Blocking(FTYPE **ppdHJMPath,	//Matrix that stores genera
 				 FTYPE **ppdFactors,	//Factor volatilities
 				 long *lRndSeed,			//Random number seed
 				 int BLOCKSIZE)
-{	
+{
 //This function computes and stores an HJM Path for given inputs
 
 	int iSuccess = 0;
@@ -87,7 +87,7 @@ int HJM_SimPath_Forward_Blocking(FTYPE **ppdHJMPath,	//Matrix that stores genera
 	FTYPE **pdZ; //vector to store random normals
 	FTYPE **randZ; //vector to store random normals
 	FTYPE dTotalShock; //total shock by which the forward curve is hit at (t, T-t)
-	FTYPE ddelt, sqrt_ddelt; //length of time steps	
+	FTYPE ddelt, sqrt_ddelt; //length of time steps
 
 	ddelt = (FTYPE)(dYears/iN);
 	sqrt_ddelt = sqrt(ddelt);
@@ -97,18 +97,18 @@ int HJM_SimPath_Forward_Blocking(FTYPE **ppdHJMPath,	//Matrix that stores genera
 
 	// =====================================================
 	// t=0 forward curve stored iN first row of ppdHJMPath
-	// At time step 0: insert expected drift 
+	// At time step 0: insert expected drift
 	// rest reset to 0
 	for(int b=0; b<BLOCKSIZE; b++){
 	  for(j=0;j<=iN-1;j++){
-	    ppdHJMPath[0][BLOCKSIZE*j + b] = pdForward[j]; 
+	    ppdHJMPath[0][BLOCKSIZE*j + b] = pdForward[j];
 
 	    for(i=1;i<=iN-1;++i)
 	      { ppdHJMPath[i][BLOCKSIZE*j + b]=0; } //initializing HJMPath to zero
 	  }
 	}
 	// -----------------------------------------------------
-	
+
         // =====================================================
         // sequentially generating random numbers
 
@@ -143,13 +143,13 @@ int HJM_SimPath_Forward_Blocking(FTYPE **ppdHJMPath,	//Matrix that stores genera
 	// Generation of HJM Path1
 	for(int b=0; b<BLOCKSIZE; b++){ // b is the blocks
 	  for (j=1;j<=iN-1;++j) {// j is the timestep
-	    
+
 	    for (l=0;l<=iN-(j+1);++l){ // l is the future steps
 	      dTotalShock = 0;
-	      
+
 	      for (i=0;i<=iFactors-1;++i){// i steps through the stochastic factors
-		dTotalShock += ppdFactors[i][l]* pdZ[i][BLOCKSIZE*j + b];		  		
-	      }	      	   
+		dTotalShock += ppdFactors[i][l]* pdZ[i][BLOCKSIZE*j + b];
+	      }
 
 	      ppdHJMPath[j][BLOCKSIZE*l+b] = ppdHJMPath[j-1][BLOCKSIZE*(l+1)+b]+ pdTotalDrift[l]*ddelt + sqrt_ddelt*dTotalShock;
 	      //as per formula
@@ -163,6 +163,3 @@ int HJM_SimPath_Forward_Blocking(FTYPE **ppdHJMPath,	//Matrix that stores genera
 	iSuccess = 1;
 	return iSuccess;
 }
-	
-
-
