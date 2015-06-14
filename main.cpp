@@ -37,11 +37,16 @@ namespace {
 
 
   //
+  // Global constants
+  //
+  const int NUM_TRIALS = 1000000;
+  const int nThreads = 16;
+  const int nSwaptions = 128;
+
+
+  //
   // Global variables
   //
-  int NUM_TRIALS = 102400;
-  int nThreads = 1;
-  int nSwaptions = 1;
   int iN = 11;
   FTYPE dYears = 5.5;
   int iFactors = 3;
@@ -78,48 +83,14 @@ namespace {
 // Adding 0.5 ensures that this does not happen. Therefore we use (int) (X/Y + 0.5); instead of (int) (X/Y);
 //
 int main(int argc, char *argv[]) {
-  if (argc == 1) {
-    fprintf(stderr,
-        " usage: \n"
-        "\t-ns [number of swaptions (should be > number of threads]\n"
-        "\t-sm [number of simulations]\n"
-        "\t-nt [number of threads]\n");
-    exit(1);
-  }
+  pthread_t *threads = (pthread_t*)malloc(nThreads*sizeof(pthread_t));
 
-  for (int j = 1; j < argc; ++j) {
-    if (!strcmp("-sm", argv[j])) { NUM_TRIALS = atoi(argv[++j]); }
-    else if (!strcmp("-nt", argv[j])) { nThreads = atoi(argv[++j]); }
-    else if (!strcmp("-ns", argv[j])) { nSwaptions = atoi(argv[++j]); }
-    else {
-      fprintf(stderr,
-          " usage: \n"
-          "\t-ns [number of swaptions (should be > number of threads]\n"
-          "\t-sm [number of simulations]\n"
-          "\t-nt [number of threads]\n");
-    }
-  }
-  if (nThreads < 1) {
-    fprintf(stderr,"Number of threads must be greater than 1.\n");
-    exit(1);
-  }
-
-  if(nSwaptions < nThreads) {
-    nSwaptions = nThreads;
-  }
-
-  printf("Number of Simulations: %d,  Number of threads: %d Number of swaptions: %d\n", NUM_TRIALS, nThreads, nSwaptions);
-
-  pthread_t      *threads;
-  pthread_attr_t  pthread_custom_attr;
-
-
-  threads = (pthread_t *) malloc(nThreads * sizeof(pthread_t));
+  pthread_attr_t pthread_custom_attr;
   pthread_attr_init(&pthread_custom_attr);
-
 
   // Initialize input dataset
   FTYPE **factors = dmatrix(0, iFactors-1, 0, iN-2);
+
   // The three rows store vol data for the three factors
   factors[0][0] = 0.01;
   factors[0][1] = 0.01;
@@ -154,7 +125,7 @@ int main(int argc, char *argv[]) {
   factors[2][8] = -0.001000;
   factors[2][9] = -0.001250;
 
-  // setting up multiple swaptions
+  // Setting up multiple swaptions
   swaptions = (parm *)malloc(sizeof(parm)*nSwaptions);
 
   for (int i = 0; i < nSwaptions; i++) {
@@ -193,6 +164,7 @@ int main(int argc, char *argv[]) {
     threadIDs[i] = i;
     pthread_create(&threads[i], &pthread_custom_attr, worker, &threadIDs[i]);
   }
+
   for (int i = 0; i < nThreads; ++i) {
     pthread_join(threads[i], NULL);
   }
@@ -200,8 +172,7 @@ int main(int argc, char *argv[]) {
   free(threads);
 
   for (int i = 0; i < nSwaptions; ++i) {
-    fprintf(stderr, "Swaption%d: [SwaptionPrice: %.10lf StdError: %.10lf] \n",
-        i, swaptions[i].dSimSwaptionMeanPrice, swaptions[i].dSimSwaptionStdError);
+    printf("Swaption%d: [SwaptionPrice: %.10lf StdError: %.10lf]\n", i, swaptions[i].dSimSwaptionMeanPrice, swaptions[i].dSimSwaptionStdError);
   }
 
   for (int i = 0; i < nSwaptions; ++i) {
