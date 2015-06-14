@@ -1,11 +1,11 @@
 Swaptions
 ========
 ```sh
-version=seq make
+make version=seq
 thorq --add ./swaptions -ns 128 -sm 1000000
 ```
 ```sh
-version=pthreads make
+make version=pthreads
 thorq --add ./swaptions -ns 128 -sm 1000000 -nt 16
 ```
 
