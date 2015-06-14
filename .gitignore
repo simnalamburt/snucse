@@ -1,4 +1,4 @@
 *.o
 *.stderr
 *.stdout
-swaptions
+bin

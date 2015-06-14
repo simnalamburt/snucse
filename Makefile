@@ -1,7 +1,7 @@
-DEF =
-INCLUDE =
+DEF=
+INCLUDE=
 
-EXEC = swaptions
+EXEC=bin
 
 ifdef version
   ifeq "$(version)" "pthreads"
@@ -14,7 +14,7 @@ ifdef version
   endif
 endif
 
-OBJS= CumNormalInv.o MaxFunction.o RanUnif.o nr_routines.o icdf.o \
+OBJS=CumNormalInv.o MaxFunction.o RanUnif.o nr_routines.o icdf.o \
 	HJM_SimPath_Forward_Blocking.o HJM.o HJM_Swaption_Blocking.o  \
 	HJM_Securities.o
 
