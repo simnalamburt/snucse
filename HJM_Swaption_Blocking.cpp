@@ -6,8 +6,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
+#include "main.h"
 #include "nr_routines.h"
-#include "HJM_Securities.h"
 #include "HJM.h"
 #include "HJM_type.h"
 

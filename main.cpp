@@ -1,5 +1,5 @@
 //
-// HJM_Securities.cpp
+// main.cpp
 //
 // Authors      : Mark Broadie, Jatin Dewanwala
 // Collaborator : Mikhail Smelyanskiy, Jike Chong, Intel
@@ -14,7 +14,7 @@
 
 #include "nr_routines.h"
 #include "HJM.h"
-#include "HJM_Securities.h"
+#include "main.h"
 #include "HJM_type.h"
 
 #ifdef ENABLE_THREADS
