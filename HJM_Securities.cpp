@@ -232,7 +232,7 @@ int main(int argc, char *argv[])
           swaptions[i].iFactors = iFactors;
           swaptions[i].dYears = dYears;
 
-          swaptions[i].dStrike =  .1;
+          swaptions[i].dStrike =  (double)i / (double)nSwaptions;
           swaptions[i].dCompounding =  0;
           swaptions[i].dMaturity =  1;
           swaptions[i].dTenor =  2.0;
