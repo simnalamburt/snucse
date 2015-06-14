@@ -1,17 +1,19 @@
-//HJM.cpp
-//Routine to setup HJM framework.
-//Authors: Mark Broadie, Jatin Dewanwala, Columbia University
-//Collaborator: Mikhail Smelyanskiy, Intel
-//Based on hjm_simn.xls created by Mark Broadie
-
+//
+// HJM.cpp
+//
+// Authors      : Mark Broadie, Jatin Dewanwala, Columbia University
+// Collaborator : Mikhail Smelyanskiy, Intel
+//
+// Routine to setup HJM framework.
+// Based on hjm_simn.xls created by Mark Broadie
+//
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
 #include <time.h>
-
 #include "nr_routines.h"
 #include "HJM.h"
-#include "HJM_type.h"
+#include "type.h"
 
 
 

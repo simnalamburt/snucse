@@ -1,7 +1,8 @@
-#include <assert.h>
-#include "HJM_type.h"
-
+#pragma once
 #include <cstring>
+#include <assert.h>
+#include "type.h"
+
 
 FTYPE RanUnif( long *s );
 FTYPE CumNormalInv( FTYPE u );

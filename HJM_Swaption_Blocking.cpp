@@ -1,15 +1,18 @@
-//HJM_Swaption_Blocking.cpp
-//Routines to compute various security prices using HJM framework (via Simulation).
-//Authors: Mark Broadie, Jatin Dewanwala
-//Collaborator: Mikhail Smelyanskiy, Intel, Jike Chong (Berkeley)
-
+//
+// HJM_Swaption_Blocking.cpp
+//
+// Authors      : Mark Broadie, Jatin Dewanwala
+// Collaborator : Mikhail Smelyanskiy, Intel, Jike Chong (Berkeley)
+//
+// Routines to compute various security prices using HJM framework (via Simulation).
+//
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
 #include "main.h"
 #include "nr_routines.h"
 #include "HJM.h"
-#include "HJM_type.h"
+#include "type.h"
 
 int HJM_Swaption_Blocking(FTYPE *pdSwaptionPrice, //Output vector that will store simulation results in the form:
 			  //Swaption Price

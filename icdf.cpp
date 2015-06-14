@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
-#include "HJM_type.h"
+#include "type.h"
 
 
 void icdf_baseline(const int N, FTYPE *in, FTYPE *out) {

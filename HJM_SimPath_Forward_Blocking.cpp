@@ -1,7 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <math.h>
-#include "HJM_type.h"
+#include "type.h"
 #include "HJM.h"
 #include "nr_routines.h"
 

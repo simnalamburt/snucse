@@ -15,7 +15,7 @@
 #include "nr_routines.h"
 #include "HJM.h"
 #include "main.h"
-#include "HJM_type.h"
+#include "type.h"
 
 #ifdef ENABLE_THREADS
 #include <pthread.h>

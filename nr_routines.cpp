@@ -3,7 +3,7 @@
 #include <stdlib.h>
 
 #include "nr_routines.h"
-#include "HJM_type.h"
+#include "type.h"
 
 #define SWAP(a,b) {temp=(a);(a)=(b);(b)=temp;}
 

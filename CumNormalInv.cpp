@@ -1,11 +1,12 @@
-// CumNormalInv.c
+//
+// CumNormalInv.cpp
+//
 // Author: Mark Broadie
-
+//
 #include <stdio.h>
 #include <math.h>
 #include <stdlib.h>
-
-#include "HJM_type.h"
+#include "type.h"
 
 FTYPE CumNormalInv( FTYPE u );
 

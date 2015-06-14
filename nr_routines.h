@@ -1,4 +1,5 @@
-#include "HJM_type.h"
+#pragma once
+#include "type.h"
 
 int      choldc(FTYPE **a, int n);
 void     gaussj(FTYPE **a, int n, FTYPE **b, int m);
