@@ -1,19 +1,6 @@
-#include <stdio.h>
+#include <assert.h>
 #include <stdlib.h>
 #include "helper.h"
-
-
-namespace {
-  //
-  // Numerical Recipes standard error handler
-  //
-  void nrerror(const char *error_text) {
-    fprintf(stderr, "Numerical Recipes run-time error...\n");
-    fprintf(stderr, "%s\n", error_text);
-    fprintf(stderr, "...now exiting to system...\n");
-    exit(1);
-  }
-}
 
 
 //
@@ -21,7 +8,7 @@ namespace {
 //
 FTYPE *dvector(long nl, long nh) {
   FTYPE *v = (FTYPE*)malloc((size_t)((nh - nl + 2)*sizeof(FTYPE)));
-  if (!v) { nrerror("allocation failure in dvector()"); }
+  assert(v);
   return v - nl + 1;
 }
 
@@ -42,13 +29,13 @@ FTYPE **dmatrix(long nrl, long nrh, long ncl, long nch) {
 
   // allocate pointers to rows
   FTYPE **m = (FTYPE**)malloc((size_t)((nrow+1)*sizeof(FTYPE*)));
-  if (!m) { nrerror("allocation failure 1 in dmatrix()"); }
+  assert(m);
   m += 1;
   m -= nrl;
 
   // allocate rows and set pointers to them
   m[nrl] = (FTYPE*)malloc((size_t)((nrow*ncol+1)*sizeof(FTYPE)));
-  if (!m[nrl]) { nrerror("allocation failure 2 in dmatrix()"); }
+  assert(m[nrl]);
   m[nrl] += 1;
   m[nrl] -= ncl;
 

@@ -1,3 +1,4 @@
+CFLAGS = -W -Wall -Wextra -Wunused -Wunreachable-code -std=c99 -g
 CXXFLAGS = -W -Wall -Wextra -Wunused -Wunreachable-code -std=c++0x -g
 
 ifdef version
