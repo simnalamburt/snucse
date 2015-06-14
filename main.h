@@ -10,4 +10,5 @@ int HJM_Drifts(FTYPE *pdTotalDrift, FTYPE **ppdDrifts, int iN, int iFactors, FTY
 int HJM_Correlations(FTYPE **ppdHJMCorr, int iN, int iFactors, FTYPE **ppdFactors);
 int HJM_Forward_to_Yield(FTYPE *pdYield, int iN, FTYPE *pdForward);
 int Discount_Factors(FTYPE *pdDiscountFactors, int iN, FTYPE dYears, FTYPE *pdRatePath);
-FTYPE dMax( FTYPE dA, FTYPE dB );
+
+inline FTYPE dMax( FTYPE dA, FTYPE dB ) { return (dA>dB ? dA:dB); }

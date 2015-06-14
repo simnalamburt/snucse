@@ -5,15 +5,9 @@ ifdef version
   endif
 endif
 
-OBJS=CumNormalInv.o MaxFunction.o RanUnif.o nr_routines.o icdf.o \
-	HJM_SimPath_Forward_Blocking.o HJM.o HJM_Swaption_Blocking.o  \
-	main.o
-
 BIN=bin
-
 all: $(BIN)
-
-$(BIN): $(OBJS)
+$(BIN): main.o CumNormalInv.o nr_routines.o icdf.o HJM_SimPath_Forward_Blocking.o HJM.o HJM_Swaption_Blocking.o
 	$(CXX) $(LDFLAGS) $^ -o $@
 
 clean:

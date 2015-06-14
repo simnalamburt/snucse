@@ -4,7 +4,21 @@
 #include "type.h"
 
 
-FTYPE RanUnif( long *s );
+//
+// Uniform random number generator
+//
+inline FTYPE RanUnif(long *s) {
+  long ix = *s;
+  *s = ix+1;
+  ix *= 1513517L;
+  ix %= 2147483647L;
+  long k1 = ix/127773L;
+  ix = 16807L*(ix - k1*127773L) - k1*2836L;
+  if (ix < 0) { ix = ix + 2147483647L; }
+
+  return ix * 4.656612875e-10;
+}
+
 FTYPE CumNormalInv( FTYPE u );
 void icdf_SSE(const int N, FTYPE *in, FTYPE *out);
 void icdf_baseline(const int N, FTYPE *in, FTYPE *out);
