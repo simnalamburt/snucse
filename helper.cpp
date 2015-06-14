@@ -29,7 +29,7 @@ FTYPE *dvector(long nl, long nh) {
 //
 // free a FTYPE vector allocated with dvector()
 //
-void free_dvector(FTYPE *v, long nl, long nh) {
+void free_dvector(FTYPE *v, long nl) {
   free((void*)(v + nl - 1));
 }
 
@@ -52,7 +52,7 @@ FTYPE **dmatrix(long nrl, long nrh, long ncl, long nch) {
   m[nrl] += 1;
   m[nrl] -= ncl;
 
-  for (size_t i = nrl + 1; i <= nrh; ++i) {
+  for (long i = nrl + 1; i <= nrh; ++i) {
     m[i] = m[i-1] + ncol;
   }
 
@@ -64,7 +64,7 @@ FTYPE **dmatrix(long nrl, long nrh, long ncl, long nch) {
 //
 // free a FTYPE matrix allocated by dmatrix()
 //
-void free_dmatrix(FTYPE **m, long nrl, long nrh, long ncl, long nch) {
+void free_dmatrix(FTYPE **m, long nrl, long ncl) {
   free((void*)(m[nrl] + ncl - 1));
   free((void*)(m + nrl - 1));
 }

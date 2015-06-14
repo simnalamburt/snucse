@@ -47,7 +47,7 @@ static inline int Discount_Factors_Blocking(FTYPE *pdDiscountFactors, int iN, FT
     } // end Block loop
   }
 
-  free_dvector(pdexpRes, 0,(iN-1)*BLOCKSIZE-1);
+  free_dvector(pdexpRes, 0);
   iSuccess = 1;
   return iSuccess;
 }
@@ -142,7 +142,7 @@ int swaption(FTYPE *pdSwaptionPrice, //Output vector that will store simulation 
     //Simulation Parameters
     long iRndSeed,
     long lTrials,
-    int BLOCKSIZE, int tid)
+    int BLOCKSIZE)
 
 {
   int iSuccess = 0;

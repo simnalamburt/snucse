@@ -22,4 +22,4 @@ int swaption(
     FTYPE **ppdFactors,
 
     // Simulation Parameters
-    long iRndSeed, long lTrials, int blocksize, int tid);
+    long iRndSeed, long lTrials, int blocksize);

@@ -65,7 +65,7 @@ namespace {
           swaptions[i].dTenor, swaptions[i].dPaymentInterval,
           swaptions[i].iN, swaptions[i].iFactors, swaptions[i].dYears,
           swaptions[i].pdYield, swaptions[i].ppdFactors,
-          100, NUM_TRIALS, block_size, 0);
+          100, NUM_TRIALS, block_size);
       assert(iSuccess == 1);
       swaptions[i].dSimSwaptionMeanPrice = pdSwaptionPrice[0];
       swaptions[i].dSimSwaptionStdError = pdSwaptionPrice[1];
@@ -82,7 +82,7 @@ namespace {
 // For instance, if X/Y = 0.999 then (int) (X/Y) will equal 0 and not 1 (as (int) rounds down).
 // Adding 0.5 ensures that this does not happen. Therefore we use (int) (X/Y + 0.5); instead of (int) (X/Y);
 //
-int main(int argc, char *argv[]) {
+int main() {
   pthread_t *threads = (pthread_t*)malloc(nThreads*sizeof(pthread_t));
 
   pthread_attr_t pthread_custom_attr;
@@ -176,8 +176,8 @@ int main(int argc, char *argv[]) {
   }
 
   for (int i = 0; i < nSwaptions; ++i) {
-    free_dvector(swaptions[i].pdYield, 0, swaptions[i].iN-1);
-    free_dmatrix(swaptions[i].ppdFactors, 0, swaptions[i].iFactors-1, 0, swaptions[i].iN-2);
+    free_dvector(swaptions[i].pdYield, 0);
+    free_dmatrix(swaptions[i].ppdFactors, 0, 0);
   }
 
   free(swaptions);
