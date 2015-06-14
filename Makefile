@@ -9,7 +9,7 @@ endif
 
 BIN=bin
 all: $(BIN)
-$(BIN): main.o CumNormalInv.o nr_routines.o icdf.o HJM_SimPath_Forward_Blocking.o HJM.o HJM_Swaption_Blocking.o
+$(BIN): main.o helper.o hjm_path.o swaption.o
 	$(CXX) $(LDFLAGS) $^ -o $@
 
 clean:
