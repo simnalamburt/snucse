@@ -16,11 +16,5 @@ all: $(BIN)
 $(BIN): $(OBJS)
 	$(CXX) $(LDFLAGS) $^ -o $@
 
-.cpp.o:
-	$(CXX) $(CXXFLAGS) -c $*.cpp -o $*.o
-
-.c.o:
-	$(CXX) $(CXXFLAGS) -c $*.c -o $*.o
-
 clean:
 	rm -f *.o $(BIN)
