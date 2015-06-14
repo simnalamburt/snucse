@@ -1,7 +1,9 @@
+CXXFLAGS = -W -Wall -Wextra -Wunused -Wunreachable-code -std=c++0x -g
+
 ifdef version
   ifeq "$(version)" "pthreads"
-    CXXFLAGS := -DENABLE_THREADS
-    LDFLAGS := -pthread
+    CXXFLAGS += -DENABLE_THREADS
+    LDFLAGS += -pthread
   endif
 endif
 
