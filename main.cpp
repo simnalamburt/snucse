@@ -12,7 +12,6 @@
 #include <cstring>
 #include <cassert>
 #include <pthread.h>
-#include "type.h"
 #include "helper.h"
 #include "swaption.h"
 
@@ -21,18 +20,18 @@ namespace {
   // Parameter struct for pthread workers
   typedef struct {
     int Id;
-    FTYPE dSimSwaptionMeanPrice;
-    FTYPE dSimSwaptionStdError;
-    FTYPE dStrike;
-    FTYPE dCompounding;
-    FTYPE dMaturity;
-    FTYPE dTenor;
-    FTYPE dPaymentInterval;
+    double dSimSwaptionMeanPrice;
+    double dSimSwaptionStdError;
+    double dStrike;
+    double dCompounding;
+    double dMaturity;
+    double dTenor;
+    double dPaymentInterval;
     int iN;
-    FTYPE dYears;
+    double dYears;
     int iFactors;
-    FTYPE *pdYield;
-    FTYPE **ppdFactors;
+    double *pdYield;
+    double **ppdFactors;
   } parm;
 
 
@@ -48,7 +47,7 @@ namespace {
   // Global variables
   //
   int iN = 11;
-  FTYPE dYears = 5.5;
+  double dYears = 5.5;
   int iFactors = 3;
   parm *swaptions;
 
@@ -57,7 +56,7 @@ namespace {
     const int chunksize = nSwaptions/nThreads;
     const int beg = tid*chunksize;
     const int end = tid != nThreads - 1 ? (tid + 1)*chunksize : nSwaptions;
-    FTYPE pdSwaptionPrice[2];
+    double pdSwaptionPrice[2];
     for (int i = beg; i < end; ++i) {
       int block_size = 16;
       int iSuccess = swaption(pdSwaptionPrice,  swaptions[i].dStrike,
@@ -89,7 +88,7 @@ int main() {
   pthread_attr_init(&pthread_custom_attr);
 
   // Initialize input dataset
-  FTYPE **factors = dmatrix(0, iFactors-1, 0, iN-2);
+  double **factors = dmatrix(0, iFactors-1, 0, iN-2);
 
   // The three rows store vol data for the three factors
   factors[0][0] = 0.01;

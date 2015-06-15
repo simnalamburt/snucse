@@ -4,37 +4,37 @@
 
 
 //
-// allocate a FTYPE vector with subscript range v[nl..nh]
+// allocate a double vector with subscript range v[nl..nh]
 //
-FTYPE *dvector(long nl, long nh) {
-  FTYPE *v = (FTYPE*)malloc((size_t)((nh - nl + 2)*sizeof(FTYPE)));
+double *dvector(long nl, long nh) {
+  double *v = (double*)malloc((size_t)((nh - nl + 2)*sizeof(double)));
   assert(v);
   return v - nl + 1;
 }
 
 
 //
-// free a FTYPE vector allocated with dvector()
+// free a double vector allocated with dvector()
 //
-void free_dvector(FTYPE *v, long nl) {
+void free_dvector(double *v, long nl) {
   free((void*)(v + nl - 1));
 }
 
 
 //
-// allocate a FTYPE matrix with subscript range m[nrl..nrh][ncl..nch]
+// allocate a double matrix with subscript range m[nrl..nrh][ncl..nch]
 //
-FTYPE **dmatrix(long nrl, long nrh, long ncl, long nch) {
+double **dmatrix(long nrl, long nrh, long ncl, long nch) {
   long nrow = nrh - nrl + 1, ncol = nch - ncl + 1;
 
   // allocate pointers to rows
-  FTYPE **m = (FTYPE**)malloc((size_t)((nrow+1)*sizeof(FTYPE*)));
+  double **m = (double**)malloc((size_t)((nrow+1)*sizeof(double*)));
   assert(m);
   m += 1;
   m -= nrl;
 
   // allocate rows and set pointers to them
-  m[nrl] = (FTYPE*)malloc((size_t)((nrow*ncol+1)*sizeof(FTYPE)));
+  m[nrl] = (double*)malloc((size_t)((nrow*ncol+1)*sizeof(double)));
   assert(m[nrl]);
   m[nrl] += 1;
   m[nrl] -= ncl;
@@ -49,9 +49,9 @@ FTYPE **dmatrix(long nrl, long nrh, long ncl, long nch) {
 
 
 //
-// free a FTYPE matrix allocated by dmatrix()
+// free a double matrix allocated by dmatrix()
 //
-void free_dmatrix(FTYPE **m, long nrl, long ncl) {
+void free_dmatrix(double **m, long nrl, long ncl) {
   free((void*)(m[nrl] + ncl - 1));
   free((void*)(m + nrl - 1));
 }

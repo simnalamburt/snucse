@@ -8,17 +8,17 @@ namespace {
   //
   // Reference: Moro, B., 1995, "The Full Monte," RISK (February), 57-58.
   //
-  FTYPE cum_normal_inv(FTYPE u) {
-    const FTYPE a[4] = { 2.50662823884, -18.61500062529, 41.39119773534, -25.44106049637 };
-    const FTYPE b[4] = { -8.47351093090, 23.08336743743, -21.06224101826, 3.13082909833 };
-    const FTYPE c[9] = {
+  double cum_normal_inv(double u) {
+    const double a[4] = { 2.50662823884, -18.61500062529, 41.39119773534, -25.44106049637 };
+    const double b[4] = { -8.47351093090, 23.08336743743, -21.06224101826, 3.13082909833 };
+    const double c[9] = {
       0.3374754822726147, 0.9761690190917186, 0.1607979714918209,
       0.0276438810333863, 0.0038405729373609, 0.0003951896511919,
       0.0000321767881768, 0.0000002888167364, 0.0000003960315187
     };
 
-    FTYPE x = u - 0.5;
-    FTYPE r;
+    double x = u - 0.5;
+    double r;
     if (fabs (x) < 0.42) {
       r = x * x;
       r = x * ((( a[3]*r + a[2]) * r + a[1]) * r + a[0])/
@@ -41,7 +41,7 @@ namespace {
   //
   // Uniform random number generator
   //
-  FTYPE uniform_random(long *s) {
+  double uniform_random(long *s) {
     long ix = *s;
     *s = ix+1;
     ix *= 1513517L;
@@ -54,7 +54,7 @@ namespace {
   }
 
 
-  void serial_b(FTYPE **pdZ, FTYPE **randZ, int BLOCKSIZE, int iN, int iFactors) {
+  void serial_b(double **pdZ, double **randZ, int BLOCKSIZE, int iN, int iFactors) {
     for(int l = 0; l <= iFactors - 1; ++l){
       for(int b = 0; b < BLOCKSIZE; b++){
         for (int j = 1; j <= iN - 1; ++j){
@@ -73,24 +73,24 @@ namespace {
 // This function computes and stores an HJM Path for given inputs
 //
 int hjm_path(
-    FTYPE **ppdHJMPath, // Matrix that stores generated HJM path (Output)
+    double **ppdHJMPath, // Matrix that stores generated HJM path (Output)
     int iN, // Number of time-steps
     int iFactors, // Number of factors in the HJM framework
-    FTYPE dYears, // Number of years
-    FTYPE *pdForward, // t=0 Forward curve
-    FTYPE *pdTotalDrift, // Vector containing total drift corrections for different maturities
-    FTYPE **ppdFactors, // Factor volatilities
+    double dYears, // Number of years
+    double *pdForward, // t=0 Forward curve
+    double *pdTotalDrift, // Vector containing total drift corrections for different maturities
+    double **ppdFactors, // Factor volatilities
     long *lRndSeed, // Random number seed
     int BLOCKSIZE)
 {
   int iSuccess = 0;
   int i,j,l; //looping variables
-  FTYPE **pdZ; //vector to store random normals
-  FTYPE **randZ; //vector to store random normals
-  FTYPE dTotalShock; //total shock by which the forward curve is hit at (t, T-t)
-  FTYPE ddelt, sqrt_ddelt; //length of time steps
+  double **pdZ; //vector to store random normals
+  double **randZ; //vector to store random normals
+  double dTotalShock; //total shock by which the forward curve is hit at (t, T-t)
+  double ddelt, sqrt_ddelt; //length of time steps
 
-  ddelt = (FTYPE)(dYears/iN);
+  ddelt = (double)(dYears/iN);
   sqrt_ddelt = sqrt(ddelt);
 
   pdZ   = dmatrix(0, iFactors-1, 0, iN*BLOCKSIZE -1); //assigning memory
