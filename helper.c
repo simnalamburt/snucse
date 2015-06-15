@@ -6,40 +6,38 @@
 //
 // allocate a double vector with subscript range v[nl..nh]
 //
-double *dvector(long nl, long nh) {
-  double *v = (double*)malloc((size_t)((nh - nl + 2)*sizeof(double)));
+double *dvector(long nh) {
+  double *v = (double*)malloc((size_t)((nh + 2)*sizeof(double)));
   assert(v);
-  return v - nl + 1;
+  return v + 1;
 }
 
 
 //
 // free a double vector allocated with dvector()
 //
-void free_dvector(double *v, long nl) {
-  free((void*)(v + nl - 1));
+void free_dvector(double *v) {
+  free((void*)(v - 1));
 }
 
 
 //
-// allocate a double matrix with subscript range m[nrl..nrh][ncl..nch]
+// allocate a double matrix with subscript range m[0..nrh][0..nch]
 //
-double **dmatrix(long nrl, long nrh, long ncl, long nch) {
-  long nrow = nrh - nrl + 1, ncol = nch - ncl + 1;
+double **dmatrix(long nrh, long nch) {
+  long nrow = nrh + 1, ncol = nch + 1;
 
   // allocate pointers to rows
   double **m = (double**)malloc((size_t)((nrow+1)*sizeof(double*)));
   assert(m);
   m += 1;
-  m -= nrl;
 
   // allocate rows and set pointers to them
-  m[nrl] = (double*)malloc((size_t)((nrow*ncol+1)*sizeof(double)));
-  assert(m[nrl]);
-  m[nrl] += 1;
-  m[nrl] -= ncl;
+  m[0] = (double*)malloc((size_t)((nrow*ncol+1)*sizeof(double)));
+  assert(m[0]);
+  m[0] += 1;
 
-  for (long i = nrl + 1; i <= nrh; ++i) {
+  for (long i = 1; i <= nrh; ++i) {
     m[i] = m[i-1] + ncol;
   }
 
@@ -51,7 +49,7 @@ double **dmatrix(long nrl, long nrh, long ncl, long nch) {
 //
 // free a double matrix allocated by dmatrix()
 //
-void free_dmatrix(double **m, long nrl, long ncl) {
-  free((void*)(m[nrl] + ncl - 1));
-  free((void*)(m + nrl - 1));
+void free_dmatrix(double **m) {
+  free((void*)(m[0] - 1));
+  free((void*)(m - 1));
 }

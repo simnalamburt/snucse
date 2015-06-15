@@ -101,8 +101,8 @@ static int hjm_path(
   ddelt = (double)(dYears/iN);
   sqrt_ddelt = sqrt(ddelt);
 
-  pdZ   = dmatrix(0, iFactors-1, 0, iN*BLOCKSIZE -1); //assigning memory
-  randZ = dmatrix(0, iFactors-1, 0, iN*BLOCKSIZE -1); //assigning memory
+  pdZ   = dmatrix(iFactors-1, iN*BLOCKSIZE -1); //assigning memory
+  randZ = dmatrix(iFactors-1, iN*BLOCKSIZE -1); //assigning memory
 
 
   // t=0 forward curve stored iN first row of ppdHJMPath
@@ -162,8 +162,8 @@ static int hjm_path(
   } // end Blocks
   // -----------------------------------------------------
 
-  free_dmatrix(pdZ, 0, 0);
-  free_dmatrix(randZ, 0, 0);
+  free_dmatrix(pdZ);
+  free_dmatrix(randZ);
   iSuccess = 1;
   return iSuccess;
 }
@@ -180,7 +180,7 @@ static inline int Discount_Factors_Blocking(double *pdDiscountFactors, int iN, d
   ddelt = (double) (dYears/iN);
 
   double *pdexpRes;
-  pdexpRes = dvector(0,(iN-1)*BLOCKSIZE-1);
+  pdexpRes = dvector((iN-1)*BLOCKSIZE-1);
   //precompute the exponientials
   for (j=0; j<=(iN-1)*BLOCKSIZE-1; ++j){ pdexpRes[j] = -pdRatePath[j]*ddelt; }
   for (j=0; j<=(iN-1)*BLOCKSIZE-1; ++j){ pdexpRes[j] = exp(pdexpRes[j]);  }
@@ -201,7 +201,7 @@ static inline int Discount_Factors_Blocking(double *pdDiscountFactors, int iN, d
     } // end Block loop
   }
 
-  free_dvector(pdexpRes, 0);
+  free_dvector(pdexpRes);
   iSuccess = 1;
   return iSuccess;
 }
@@ -334,11 +334,10 @@ int swaption(double *pdSwaptionPrice, //Output vector that will store simulation
   double *pdTotalDrift;
 
   // *******************************
-  // ppdHJMPath = dmatrix(0,iN-1,0,iN-1);
-  ppdHJMPath = dmatrix(0,iN-1,0,iN*BLOCKSIZE-1);    // **** per Trial data **** //
-  pdForward = dvector(0, iN-1);
-  ppdDrifts = dmatrix(0, iFactors-1, 0, iN-2);
-  pdTotalDrift = dvector(0, iN-2);
+  ppdHJMPath = dmatrix(iN-1,iN*BLOCKSIZE-1);    // **** per Trial data **** //
+  pdForward = dvector(iN-1);
+  ppdDrifts = dmatrix(iFactors-1, iN-2);
+  pdTotalDrift = dvector(iN-2);
 
   //==================================
   // **** per Trial data **** //
@@ -368,17 +367,17 @@ int swaption(double *pdSwaptionPrice, //Output vector that will store simulation
   double dSimSwaptionStdError;
 
   // *******************************
-  pdPayoffDiscountFactors = dvector(0, iN*BLOCKSIZE-1);
-  pdDiscountingRatePath = dvector(0, iN*BLOCKSIZE-1);
+  pdPayoffDiscountFactors = dvector(iN*BLOCKSIZE-1);
+  pdDiscountingRatePath = dvector(iN*BLOCKSIZE-1);
   // *******************************
 
   iSwapVectorLength = (int) (iN - dMaturity/ddelt + 0.5);	//This is the length of the HJM rate path at the time index
   //corresponding to swaption maturity.
   // *******************************
-  pdSwapRatePath = dvector(0, iSwapVectorLength*BLOCKSIZE - 1);
-  pdSwapDiscountFactors  = dvector(0, iSwapVectorLength*BLOCKSIZE - 1);
+  pdSwapRatePath = dvector(iSwapVectorLength*BLOCKSIZE - 1);
+  pdSwapDiscountFactors  = dvector(iSwapVectorLength*BLOCKSIZE - 1);
   // *******************************
-  pdSwapPayoffs = dvector(0, iSwapVectorLength - 1);
+  pdSwapPayoffs = dvector(iSwapVectorLength - 1);
 
 
   iSwapStartTimeIndex = (int) (dMaturity/ddelt + 0.5);	//Swap starts at swaption maturity
