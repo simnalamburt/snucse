@@ -28,7 +28,7 @@ static double cum_normal_inv(double u) {
     0.0000321767881768, 0.0000002888167364, 0.0000003960315187
   };
 
-  double x = u - 0.5;
+  const double x = u - 0.5;
   double r;
   if (fabs (x) < 0.42) {
     r = x * x;
@@ -66,9 +66,9 @@ static double uniform_random(long *s) {
 
 
 static void serial_b(double **pdZ, double **randZ, int BLOCKSIZE, int iN, int iFactors) {
-  for(int l = 0; l <= iFactors - 1; ++l){
-    for(int b = 0; b < BLOCKSIZE; b++){
-      for (int j = 1; j <= iN - 1; ++j){
+  for (int l = 0; l <= iFactors - 1; ++l) {
+    for (int b = 0; b < BLOCKSIZE; b++) {
+      for (int j = 1; j <= iN - 1; ++j) {
         // 18% of the total executition time
         pdZ[l][BLOCKSIZE*j + b] = cum_normal_inv(randZ[l][BLOCKSIZE*j + b]);
       }
@@ -276,30 +276,32 @@ static inline int HJM_Drifts(double *pdTotalDrift,	//Output vector that stores t
 
 
 
-int swaption(double *pdSwaptionPrice, //Output vector that will store simulation results in the form:
-    //Swaption Price
-    //Swaption Standard Error
-    //Swaption Parameters
+int swaption(
+    // Output vector that will store simulation results in the form:
+    //     Swaption Price
+    //     Swaption Standard Error
+    //     Swaption Parameters
+    double *pdSwaptionPrice,
     double dStrike,
-    double dCompounding,     //Compounding convention used for quoting the strike (0 => continuous,
-    //0.5 => semi-annual, 1 => annual).
-    double dMaturity,	      //Maturity of the swaption (time to expiration)
-    double dTenor,	      //Tenor of the swap
-    double dPaymentInterval, //frequency of swap payments e.g. dPaymentInterval = 0.5 implies a swap payment every half
-    //year
-    //HJM Framework Parameters (please refer HJM.cpp for explanation of variables and functions)
-    int iN,
-    int iFactors,
-    double dYears,
-    double *pdYield,
-    double **ppdFactors,
-    //Simulation Parameters
-    long iRndSeed,
-    long lTrials,
-    int BLOCKSIZE)
 
+    // HJM Framework Parameters (please refer HJM.cpp for explanation of variables and functions)
+    int iN, int iFactors, double *pdYield, double **ppdFactors,
+    // Simulation Parameters
+    int BLOCKSIZE)
 {
+  //
+  // Constants
+  //
+  const double dCompounding = 0; // Compounding convention used for quoting the strike (0 => continuous, 0.5 => semi-annual, 1 => annual)
+  const double dMaturity = 1; // Maturity of the swaption (time to expiration)
+  const double dTenor = 2.0; // Tenor of the swap
+  const double dPaymentInterval = 1.0; //frequency of swap payments e.g. dPaymentInterval = 0.5 implies a swap payment every half year
+  const double dYears = 5.5;
+  const long lTrials = 1000000;
+
+
   int iSuccess = 0;
+  long iRndSeed = 100;
   int i;
   int b; //block looping variable
   long l; //looping variables

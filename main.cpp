@@ -50,8 +50,7 @@ namespace {
     for (int i = beg; i < end; ++i) {
       int block_size = 16;
       int iSuccess = swaption(pdSwaptionPrice, (double)swaptions[i].Id/(double)nSwaptions,
-          0, 1, 2.0, 1.0, iN, iFactors, 5.5,
-          swaptions[i].pdYield, swaptions[i].ppdFactors, 100, 1000000, block_size);
+          iN, iFactors, swaptions[i].pdYield, swaptions[i].ppdFactors, block_size);
       assert(iSuccess == 1);
       swaptions[i].dSimSwaptionMeanPrice = pdSwaptionPrice[0];
       swaptions[i].dSimSwaptionStdError = pdSwaptionPrice[1];
