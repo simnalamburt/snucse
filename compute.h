@@ -1,4 +1,24 @@
 #pragma once
+#ifdef __cplusplus
+extern "C"
+{
+#endif
+
+double *dvector(long nl, long nh);
+void free_dvector(double *v, long nl);
+double **dmatrix(long nrl, long nrh, long ncl, long nch);
+void free_dmatrix(double **m, long nrl, long ncl);
+
+int hjm_path(double **ppdHJMPath,
+    int iN,
+    int iFactors,
+    double dYears,
+    double *pdForward,
+    double *pdTotalDrift,
+    double **ppdFactors,
+    long *lRndSeed,
+    int BLOCKSIZE);
+
 int swaption(
     // Output vector that will store simulation results in the form:
     //     Swaption Price
@@ -20,3 +40,7 @@ int swaption(
 
     // Simulation Parameters
     long iRndSeed, long lTrials, int blocksize);
+
+#ifdef __cplusplus
+}
+#endif

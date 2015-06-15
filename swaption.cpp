@@ -11,10 +11,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
-#include "hjm_path.h"
-#include "helper.h"
-#include "swaption.h"
-
+#include "compute.h"
 
 
 static inline int Discount_Factors_Blocking(double *pdDiscountFactors, int iN, double dYears, double *pdRatePath, int BLOCKSIZE) {

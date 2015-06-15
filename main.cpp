@@ -12,8 +12,7 @@
 #include <cstring>
 #include <cassert>
 #include <pthread.h>
-#include "helper.h"
-#include "swaption.h"
+#include "compute.h"
 
 
 namespace {
