@@ -6,11 +6,11 @@
 //
 // Routines to compute various security prices using HJM framework (via Simulation).
 //
-#include <cstring>
-#include <assert.h>
 #include <stdio.h>
-#include <stdlib.h>
 #include <math.h>
+#include <stdlib.h>
+#include <string.h>
+#include <assert.h>
 #include "compute.h"
 
 
