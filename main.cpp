@@ -18,27 +18,18 @@
 
 namespace {
   // Parameter struct for pthread workers
-  typedef struct {
+  struct param_t {
     int Id;
     double dSimSwaptionMeanPrice;
     double dSimSwaptionStdError;
-    double dStrike;
-    double dCompounding;
-    double dMaturity;
-    double dTenor;
-    double dPaymentInterval;
-    int iN;
-    double dYears;
-    int iFactors;
     double *pdYield;
     double **ppdFactors;
-  } parm;
+  };
 
 
   //
   // Global constants
   //
-  const int NUM_TRIALS = 1000000;
   const int nThreads = 16;
   const int nSwaptions = 128;
 
@@ -46,10 +37,9 @@ namespace {
   //
   // Global variables
   //
-  int iN = 11;
-  double dYears = 5.5;
-  int iFactors = 3;
-  parm *swaptions;
+  const int iN = 11;
+  const int iFactors = 3;
+  param_t *swaptions;
 
   void *worker(void *arg) {
     int tid = *(int*)arg;
@@ -59,12 +49,9 @@ namespace {
     double pdSwaptionPrice[2];
     for (int i = beg; i < end; ++i) {
       int block_size = 16;
-      int iSuccess = swaption(pdSwaptionPrice,  swaptions[i].dStrike,
-          swaptions[i].dCompounding, swaptions[i].dMaturity,
-          swaptions[i].dTenor, swaptions[i].dPaymentInterval,
-          swaptions[i].iN, swaptions[i].iFactors, swaptions[i].dYears,
-          swaptions[i].pdYield, swaptions[i].ppdFactors,
-          100, NUM_TRIALS, block_size);
+      int iSuccess = swaption(pdSwaptionPrice, (double)swaptions[i].Id/(double)nSwaptions,
+          0, 1, 2.0, 1.0, iN, iFactors, 5.5,
+          swaptions[i].pdYield, swaptions[i].ppdFactors, 100, 1000000, block_size);
       assert(iSuccess == 1);
       swaptions[i].dSimSwaptionMeanPrice = pdSwaptionPrice[0];
       swaptions[i].dSimSwaptionStdError = pdSwaptionPrice[1];
@@ -82,11 +69,6 @@ namespace {
 // Adding 0.5 ensures that this does not happen. Therefore we use (int) (X/Y + 0.5); instead of (int) (X/Y);
 //
 int main() {
-  pthread_t *threads = (pthread_t*)malloc(nThreads*sizeof(pthread_t));
-
-  pthread_attr_t pthread_custom_attr;
-  pthread_attr_init(&pthread_custom_attr);
-
   // Initialize input dataset
   double **factors = dmatrix(0, iFactors-1, 0, iN-2);
 
@@ -125,30 +107,20 @@ int main() {
   factors[2][9] = -0.001250;
 
   // Setting up multiple swaptions
-  swaptions = (parm *)malloc(sizeof(parm)*nSwaptions);
+  swaptions = new param_t[nSwaptions];
 
   for (int i = 0; i < nSwaptions; i++) {
     swaptions[i].Id = i;
-    swaptions[i].iN = iN;
-    swaptions[i].iFactors = iFactors;
-    swaptions[i].dYears = dYears;
-
-    swaptions[i].dStrike =  (double)i / (double)nSwaptions;
-    swaptions[i].dCompounding =  0;
-    swaptions[i].dMaturity =  1;
-    swaptions[i].dTenor =  2.0;
-    swaptions[i].dPaymentInterval =  1.0;
-
     swaptions[i].pdYield = dvector(0,iN-1);;
     swaptions[i].pdYield[0] = .1;
 
-    for (int j = 1; j <= swaptions[i].iN-1; ++j) {
+    for (int j = 1; j <= iN-1; ++j) {
       swaptions[i].pdYield[j] = swaptions[i].pdYield[j-1]+.005;
     }
 
-    swaptions[i].ppdFactors = dmatrix(0, swaptions[i].iFactors-1, 0, swaptions[i].iN-2);
-    for(int k = 0; k <= swaptions[i].iFactors-1; ++k) {
-      for(int j = 0; j <= swaptions[i].iN-2; ++j) {
+    swaptions[i].ppdFactors = dmatrix(0, iFactors-1, 0, iN-2);
+    for(int k = 0; k <= iFactors-1; ++k) {
+      for(int j = 0; j <= iN-2; ++j) {
         swaptions[i].ppdFactors[k][j] = factors[k][j];
       }
     }
@@ -158,10 +130,12 @@ int main() {
   //
   // Calling the Swaption Pricing Routine
   //
+  pthread_t *threads = (pthread_t*)malloc(nThreads*sizeof(pthread_t));
+
   int threadIDs[nThreads];
   for (int i = 0; i < nThreads; ++i) {
     threadIDs[i] = i;
-    pthread_create(&threads[i], &pthread_custom_attr, worker, &threadIDs[i]);
+    pthread_create(&threads[i], NULL, worker, &threadIDs[i]);
   }
 
   for (int i = 0; i < nThreads; ++i) {
@@ -171,7 +145,8 @@ int main() {
   free(threads);
 
   for (int i = 0; i < nSwaptions; ++i) {
-    printf("Swaption%d: [SwaptionPrice: %.10lf StdError: %.10lf]\n", i, swaptions[i].dSimSwaptionMeanPrice, swaptions[i].dSimSwaptionStdError);
+    printf("Swaption%d: [SwaptionPrice: %.10lf StdError: %.10lf]\n",
+        i, swaptions[i].dSimSwaptionMeanPrice, swaptions[i].dSimSwaptionStdError);
   }
 
   for (int i = 0; i < nSwaptions; ++i) {
@@ -179,6 +154,6 @@ int main() {
     free_dmatrix(swaptions[i].ppdFactors, 0, 0);
   }
 
-  free(swaptions);
+  delete[] swaptions;
   return 0;
 }
