@@ -11,7 +11,7 @@ endif
 
 BIN=bin
 all: $(BIN)
-$(BIN): main.o helper.o hjm_path.o swaption.o
+$(BIN): main.o helper.o compute.o
 	$(CXX) $(LDFLAGS) $^ -o $@
 
 clean:

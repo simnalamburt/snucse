@@ -12,6 +12,7 @@
 #include <cstring>
 #include <cassert>
 #include <pthread.h>
+#include "helper.h"
 #include "compute.h"
 
 
