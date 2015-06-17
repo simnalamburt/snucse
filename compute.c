@@ -488,6 +488,19 @@ int swaption(
   pdSwaptionPrice[0] = dSimSwaptionMeanPrice;
   pdSwaptionPrice[1] = dSimSwaptionStdError;
 
-  iSuccess = 1;
-  return iSuccess;
+
+  //
+  // Free memory
+  //
+  free_dmatrix(ppdHJMPath);
+  free_dvector(pdForward);
+  free_dmatrix(ppdDrifts);
+  free_dvector(pdTotalDrift);
+  free_dvector(pdPayoffDiscountFactors);
+  free_dvector(pdDiscountingRatePath);
+  free_dvector(pdSwapRatePath);
+  free_dvector(pdSwapDiscountFactors);
+  free_dvector(pdSwapPayoffs);
+
+  return 1;
 }

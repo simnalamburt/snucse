@@ -153,5 +153,6 @@ int main() {
   }
 
   delete[] swaptions;
+  free_dmatrix(factors);
   return 0;
 }
