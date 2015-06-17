@@ -20,10 +20,10 @@ namespace {
   // Parameter struct for pthread workers
   struct param_t {
     int Id;
-    double dSimSwaptionMeanPrice;
-    double dSimSwaptionStdError;
     double *pdYield;
     double **ppdFactors;
+    double result_mean;
+    double result_error;
   };
 
 
@@ -32,28 +32,27 @@ namespace {
   //
   const int nThreads = 16;
   const int nSwaptions = 128;
+  const int iN = 11;
+  const int iFactors = 3;
 
 
   //
   // Global variables
   //
-  const int iN = 11;
-  const int iFactors = 3;
   param_t *swaptions;
-
   void *worker(void *arg) {
     int tid = *(int*)arg;
     const int chunksize = nSwaptions/nThreads;
-    const int beg = tid*chunksize;
+    const int begin = tid*chunksize;
     const int end = tid != nThreads - 1 ? (tid + 1)*chunksize : nSwaptions;
-    double pdSwaptionPrice[2];
-    for (int i = beg; i < end; ++i) {
+    double result[2];
+    for (int i = begin; i < end; ++i) {
       int block_size = 16;
-      int iSuccess = swaption(pdSwaptionPrice, (double)swaptions[i].Id/(double)nSwaptions,
+      int iSuccess = swaption(result, (double)swaptions[i].Id/(double)nSwaptions,
           iN, iFactors, swaptions[i].pdYield, swaptions[i].ppdFactors, block_size);
       assert(iSuccess == 1);
-      swaptions[i].dSimSwaptionMeanPrice = pdSwaptionPrice[0];
-      swaptions[i].dSimSwaptionStdError = pdSwaptionPrice[1];
+      swaptions[i].result_mean = result[0];
+      swaptions[i].result_error = result[1];
     }
     return NULL;
   }
@@ -145,7 +144,7 @@ int main() {
 
   for (int i = 0; i < nSwaptions; ++i) {
     printf("Swaption%d: [SwaptionPrice: %.10lf StdError: %.10lf]\n",
-        i, swaptions[i].dSimSwaptionMeanPrice, swaptions[i].dSimSwaptionStdError);
+        i, swaptions[i].result_mean, swaptions[i].result_error);
   }
 
   for (int i = 0; i < nSwaptions; ++i) {
