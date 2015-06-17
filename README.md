@@ -3,6 +3,7 @@ Swaptions
 ```sh
 make
 thorq --add ./bin
+cmp expected_stdout task_*.stdout
 ```
 
 --------
