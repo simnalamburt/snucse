@@ -109,7 +109,7 @@ int main() {
 
   for (int i = 0; i < nSwaptions; i++) {
     swaptions[i].Id = i;
-    swaptions[i].pdYield = dvector(iN-1);;
+    swaptions[i].pdYield = dvector(iN);
     swaptions[i].pdYield[0] = .1;
 
     for (int j = 1; j <= iN-1; ++j) {

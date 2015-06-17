@@ -6,12 +6,7 @@
 //
 // Allocate/deallocate a vector
 //
-double *dvector(size_t size_minus_1) {
-  const size_t size = size_minus_1 + 1;
-
-  return malloc(size * sizeof(double));
-}
-
+double *dvector(size_t size) { return malloc(size * sizeof(double)); }
 void free_dvector(double *ptr) { free(ptr); }
 
 
