@@ -1,55 +1,44 @@
-#include <assert.h>
 #include <stdlib.h>
-#include "compute.h"
+#include <stdint.h>
+#include "helper.h"
 
 
 //
-// allocate a double vector with subscript range v[nl..nh]
+// Allocate/deallocate a vector
 //
-double *dvector(long nh) {
-  double *v = (double*)malloc((size_t)((nh + 2)*sizeof(double)));
-  assert(v);
-  return v + 1;
+double *dvector(size_t size_minus_1) {
+  const size_t size = size_minus_1 + 1;
+
+  return malloc(size * sizeof(double));
 }
 
-
-//
-// free a double vector allocated with dvector()
-//
-void free_dvector(double *v) {
-  free((void*)(v - 1));
-}
+void free_dvector(double *ptr) { free(ptr); }
 
 
 //
-// allocate a double matrix with subscript range m[0..nrh][0..nch]
+// Allocate/deallocate a matrix
 //
-double **dmatrix(long nrh, long nch) {
-  long nrow = nrh + 1, ncol = nch + 1;
+// Usage:
+//     auto matrix = dmatrix(row - 1, col - 1);
+//     matrix[0..row][0..col] = 30;
+//
+double **dmatrix(size_t row_minus_1, size_t col_minus_1) {
+  const size_t col = col_minus_1 + 1;
+  const size_t row = row_minus_1 + 1;
 
-  // allocate pointers to rows
-  double **m = (double**)malloc((size_t)((nrow+1)*sizeof(double*)));
-  assert(m);
-  m += 1;
+  // Allocate an array for a column
+  double **m = malloc(row*sizeof(double*));
+  uintptr_t mem = (uintptr_t)malloc(row*col*sizeof(double));
 
-  // allocate rows and set pointers to them
-  m[0] = (double*)malloc((size_t)((nrow*ncol+1)*sizeof(double)));
-  assert(m[0]);
-  m[0] += 1;
-
-  for (long i = 1; i <= nrh; ++i) {
-    m[i] = m[i-1] + ncol;
+  // Allocate each row
+  for (size_t i = 0; i < row; ++i) {
+    m[i] = (double*)(mem + i*col*sizeof(double));
   }
 
-  // return pointer to array of pointers to rows
   return m;
 }
 
-
-//
-// free a double matrix allocated by dmatrix()
-//
 void free_dmatrix(double **m) {
-  free((void*)(m[0] - 1));
-  free((void*)(m - 1));
+  free(m[0]);
+  free(m);
 }
