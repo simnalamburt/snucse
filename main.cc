@@ -6,6 +6,8 @@
 //
 // Routines to compute various security prices using HJM framework (via Simulation).
 //
+#include <iostream>
+#include <chrono>
 #include <cstdio>
 #include <cstdlib>
 #include <cmath>
@@ -14,6 +16,9 @@
 #include <pthread.h>
 #include "helper.h"
 #include "compute.h"
+
+using namespace std;
+using namespace chrono;
 
 
 namespace {
@@ -41,6 +46,8 @@ namespace {
   //
   param_t *swaptions;
   void *worker(void *arg) {
+    auto time = system_clock::now();
+
     int tid = *(int*)arg;
     const int chunksize = nSwaptions/nThreads;
     const int begin = tid*chunksize;
@@ -54,6 +61,9 @@ namespace {
       swaptions[i].result_mean = result[0];
       swaptions[i].result_error = result[1];
     }
+
+    auto elapsed = duration<double>(system_clock::now() - time).count();
+    cerr << "Thread " << tid << ", " << elapsed << " seconds" << endl;
     return NULL;
   }
 }
@@ -67,6 +77,8 @@ namespace {
 // Adding 0.5 ensures that this does not happen. Therefore we use (int) (X/Y + 0.5); instead of (int) (X/Y);
 //
 int main() {
+  auto time = system_clock::now();
+
   // Initialize input dataset
   double **factors = dmatrix(iFactors, iN - 1);
 
@@ -154,5 +166,8 @@ int main() {
 
   delete[] swaptions;
   free_dmatrix(factors);
+
+  auto elapsed = duration<double>(system_clock::now() - time).count();
+  cerr << "Total elapsed time : " << elapsed << " seconds" << endl;
   return 0;
 }
