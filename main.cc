@@ -38,21 +38,7 @@ namespace {
 
     param_t *param = (param_t*)arg;
     for (int i = param->begin; i < param->end; ++i) {
-      //
-      // Initialize
-      //
-      double pdYield[N];
-      double tmp = 0.1;
-      for (int j = 0; j < N; ++j) {
-        pdYield[j] = tmp;
-        tmp += 0.005;
-      }
-
-
-      //
-      // Calculate
-      //
-      swaption(&tasks[i].result_mean, &tasks[i].result_error, (double)i/(double)TASKS, pdYield);
+      swaption(&tasks[i].result_mean, &tasks[i].result_error, (double)i/(double)TASKS);
     }
     auto elapsed = duration<double>(system_clock::now() - time).count();
 

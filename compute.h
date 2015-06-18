@@ -9,8 +9,7 @@ extern "C" {
 void swaption(
     double * __restrict__ mean,
     double * __restrict__ error,
-    double dStrike,
-    const double * __restrict__ pdYield);
+    double dStrike);
 
 #ifdef __cplusplus
 }

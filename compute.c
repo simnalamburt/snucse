@@ -195,15 +195,9 @@ static void discount_factors(
 
 
 void swaption(
-    // result vector that will store simulation results in the form:
-    //     Swaption Price
-    //     Swaption Standard Error
     double * __restrict__ mean,
     double * __restrict__ error,
-
-    // HJM Framework Parameters
-    double dStrikeCont,
-    const double * __restrict__ pdYield)
+    double dStrikeCont)
 {
   //
   // Mathmatical constants
@@ -228,6 +222,15 @@ void swaption(
     // But at terminal time point, bond pays coupon plus par amount
     pdSwapPayoffs[i] = i == iSwapTimePoints ? tmp : tmp - 1;
   }
+
+  // Initialize yield curve
+  double pdYield[N];
+  double tmp = 0.1;
+  for (int i = 0; i < N; ++i) {
+    pdYield[i] = tmp;
+    tmp += 0.005;
+  }
+
   // Generating forward curve at t=0 from supplied yield curve
   double pdForward[N];
   pdForward[0] = pdYield[0];
