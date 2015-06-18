@@ -1,5 +1,5 @@
-CFLAGS = -W -Wall -Wextra -Wunused -Wunreachable-code -std=c99 -g
-CXXFLAGS = -W -Wall -Wextra -Wunused -Wunreachable-code -std=c++0x -g
+CFLAGS = -W -Wall -Wextra -Wunused -Wunreachable-code -std=c99
+CXXFLAGS = -W -Wall -Wextra -Wunused -Wunreachable-code -std=c++0x
 
 ifdef version
   ifeq "$(version)" "cpu"
@@ -10,7 +10,16 @@ else
 endif
 
 BIN=bin
-all: $(BIN)
+all: debug
+
+release: CFLAGS += -O3
+release: CXXFLAGS += -O3
+release: $(BIN)
+
+debug: CFLAGS += -g
+debug: CXXFLAGS += -g
+debug: $(BIN)
+
 $(BIN): main.o helper.o compute.o
 	$(CXX) $(LDFLAGS) $^ -o $@
 
