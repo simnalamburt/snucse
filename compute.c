@@ -12,6 +12,8 @@
 
 #define TRIALS 1000000
 #define BLOCKSIZE 16
+#define ITERS (TRIALS/BLOCKSIZE)
+
 #define YEARS 5.5
 
 // Length of time steps
@@ -257,15 +259,19 @@ void swaption(
   //
   // Simulations
   //
-  double dSumSimSwaptionPrice = 0;
-  double dSumSquareSimSwaptionPrice = 0;
-  long iRndSeed = 100;
+  double seeds[ITERS];
+  double seed = 100;
+  for (int i = 0; i < ITERS; ++i) {
+    seeds[i] = seed;
+    seed += BLOCKSIZE*(N - 1)*FACTORS;
+  }
 
-  for (int l = 0; l< TRIALS; l += BLOCKSIZE) {
+  double sums[ITERS] = {};
+  double square_sums[ITERS] = {};
+  for (int i = 0; i < ITERS; ++i) {
     // For each trial a new HJM Path is generated
     double ppdHJMPath[N][N*BLOCKSIZE];
-    hjm_path(ppdHJMPath, pdForward, pdTotalDrift, ppdFactors, iRndSeed); // 51% of the time goes here
-    iRndSeed += BLOCKSIZE*(N - 1)*FACTORS;
+    hjm_path(ppdHJMPath, pdForward, pdTotalDrift, ppdFactors, seeds[i]); // 51% of the time goes here
 
     // Now we compute the discount factor vector
     // 여긴 안해도 될거같음
@@ -293,24 +299,33 @@ void swaption(
     discount_factors(pdSwapDiscountFactors, iSwapVectorLength, dSwapVectorYears, pdSwapRatePath);
 
 
-    //
-    // Simulation
-    //
+    double sum = 0;
+    double square_sum = 0;
     for (int b = 0; b < BLOCKSIZE; ++b) {
-      double sum = -1;
+      double tmp = -1;
       for (int i = 0; i < iSwapVectorLength; ++i) {
-        sum += pdSwapPayoffs[i]*pdSwapDiscountFactors[i*BLOCKSIZE + b];
+        tmp += pdSwapPayoffs[i]*pdSwapDiscountFactors[i*BLOCKSIZE + b];
       }
 
-      double result = sum > 0 ? sum*pdPayoffDiscountFactors[iSwapStartTimeIndex*BLOCKSIZE + b] : 0;
+      if (tmp <= 0) { continue; }
+      tmp *= pdPayoffDiscountFactors[iSwapStartTimeIndex*BLOCKSIZE + b];
 
       // Accumulate
-      dSumSimSwaptionPrice += result;
-      dSumSquareSimSwaptionPrice += result*result;
+      sum += tmp;
+      square_sum += tmp*tmp;
     }
+    sums[i] = sum;
+    square_sums[i] = square_sum;
+  }
+
+  double sum = 0;
+  double square_sum = 0;
+  for (int i = 0; i < ITERS; ++i) {
+    sum += sums[i];
+    square_sum += square_sums[i];
   }
 
   // Store results
-  result[0] = dSumSimSwaptionPrice/TRIALS;
-  result[1] = sqrt((dSumSquareSimSwaptionPrice - dSumSimSwaptionPrice*dSumSimSwaptionPrice/TRIALS)/(TRIALS - 1.0)/TRIALS);
+  result[0] = sum/TRIALS;
+  result[1] = sqrt((square_sum - sum*sum/TRIALS)/(TRIALS - 1.0)/TRIALS);
 }
