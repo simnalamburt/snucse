@@ -8,6 +8,7 @@
 //
 #include <iostream>
 #include <chrono>
+#include <cstring>
 #include <pthread.h>
 #include "compute.h"
 
@@ -66,17 +67,14 @@ int main() {
 
   for (int i = 0; i < TASKS; i++) {
     tasks[i].Id = i;
-    tasks[i].pdYield[0] = .1;
 
-    for (int j = 1; j < N; ++j) {
-      tasks[i].pdYield[j] = tasks[i].pdYield[j-1]+.005;
+    double tmp = 0.1;
+    for (int j = 0; j < N; ++j) {
+      tasks[i].pdYield[j] = tmp;
+      tmp += 0.005;
     }
 
-    for (int k = 0; k < FACTORS; ++k) {
-      for (int j = 0; j < N - 1; ++j) {
-        tasks[i].ppdFactors[k][j] = factors[k][j];
-      }
-    }
+    memcpy(tasks[i].ppdFactors, factors, sizeof factors);
   }
 
 
