@@ -9,8 +9,8 @@ extern "C" {
 void swaption(
     double * __restrict__ result,
     double dStrike,
-    double * __restrict__ pdYield,
-    double ppdFactors[FACTORS][N - 1]);
+    const double * __restrict__ pdYield,
+    const double ppdFactors[FACTORS][N - 1]);
 
 #ifdef __cplusplus
 }

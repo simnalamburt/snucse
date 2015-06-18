@@ -69,11 +69,11 @@ static void hjm_path(
     // Matrix that stores generated HJM path (Output)
     double ppdHJMPath[restrict N][N*BLOCKSIZE],
     // t=0 Forward curve
-    double pdForward[restrict],
+    const double pdForward[restrict],
     // Vector containing total drift corrections for different maturities
-    double pdTotalDrift[restrict],
+    const double pdTotalDrift[restrict],
     // Factor volatilities
-    double ppdFactors[restrict FACTORS][N - 1],
+    const double ppdFactors[restrict FACTORS][N - 1],
     // Random number seed
     long seed)
 {
@@ -108,10 +108,6 @@ static void hjm_path(
     }
   }
 
-
-  //
-  // 할수있어! 병렬화 below:
-  //
 
   //
   // shocks to hit various factors for forward curve at t
@@ -160,7 +156,7 @@ static void discount_factors(
     double pdDiscountFactors[restrict],
     int num,
     double years,
-    double pdRatePath[restrict])
+    const double pdRatePath[restrict])
 {
   // HJM time-step length
   const double delta = years/num;
@@ -196,8 +192,8 @@ void swaption(
 
     // HJM Framework Parameters
     double dStrikeCont,
-    double * __restrict__ pdYield,
-    double ppdFactors[FACTORS][N - 1])
+    const double * __restrict__ pdYield,
+    const double ppdFactors[FACTORS][N - 1])
 {
   //
   // Mathmatical constants
@@ -268,7 +264,7 @@ void swaption(
   for (int l = 0; l< TRIALS; l += BLOCKSIZE) {
     // For each trial a new HJM Path is generated
     double ppdHJMPath[N][N*BLOCKSIZE];
-    hjm_path(ppdHJMPath, pdForward, pdTotalDrift,ppdFactors, iRndSeed); // 51% of the time goes here
+    hjm_path(ppdHJMPath, pdForward, pdTotalDrift, ppdFactors, iRndSeed); // 51% of the time goes here
     iRndSeed += BLOCKSIZE*(N - 1)*FACTORS;
 
     // Now we compute the discount factor vector
