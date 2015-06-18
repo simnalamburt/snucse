@@ -78,8 +78,6 @@ static double uniform_random(long *s) {
 //
 static int hjm_path(
     double **ppdHJMPath, // Matrix that stores generated HJM path (Output)
-    int iN, // Number of time-steps
-    int iFactors, // Number of factors in the HJM framework
     double dYears, // Number of years
     double *pdForward, // t=0 Forward curve
     double *pdTotalDrift, // Vector containing total drift corrections for different maturities
@@ -94,24 +92,24 @@ static int hjm_path(
   double dTotalShock; //total shock by which the forward curve is hit at (t, T-t)
   double ddelt, sqrt_ddelt; //length of time steps
 
-  ddelt = (double)(dYears/iN);
+  ddelt = (double)(dYears/N);
   sqrt_ddelt = sqrt(ddelt);
 
-  pdZ   = dmatrix(iFactors, iN*BLOCKSIZE); //assigning memory
-  randZ = dmatrix(iFactors, iN*BLOCKSIZE); //assigning memory
+  pdZ   = dmatrix(FACTORS, N*BLOCKSIZE); //assigning memory
+  randZ = dmatrix(FACTORS, N*BLOCKSIZE); //assigning memory
 
 
-  // t=0 forward curve stored iN first row of ppdHJMPath
+  // t=0 forward curve stored N first row of ppdHJMPath
   // At time step 0: insert expected drift
   // rest reset to 0
   // KCM: if you are not going to do parallelization,change the order of the
   // loop. {for (j) for(b)} {for(i) memset(ppdHJMPATH[i])}
   for (int b = 0; b < BLOCKSIZE; b++) {
-    for (j = 0; j <= iN - 1; j++) {
+    for (j = 0; j <= N - 1; j++) {
       ppdHJMPath[0][BLOCKSIZE*j + b] = pdForward[j];
 
       // Initializing HJMPath to zero
-      for (i = 1; i <= iN - 1; ++i) {
+      for (i = 1; i <= N - 1; ++i) {
         ppdHJMPath[i][BLOCKSIZE*j + b] = 0;
       }
     }
@@ -123,8 +121,8 @@ static int hjm_path(
   //
   for(int b=0; b<BLOCKSIZE; b++){
     for(int s=0; s<1; s++){
-      for (j=1;j<=iN-1;++j){
-        for (l=0;l<=iFactors-1;++l){
+      for (j=1;j<=N-1;++j){
+        for (l=0;l<=FACTORS-1;++l){
           //compute random number in exact same sequence
           // 병렬화가 어렵다.
           randZ[l][BLOCKSIZE*j + b + s] = uniform_random(lRndSeed);  /* 10% of the total executition time */
@@ -141,9 +139,9 @@ static int hjm_path(
   // shocks to hit various factors for forward curve at t
   // 18% of the total executition time
   //
-  for (int l = 0; l <= iFactors - 1; ++l) {
+  for (int l = 0; l <= FACTORS - 1; ++l) {
     for (int b = 0; b < BLOCKSIZE; b++) {
-      for (int j = 1; j <= iN - 1; ++j) {
+      for (int j = 1; j <= N - 1; ++j) {
         // 18% of the total executition time
         pdZ[l][BLOCKSIZE*j + b] = cum_normal_inv(randZ[l][BLOCKSIZE*j + b]);
       }
@@ -155,12 +153,12 @@ static int hjm_path(
   // Generation of HJM Path1
   //
   for(int b=0; b<BLOCKSIZE; b++){ // b is the blocks
-    for (j=1;j<=iN-1;++j) {// j is the timestep
+    for (j=1;j<=N-1;++j) {// j is the timestep
 
-      for (l=0;l<=iN-(j+1);++l){ // l is the future steps
+      for (l=0;l<=N-(j+1);++l){ // l is the future steps
         dTotalShock = 0;
 
-        for (i=0;i<=iFactors-1;++i){// i steps through the stochastic factors
+        for (i=0;i<=FACTORS-1;++i){// i steps through the stochastic factors
           dTotalShock += ppdFactors[i][l]* pdZ[i][BLOCKSIZE*j + b];
         }
 
@@ -181,25 +179,25 @@ static int hjm_path(
 //
 // swaption.c
 //
-static inline int Discount_Factors_Blocking(double *pdDiscountFactors, int iN, double dYears, double *pdRatePath, int BLOCKSIZE) {
+static inline int Discount_Factors_Blocking(double *pdDiscountFactors, int num, double dYears, double *pdRatePath, int BLOCKSIZE) {
   int i,j,b;				//looping variables
   int iSuccess;			//return variable
 
   double ddelt;			//HJM time-step length
-  ddelt = (double) (dYears/iN);
+  ddelt = (double) (dYears/num);
 
   double *pdexpRes;
-  pdexpRes = dvector((iN-1)*BLOCKSIZE);
+  pdexpRes = dvector((num-1)*BLOCKSIZE);
   //precompute the exponientials
-  for (j=0; j<=(iN-1)*BLOCKSIZE-1; ++j){ pdexpRes[j] = -pdRatePath[j]*ddelt; }
-  for (j=0; j<=(iN-1)*BLOCKSIZE-1; ++j){ pdexpRes[j] = exp(pdexpRes[j]);  }
+  for (j=0; j<=(num-1)*BLOCKSIZE-1; ++j){ pdexpRes[j] = -pdRatePath[j]*ddelt; }
+  for (j=0; j<=(num-1)*BLOCKSIZE-1; ++j){ pdexpRes[j] = exp(pdexpRes[j]);  }
 
 
   //initializing the discount factor vector
-  for (i=0; i<(iN)*BLOCKSIZE; ++i)
+  for (i=0; i<(num)*BLOCKSIZE; ++i)
     pdDiscountFactors[i] = 1.0;
 
-  for (i=1; i<=iN-1; ++i){
+  for (i=1; i<=num-1; ++i){
     //printf("\nVisiting timestep %d : ",i);
     for (b=0; b<BLOCKSIZE; b++){
       //printf("\n");
@@ -220,7 +218,6 @@ static inline int Discount_Factors_Blocking(double *pdDiscountFactors, int iN, d
 
 
 static inline int HJM_Yield_to_Forward (double *pdForward,	//Forward curve to be outputted
-    int iN,				//Number of time-steps
     double *pdYield)		//Input yield curve
 {
   //This function computes forward rates from supplied yield rates.
@@ -230,7 +227,7 @@ static inline int HJM_Yield_to_Forward (double *pdForward,	//Forward curve to be
 
   //forward curve computation
   pdForward[0] = pdYield[0];
-  for(i=1;i<=iN-1; ++i){
+  for(i=1;i<=N-1; ++i){
     pdForward[i] = (i+1)*pdYield[i] - i*pdYield[i-1];	//as per formula
     //printf("pdForward: %f = (%d+1)*%f - %d*%f \n", pdForward[i], i, pdYield[i], i, pdYield[i-1]);
   }
@@ -241,8 +238,6 @@ static inline int HJM_Yield_to_Forward (double *pdForward,	//Forward curve to be
 
 static inline int HJM_Drifts(double *pdTotalDrift,	//Output vector that stores the total drift correction for each maturity
     double **ppdDrifts,		//Output matrix that stores drift correction for each factor for each maturity
-    int iN,
-    int iFactors,
     double dYears,
     double **ppdFactors)		//Input factor volatilities
 {
@@ -250,16 +245,16 @@ static inline int HJM_Drifts(double *pdTotalDrift,	//Output vector that stores t
 
   int iSuccess =0;
   int i, j, l; //looping variables
-  double ddelt = (double) (dYears/iN);
+  double ddelt = (double) (dYears/N);
   double dSumVol;
 
   //computation of factor drifts for shortest maturity
-  for (i=0; i<=iFactors-1; ++i)
+  for (i=0; i<=FACTORS-1; ++i)
     ppdDrifts[i][0] = 0.5*ddelt*(ppdFactors[i][0])*(ppdFactors[i][0]);
 
   //computation of factor drifts for other maturities
-  for (i=0; i<=iFactors-1;++i)
-    for (j=1; j<=iN-2; ++j)
+  for (i=0; i<=FACTORS-1;++i)
+    for (j=1; j<=N-2; ++j)
     {
       ppdDrifts[i][j] = 0;
       for(l=0;l<=j-1;++l)
@@ -271,10 +266,10 @@ static inline int HJM_Drifts(double *pdTotalDrift,	//Output vector that stores t
     }
 
   //computation of total drifts for all maturities
-  for(i=0;i<=iN-2;++i)
+  for(i=0;i<=N-2;++i)
   {
     pdTotalDrift[i]=0;
-    for(j=0;j<=iFactors-1;++j)
+    for(j=0;j<=FACTORS-1;++j)
       pdTotalDrift[i]+= ppdDrifts[j][i];
   }
 
@@ -293,7 +288,7 @@ int swaption(
     double dStrike,
 
     // HJM Framework Parameters (please refer HJM.cpp for explanation of variables and functions)
-    int iN, int iFactors, double *pdYield, double **ppdFactors,
+    double *pdYield, double **ppdFactors,
     // Simulation Parameters
     int BLOCKSIZE)
 {
@@ -314,8 +309,8 @@ int swaption(
   int b; //block looping variable
   long l; //looping variables
 
-  double ddelt = (double)(dYears/iN);				//ddelt = HJM matrix time-step width. e.g. if dYears = 5yrs and
-  //iN = no. of time points = 10, then ddelt = step length = 0.5yrs
+  double ddelt = (double)(dYears/N);				//ddelt = HJM matrix time-step width. e.g. if dYears = 5yrs and
+  //N = no. of time points = 10, then ddelt = step length = 0.5yrs
   int iFreqRatio = (int)(dPaymentInterval/ddelt + 0.5);		// = ratio of time gap between swap payments and HJM step-width.
   //e.g. dPaymentInterval = 1 year. ddelt = 0.5year. This implies that a swap
   //payment will be made after every 2 HJM time steps.
@@ -344,10 +339,10 @@ int swaption(
   double *pdTotalDrift;
 
   // *******************************
-  ppdHJMPath = dmatrix(iN, iN*BLOCKSIZE);    // **** per Trial data **** //
-  pdForward = dvector(iN);
-  ppdDrifts = dmatrix(iFactors, iN - 1);
-  pdTotalDrift = dvector(iN-1);
+  ppdHJMPath = dmatrix(N, N*BLOCKSIZE);    // **** per Trial data **** //
+  pdForward = dvector(N);
+  ppdDrifts = dmatrix(FACTORS, N - 1);
+  pdTotalDrift = dvector(N-1);
 
   //==================================
   // **** per Trial data **** //
@@ -377,11 +372,11 @@ int swaption(
   double dSimSwaptionStdError;
 
   // *******************************
-  pdPayoffDiscountFactors = dvector(iN*BLOCKSIZE);
-  pdDiscountingRatePath = dvector(iN*BLOCKSIZE);
+  pdPayoffDiscountFactors = dvector(N*BLOCKSIZE);
+  pdDiscountingRatePath = dvector(N*BLOCKSIZE);
   // *******************************
 
-  iSwapVectorLength = (int) (iN - dMaturity/ddelt + 0.5);	//This is the length of the HJM rate path at the time index
+  iSwapVectorLength = (int) (N - dMaturity/ddelt + 0.5);	//This is the length of the HJM rate path at the time index
   //corresponding to swaption maturity.
   // *******************************
   pdSwapRatePath = dvector(iSwapVectorLength*BLOCKSIZE);
@@ -408,12 +403,12 @@ int swaption(
   }
 
   //generating forward curve at t=0 from supplied yield curve
-  iSuccess = HJM_Yield_to_Forward(pdForward, iN, pdYield);
+  iSuccess = HJM_Yield_to_Forward(pdForward, pdYield);
   if (iSuccess!=1)
     return iSuccess;
 
   //computation of drifts from factor volatilities
-  iSuccess = HJM_Drifts(pdTotalDrift, ppdDrifts, iN, iFactors, dYears, ppdFactors);
+  iSuccess = HJM_Drifts(pdTotalDrift, ppdDrifts, dYears, ppdFactors);
   if (iSuccess!=1)
     return iSuccess;
 
@@ -423,19 +418,19 @@ int swaption(
   //Simulations begin:
   for (l=0;l<=lTrials-1;l+=BLOCKSIZE) {
     //For each trial a new HJM Path is generated
-    iSuccess = hjm_path(ppdHJMPath, iN, iFactors, dYears, pdForward, pdTotalDrift,ppdFactors, &iRndSeed, BLOCKSIZE); /* GC: 51% of the time goes here */
+    iSuccess = hjm_path(ppdHJMPath, dYears, pdForward, pdTotalDrift,ppdFactors, &iRndSeed, BLOCKSIZE); /* GC: 51% of the time goes here */
     if (iSuccess!=1)
       return iSuccess;
 
     //now we compute the discount factor vector
 
     // 여긴 안해도 될거같음
-    for(i=0;i<=iN-1;++i){
+    for(i=0;i<=N-1;++i){
       for(b=0;b<=BLOCKSIZE-1;b++){
         pdDiscountingRatePath[BLOCKSIZE*i + b] = ppdHJMPath[i][0 + b];
       }
     }
-    iSuccess = Discount_Factors_Blocking(pdPayoffDiscountFactors, iN, dYears, pdDiscountingRatePath, BLOCKSIZE); /* 15% of the time goes here */
+    iSuccess = Discount_Factors_Blocking(pdPayoffDiscountFactors, N, dYears, pdDiscountingRatePath, BLOCKSIZE); /* 15% of the time goes here */
 
     if (iSuccess!=1)
       return iSuccess;

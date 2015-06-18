@@ -37,8 +37,6 @@ namespace {
   //
   const int nThreads = 16;
   const int nSwaptions = 128;
-  const int iN = 11;
-  const int iFactors = 3;
 
 
   //
@@ -56,7 +54,7 @@ namespace {
     for (int i = begin; i < end; ++i) {
       int block_size = 16;
       int iSuccess = swaption(result, (double)swaptions[i].Id/(double)nSwaptions,
-          iN, iFactors, swaptions[i].pdYield, swaptions[i].ppdFactors, block_size);
+          swaptions[i].pdYield, swaptions[i].ppdFactors, block_size);
       assert(iSuccess == 1);
       swaptions[i].result_mean = result[0];
       swaptions[i].result_error = result[1];
@@ -80,7 +78,7 @@ int main() {
   auto time = system_clock::now();
 
   // Initialize input dataset
-  double **factors = dmatrix(iFactors, iN - 1);
+  double **factors = dmatrix(FACTORS, N - 1);
 
   // The three rows store vol data for the three factors
   factors[0][0] = 0.01;
@@ -121,16 +119,16 @@ int main() {
 
   for (int i = 0; i < nSwaptions; i++) {
     swaptions[i].Id = i;
-    swaptions[i].pdYield = dvector(iN);
+    swaptions[i].pdYield = dvector(N);
     swaptions[i].pdYield[0] = .1;
 
-    for (int j = 1; j <= iN-1; ++j) {
+    for (int j = 1; j <= N-1; ++j) {
       swaptions[i].pdYield[j] = swaptions[i].pdYield[j-1]+.005;
     }
 
-    swaptions[i].ppdFactors = dmatrix(iFactors, iN - 1);
-    for(int k = 0; k <= iFactors-1; ++k) {
-      for(int j = 0; j <= iN-2; ++j) {
+    swaptions[i].ppdFactors = dmatrix(FACTORS, N - 1);
+    for(int k = 0; k <= FACTORS-1; ++k) {
+      for(int j = 0; j <= N-2; ++j) {
         swaptions[i].ppdFactors[k][j] = factors[k][j];
       }
     }
