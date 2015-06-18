@@ -20,7 +20,7 @@ debug: CFLAGS += -g
 debug: CXXFLAGS += -g
 debug: $(BIN)
 
-$(BIN): main.o helper.o compute.o
+$(BIN): main.o compute.o
 	$(CXX) $(LDFLAGS) $^ -o $@
 
 clean:

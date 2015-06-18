@@ -14,7 +14,6 @@
 #include <cstring>
 #include <cassert>
 #include <pthread.h>
-#include "helper.h"
 #include "compute.h"
 
 using namespace std;
@@ -25,8 +24,8 @@ namespace {
   // Parameter struct for pthread workers
   struct param_t {
     int Id;
-    double *pdYield;
-    double **ppdFactors;
+    double pdYield[N];
+    double ppdFactors[FACTORS][N - 1];
     double result_mean;
     double result_error;
   };
@@ -76,9 +75,8 @@ int main() {
   auto time = system_clock::now();
 
   // Initialize input dataset
-  double **factors = dmatrix(FACTORS, N - 1);
-
   // The three rows store vol data for the three factors
+  double factors[FACTORS][N - 1];
   factors[0][0] = 0.01;
   factors[0][1] = 0.01;
   factors[0][2] = 0.01;
@@ -117,14 +115,12 @@ int main() {
 
   for (int i = 0; i < nSwaptions; i++) {
     swaptions[i].Id = i;
-    swaptions[i].pdYield = dvector(N);
     swaptions[i].pdYield[0] = .1;
 
     for (int j = 1; j <= N-1; ++j) {
       swaptions[i].pdYield[j] = swaptions[i].pdYield[j-1]+.005;
     }
 
-    swaptions[i].ppdFactors = dmatrix(FACTORS, N - 1);
     for(int k = 0; k <= FACTORS-1; ++k) {
       for(int j = 0; j <= N-2; ++j) {
         swaptions[i].ppdFactors[k][j] = factors[k][j];
@@ -155,13 +151,7 @@ int main() {
         i, swaptions[i].result_mean, swaptions[i].result_error);
   }
 
-  for (int i = 0; i < nSwaptions; ++i) {
-    free_dvector(swaptions[i].pdYield);
-    free_dmatrix(swaptions[i].ppdFactors);
-  }
-
   delete[] swaptions;
-  free_dmatrix(factors);
 
   auto elapsed = duration<double>(system_clock::now() - time).count();
   cerr << "Total elapsed time : " << elapsed << " seconds" << endl;
