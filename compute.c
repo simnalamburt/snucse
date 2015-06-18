@@ -71,18 +71,6 @@ static double uniform_random(long *s) {
 }
 
 
-static void serial_b(double **pdZ, double **randZ, int BLOCKSIZE, int iN, int iFactors) {
-  for (int l = 0; l <= iFactors - 1; ++l) {
-    for (int b = 0; b < BLOCKSIZE; b++) {
-      for (int j = 1; j <= iN - 1; ++j) {
-        // 18% of the total executition time
-        pdZ[l][BLOCKSIZE*j + b] = cum_normal_inv(randZ[l][BLOCKSIZE*j + b]);
-      }
-    }
-  }
-}
-
-
 //
 // This function computes and stores an HJM Path for given inputs
 //
@@ -153,7 +141,14 @@ static int hjm_path(
   // shocks to hit various factors for forward curve at t
   // 18% of the total executition time
   //
-  serial_b(pdZ, randZ, BLOCKSIZE, iN, iFactors);
+  for (int l = 0; l <= iFactors - 1; ++l) {
+    for (int b = 0; b < BLOCKSIZE; b++) {
+      for (int j = 1; j <= iN - 1; ++j) {
+        // 18% of the total executition time
+        pdZ[l][BLOCKSIZE*j + b] = cum_normal_inv(randZ[l][BLOCKSIZE*j + b]);
+      }
+    }
+  }
 
 
   //
@@ -242,9 +237,6 @@ static inline int HJM_Yield_to_Forward (double *pdForward,	//Forward curve to be
   iSuccess=1;
   return iSuccess;
 }
-
-
-static inline double dMax( double dA, double dB ) { return (dA>dB ? dA:dB); }
 
 
 static inline int HJM_Drifts(double *pdTotalDrift,	//Output vector that stores the total drift correction for each maturity
@@ -467,7 +459,9 @@ int swaption(
       for (i=0;i<=iSwapVectorLength-1;++i){
         dFixedLegValue += pdSwapPayoffs[i]*pdSwapDiscountFactors[i*BLOCKSIZE + b];
       }
-      dSwaptionPayoff = dMax(dFixedLegValue - 1.0, 0);
+
+      double tmp = dFixedLegValue - 1.0;
+      dSwaptionPayoff = tmp > 0 ? tmp : 0;
 
       dDiscSwaptionPayoff = dSwaptionPayoff*pdPayoffDiscountFactors[iSwapStartTimeIndex*BLOCKSIZE + b];
 
