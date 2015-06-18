@@ -5,9 +5,8 @@ extern "C" {
 
 #define N 11
 #define FACTORS 3
-#define BLOCKSIZE 16
 
-int swaption(
+void swaption(
     double * __restrict__ result,
     double dStrike,
     double * __restrict__ pdYield,
