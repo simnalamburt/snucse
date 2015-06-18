@@ -82,8 +82,7 @@ static int hjm_path(
     double *pdForward, // t=0 Forward curve
     double *pdTotalDrift, // Vector containing total drift corrections for different maturities
     double **ppdFactors, // Factor volatilities
-    long *lRndSeed, // Random number seed
-    int BLOCKSIZE)
+    long *lRndSeed) // Random number seed
 {
   int iSuccess = 0;
   int i,j,l; //looping variables
@@ -179,7 +178,7 @@ static int hjm_path(
 //
 // swaption.c
 //
-static inline int Discount_Factors_Blocking(double *pdDiscountFactors, int num, double dYears, double *pdRatePath, int BLOCKSIZE) {
+static inline int Discount_Factors_Blocking(double *pdDiscountFactors, int num, double dYears, double *pdRatePath) {
   int i,j,b;				//looping variables
   int iSuccess;			//return variable
 
@@ -198,16 +197,13 @@ static inline int Discount_Factors_Blocking(double *pdDiscountFactors, int num, 
     pdDiscountFactors[i] = 1.0;
 
   for (i=1; i<=num-1; ++i){
-    //printf("\nVisiting timestep %d : ",i);
     for (b=0; b<BLOCKSIZE; b++){
-      //printf("\n");
       for (j=0; j<=i-1; ++j){
         // kcm: do both loop unrolling and reorder pdexpRes vector elements above. -> SSE
         // optimization is possible.
         pdDiscountFactors[i*BLOCKSIZE + b] *= pdexpRes[j*BLOCKSIZE + b];
-        //printf("(%f) ",pdexpRes[j*BLOCKSIZE + b]);
       }
-    } // end Block loop
+    }
   }
 
   free_dvector(pdexpRes);
@@ -288,9 +284,7 @@ int swaption(
     double dStrike,
 
     // HJM Framework Parameters (please refer HJM.cpp for explanation of variables and functions)
-    double *pdYield, double **ppdFactors,
-    // Simulation Parameters
-    int BLOCKSIZE)
+    double *pdYield, double **ppdFactors)
 {
   //
   // Constants
@@ -418,7 +412,7 @@ int swaption(
   //Simulations begin:
   for (l=0;l<=lTrials-1;l+=BLOCKSIZE) {
     //For each trial a new HJM Path is generated
-    iSuccess = hjm_path(ppdHJMPath, dYears, pdForward, pdTotalDrift,ppdFactors, &iRndSeed, BLOCKSIZE); /* GC: 51% of the time goes here */
+    iSuccess = hjm_path(ppdHJMPath, dYears, pdForward, pdTotalDrift,ppdFactors, &iRndSeed); /* GC: 51% of the time goes here */
     if (iSuccess!=1)
       return iSuccess;
 
@@ -430,7 +424,7 @@ int swaption(
         pdDiscountingRatePath[BLOCKSIZE*i + b] = ppdHJMPath[i][0 + b];
       }
     }
-    iSuccess = Discount_Factors_Blocking(pdPayoffDiscountFactors, N, dYears, pdDiscountingRatePath, BLOCKSIZE); /* 15% of the time goes here */
+    iSuccess = Discount_Factors_Blocking(pdPayoffDiscountFactors, N, dYears, pdDiscountingRatePath); /* 15% of the time goes here */
 
     if (iSuccess!=1)
       return iSuccess;
@@ -442,7 +436,7 @@ int swaption(
           ppdHJMPath[iSwapStartTimeIndex][i*BLOCKSIZE + b];
       }
     }
-    iSuccess = Discount_Factors_Blocking(pdSwapDiscountFactors, iSwapVectorLength, dSwapVectorYears, pdSwapRatePath, BLOCKSIZE);
+    iSuccess = Discount_Factors_Blocking(pdSwapDiscountFactors, iSwapVectorLength, dSwapVectorYears, pdSwapRatePath);
     if (iSuccess!=1)
       return iSuccess;
 

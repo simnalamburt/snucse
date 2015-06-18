@@ -5,8 +5,9 @@ extern "C" {
 
 #define N 11
 #define FACTORS 3
+#define BLOCKSIZE 16
 
-int swaption(double *pdSwaptionPrice, double dStrike, double *pdYield, double **ppdFactors, int BLOCKSIZE);
+int swaption(double *pdSwaptionPrice, double dStrike, double *pdYield, double **ppdFactors);
 
 #ifdef __cplusplus
 }

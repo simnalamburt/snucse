@@ -52,9 +52,7 @@ namespace {
     const int end = tid != nThreads - 1 ? (tid + 1)*chunksize : nSwaptions;
     double result[2];
     for (int i = begin; i < end; ++i) {
-      int block_size = 16;
-      int iSuccess = swaption(result, (double)swaptions[i].Id/(double)nSwaptions,
-          swaptions[i].pdYield, swaptions[i].ppdFactors, block_size);
+      int iSuccess = swaption(result, (double)swaptions[i].Id/(double)nSwaptions, swaptions[i].pdYield, swaptions[i].ppdFactors);
       assert(iSuccess == 1);
       swaptions[i].result_mean = result[0];
       swaptions[i].result_error = result[1];
