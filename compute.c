@@ -76,12 +76,12 @@ static double uniform_random(long *s) {
 // 대부분
 //
 static int hjm_path(
-    double ppdHJMPath[N][N*BLOCKSIZE], // Matrix that stores generated HJM path (Output)
+    double ppdHJMPath[restrict N][N*BLOCKSIZE], // Matrix that stores generated HJM path (Output)
     double dYears, // Number of years
-    double *pdForward, // t=0 Forward curve
-    double *pdTotalDrift, // Vector containing total drift corrections for different maturities
+    double pdForward[restrict], // t=0 Forward curve
+    double pdTotalDrift[restrict], // Vector containing total drift corrections for different maturities
     double ppdFactors[FACTORS][N - 1], // Factor volatilities
-    long *lRndSeed) // Random number seed
+    long * restrict lRndSeed) // Random number seed
 {
   int i,j,l; //looping variables
   double dTotalShock; //total shock by which the forward curve is hit at (t, T-t)
@@ -170,7 +170,12 @@ static int hjm_path(
 //
 // swaption.c
 //
-static inline int Discount_Factors_Blocking(double *pdDiscountFactors, int num, double dYears, double *pdRatePath) {
+static inline int Discount_Factors_Blocking(
+    double pdDiscountFactors[restrict],
+    int num,
+    double dYears,
+    double pdRatePath[restrict])
+{
   int i,j,b; // Looping variables
 
   double ddelt;			//HJM time-step length
@@ -201,8 +206,9 @@ static inline int Discount_Factors_Blocking(double *pdDiscountFactors, int num, 
 
 
 
-static inline int HJM_Yield_to_Forward (double *pdForward,	//Forward curve to be outputted
-    double *pdYield)		//Input yield curve
+static inline int HJM_Yield_to_Forward(
+    double pdForward[restrict], // Forward curve to be outputted
+    double pdYield[restrict]) // Input yield curve
 {
   //This function computes forward rates from supplied yield rates.
 
@@ -220,10 +226,11 @@ static inline int HJM_Yield_to_Forward (double *pdForward,	//Forward curve to be
 }
 
 
-static inline int HJM_Drifts(double pdTotalDrift[N-1],	//Output vector that stores the total drift correction for each maturity
-    double ppdDrifts[FACTORS][N - 1],		//Output matrix that stores drift correction for each factor for each maturity
+static inline int HJM_Drifts(
+    double pdTotalDrift[restrict N-1], // Output vector that stores the total drift correction for each maturity
+    double ppdDrifts[restrict FACTORS][N - 1], // Output matrix that stores drift correction for each factor for each maturity
     double dYears,
-    double ppdFactors[FACTORS][N - 1])		//Input factor volatilities
+    double ppdFactors[restrict FACTORS][N - 1]) // Input factor volatilities
 {
   //This function computes drift corrections required for each factor for each maturity based on given factor volatilities
 
@@ -264,15 +271,15 @@ static inline int HJM_Drifts(double pdTotalDrift[N-1],	//Output vector that stor
 
 
 int swaption(
-    // Output vector that will store simulation results in the form:
+    // result vector that will store simulation results in the form:
     //     Swaption Price
     //     Swaption Standard Error
-    //     Swaption Parameters
-    double *pdSwaptionPrice,
-    double dStrike,
+    double * __restrict__ result,
 
+    double dStrike,
     // HJM Framework Parameters (please refer HJM.cpp for explanation of variables and functions)
-    double pdYield[N], double ppdFactors[FACTORS][N - 1])
+    double * __restrict__ pdYield,
+    double ppdFactors[FACTORS][N - 1])
 {
   //
   // Constants
@@ -448,10 +455,8 @@ int swaption(
   dSimSwaptionStdError = sqrt((dSumSquareSimSwaptionPrice-dSumSimSwaptionPrice*dSumSimSwaptionPrice/lTrials)/
       (lTrials-1.0))/sqrt((double)lTrials);
 
-  //results returned
-  pdSwaptionPrice[0] = dSimSwaptionMeanPrice;
-  pdSwaptionPrice[1] = dSimSwaptionStdError;
-
-
+  // Store results
+  result[0] = dSimSwaptionMeanPrice;
+  result[1] = dSimSwaptionStdError;
   return 1;
 }
