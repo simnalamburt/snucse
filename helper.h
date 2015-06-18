@@ -5,7 +5,7 @@ extern "C" {
 
 double *dvector(size_t size);
 void free_dvector(double *ptr);
-double **dmatrix(size_t row_minus_1, size_t col_minus_1);
+double **dmatrix(size_t row, size_t col);
 void free_dmatrix(double **ptr);
 
 #ifdef __cplusplus

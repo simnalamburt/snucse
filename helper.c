@@ -14,13 +14,10 @@ void free_dvector(double *ptr) { free(ptr); }
 // Allocate/deallocate a matrix
 //
 // Usage:
-//     auto matrix = dmatrix(row - 1, col - 1);
+//     auto matrix = dmatrix(row, col);
 //     matrix[0..row][0..col] = 30;
 //
-double **dmatrix(size_t row_minus_1, size_t col_minus_1) {
-  const size_t col = col_minus_1 + 1;
-  const size_t row = row_minus_1 + 1;
-
+double **dmatrix(size_t row, size_t col) {
   // Allocate an array for a column
   double **m = malloc(row*sizeof(double*));
   uintptr_t mem = (uintptr_t)malloc(row*col*sizeof(double));

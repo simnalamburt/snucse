@@ -68,7 +68,7 @@ namespace {
 //
 int main() {
   // Initialize input dataset
-  double **factors = dmatrix(iFactors-1, iN-2);
+  double **factors = dmatrix(iFactors, iN - 1);
 
   // The three rows store vol data for the three factors
   factors[0][0] = 0.01;
@@ -116,7 +116,7 @@ int main() {
       swaptions[i].pdYield[j] = swaptions[i].pdYield[j-1]+.005;
     }
 
-    swaptions[i].ppdFactors = dmatrix(iFactors-1, iN-2);
+    swaptions[i].ppdFactors = dmatrix(iFactors, iN - 1);
     for(int k = 0; k <= iFactors-1; ++k) {
       for(int j = 0; j <= iN-2; ++j) {
         swaptions[i].ppdFactors[k][j] = factors[k][j];

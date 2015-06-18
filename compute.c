@@ -109,8 +109,8 @@ static int hjm_path(
   ddelt = (double)(dYears/iN);
   sqrt_ddelt = sqrt(ddelt);
 
-  pdZ   = dmatrix(iFactors-1, iN*BLOCKSIZE -1); //assigning memory
-  randZ = dmatrix(iFactors-1, iN*BLOCKSIZE -1); //assigning memory
+  pdZ   = dmatrix(iFactors, iN*BLOCKSIZE); //assigning memory
+  randZ = dmatrix(iFactors, iN*BLOCKSIZE); //assigning memory
 
 
   // t=0 forward curve stored iN first row of ppdHJMPath
@@ -352,9 +352,9 @@ int swaption(
   double *pdTotalDrift;
 
   // *******************************
-  ppdHJMPath = dmatrix(iN-1,iN*BLOCKSIZE-1);    // **** per Trial data **** //
+  ppdHJMPath = dmatrix(iN, iN*BLOCKSIZE);    // **** per Trial data **** //
   pdForward = dvector(iN);
-  ppdDrifts = dmatrix(iFactors-1, iN-2);
+  ppdDrifts = dmatrix(iFactors, iN - 1);
   pdTotalDrift = dvector(iN-1);
 
   //==================================
