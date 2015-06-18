@@ -57,15 +57,12 @@ static double cum_normal_inv(double u) {
 // 그러니까 vector에 [시작값, 시작값+1, 시작값+2, ... ]으로 채워놓고 밑의 연산 적용하면 됨.
 // 대놓고 병렬화하라고 준 랜덤이네.
 //
-static double uniform_random(long *s) {
-  long ix = *s;
-  *s = ix+1;
+static double uniform_random(long ix) {
   ix *= 1513517L;
   ix %= 2147483647L;
   long k1 = ix/127773L;
   ix = 16807L*(ix - k1*127773L) - k1*2836L;
   if (ix < 0) { ix = ix + 2147483647L; }
-
   return ix * 4.656612875e-10;
 }
 
@@ -114,17 +111,19 @@ static int hjm_path(
   //
   // Sequentially generating random numbers
   //
+  long seed = *lRndSeed;
   for(int b=0; b<BLOCKSIZE; b++){
     for(int s=0; s<1; s++){
       for (j=1;j<=N-1;++j){
         for (l=0;l<=FACTORS-1;++l){
           //compute random number in exact same sequence
           // 병렬화가 어렵다.
-          randZ[l][BLOCKSIZE*j + b + s] = uniform_random(lRndSeed);  /* 10% of the total executition time */
+          randZ[l][BLOCKSIZE*j + b + s] = uniform_random(seed++);  /* 10% of the total executition time */
         }
       }
     }
   }
+  *lRndSeed = seed;
 
 
   // 할수있어! 병렬화 below:
