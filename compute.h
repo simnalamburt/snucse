@@ -7,10 +7,10 @@ extern "C" {
 #define FACTORS 3
 
 void swaption(
-    double * __restrict__ result,
+    double * __restrict__ mean,
+    double * __restrict__ error,
     double dStrike,
-    const double * __restrict__ pdYield,
-    const double ppdFactors[FACTORS][N - 1]);
+    const double * __restrict__ pdYield);
 
 #ifdef __cplusplus
 }

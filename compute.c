@@ -10,6 +10,10 @@
 #include <string.h>
 #include "compute.h"
 
+
+//
+// Contants
+//
 #define TRIALS 1000000
 #define BLOCKSIZE 16
 #define ITERS (TRIALS/BLOCKSIZE)
@@ -19,6 +23,12 @@
 // Length of time steps
 #define DELTA (YEARS/N)
 #define SQRT_DELTA 0.7071067811865476
+
+static const double factors[FACTORS][N - 1] = {
+  { 0.01, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01 },
+  { 0.009048, 0.008187, 0.007408, 0.006703, 0.006065, 0.005488, 0.004966, 0.004493, 0.004066, 0.003679 },
+  { 0.001000, 0.000750, 0.000500, 0.000250, 0.000000, -0.000250, -0.000500, -0.000750, -0.001000, -0.001250 }
+};
 
 
 //
@@ -74,8 +84,6 @@ static void hjm_path(
     const double pdForward[restrict],
     // Vector containing total drift corrections for different maturities
     const double pdTotalDrift[restrict],
-    // Factor volatilities
-    const double ppdFactors[restrict FACTORS][N - 1],
     // Random number seed
     long seed)
 {
@@ -140,7 +148,7 @@ static void hjm_path(
 
         // i steps through the stochastic factors
         for (int i = 0; i < FACTORS; ++i){
-          dTotalShock += ppdFactors[i][l] * pdZ[i][BLOCKSIZE*j + b];
+          dTotalShock += factors[i][l] * pdZ[i][BLOCKSIZE*j + b];
         }
 
         // As per formula
@@ -190,12 +198,12 @@ void swaption(
     // result vector that will store simulation results in the form:
     //     Swaption Price
     //     Swaption Standard Error
-    double * __restrict__ result,
+    double * __restrict__ mean,
+    double * __restrict__ error,
 
     // HJM Framework Parameters
     double dStrikeCont,
-    const double * __restrict__ pdYield,
-    const double ppdFactors[FACTORS][N - 1])
+    const double * __restrict__ pdYield)
 {
   //
   // Mathmatical constants
@@ -208,6 +216,7 @@ void swaption(
   const double dTenor = 2.0;
   const int iSwapTimePoints = dTenor/DELTA + 0.5;
   const double dSwapVectorYears = iSwapVectorLength*DELTA;
+
 
 
   // Store swap payoffs
@@ -234,7 +243,7 @@ void swaption(
   double pdTotalDrift[N- 1];
   // Computation of factor drifts for shortest maturity
   for (int i = 0; i < FACTORS; ++i) {
-    ppdDrifts[i][0] = 0.5*DELTA*ppdFactors[i][0]*ppdFactors[i][0];
+    ppdDrifts[i][0] = 0.5*DELTA*factors[i][0]*factors[i][0];
   }
   // Computation of factor drifts for other maturities
   for (int i = 0; i < FACTORS; ++i) {
@@ -244,7 +253,7 @@ void swaption(
       ppdDrifts[i][j] = sum0;
 
       double sum = 0;
-      for(int l = 0; l <= j; ++l) { sum += ppdFactors[i][l]; }
+      for(int l = 0; l <= j; ++l) { sum += factors[i][l]; }
       ppdDrifts[i][j] += 0.5*DELTA*sum*sum;
     }
   }
@@ -271,7 +280,7 @@ void swaption(
   for (int i = 0; i < ITERS; ++i) {
     // For each trial a new HJM Path is generated
     double ppdHJMPath[N][N*BLOCKSIZE];
-    hjm_path(ppdHJMPath, pdForward, pdTotalDrift, ppdFactors, seeds[i]); // 51% of the time goes here
+    hjm_path(ppdHJMPath, pdForward, pdTotalDrift, seeds[i]); // 51% of the time goes here
 
     // Now we compute the discount factor vector
     // 여긴 안해도 될거같음
@@ -326,6 +335,6 @@ void swaption(
   }
 
   // Store results
-  result[0] = sum/TRIALS;
-  result[1] = sqrt((square_sum - sum*sum/TRIALS)/(TRIALS - 1.0)/TRIALS);
+  *mean = sum/TRIALS;
+  *error = sqrt((square_sum - sum*sum/TRIALS)/(TRIALS - 1.0)/TRIALS);
 }

@@ -32,14 +32,6 @@ namespace {
 
   task_t tasks[TASKS];
 
-  //
-  // Constants
-  //
-  const double factors[FACTORS][N - 1] = {
-    { 0.01, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01 },
-    { 0.009048, 0.008187, 0.007408, 0.006703, 0.006065, 0.005488, 0.004966, 0.004493, 0.004066, 0.003679 },
-    { 0.001000, 0.000750, 0.000500, 0.000250, 0.000000, -0.000250, -0.000500, -0.000750, -0.001000, -0.001250 }
-  };
 
   void *worker(void *arg) {
     auto time = system_clock::now();
@@ -56,17 +48,11 @@ namespace {
         tmp += 0.005;
       }
 
-      double ppdFactors[FACTORS][N - 1];
-      memcpy(ppdFactors, factors, sizeof factors);
-
 
       //
       // Calculate
       //
-      double result[2];
-      swaption(result, (double)i/(double)TASKS, pdYield, ppdFactors);
-      tasks[i].result_mean = result[0];
-      tasks[i].result_error = result[1];
+      swaption(&tasks[i].result_mean, &tasks[i].result_error, (double)i/(double)TASKS, pdYield);
     }
     auto elapsed = duration<double>(system_clock::now() - time).count();
 
