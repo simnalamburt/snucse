@@ -31,15 +31,18 @@ static double cum_normal_inv(double u) {
   const double x = u - 0.5;
   double r;
   if (fabs (x) < 0.42) {
+    // 얘만 수행하는 병렬화를 해야됨
     r = x * x;
     r = x * ((( a[3]*r + a[2]) * r + a[1]) * r + a[0])/
           ((((b[3] * r+ b[2]) * r + b[1]) * r + b[0]) * r + 1.0);
     return r;
   }
 
+  // 조건 밖에 해당되어서 특별처리하는부분
+  // 이거 근사하기
   r = u;
   if (x > 0.0) { r = 1.0 - u; }
-  r = log(-log(r));
+  r = log(-log(r)); //!!!!!!!!
   r = c[0] + r * (c[1] + r *
        (c[2] + r * (c[3] + r *
        (c[4] + r * (c[5] + r * (c[6] + r * (c[7] + r*c[8])))))));
@@ -51,6 +54,9 @@ static double cum_normal_inv(double u) {
 
 //
 // Uniform random number generator
+// 병렬화 가능함. s는 계속 1씩 증가할 뿐. 나머지 코드는 그대로 병렬화 가능.
+// 그러니까 vector에 [시작값, 시작값+1, 시작값+2, ... ]으로 채워놓고 밑의 연산 적용하면 됨.
+// 대놓고 병렬화하라고 준 랜덤이네.
 //
 static double uniform_random(long *s) {
   long ix = *s;
@@ -80,6 +86,8 @@ static void serial_b(double **pdZ, double **randZ, int BLOCKSIZE, int iN, int iF
 //
 // This function computes and stores an HJM Path for given inputs
 //
+// 대부분
+//
 static int hjm_path(
     double **ppdHJMPath, // Matrix that stores generated HJM path (Output)
     int iN, // Number of time-steps
@@ -108,6 +116,8 @@ static int hjm_path(
   // t=0 forward curve stored iN first row of ppdHJMPath
   // At time step 0: insert expected drift
   // rest reset to 0
+  // KCM: if you are not going to do parallelization,change the order of the
+  // loop. {for (j) for(b)} {for(i) memset(ppdHJMPATH[i])}
   for (int b = 0; b < BLOCKSIZE; b++) {
     for (j = 0; j <= iN - 1; j++) {
       ppdHJMPath[0][BLOCKSIZE*j + b] = pdForward[j];
@@ -128,11 +138,15 @@ static int hjm_path(
       for (j=1;j<=iN-1;++j){
         for (l=0;l<=iFactors-1;++l){
           //compute random number in exact same sequence
+          // 병렬화가 어렵다.
           randZ[l][BLOCKSIZE*j + b + s] = uniform_random(lRndSeed);  /* 10% of the total executition time */
         }
       }
     }
   }
+
+
+  // 할수있어! 병렬화 below:
 
 
   //
@@ -195,6 +209,8 @@ static inline int Discount_Factors_Blocking(double *pdDiscountFactors, int iN, d
     for (b=0; b<BLOCKSIZE; b++){
       //printf("\n");
       for (j=0; j<=i-1; ++j){
+        // kcm: do both loop unrolling and reorder pdexpRes vector elements above. -> SSE
+        // optimization is possible.
         pdDiscountFactors[i*BLOCKSIZE + b] *= pdexpRes[j*BLOCKSIZE + b];
         //printf("(%f) ",pdexpRes[j*BLOCKSIZE + b]);
       }
@@ -421,6 +437,7 @@ int swaption(
 
     //now we compute the discount factor vector
 
+    // 여긴 안해도 될거같음
     for(i=0;i<=iN-1;++i){
       for(b=0;b<=BLOCKSIZE-1;b++){
         pdDiscountingRatePath[BLOCKSIZE*i + b] = ppdHJMPath[i][0 + b];
