@@ -20,28 +20,21 @@ using namespace chrono;
 
 
 namespace {
-  struct param_t {
-    int begin;
-    int end;
-  };
+  struct result_t { double mean, error; };
+  result_t results[TASKS];
 
-  struct task_t {
-    double result_mean;
-    double result_error;
-  };
+  void per_task(int task_id) {
+    swaption(&results[task_id].mean, &results[task_id].error, (double)task_id/(double)TASKS);
+  }
 
-  task_t tasks[TASKS];
-
-
+  struct param_t { int begin, end; };
   void *worker(void *arg) {
     auto time = system_clock::now();
 
     param_t *param = (param_t*)arg;
-    for (int i = param->begin; i < param->end; ++i) {
-      swaption(&tasks[i].result_mean, &tasks[i].result_error, (double)i/(double)TASKS);
-    }
-    auto elapsed = duration<double>(system_clock::now() - time).count();
+    for (int i = param->begin; i < param->end; ++i) { per_task(i); }
 
+    auto elapsed = duration<double>(system_clock::now() - time).count();
     cerr << "[" << param->begin << ", " << param->end << ") " << elapsed << " seconds" << endl;
     return NULL;
   }
@@ -66,7 +59,7 @@ int main() {
   for (int i = 0; i < THREADS; ++i) {
     pthread_join(threads[i], NULL);
     for (int n = params[i].begin; n < params[i].end; ++n) {
-      printf("Swaption%d: [SwaptionPrice: %.10lf StdError: %.10lf]\n", n, tasks[n].result_mean, tasks[n].result_error);
+      printf("Swaption%d: [SwaptionPrice: %.10lf StdError: %.10lf]\n", n, results[n].mean, results[n].error);
     }
   }
 
