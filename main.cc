@@ -12,7 +12,7 @@
 #include "compute.h"
 
 #define THREADS 16
-#define SWAPTIONS 128
+#define TASKS 128
 
 using namespace std;
 using namespace chrono;
@@ -32,7 +32,7 @@ namespace {
     double result_error;
   };
 
-  task_t swaptions[SWAPTIONS];
+  task_t tasks[TASKS];
 
   void *worker(void *arg) {
     param_t *param = (param_t*)arg;
@@ -40,9 +40,9 @@ namespace {
     auto time = system_clock::now();
     for (int i = param->begin; i < param->end; ++i) {
       double result[2];
-      swaption(result, (double)swaptions[i].Id/(double)SWAPTIONS, swaptions[i].pdYield, swaptions[i].ppdFactors);
-      swaptions[i].result_mean = result[0];
-      swaptions[i].result_error = result[1];
+      swaption(result, (double)tasks[i].Id/(double)TASKS, tasks[i].pdYield, tasks[i].ppdFactors);
+      tasks[i].result_mean = result[0];
+      tasks[i].result_error = result[1];
     }
     auto elapsed = duration<double>(system_clock::now() - time).count();
 
@@ -64,17 +64,17 @@ int main() {
     { 0.001000, 0.000750, 0.000500, 0.000250, 0.000000, -0.000250, -0.000500, -0.000750, -0.001000, -0.001250 }
   };
 
-  for (int i = 0; i < SWAPTIONS; i++) {
-    swaptions[i].Id = i;
-    swaptions[i].pdYield[0] = .1;
+  for (int i = 0; i < TASKS; i++) {
+    tasks[i].Id = i;
+    tasks[i].pdYield[0] = .1;
 
     for (int j = 1; j < N; ++j) {
-      swaptions[i].pdYield[j] = swaptions[i].pdYield[j-1]+.005;
+      tasks[i].pdYield[j] = tasks[i].pdYield[j-1]+.005;
     }
 
     for (int k = 0; k < FACTORS; ++k) {
       for (int j = 0; j < N - 1; ++j) {
-        swaptions[i].ppdFactors[k][j] = factors[k][j];
+        tasks[i].ppdFactors[k][j] = factors[k][j];
       }
     }
   }
@@ -84,10 +84,10 @@ int main() {
   // Calling the Swaption Pricing Routine
   //
   param_t params[THREADS];
-  const int chunksize = SWAPTIONS/THREADS;
+  const int chunksize = TASKS/THREADS;
   for (int i = 0; i < THREADS; ++i) {
     params[i].begin = i*chunksize;
-    params[i].end = i != THREADS - 1 ? (i + 1)*chunksize : SWAPTIONS;
+    params[i].end = i != THREADS - 1 ? (i + 1)*chunksize : TASKS;
   }
 
   pthread_t threads[THREADS];
@@ -99,8 +99,8 @@ int main() {
     pthread_join(threads[i], NULL);
   }
 
-  for (int i = 0; i < SWAPTIONS; ++i) {
-    printf("Swaption%d: [SwaptionPrice: %.10lf StdError: %.10lf]\n", i, swaptions[i].result_mean, swaptions[i].result_error);
+  for (int i = 0; i < TASKS; ++i) {
+    printf("Swaption%d: [SwaptionPrice: %.10lf StdError: %.10lf]\n", i, tasks[i].result_mean, tasks[i].result_error);
   }
 
   auto elapsed = duration<double>(system_clock::now() - time).count();
