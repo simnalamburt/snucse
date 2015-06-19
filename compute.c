@@ -8,6 +8,7 @@
 //
 #include <math.h>
 #include <string.h>
+#include <CL/cl.h>
 #include "compute.h"
 
 
