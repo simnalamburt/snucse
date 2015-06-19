@@ -1,16 +1,9 @@
 CFLAGS = -W -Wall -Wextra -Wunused -Wunreachable-code -std=c99
 CXXFLAGS = -W -Wall -Wextra -Wunused -Wunreachable-code -std=c++0x
-
-ifdef version
-  ifeq "$(version)" "cpu"
-    CXXFLAGS += -DCPU
-  endif
-else
-  LDFLAGS += -pthread
-endif
+LDFLAGS = -lOpenCL
 
 BIN=bin
-all: debug
+all: release
 
 release: CFLAGS += -O3
 release: CXXFLAGS += -O3
