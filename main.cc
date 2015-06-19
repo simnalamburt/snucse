@@ -60,7 +60,7 @@ int main() {
 
   for (int task_id = 0; task_id < TASKS; ++task_id) {
     for (int i = 0; i < ITERS; ++i) {
-      swaption(&tasks[task_id], &results[task_id], i);
+      swaption(tasks, results, task_id, i);
     }
   }
 

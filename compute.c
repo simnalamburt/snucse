@@ -181,7 +181,9 @@ static void discount_factors(
 }
 
 
-void swaption(task_t *task, result_t *result, size_t id) {
+void swaption(task_t *tasks, result_t *results, size_t task_id, size_t id) {
+  task_t *task = &tasks[task_id];
+  result_t *result = &results[task_id];
   double *pdForward = task->forward;
   double *pdTotalDrift = task->drifts;
   double *seeds = task->seeds;

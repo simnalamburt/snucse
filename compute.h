@@ -27,7 +27,7 @@ typedef struct {
   double sums[ITERS], square_sums[ITERS];
 } result_t;
 
-void swaption(task_t *task, result_t *result, size_t id);
+void swaption(task_t *tasks, result_t *results, size_t task_id, size_t id);
 
 static const double factors[FACTORS][N - 1] = {
   { 0.01, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01 },
