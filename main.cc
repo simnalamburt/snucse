@@ -11,7 +11,6 @@
 #include <CL/cl.h>
 #include "compute.h"
 
-#define THREADS 16
 #define TASKS 128
 
 using namespace std;
@@ -108,7 +107,7 @@ int main() {
     check(clSetKernelArg(kernel, 1, sizeof(cl_mem), &buffer_results[i]));
 
     array<size_t, 2> global = {{ TASKS/device_count, TRIALS }};
-    array<size_t, 2> local = {{ 1, 256 }};
+    array<size_t, 2> local = {{ 1, 128 }};
     check(clEnqueueNDRangeKernel(cmdqs[i], kernel, 2, NULL, global.data(), local.data(), 0, NULL, NULL));
   }
 
