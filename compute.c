@@ -11,24 +11,10 @@
 #include "compute.h"
 
 
-//
-// Contants
-//
-#define TRIALS 1000000
-#define BLOCKSIZE 16
-#define ITERS (TRIALS/BLOCKSIZE)
-
-#define YEARS 5.5
 
 // Length of time steps
-#define DELTA (YEARS/N)
 #define SQRT_DELTA 0.7071067811865476
 
-static const double factors[FACTORS][N - 1] = {
-  { 0.01, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01 },
-  { 0.009048, 0.008187, 0.007408, 0.006703, 0.006065, 0.005488, 0.004966, 0.004493, 0.004066, 0.003679 },
-  { 0.001000, 0.000750, 0.000500, 0.000250, 0.000000, -0.000250, -0.000500, -0.000750, -0.001000, -0.001250 }
-};
 
 
 //
@@ -195,91 +181,22 @@ static void discount_factors(
 
 
 void swaption(
-    double * __restrict__ mean,
-    double * __restrict__ error,
-    double dStrikeCont)
+    const double * __restrict__ pdForward,
+    const double * __restrict__ pdTotalDrift,
+    const double * __restrict__ seeds,
+    const double * __restrict__ pdSwapPayoffs,
+    double * __restrict__ sums,
+    double * __restrict__ square_sums)
 {
   //
-  // Mathmatical constants
+  // Constants
   //
-  const double dPaymentInterval = 1.0;
-  const int iFreqRatio = dPaymentInterval/DELTA + 0.5;
   const double dMaturity = 1.0;
   const int iSwapVectorLength = N - dMaturity/DELTA + 0.5;
   const int iSwapStartTimeIndex = dMaturity/DELTA + 0.5;
-  const double dTenor = 2.0;
-  const int iSwapTimePoints = dTenor/DELTA + 0.5;
   const double dSwapVectorYears = iSwapVectorLength*DELTA;
 
 
-
-  // Store swap payoffs
-  double pdSwapPayoffs[iSwapVectorLength];
-  memset(pdSwapPayoffs, 0, sizeof pdSwapPayoffs);
-  for (int i = iFreqRatio; i <= iSwapTimePoints; i += iFreqRatio) {
-    double tmp = exp(dStrikeCont*dPaymentInterval);
-    // Normally, the bond pays coupon equal to this amount
-    // But at terminal time point, bond pays coupon plus par amount
-    pdSwapPayoffs[i] = i == iSwapTimePoints ? tmp : tmp - 1;
-  }
-
-  // Initialize yield curve
-  double pdYield[N];
-  double tmp = 0.1;
-  for (int i = 0; i < N; ++i) {
-    pdYield[i] = tmp;
-    tmp += 0.005;
-  }
-
-  // Generating forward curve at t=0 from supplied yield curve
-  double pdForward[N];
-  pdForward[0] = pdYield[0];
-  for (int i = 1; i < N; ++i) {
-    pdForward[i] = (i + 1)*pdYield[i] - i*pdYield[i - 1];
-  }
-
-
-  //
-  // Computation of drifts from factor volatilities
-  //
-  double ppdDrifts[FACTORS][N - 1];
-  double pdTotalDrift[N- 1];
-  // Computation of factor drifts for shortest maturity
-  for (int i = 0; i < FACTORS; ++i) {
-    ppdDrifts[i][0] = 0.5*DELTA*factors[i][0]*factors[i][0];
-  }
-  // Computation of factor drifts for other maturities
-  for (int i = 0; i < FACTORS; ++i) {
-    for (int j = 1; j < N - 1; ++j) {
-      double sum0 = 0;
-      for(int l = 0; l < j; ++l) { sum0 -= ppdDrifts[i][l]; }
-      ppdDrifts[i][j] = sum0;
-
-      double sum = 0;
-      for(int l = 0; l <= j; ++l) { sum += factors[i][l]; }
-      ppdDrifts[i][j] += 0.5*DELTA*sum*sum;
-    }
-  }
-  // Computation of total drifts for all maturities
-  for (int i = 0; i < N - 1; ++i) {
-    double sum = 0;
-    for(int j = 0; j < FACTORS; ++j) { sum += ppdDrifts[j][i]; }
-    pdTotalDrift[i] = sum;
-  }
-
-
-  //
-  // Simulations
-  //
-  double seeds[ITERS];
-  double seed = 100;
-  for (int i = 0; i < ITERS; ++i) {
-    seeds[i] = seed;
-    seed += BLOCKSIZE*(N - 1)*FACTORS;
-  }
-
-  double sums[ITERS] = {};
-  double square_sums[ITERS] = {};
   for (int i = 0; i < ITERS; ++i) {
     // For each trial a new HJM Path is generated
     double ppdHJMPath[N][N*BLOCKSIZE];
@@ -329,15 +246,4 @@ void swaption(
     sums[i] = sum;
     square_sums[i] = square_sum;
   }
-
-  double sum = 0;
-  double square_sum = 0;
-  for (int i = 0; i < ITERS; ++i) {
-    sum += sums[i];
-    square_sum += square_sums[i];
-  }
-
-  // Store results
-  *mean = sum/TRIALS;
-  *error = sqrt((square_sum - sum*sum/TRIALS)/(TRIALS - 1.0)/TRIALS);
 }
