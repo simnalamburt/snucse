@@ -10,7 +10,9 @@
 #include <pthread.h>
 #include <CL/cl.h>
 #include "compute.h"
+#ifdef USE_MPI
 #include "mpi.h"
+#endif
 
 #define TASKS 128
 
@@ -27,6 +29,7 @@ namespace {
 int main(int argc, char *argv[]) {
   auto time = system_clock::now();
 
+#ifdef USE_MPI
   MPI_Init(&argc, &argv);
 
   int size, rank;
@@ -36,6 +39,10 @@ int main(int argc, char *argv[]) {
 
   const size_t task_count = TASKS/size;
   const size_t task_offset = task_count * rank;
+#else
+  const size_t task_count = TASKS;
+  const size_t task_offset = 0;
+#endif
 
   auto tasks = unique_ptr<task_t[]>(new task_t[task_count]);
   auto results = unique_ptr<result_t[]>(new result_t[task_count]);
@@ -139,6 +146,7 @@ int main(int argc, char *argv[]) {
     check(clFinish(cmdqs[i]));
   }
 
+#ifdef USE_MPI
   // Gather result
   double sums[TASKS];
   double square_sums[TASKS];
@@ -170,6 +178,24 @@ int main(int argc, char *argv[]) {
   }
 
   MPI_Finalize();
+#else
+  for (size_t task_id = 0; task_id < task_count; ++task_id) {
+    double sum = 0;
+    double square_sum = 0;
+    for (int i = 0; i < TRIALS; ++i) {
+      sum += results[task_id].sums[i];
+      square_sum += results[task_id].square_sums[i];
+    }
+
+    // Store results
+    double mean = sum/TRIALS;
+    double error = sqrt((square_sum - sum*sum/TRIALS)/(TRIALS - 1.0)/TRIALS);
+    printf("Swaption%lu: [SwaptionPrice: %.10lf StdError: %.10lf]\n", task_id, mean, error);
+  }
+
+  auto elapsed = duration<double>(system_clock::now() - time).count();
+  cerr << "Total elapsed time : " << elapsed << " seconds" << endl;
+#endif
   return 0;
 }
 
