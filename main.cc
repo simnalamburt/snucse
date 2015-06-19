@@ -6,6 +6,7 @@
 #include <array>
 #include <cstring>
 #include <cmath>
+#include <cassert>
 #include <pthread.h>
 #include <CL/cl.h>
 #include "compute.h"
@@ -34,10 +35,11 @@ int main() {
   cl_platform_id platform;
   check(clGetPlatformIDs(1, &platform, NULL));
 
-  cl_device_type type = CL_DEVICE_TYPE_ALL;
+  cl_device_type type = CL_DEVICE_TYPE_GPU;
   // Get device count
   cl_uint device_count;
   check(clGetDeviceIDs(platform, type, 0, NULL, &device_count));
+  assert(TASKS % device_count == 0);
 
   // Get all devices
   auto devices = unique_ptr<cl_device_id[]>(new cl_device_id[device_count]);
@@ -57,8 +59,15 @@ int main() {
   for (int task_id = 0; task_id < TASKS; ++task_id) {
     init(&tasks[task_id], task_id);
   }
-  auto buffer_tasks = clCreateBuffer(ctxt, CL_MEM_READ_ONLY | CL_MEM_USE_HOST_PTR, sizeof tasks, tasks, &e); check(e);
-  auto buffer_results = clCreateBuffer(ctxt, CL_MEM_WRITE_ONLY, sizeof results, NULL, &e); check(e);
+
+  auto buffer_tasks = unique_ptr<cl_mem[]>(new cl_mem[device_count]);
+  auto buffer_results = unique_ptr<cl_mem[]>(new cl_mem[device_count]);
+  for (cl_uint i = 0; i < device_count; ++i) {
+    size_t chunk = (sizeof tasks)/device_count;
+    void* mem = (void*)((uintptr_t)tasks + chunk*i);
+    buffer_tasks[i] = clCreateBuffer(ctxt, CL_MEM_READ_ONLY | CL_MEM_USE_HOST_PTR, chunk, mem, &e); check(e);
+    buffer_results[i] = clCreateBuffer(ctxt, CL_MEM_WRITE_ONLY, (sizeof results)/device_count, NULL, &e); check(e);
+  }
 
   // Initialize kernal
   ifstream ifs("compute.cl");
@@ -89,18 +98,32 @@ int main() {
   // Create kernel
   //
   auto kernel = clCreateKernel(program, "swaption", &e); check(e);
-  check(clSetKernelArg(kernel, 0, sizeof(cl_mem), &buffer_tasks));
-  check(clSetKernelArg(kernel, 1, sizeof(cl_mem), &buffer_results));
 
-  array<size_t, 2> global = {{ TASKS, TRIALS }};
-  array<size_t, 2> local = {{ 1, 16 }};
-  check(clEnqueueNDRangeKernel(cmdqs[0], kernel, 2, NULL, global.data(), local.data(), 0, NULL, NULL));
-  check(clEnqueueReadBuffer(cmdqs[0], buffer_results, CL_TRUE, 0, sizeof results, results, 0, NULL, NULL));
+
+  //
+  // Calculate
+  //
+  for (cl_uint i = 0; i < device_count; ++i) {
+    check(clSetKernelArg(kernel, 0, sizeof(cl_mem), &buffer_tasks[i]));
+    check(clSetKernelArg(kernel, 1, sizeof(cl_mem), &buffer_results[i]));
+
+    array<size_t, 2> global = {{ TASKS/device_count, TRIALS }};
+    array<size_t, 2> local = {{ 1, 256 }};
+    uint8_t pattern = 0;
+    clEnqueueFillBuffer(cmdqs[i], buffer_results[i], &pattern, sizeof pattern, 0, (sizeof results)/device_count, NULL, NULL, NULL);
+    check(clEnqueueNDRangeKernel(cmdqs[i], kernel, 2, NULL, global.data(), local.data(), 0, NULL, NULL));
+  }
 
 
   //
   // Read result
   //
+  for (cl_uint i = 0; i < device_count; ++i) {
+    size_t chunk = (sizeof results)/device_count;
+    void* mem = (void*)((uintptr_t)results + chunk*i);
+    check(clEnqueueReadBuffer(cmdqs[i], buffer_results[i], CL_TRUE, 0, chunk, mem, 0, NULL, NULL));
+  }
+
   for (int task_id = 0; task_id < TASKS; ++task_id) {
     double sum = 0;
     double square_sum = 0;
