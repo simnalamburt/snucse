@@ -106,25 +106,20 @@ static void hjm_path(
   }
 
 
-  //
   // Sequentially generating random numbers
-  //
+  // 10% of the total executition time
   double pdZ[FACTORS][N];
   for (int j = 1; j < N; ++j) {
     for (int l = 0; l < FACTORS; ++l) {
-      //compute random number in exact same sequence
-      pdZ[l][j] = uniform_random(seed++);  /* 10% of the total executition time */
+      pdZ[l][j] = uniform_random(seed++);
     }
   }
 
 
-  //
   // shocks to hit various factors for forward curve at t
   // 18% of the total executition time
-  //
   for (int l = 0; l < FACTORS; ++l) {
     for (int j = 1; j < N; ++j) {
-      // 18% of the total executition time
       pdZ[l][j] = cum_normal_inv(pdZ[l][j]);
     }
   }
@@ -176,11 +171,13 @@ static void discount_factors(
   }
 
   for (int i = 1; i < num; ++i) {
+    double val = 1;
     for (int j = 0; j < i; ++j) {
       // kcm: do both loop unrolling and reorder pdexpRes vector elements above. -> SSE
       // optimization is possible.
-      pdDiscountFactors[i] *= pdexpRes[j];
+      val *= pdexpRes[j];
     }
+    pdDiscountFactors[i] *= val;
   }
 }
 
