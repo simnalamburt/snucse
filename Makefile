@@ -1,7 +1,14 @@
 CXXFLAGS = -W -Wall -Wextra -Wunused -std=c++0x -O3
 LDFLAGS = -lOpenCL
 
-all: main.cc
+all: gpu
+
+cpu: CXXFLAGS += -DUSE_CPU
+cpu: cpu.cc
+	g++ $(CXXFLAGS) $(LDFLAGS) $^ -o bin
+	strip bin
+
+gpu: main.cc
 	g++ $(CXXFLAGS) $(LDFLAGS) $^ -o bin
 	strip bin
 
