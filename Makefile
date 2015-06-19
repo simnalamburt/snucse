@@ -1,20 +1,11 @@
-CFLAGS = -W -Wall -Wextra -Wunused -Wunreachable-code -std=c99
-CXXFLAGS = -W -Wall -Wextra -Wunused -Wunreachable-code -std=c++0x
+CXXFLAGS = -W -Wall -Wextra -Wunused -std=c++0x -O3
 LDFLAGS = -lOpenCL
 
-BIN=bin
-all: release
+all: main.cc
+	g++ $(CXXFLAGS) $(LDFLAGS) $^ -o bin
+	strip bin
 
-release: CFLAGS += -O3
-release: CXXFLAGS += -O3
-release: $(BIN)
-
-debug: CFLAGS += -g
-debug: CXXFLAGS += -g
-debug: $(BIN)
-
-$(BIN): main.o
-	$(CXX) $(LDFLAGS) $^ -o $@
-
-clean:
-	rm -f *.o $(BIN)
+snucl: LDFLAGS += -I/opt/SnuCL/1.3.3/inc -L/opt/SnuCL/1.3.3/lib -lsnucl_cluster
+snucl: main.cc
+	mpic++ $(CXXFLAGS) $(LDFLAGS) $^ -o bin
+	strip bin
