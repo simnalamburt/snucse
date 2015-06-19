@@ -109,7 +109,9 @@ namespace {
     double sums[ITERS] = {};
     double square_sums[ITERS] = {};
 
-    swaption(pdForward, pdTotalDrift, seeds, pdSwapPayoffs, sums, square_sums);
+    for (int id = 0; id < ITERS; ++id) {
+      swaption(pdForward, pdTotalDrift, seeds, pdSwapPayoffs, sums, square_sums, id);
+    }
 
     double sum = 0;
     double square_sum = 0;

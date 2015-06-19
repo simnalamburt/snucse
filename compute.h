@@ -22,7 +22,8 @@ void swaption(
     const double * __restrict__ seeds,
     const double * __restrict__ pdSwapPayoffs,
     double * __restrict__ sums,
-    double * __restrict__ square_sums);
+    double * __restrict__ square_sums,
+    size_t id);
 
 static const double factors[FACTORS][N - 1] = {
   { 0.01, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01 },

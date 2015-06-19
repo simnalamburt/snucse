@@ -186,7 +186,8 @@ void swaption(
     const double * __restrict__ seeds,
     const double * __restrict__ pdSwapPayoffs,
     double * __restrict__ sums,
-    double * __restrict__ square_sums)
+    double * __restrict__ square_sums,
+    size_t id)
 {
   //
   // Constants
@@ -197,53 +198,51 @@ void swaption(
   const double dSwapVectorYears = iSwapVectorLength*DELTA;
 
 
-  for (int i = 0; i < ITERS; ++i) {
-    // For each trial a new HJM Path is generated
-    double ppdHJMPath[N][N*BLOCKSIZE];
-    hjm_path(ppdHJMPath, pdForward, pdTotalDrift, seeds[i]); // 51% of the time goes here
+  // For each trial a new HJM Path is generated
+  double ppdHJMPath[N][N*BLOCKSIZE];
+  hjm_path(ppdHJMPath, pdForward, pdTotalDrift, seeds[id]); // 51% of the time goes here
 
-    // Now we compute the discount factor vector
-    // 여긴 안해도 될거같음
-    double pdDiscountingRatePath[N*BLOCKSIZE];
-    for (int i = 0; i < N; ++i) {
-      for (int b = 0; b < BLOCKSIZE; ++b) {
-        pdDiscountingRatePath[BLOCKSIZE*i + b] = ppdHJMPath[i][0 + b];
-      }
-    }
-
-    // Store discount factors for the rate path along which the swaption
-    double pdPayoffDiscountFactors[N*BLOCKSIZE];
-    discount_factors(pdPayoffDiscountFactors, N, YEARS, pdDiscountingRatePath); // 15% of the time goes here
-
-    // Now we compute discount factors along the swap path
-    double pdSwapRatePath[iSwapVectorLength*BLOCKSIZE];
-    for (int i = 0; i < iSwapVectorLength; ++i) {
-      for (int b = 0; b < BLOCKSIZE; ++b) {
-        pdSwapRatePath[i*BLOCKSIZE + b] = ppdHJMPath[iSwapStartTimeIndex][i*BLOCKSIZE + b];
-      }
-    }
-
-    // Payments made will be discounted corresponding to swaption maturity
-    double pdSwapDiscountFactors[iSwapVectorLength*BLOCKSIZE];
-    discount_factors(pdSwapDiscountFactors, iSwapVectorLength, dSwapVectorYears, pdSwapRatePath);
-
-
-    double sum = 0;
-    double square_sum = 0;
+  // Now we compute the discount factor vector
+  // 여긴 안해도 될거같음
+  double pdDiscountingRatePath[N*BLOCKSIZE];
+  for (int i = 0; i < N; ++i) {
     for (int b = 0; b < BLOCKSIZE; ++b) {
-      double tmp = -1;
-      for (int i = 0; i < iSwapVectorLength; ++i) {
-        tmp += pdSwapPayoffs[i]*pdSwapDiscountFactors[i*BLOCKSIZE + b];
-      }
-
-      if (tmp <= 0) { continue; }
-      tmp *= pdPayoffDiscountFactors[iSwapStartTimeIndex*BLOCKSIZE + b];
-
-      // Accumulate
-      sum += tmp;
-      square_sum += tmp*tmp;
+      pdDiscountingRatePath[BLOCKSIZE*i + b] = ppdHJMPath[i][0 + b];
     }
-    sums[i] = sum;
-    square_sums[i] = square_sum;
   }
+
+  // Store discount factors for the rate path along which the swaption
+  double pdPayoffDiscountFactors[N*BLOCKSIZE];
+  discount_factors(pdPayoffDiscountFactors, N, YEARS, pdDiscountingRatePath); // 15% of the time goes here
+
+  // Now we compute discount factors along the swap path
+  double pdSwapRatePath[iSwapVectorLength*BLOCKSIZE];
+  for (int i = 0; i < iSwapVectorLength; ++i) {
+    for (int b = 0; b < BLOCKSIZE; ++b) {
+      pdSwapRatePath[i*BLOCKSIZE + b] = ppdHJMPath[iSwapStartTimeIndex][i*BLOCKSIZE + b];
+    }
+  }
+
+  // Payments made will be discounted corresponding to swaption maturity
+  double pdSwapDiscountFactors[iSwapVectorLength*BLOCKSIZE];
+  discount_factors(pdSwapDiscountFactors, iSwapVectorLength, dSwapVectorYears, pdSwapRatePath);
+
+
+  double sum = 0;
+  double square_sum = 0;
+  for (int b = 0; b < BLOCKSIZE; ++b) {
+    double tmp = -1;
+    for (int i = 0; i < iSwapVectorLength; ++i) {
+      tmp += pdSwapPayoffs[i]*pdSwapDiscountFactors[i*BLOCKSIZE + b];
+    }
+
+    if (tmp <= 0) { continue; }
+    tmp *= pdPayoffDiscountFactors[iSwapStartTimeIndex*BLOCKSIZE + b];
+
+    // Accumulate
+    sum += tmp;
+    square_sum += tmp*tmp;
+  }
+  sums[id] = sum;
+  square_sums[id] = square_sum;
 }
