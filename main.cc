@@ -13,13 +13,7 @@ using namespace chrono;
 
 
 namespace {
-  struct result_t { double mean, error; };
-  struct param_t { int begin, end; };
-
-  result_t results[TASKS];
-
-  void *worker(void *arg);
-  void per_task(int task_id);
+  task_t tasks[TASKS];
   void init(task_t *task, int task_id);
 }
 
@@ -27,23 +21,24 @@ namespace {
 int main() {
   auto time = system_clock::now();
 
-  param_t params[THREADS];
-  const int chunksize = TASKS/THREADS;
-  for (int i = 0; i < THREADS; ++i) {
-    params[i].begin = i*chunksize;
-    params[i].end = i != THREADS - 1 ? (i + 1)*chunksize : TASKS;
-  }
+  for (int task_id = 0; task_id < TASKS; ++task_id) {
+    init(&tasks[task_id], task_id);
 
-  pthread_t threads[THREADS];
-  for (int i = 0; i < THREADS; ++i) {
-    pthread_create(&threads[i], NULL, worker, &params[i]);
-  }
-
-  for (int i = 0; i < THREADS; ++i) {
-    pthread_join(threads[i], NULL);
-    for (int n = params[i].begin; n < params[i].end; ++n) {
-      printf("Swaption%d: [SwaptionPrice: %.10lf StdError: %.10lf]\n", n, results[n].mean, results[n].error);
+    for (int i = 0; i < ITERS; ++i) {
+      swaption(&tasks[task_id], i);
     }
+
+    double sum = 0;
+    double square_sum = 0;
+    for (int i = 0; i < ITERS; ++i) {
+      sum += tasks[task_id].sums[i];
+      square_sum += tasks[task_id].square_sums[i];
+    }
+
+    // Store results
+    double mean = sum/TRIALS;
+    double error = sqrt((square_sum - sum*sum/TRIALS)/(TRIALS - 1.0)/TRIALS);
+    printf("Swaption%d: [SwaptionPrice: %.10lf StdError: %.10lf]\n", task_id, mean, error);
   }
 
   auto elapsed = duration<double>(system_clock::now() - time).count();
@@ -53,40 +48,6 @@ int main() {
 
 
 namespace {
-  //
-  // Parameter for pthread
-  //
-  void *worker(void *arg) {
-    param_t *param = (param_t*)arg;
-    for (int i = param->begin; i < param->end; ++i) { per_task(i); }
-    return NULL;
-  }
-
-
-  //
-  // Executed per task
-  //
-  void per_task(int task_id) {
-    task_t task;
-    init(&task, task_id);
-
-    for (int id = 0; id < ITERS; ++id) {
-      swaption(&task, id);
-    }
-
-    double sum = 0;
-    double square_sum = 0;
-    for (int i = 0; i < ITERS; ++i) {
-      sum += task.sums[i];
-      square_sum += task.square_sums[i];
-    }
-
-    // Store results
-    results[task_id].mean = sum/TRIALS;
-    results[task_id].error = sqrt((square_sum - sum*sum/TRIALS)/(TRIALS - 1.0)/TRIALS);
-  }
-
-
   //
   // Initialize buffers
   //
