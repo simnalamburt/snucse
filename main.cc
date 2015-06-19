@@ -109,8 +109,6 @@ int main() {
 
     array<size_t, 2> global = {{ TASKS/device_count, TRIALS }};
     array<size_t, 2> local = {{ 1, 256 }};
-    uint8_t pattern = 0;
-    clEnqueueFillBuffer(cmdqs[i], buffer_results[i], &pattern, sizeof pattern, 0, (sizeof results)/device_count, NULL, NULL, NULL);
     check(clEnqueueNDRangeKernel(cmdqs[i], kernel, 2, NULL, global.data(), local.data(), 0, NULL, NULL));
   }
 

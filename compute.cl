@@ -236,11 +236,7 @@ __kernel void swaption(
   for (size_t i = 0; i < SWAP_VECTOR_LENGTH; ++i) {
     sum += pdSwapPayoffs[i]*pdSwapDiscountFactors[i];
   }
-
-  if (sum <= 0) { return; }
-  sum *= pdPayoffDiscountFactors[iSwapStartTimeIndex];
-
-  // Accumulate
+  sum = sum > 0 ? sum * pdPayoffDiscountFactors[iSwapStartTimeIndex] : 0;
   sums[id] = sum;
   square_sums[id] = sum*sum;
 }
