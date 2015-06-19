@@ -1,23 +1,25 @@
+CXX = g++
 CXXFLAGS = -W -Wall -Wextra -Wunused -std=c++0x -O3
 LDFLAGS = -lOpenCL
+INPUT = main.cc
 
-all: gpu
+ifdef version
+  ifeq "$(version)" "cpu"
+    CXXFLAGS += -DUSE_CPU
+    INPUT = cpu.cc
+  endif
+  ifeq "$(version)" "gpu"
+  endif
+  ifeq "$(version)" "mpi"
+    CXX = mpic++
+    CXXFLAGS += -DUSE_MPI
+  endif
+  ifeq "$(version)" "snucl"
+    CXX = mpic++
+    LDFLAGS += -I/opt/SnuCL/1.3.3/inc -L/opt/SnuCL/1.3.3/lib -lsnucl_cluster
+  endif
+endif
 
-cpu: CXXFLAGS += -DUSE_CPU
-cpu: cpu.cc
-	g++ $(CXXFLAGS) $(LDFLAGS) $^ -o bin
-	strip bin
-
-gpu: main.cc
-	g++ $(CXXFLAGS) $(LDFLAGS) $^ -o bin
-	strip bin
-
-snucl: LDFLAGS += -I/opt/SnuCL/1.3.3/inc -L/opt/SnuCL/1.3.3/lib -lsnucl_cluster
-snucl: main.cc
-	mpic++ $(CXXFLAGS) $(LDFLAGS) $^ -o bin
-	strip bin
-
-mpi: CXXFLAGS += -DUSE_MPI
-mpi: main.cc
-	mpic++ $(CXXFLAGS) $(LDFLAGS) $^ -o bin
+all:
+	$(CXX) $(CXXFLAGS) $(LDFLAGS) $(INPUT) -o bin
 	strip bin
