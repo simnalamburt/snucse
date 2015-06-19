@@ -121,7 +121,11 @@ int main() {
   for (cl_uint i = 0; i < device_count; ++i) {
     size_t chunk = (sizeof results)/device_count;
     void* mem = (void*)((uintptr_t)results + chunk*i);
-    check(clEnqueueReadBuffer(cmdqs[i], buffer_results[i], CL_TRUE, 0, chunk, mem, 0, NULL, NULL));
+    check(clEnqueueReadBuffer(cmdqs[i], buffer_results[i], CL_FALSE, 0, chunk, mem, 0, NULL, NULL));
+  }
+
+  for (cl_uint i = 0; i < device_count; ++i) {
+    check(clFinish(cmdqs[i]));
   }
 
   for (int task_id = 0; task_id < TASKS; ++task_id) {
