@@ -50,6 +50,9 @@ int main() {
     cmdqs[i] = clCreateCommandQueue(ctxt, devices[i], 0, &e); check(e);
   }
 
+  auto buffer_tasks = clCreateBuffer(ctxt, CL_MEM_READ_ONLY | CL_MEM_USE_HOST_PTR, sizeof tasks, tasks, &e); check(e);
+  auto buffer_results = clCreateBuffer(ctxt, CL_MEM_WRITE_ONLY, sizeof results, NULL, &e); check(e);
+
 
   for (int task_id = 0; task_id < TASKS; ++task_id) {
     init(&tasks[task_id], task_id);
