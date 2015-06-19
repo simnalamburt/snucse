@@ -20,10 +20,14 @@ extern "C" {
 #define SWAP_VECTOR_LENGTH ((size_t)(N - MATURITY/DELTA + 0.5))
 
 typedef struct {
-  double forward[N], drifts[N - 1], seeds[ITERS], payoffs[SWAP_VECTOR_LENGTH], sums[ITERS], square_sums[ITERS];
+  double forward[N], drifts[N - 1], seeds[ITERS], payoffs[SWAP_VECTOR_LENGTH];
 } task_t;
 
-void swaption(task_t *task, size_t id);
+typedef struct {
+  double sums[ITERS], square_sums[ITERS];
+} result_t;
+
+void swaption(task_t *task, result_t *result, size_t id);
 
 static const double factors[FACTORS][N - 1] = {
   { 0.01, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01 },

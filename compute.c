@@ -181,13 +181,13 @@ static void discount_factors(
 }
 
 
-void swaption(task_t *task, size_t id) {
+void swaption(task_t *task, result_t *result, size_t id) {
   double *pdForward = task->forward;
   double *pdTotalDrift = task->drifts;
   double *seeds = task->seeds;
   double *pdSwapPayoffs = task->payoffs;
-  double *sums = task->sums;
-  double *square_sums = task->square_sums;
+  double *sums = result->sums;
+  double *square_sums = result->square_sums;
 
 
   //

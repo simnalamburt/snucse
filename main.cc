@@ -16,6 +16,7 @@ using namespace chrono;
 
 namespace {
   task_t tasks[TASKS];
+  result_t results[TASKS];
   void init(task_t *task, int task_id);
   void check(cl_int);
 }
@@ -45,7 +46,7 @@ int main() {
 
   // for each device create a separate queue
   auto cmdqs = unique_ptr<cl_command_queue[]>(new cl_command_queue[device_count]);
-  for (int i = 0; i < device_count; ++i) {
+  for (size_t i = 0; i < device_count; ++i) {
     cmdqs[i] = clCreateCommandQueue(ctxt, devices[i], 0, &e); check(e);
   }
 
@@ -56,7 +57,7 @@ int main() {
 
   for (int task_id = 0; task_id < TASKS; ++task_id) {
     for (int i = 0; i < ITERS; ++i) {
-      swaption(&tasks[task_id], i);
+      swaption(&tasks[task_id], &results[task_id], i);
     }
   }
 
@@ -64,8 +65,8 @@ int main() {
     double sum = 0;
     double square_sum = 0;
     for (int i = 0; i < ITERS; ++i) {
-      sum += tasks[task_id].sums[i];
-      square_sum += tasks[task_id].square_sums[i];
+      sum += results[task_id].sums[i];
+      square_sum += results[task_id].square_sums[i];
     }
 
     // Store results
@@ -89,8 +90,6 @@ namespace {
     double *pdTotalDrift = task->drifts;
     double *seeds = task->seeds;
     double *pdSwapPayoffs = task->payoffs;
-    double *sums = task->sums;
-    double *square_sums = task->square_sums;
 
 
     // Mathmatical constants
@@ -154,10 +153,6 @@ namespace {
       seeds[i] = seed;
       seed += BLOCKSIZE*(N - 1)*FACTORS;
     }
-
-    // Zerofill sums and square_sums
-    memset(sums, 0, sizeof sums);
-    memset(square_sums, 0, sizeof square_sums);
   }
 
   const char *clGetErrorMessage(cl_int error_code) {
