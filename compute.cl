@@ -1,15 +1,32 @@
 //
-// swaption.cpp
+// Contants
 //
-// Authors      : Mark Broadie, Jatin Dewanwala
-// Collaborator : Mikhail Smelyanskiy, Intel, Jike Chong (Berkeley)
-//
-// Routines to compute various security prices using HJM framework (via Simulation).
-//
-#include <math.h>
-#include <string.h>
-#include <CL/cl.h>
-#include "compute.h"
+#define N 11
+#define FACTORS 3
+
+#define YEARS 5.5
+#define DELTA (YEARS/N)
+
+#define TRIALS 1000000
+#define BLOCKSIZE 16
+#define ITERS (TRIALS/BLOCKSIZE)
+
+#define MATURITY 1.0
+#define SWAP_VECTOR_LENGTH ((size_t)(N - MATURITY/DELTA + 0.5))
+
+typedef struct {
+  double forward[N], drifts[N - 1], seeds[ITERS], payoffs[SWAP_VECTOR_LENGTH];
+} task_t;
+
+typedef struct {
+  double sums[ITERS], square_sums[ITERS];
+} result_t;
+
+static const double factors[FACTORS][N - 1] = {
+  { 0.01, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01 },
+  { 0.009048, 0.008187, 0.007408, 0.006703, 0.006065, 0.005488, 0.004966, 0.004493, 0.004066, 0.003679 },
+  { 0.001000, 0.000750, 0.000500, 0.000250, 0.000000, -0.000250, -0.000500, -0.000750, -0.001000, -0.001250 }
+};
 
 
 
@@ -68,9 +85,9 @@ static void hjm_path(
     // Matrix that stores generated HJM path (Output)
     double ppdHJMPath[restrict N][N*BLOCKSIZE],
     // t=0 Forward curve
-    const double pdForward[restrict],
+    __global const double pdForward[restrict],
     // Vector containing total drift corrections for different maturities
-    const double pdTotalDrift[restrict],
+    __global const double pdTotalDrift[restrict],
     // Random number seed
     long seed)
 {
@@ -88,7 +105,9 @@ static void hjm_path(
 
   // Initializing HJMPath to zero
   for (int i = 1; i < N; ++i) {
-    memset(ppdHJMPath[i], 0, sizeof ppdHJMPath[i]);
+    for (int k = 0; k < N*BLOCKSIZE; ++k) {
+      ppdHJMPath[i][k] = 0;
+    }
   }
 
 
@@ -159,7 +178,7 @@ static void discount_factors(
   const double delta = years/num;
 
   // Precompute the exponientials
-  double pdexpRes[(num - 1)*BLOCKSIZE];
+  double pdexpRes[(N - 1)*BLOCKSIZE];
   for (int j = 0; j < (num - 1)*BLOCKSIZE; ++j) { pdexpRes[j] = -pdRatePath[j]*delta; }
   for (int j = 0; j < (num - 1)*BLOCKSIZE; ++j) { pdexpRes[j] = exp(pdexpRes[j]);  }
 
@@ -181,15 +200,21 @@ static void discount_factors(
 }
 
 
-void swaption(task_t *tasks, result_t *results, size_t task_id, size_t id) {
-  task_t *task = &tasks[task_id];
-  result_t *result = &results[task_id];
-  double *pdForward = task->forward;
-  double *pdTotalDrift = task->drifts;
-  double *seeds = task->seeds;
-  double *pdSwapPayoffs = task->payoffs;
-  double *sums = result->sums;
-  double *square_sums = result->square_sums;
+__kernel void swaption(
+    __global task_t *tasks,
+    __global result_t *results)
+{
+  size_t task_id = get_global_id(0);
+  size_t id = get_global_id(1);
+
+  __global task_t *task = &tasks[task_id];
+  __global result_t *result = &results[task_id];
+  __global double *pdForward = task->forward;
+  __global double *pdTotalDrift = task->drifts;
+  __global double *seeds = task->seeds;
+  __global double *pdSwapPayoffs = task->payoffs;
+  __global double *sums = result->sums;
+  __global double *square_sums = result->square_sums;
 
 
   //

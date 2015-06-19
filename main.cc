@@ -1,6 +1,9 @@
 #include <iostream>
+#include <fstream>
 #include <chrono>
 #include <memory>
+#include <string>
+#include <array>
 #include <cstring>
 #include <cmath>
 #include <pthread.h>
@@ -50,20 +53,54 @@ int main() {
     cmdqs[i] = clCreateCommandQueue(ctxt, devices[i], 0, &e); check(e);
   }
 
-  auto buffer_tasks = clCreateBuffer(ctxt, CL_MEM_READ_ONLY | CL_MEM_USE_HOST_PTR, sizeof tasks, tasks, &e); check(e);
-  auto buffer_results = clCreateBuffer(ctxt, CL_MEM_WRITE_ONLY, sizeof results, NULL, &e); check(e);
-
-
+  // GPU memory alloc
   for (int task_id = 0; task_id < TASKS; ++task_id) {
     init(&tasks[task_id], task_id);
   }
+  auto buffer_tasks = clCreateBuffer(ctxt, CL_MEM_READ_ONLY | CL_MEM_USE_HOST_PTR, sizeof tasks, tasks, &e); check(e);
+  auto buffer_results = clCreateBuffer(ctxt, CL_MEM_WRITE_ONLY, sizeof results, NULL, &e); check(e);
 
-  for (int task_id = 0; task_id < TASKS; ++task_id) {
-    for (int i = 0; i < ITERS; ++i) {
-      swaption(tasks, results, task_id, i);
-    }
+  // Initialize kernal
+  ifstream ifs("compute.cl");
+  string content((istreambuf_iterator<char>(ifs)), (istreambuf_iterator<char>()));
+  auto code = content.c_str();
+  const auto codelen = content.length();
+  auto program = clCreateProgramWithSource(ctxt, 1, &code, &codelen, &e); check(e);
+  e = clBuildProgram(program, device_count, devices.get(), NULL, NULL, NULL);
+  if (e == CL_BUILD_PROGRAM_FAILURE) {
+    // Print detailed message
+    cerr << endl;
+    cerr << "OpenCL compile error" << endl;
+
+    size_t len, size = 2048;
+    auto buffer = unique_ptr<char[]>(new char[2048]);
+    clGetProgramBuildInfo(program, devices[0], CL_PROGRAM_BUILD_LOG, size, buffer.get(), &len);
+    cerr << buffer.get() << endl;
+    clGetProgramBuildInfo(program, devices[0], CL_PROGRAM_BUILD_STATUS, size, buffer.get(), &len);
+    cerr << buffer.get() << endl;
+    clGetProgramBuildInfo(program, devices[0], CL_PROGRAM_BUILD_OPTIONS, size, buffer.get(), &len);
+    cerr << buffer.get() << endl;
+    exit(1);
   }
+  check(e);
 
+
+  //
+  // Create kernel
+  //
+  auto kernel = clCreateKernel(program, "swaption", &e); check(e);
+  check(clSetKernelArg(kernel, 0, sizeof(cl_mem), &buffer_tasks));
+  check(clSetKernelArg(kernel, 1, sizeof(cl_mem), &buffer_results));
+
+  array<size_t, 2> global = {{ TASKS, ITERS }};
+  array<size_t, 2> local = {{ 1, 1 }};
+  check(clEnqueueNDRangeKernel(cmdqs[0], kernel, 2, NULL, global.data(), local.data(), 0, NULL, NULL));
+  check(clEnqueueReadBuffer(cmdqs[0], buffer_results, CL_TRUE, 0, sizeof results, results, 0, NULL, NULL));
+
+
+  //
+  // Read result
+  //
   for (int task_id = 0; task_id < TASKS; ++task_id) {
     double sum = 0;
     double square_sum = 0;
