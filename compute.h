@@ -19,14 +19,11 @@ extern "C" {
 #define MATURITY 1.0
 #define SWAP_VECTOR_LENGTH ((size_t)(N - MATURITY/DELTA + 0.5))
 
-void swaption(
-    const double * __restrict__ pdForward,
-    const double * __restrict__ pdTotalDrift,
-    const double * __restrict__ seeds,
-    const double * __restrict__ pdSwapPayoffs,
-    double * __restrict__ sums,
-    double * __restrict__ square_sums,
-    size_t id);
+typedef struct {
+  double forward[N], drifts[N - 1], seeds[ITERS], payoffs[SWAP_VECTOR_LENGTH], sums[ITERS], square_sums[ITERS];
+} task_t;
+
+void swaption(task_t *task, size_t id);
 
 static const double factors[FACTORS][N - 1] = {
   { 0.01, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01 },

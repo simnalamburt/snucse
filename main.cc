@@ -13,9 +13,6 @@ using namespace chrono;
 
 
 namespace {
-  struct task_t {
-    double forward[N], drifts[N - 1], seeds[ITERS], payoffs[SWAP_VECTOR_LENGTH], sums[ITERS], square_sums[ITERS];
-  };
   struct result_t { double mean, error; };
   struct param_t { int begin, end; };
 
@@ -74,7 +71,7 @@ namespace {
     init(&task, task_id);
 
     for (int id = 0; id < ITERS; ++id) {
-      swaption(task.forward, task.drifts, task.seeds, task.payoffs, task.sums, task.square_sums, id);
+      swaption(&task, id);
     }
 
     double sum = 0;

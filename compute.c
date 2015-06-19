@@ -180,15 +180,15 @@ static void discount_factors(
 }
 
 
-void swaption(
-    const double * __restrict__ pdForward,
-    const double * __restrict__ pdTotalDrift,
-    const double * __restrict__ seeds,
-    const double * __restrict__ pdSwapPayoffs,
-    double * __restrict__ sums,
-    double * __restrict__ square_sums,
-    size_t id)
-{
+void swaption(task_t *task, size_t id) {
+  double *pdForward = task->forward;
+  double *pdTotalDrift = task->drifts;
+  double *seeds = task->seeds;
+  double *pdSwapPayoffs = task->payoffs;
+  double *sums = task->sums;
+  double *square_sums = task->square_sums;
+
+
   //
   // Constants
   //
