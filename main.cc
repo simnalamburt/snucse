@@ -18,8 +18,6 @@ using namespace chrono;
 
 
 namespace {
-  task_t tasks[TASKS];
-  result_t results[TASKS];
   void init(task_t *task, int task_id);
   void check(cl_int);
 }
@@ -27,6 +25,14 @@ namespace {
 
 int main() {
   auto time = system_clock::now();
+
+  const size_t task_count = TASKS;
+  const size_t task_offset = 0;
+
+  auto tasks = unique_ptr<task_t[]>(new task_t[task_count]);
+  auto results = unique_ptr<result_t[]>(new result_t[task_count]);
+  const size_t sizeof_tasks = sizeof(task_t)*task_count;
+  const size_t sizeof_results = sizeof(result_t)*task_count;
 
   //
   // OpenCL
@@ -38,7 +44,7 @@ int main() {
   // Get device count
   cl_uint device_count;
   check(clGetDeviceIDs(platform, type, 0, NULL, &device_count));
-  assert(TASKS % device_count == 0);
+  assert(task_count % device_count == 0);
 
   // Get all devices
   auto devices = unique_ptr<cl_device_id[]>(new cl_device_id[device_count]);
@@ -55,17 +61,17 @@ int main() {
   }
 
   // GPU memory alloc
-  for (int task_id = 0; task_id < TASKS; ++task_id) {
-    init(&tasks[task_id], task_id);
+  for (size_t task_id = 0; task_id < task_count; ++task_id) {
+    init(&tasks[task_id], task_offset + task_id);
   }
 
   auto buffer_tasks = unique_ptr<cl_mem[]>(new cl_mem[device_count]);
   auto buffer_results = unique_ptr<cl_mem[]>(new cl_mem[device_count]);
   for (cl_uint i = 0; i < device_count; ++i) {
-    size_t chunk = (sizeof tasks)/device_count;
-    void* mem = (void*)((uintptr_t)tasks + chunk*i);
+    size_t chunk = (sizeof_tasks)/device_count;
+    void* mem = (void*)((uintptr_t)tasks.get() + chunk*i);
     buffer_tasks[i] = clCreateBuffer(ctxt, CL_MEM_READ_ONLY | CL_MEM_USE_HOST_PTR, chunk, mem, &e); check(e);
-    buffer_results[i] = clCreateBuffer(ctxt, CL_MEM_WRITE_ONLY, (sizeof results)/device_count, NULL, &e); check(e);
+    buffer_results[i] = clCreateBuffer(ctxt, CL_MEM_WRITE_ONLY, (sizeof_results)/device_count, NULL, &e); check(e);
   }
 
   // Initialize kernal
@@ -106,7 +112,7 @@ int main() {
     check(clSetKernelArg(kernel, 0, sizeof(cl_mem), &buffer_tasks[i]));
     check(clSetKernelArg(kernel, 1, sizeof(cl_mem), &buffer_results[i]));
 
-    array<size_t, 2> global = {{ TASKS/device_count, TRIALS }};
+    array<size_t, 2> global = {{ task_count/device_count, TRIALS }};
     array<size_t, 2> local = {{ 1, 128 }};
     check(clEnqueueNDRangeKernel(cmdqs[i], kernel, 2, NULL, global.data(), local.data(), 0, NULL, NULL));
   }
@@ -116,8 +122,8 @@ int main() {
   // Read result
   //
   for (cl_uint i = 0; i < device_count; ++i) {
-    size_t chunk = (sizeof results)/device_count;
-    void* mem = (void*)((uintptr_t)results + chunk*i);
+    size_t chunk = (sizeof_results)/device_count;
+    void* mem = (void*)((uintptr_t)results.get() + chunk*i);
     check(clEnqueueReadBuffer(cmdqs[i], buffer_results[i], CL_FALSE, 0, chunk, mem, 0, NULL, NULL));
   }
 
@@ -125,7 +131,7 @@ int main() {
     check(clFinish(cmdqs[i]));
   }
 
-  for (int task_id = 0; task_id < TASKS; ++task_id) {
+  for (size_t task_id = 0; task_id < task_count; ++task_id) {
     double sum = 0;
     double square_sum = 0;
     for (int i = 0; i < TRIALS; ++i) {
@@ -136,7 +142,7 @@ int main() {
     // Store results
     double mean = sum/TRIALS;
     double error = sqrt((square_sum - sum*sum/TRIALS)/(TRIALS - 1.0)/TRIALS);
-    printf("Swaption%d: [SwaptionPrice: %.10lf StdError: %.10lf]\n", task_id, mean, error);
+    printf("Swaption%lu: [SwaptionPrice: %.10lf StdError: %.10lf]\n", task_id, mean, error);
   }
 
   auto elapsed = duration<double>(system_clock::now() - time).count();
