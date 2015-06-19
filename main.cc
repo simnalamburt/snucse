@@ -10,6 +10,7 @@
 #include <pthread.h>
 #include <CL/cl.h>
 #include "compute.h"
+#include "mpi.h"
 
 #define TASKS 128
 
@@ -23,11 +24,18 @@ namespace {
 }
 
 
-int main() {
+int main(int argc, char *argv[]) {
   auto time = system_clock::now();
 
-  const size_t task_count = TASKS;
-  const size_t task_offset = 0;
+  MPI_Init(&argc, &argv);
+
+  int size, rank;
+  MPI_Comm_size(MPI_COMM_WORLD, &size);
+  MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+  assert(TASKS % size == 0);
+
+  const size_t task_count = TASKS/size;
+  const size_t task_offset = task_count * rank;
 
   auto tasks = unique_ptr<task_t[]>(new task_t[task_count]);
   auto results = unique_ptr<result_t[]>(new result_t[task_count]);
@@ -131,6 +139,9 @@ int main() {
     check(clFinish(cmdqs[i]));
   }
 
+  // Gather result
+  double sums[TASKS];
+  double square_sums[TASKS];
   for (size_t task_id = 0; task_id < task_count; ++task_id) {
     double sum = 0;
     double square_sum = 0;
@@ -140,13 +151,25 @@ int main() {
     }
 
     // Store results
-    double mean = sum/TRIALS;
-    double error = sqrt((square_sum - sum*sum/TRIALS)/(TRIALS - 1.0)/TRIALS);
-    printf("Swaption%lu: [SwaptionPrice: %.10lf StdError: %.10lf]\n", task_id, mean, error);
+    sums[task_offset + task_id] = sum;
+    square_sums[task_offset + task_id] = square_sum;
   }
 
-  auto elapsed = duration<double>(system_clock::now() - time).count();
-  cerr << "Total elapsed time : " << elapsed << " seconds" << endl;
+  MPI_Gather(&sums[task_offset], task_count, MPI_DOUBLE, &sums[0], task_count, MPI_DOUBLE, 0, MPI_COMM_WORLD);
+  MPI_Gather(&square_sums[task_offset], task_count, MPI_DOUBLE, &square_sums[0], task_count, MPI_DOUBLE, 0, MPI_COMM_WORLD);
+
+  if (rank == 0) {
+    for (size_t i = 0; i < TASKS; ++i) {
+      double mean = sums[i]/TRIALS;
+      double error = sqrt((square_sums[i] - sums[i]*sums[i]/TRIALS)/(TRIALS - 1.0)/TRIALS);
+      printf("Swaption%lu: [SwaptionPrice: %.10lf StdError: %.10lf]\n", i, mean, error);
+    }
+
+    auto elapsed = duration<double>(system_clock::now() - time).count();
+    cerr << "Total elapsed time : " << elapsed << " seconds" << endl;
+  }
+
+  MPI_Finalize();
   return 0;
 }
 
