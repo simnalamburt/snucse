@@ -16,6 +16,9 @@ extern "C" {
 #define BLOCKSIZE 16
 #define ITERS (TRIALS/BLOCKSIZE)
 
+#define MATURITY 1.0
+#define SWAP_VECTOR_LENGTH ((size_t)(N - MATURITY/DELTA + 0.5))
+
 void swaption(
     const double * __restrict__ pdForward,
     const double * __restrict__ pdTotalDrift,

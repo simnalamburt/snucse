@@ -192,10 +192,8 @@ void swaption(
   //
   // Constants
   //
-  const double dMaturity = 1.0;
-  const int iSwapVectorLength = N - dMaturity/DELTA + 0.5;
-  const int iSwapStartTimeIndex = dMaturity/DELTA + 0.5;
-  const double dSwapVectorYears = iSwapVectorLength*DELTA;
+  const int iSwapStartTimeIndex = MATURITY/DELTA + 0.5;
+  const double dSwapVectorYears = SWAP_VECTOR_LENGTH*DELTA;
 
 
   // For each trial a new HJM Path is generated
@@ -216,23 +214,23 @@ void swaption(
   discount_factors(pdPayoffDiscountFactors, N, YEARS, pdDiscountingRatePath); // 15% of the time goes here
 
   // Now we compute discount factors along the swap path
-  double pdSwapRatePath[iSwapVectorLength*BLOCKSIZE];
-  for (int i = 0; i < iSwapVectorLength; ++i) {
+  double pdSwapRatePath[SWAP_VECTOR_LENGTH*BLOCKSIZE];
+  for (size_t i = 0; i < SWAP_VECTOR_LENGTH; ++i) {
     for (int b = 0; b < BLOCKSIZE; ++b) {
       pdSwapRatePath[i*BLOCKSIZE + b] = ppdHJMPath[iSwapStartTimeIndex][i*BLOCKSIZE + b];
     }
   }
 
   // Payments made will be discounted corresponding to swaption maturity
-  double pdSwapDiscountFactors[iSwapVectorLength*BLOCKSIZE];
-  discount_factors(pdSwapDiscountFactors, iSwapVectorLength, dSwapVectorYears, pdSwapRatePath);
+  double pdSwapDiscountFactors[SWAP_VECTOR_LENGTH*BLOCKSIZE];
+  discount_factors(pdSwapDiscountFactors, SWAP_VECTOR_LENGTH, dSwapVectorYears, pdSwapRatePath);
 
 
   double sum = 0;
   double square_sum = 0;
   for (int b = 0; b < BLOCKSIZE; ++b) {
     double tmp = -1;
-    for (int i = 0; i < iSwapVectorLength; ++i) {
+    for (size_t i = 0; i < SWAP_VECTOR_LENGTH; ++i) {
       tmp += pdSwapPayoffs[i]*pdSwapDiscountFactors[i*BLOCKSIZE + b];
     }
 

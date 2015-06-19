@@ -32,20 +32,17 @@ namespace {
     //
     // Mathmatical constants
     //
-    const double dStrikeCont = (double)task_id/TASKS;
+    const double strike = (double)task_id/TASKS;
     const double dPaymentInterval = 1.0;
     const int iFreqRatio = dPaymentInterval/DELTA + 0.5;
-    const double dMaturity = 1.0;
-    const int iSwapVectorLength = N - dMaturity/DELTA + 0.5;
     const double dTenor = 2.0;
     const int iSwapTimePoints = dTenor/DELTA + 0.5;
 
 
     // Store swap payoffs
-    double pdSwapPayoffs[iSwapVectorLength];
-    memset(pdSwapPayoffs, 0, sizeof pdSwapPayoffs);
+    double pdSwapPayoffs[SWAP_VECTOR_LENGTH] = {};
     for (int i = iFreqRatio; i <= iSwapTimePoints; i += iFreqRatio) {
-      double tmp = exp(dStrikeCont*dPaymentInterval);
+      double tmp = exp(strike*dPaymentInterval);
       // Normally, the bond pays coupon equal to this amount
       // But at terminal time point, bond pays coupon plus par amount
       pdSwapPayoffs[i] = i == iSwapTimePoints ? tmp : tmp - 1;
@@ -127,13 +124,8 @@ namespace {
 
   struct param_t { int begin, end; };
   void *worker(void *arg) {
-    auto time = system_clock::now();
-
     param_t *param = (param_t*)arg;
     for (int i = param->begin; i < param->end; ++i) { per_task(i); }
-
-    auto elapsed = duration<double>(system_clock::now() - time).count();
-    cerr << "[" << param->begin << ", " << param->end << ") " << elapsed << " seconds" << endl;
     return NULL;
   }
 }
