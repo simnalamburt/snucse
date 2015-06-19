@@ -1,0 +1,2 @@
+#!/bin/sh
+thorq --add --mode mpi --nodes 4 --device gpu bin

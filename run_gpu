@@ -1,0 +1,2 @@
+#!/bin/sh
+thorq --add --device gpu bin

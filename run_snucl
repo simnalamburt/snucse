@@ -1,0 +1,2 @@
+#!/bin/sh
+thorq --add --mode snucl --nodes 5 --device gpu bin
