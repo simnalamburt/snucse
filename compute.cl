@@ -8,18 +8,16 @@
 #define DELTA (YEARS/N)
 
 #define TRIALS 1000000
-#define BLOCKSIZE 16
-#define ITERS (TRIALS/BLOCKSIZE)
 
 #define MATURITY 1.0
 #define SWAP_VECTOR_LENGTH ((size_t)(N - MATURITY/DELTA + 0.5))
 
 typedef struct {
-  double forward[N], drifts[N - 1], seeds[ITERS], payoffs[SWAP_VECTOR_LENGTH];
+  double forward[N], drifts[N - 1], seeds[TRIALS], payoffs[SWAP_VECTOR_LENGTH];
 } task_t;
 
 typedef struct {
-  double sums[ITERS], square_sums[ITERS];
+  double sums[TRIALS], square_sums[TRIALS];
 } result_t;
 
 static const double factors[FACTORS][N - 1] = {
@@ -83,7 +81,7 @@ static double uniform_random(long ix) {
 //
 static void hjm_path(
     // Matrix that stores generated HJM path (Output)
-    double ppdHJMPath[restrict N][N*BLOCKSIZE],
+    double ppdHJMPath[restrict N][N],
     // t=0 Forward curve
     __global const double pdForward[restrict],
     // Vector containing total drift corrections for different maturities
@@ -97,15 +95,12 @@ static void hjm_path(
   // KCM: if you are not going to do parallelization,change the order of the
   // loop. {for (j) for(b)} {for(i) memset(ppdHJMPATH[i])}
   for (int j = 0; j < N; ++j) {
-    double val = pdForward[j];
-    for (int b = 0; b < BLOCKSIZE; ++b) {
-      ppdHJMPath[0][BLOCKSIZE*j + b] = val;
-    }
+    ppdHJMPath[0][j] = pdForward[j];
   }
 
   // Initializing HJMPath to zero
   for (int i = 1; i < N; ++i) {
-    for (int k = 0; k < N*BLOCKSIZE; ++k) {
+    for (int k = 0; k < N; ++k) {
       ppdHJMPath[i][k] = 0;
     }
   }
@@ -114,13 +109,11 @@ static void hjm_path(
   //
   // Sequentially generating random numbers
   //
-  double pdZ[FACTORS][N*BLOCKSIZE];
-  for(int b = 0; b < BLOCKSIZE; ++b) {
-    for (int j = 1; j < N; ++j) {
-      for (int l = 0; l < FACTORS; ++l) {
-        //compute random number in exact same sequence
-        pdZ[l][BLOCKSIZE*j + b] = uniform_random(seed++);  /* 10% of the total executition time */
-      }
+  double pdZ[FACTORS][N];
+  for (int j = 1; j < N; ++j) {
+    for (int l = 0; l < FACTORS; ++l) {
+      //compute random number in exact same sequence
+      pdZ[l][j] = uniform_random(seed++);  /* 10% of the total executition time */
     }
   }
 
@@ -130,11 +123,9 @@ static void hjm_path(
   // 18% of the total executition time
   //
   for (int l = 0; l < FACTORS; ++l) {
-    for (int b = 0; b < BLOCKSIZE; ++b) {
-      for (int j = 1; j < N; ++j) {
-        // 18% of the total executition time
-        pdZ[l][BLOCKSIZE*j + b] = cum_normal_inv(pdZ[l][BLOCKSIZE*j + b]);
-      }
+    for (int j = 1; j < N; ++j) {
+      // 18% of the total executition time
+      pdZ[l][j] = cum_normal_inv(pdZ[l][j]);
     }
   }
 
@@ -142,24 +133,20 @@ static void hjm_path(
   //
   // Generation of HJM Path1
   //
+  // j is the timestep
+  for (int j = 1; j < N; ++j) {
+    // l is the future steps
+    for (int l = 0; l < N - j; ++l){
+      // Total shock by which the forward curve is hit at (t, T-t)
+      double dTotalShock = 0;
 
-  // b is the blocks
-  for(int b = 0; b < BLOCKSIZE; ++b){
-    // j is the timestep
-    for (int j = 1; j < N; ++j) {
-      // l is the future steps
-      for (int l = 0; l < N - j; ++l){
-        // Total shock by which the forward curve is hit at (t, T-t)
-        double dTotalShock = 0;
-
-        // i steps through the stochastic factors
-        for (int i = 0; i < FACTORS; ++i){
-          dTotalShock += factors[i][l] * pdZ[i][BLOCKSIZE*j + b];
-        }
-
-        // As per formula
-        ppdHJMPath[j][BLOCKSIZE*l+b] = ppdHJMPath[j-1][BLOCKSIZE*(l+1)+b] + pdTotalDrift[l]*DELTA + SQRT_DELTA*dTotalShock;
+      // i steps through the stochastic factors
+      for (int i = 0; i < FACTORS; ++i){
+        dTotalShock += factors[i][l] * pdZ[i][j];
       }
+
+      // As per formula
+      ppdHJMPath[j][l] = ppdHJMPath[j-1][l+1] + pdTotalDrift[l]*DELTA + SQRT_DELTA*dTotalShock;
     }
   }
 }
@@ -178,23 +165,21 @@ static void discount_factors(
   const double delta = years/num;
 
   // Precompute the exponientials
-  double pdexpRes[(N - 1)*BLOCKSIZE];
-  for (int j = 0; j < (num - 1)*BLOCKSIZE; ++j) { pdexpRes[j] = -pdRatePath[j]*delta; }
-  for (int j = 0; j < (num - 1)*BLOCKSIZE; ++j) { pdexpRes[j] = exp(pdexpRes[j]);  }
+  double pdexpRes[N - 1];
+  for (int j = 0; j < num - 1; ++j) { pdexpRes[j] = -pdRatePath[j]*delta; }
+  for (int j = 0; j < num - 1; ++j) { pdexpRes[j] = exp(pdexpRes[j]);  }
 
 
   // Initializing the discount factor vector
-  for (int i = 0; i < num*BLOCKSIZE; ++i) {
+  for (int i = 0; i < num; ++i) {
     pdDiscountFactors[i] = 1.0;
   }
 
   for (int i = 1; i < num; ++i) {
-    for (int b = 0; b < BLOCKSIZE; ++b) {
-      for (int j = 0; j < i; ++j) {
-        // kcm: do both loop unrolling and reorder pdexpRes vector elements above. -> SSE
-        // optimization is possible.
-        pdDiscountFactors[i*BLOCKSIZE + b] *= pdexpRes[j*BLOCKSIZE + b];
-      }
+    for (int j = 0; j < i; ++j) {
+      // kcm: do both loop unrolling and reorder pdexpRes vector elements above. -> SSE
+      // optimization is possible.
+      pdDiscountFactors[i] *= pdexpRes[j];
     }
   }
 }
@@ -225,50 +210,40 @@ __kernel void swaption(
 
 
   // For each trial a new HJM Path is generated
-  double ppdHJMPath[N][N*BLOCKSIZE];
+  double ppdHJMPath[N][N];
   hjm_path(ppdHJMPath, pdForward, pdTotalDrift, seeds[id]); // 51% of the time goes here
 
   // Now we compute the discount factor vector
   // 여긴 안해도 될거같음
-  double pdDiscountingRatePath[N*BLOCKSIZE];
+  double pdDiscountingRatePath[N];
   for (int i = 0; i < N; ++i) {
-    for (int b = 0; b < BLOCKSIZE; ++b) {
-      pdDiscountingRatePath[BLOCKSIZE*i + b] = ppdHJMPath[i][0 + b];
-    }
+    pdDiscountingRatePath[i] = ppdHJMPath[i][0];
   }
 
   // Store discount factors for the rate path along which the swaption
-  double pdPayoffDiscountFactors[N*BLOCKSIZE];
+  double pdPayoffDiscountFactors[N];
   discount_factors(pdPayoffDiscountFactors, N, YEARS, pdDiscountingRatePath); // 15% of the time goes here
 
   // Now we compute discount factors along the swap path
-  double pdSwapRatePath[SWAP_VECTOR_LENGTH*BLOCKSIZE];
+  double pdSwapRatePath[SWAP_VECTOR_LENGTH];
   for (size_t i = 0; i < SWAP_VECTOR_LENGTH; ++i) {
-    for (int b = 0; b < BLOCKSIZE; ++b) {
-      pdSwapRatePath[i*BLOCKSIZE + b] = ppdHJMPath[iSwapStartTimeIndex][i*BLOCKSIZE + b];
-    }
+    pdSwapRatePath[i] = ppdHJMPath[iSwapStartTimeIndex][i];
   }
 
   // Payments made will be discounted corresponding to swaption maturity
-  double pdSwapDiscountFactors[SWAP_VECTOR_LENGTH*BLOCKSIZE];
+  double pdSwapDiscountFactors[SWAP_VECTOR_LENGTH];
   discount_factors(pdSwapDiscountFactors, SWAP_VECTOR_LENGTH, dSwapVectorYears, pdSwapRatePath);
 
 
-  double sum = 0;
-  double square_sum = 0;
-  for (int b = 0; b < BLOCKSIZE; ++b) {
-    double tmp = -1;
-    for (size_t i = 0; i < SWAP_VECTOR_LENGTH; ++i) {
-      tmp += pdSwapPayoffs[i]*pdSwapDiscountFactors[i*BLOCKSIZE + b];
-    }
-
-    if (tmp <= 0) { continue; }
-    tmp *= pdPayoffDiscountFactors[iSwapStartTimeIndex*BLOCKSIZE + b];
-
-    // Accumulate
-    sum += tmp;
-    square_sum += tmp*tmp;
+  double sum = -1;
+  for (size_t i = 0; i < SWAP_VECTOR_LENGTH; ++i) {
+    sum += pdSwapPayoffs[i]*pdSwapDiscountFactors[i];
   }
+
+  if (sum <= 0) { return; }
+  sum *= pdPayoffDiscountFactors[iSwapStartTimeIndex];
+
+  // Accumulate
   sums[id] = sum;
-  square_sums[id] = square_sum;
+  square_sums[id] = sum*sum;
 }

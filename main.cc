@@ -92,8 +92,8 @@ int main() {
   check(clSetKernelArg(kernel, 0, sizeof(cl_mem), &buffer_tasks));
   check(clSetKernelArg(kernel, 1, sizeof(cl_mem), &buffer_results));
 
-  array<size_t, 2> global = {{ TASKS, ITERS }};
-  array<size_t, 2> local = {{ 1, 1 }};
+  array<size_t, 2> global = {{ TASKS, TRIALS }};
+  array<size_t, 2> local = {{ 1, 16 }};
   check(clEnqueueNDRangeKernel(cmdqs[0], kernel, 2, NULL, global.data(), local.data(), 0, NULL, NULL));
   check(clEnqueueReadBuffer(cmdqs[0], buffer_results, CL_TRUE, 0, sizeof results, results, 0, NULL, NULL));
 
@@ -104,7 +104,7 @@ int main() {
   for (int task_id = 0; task_id < TASKS; ++task_id) {
     double sum = 0;
     double square_sum = 0;
-    for (int i = 0; i < ITERS; ++i) {
+    for (int i = 0; i < TRIALS; ++i) {
       sum += results[task_id].sums[i];
       square_sum += results[task_id].square_sums[i];
     }
@@ -189,9 +189,9 @@ namespace {
 
     // Init seeds
     double seed = 100;
-    for (int i = 0; i < ITERS; ++i) {
+    for (int i = 0; i < TRIALS; ++i) {
       seeds[i] = seed;
-      seed += BLOCKSIZE*(N - 1)*FACTORS;
+      seed += (N - 1)*FACTORS;
     }
   }
 

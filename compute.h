@@ -13,18 +13,16 @@ extern "C" {
 #define DELTA (YEARS/N)
 
 #define TRIALS 1000000
-#define BLOCKSIZE 16
-#define ITERS (TRIALS/BLOCKSIZE)
 
 #define MATURITY 1.0
 #define SWAP_VECTOR_LENGTH ((size_t)(N - MATURITY/DELTA + 0.5))
 
 typedef struct {
-  double forward[N], drifts[N - 1], seeds[ITERS], payoffs[SWAP_VECTOR_LENGTH];
+  double forward[N], drifts[N - 1], seeds[TRIALS], payoffs[SWAP_VECTOR_LENGTH];
 } task_t;
 
 typedef struct {
-  double sums[ITERS], square_sums[ITERS];
+  double sums[TRIALS], square_sums[TRIALS];
 } result_t;
 
 void swaption(task_t *tasks, result_t *results, size_t task_id, size_t id);
