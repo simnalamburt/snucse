@@ -209,4 +209,4 @@ CSE가 뭡니까? (장호: Science of abstraction) 그건 내생각에 Math야.
 abstraction이야. 수학적으로 추상적인 개념들을 자동으로 작동시킬 수 있도록
 하는거야.
 
-
+> 9월 3일 결석
