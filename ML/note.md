@@ -2417,3 +2417,288 @@ DARPA 무인차 경주대회. 2014년에도 했는데 단 한팀도 완주를 �
 @김젼	비트의 수
 @김젼	I(X; X) = H(X)
 ```
+
+> 9월 15일
+
+```
+@Nemo	9/17 10/1 휴강 9/22 7:00-10:00 로 대체
+@김젼	- 모델 구조
+@김젼	- 목적함수
+@김젼	- 학습 알고리즘
+@김젼	데이타로부터 모델 만드는것.
+@김젼	L : D -> M
+@Nemo	Error
+@Nemo	Classification rate
+@Nemo	Loss
+@Nemo	Risk
+@Nemo	Entropy
+@Nemo	Relative Entropy
+@Nemo	Mutual info
+@김젼	엔트로피가
+@김젼	불확실성을 나타내는 척도에요.
+@Nemo	확률에 반비례하게
+@Nemo	log_2 를 취하면 비트수
+@김젼	인포메이션 씨오리
+@김젼	컴공엔 없고
+@김젼	전기과 대학원에 나중에 있는데
+@Nemo	유투브에 강의 있음
+@김젼	코딩 이런거
+@김젼	정보량!
+@김젼	(지난시간에 했던것들 계속 복습중)
+@Nemo	오늘밤 9시 뉴스에 들은 얘기 계속 나오면 정보량이 낮아
+@Nemo	놀라운 얘기는 확률이 낮은거임
+@Nemo	확률이 낮은게 정보량이 많아
+@sgk	 역시 지난시간 보강 안 온게 이득
+@김젼	Fallback divergence
+@Nemo	렐레티브 엔트로피랑 크로스 엔트로피랑 같은거군
+@김젼	슬슬 복습 끝남
+@Nemo	폴백 다이버젼스라니
+@Nemo	Kullback–Leibler divergence
+@김젼	저게
+@김젼	뮤추얼 인포메이션이던가?
+@Nemo	아 크로스엔트로피는 다른거구나
+@Nemo	KL(P,Q) = H(P,Q) - H(P)
+@김젼	H(P, Q) <- 크로스 엔트로피
+@김젼	KL 다이버전스
+@김젼	KL(P || Q)
+@김젼	P와 Q의 거리
+@김젼	라고 지난번에 이야기했던듯
+@Nemo	KL(P||Q) != KL(Q||P) 라 distance 비스무리한거
+@김젼	아 맞아
+@김젼	디스턴스가 아니라
+@김젼	다이버전스
+@김젼	ㄱㅅㄱㅅ
+@Nemo	앵
+@김젼	뮤추얼 인포메이션
+@김젼	MI(X; Y) = KL( P(x,y) || P(x)P(y) )
+@Nemo	값이 크면 서로 dependent
+@Nemo	MI(X;Y) = MI(Y;X)
+@Nemo	대칭
+@김젼	Y를 예측하는데에
+@김젼	어떤 X 를 쓰늑넛이
+@김젼	좋을지
+@p	캐치볼하고 싶당
+@Nemo	나 꼬시면 할지도(?)
+@p	ㄷㄷ
+@p	그렇군
+@Unused	캐치유 캐치유 캐치미 캐치미~
+@p	하지않으면 공으로 때리겠다!
+@Nemo	ㄷㄷ
+@Unused	이제 숨바꼭질은 그만
+@Unused	(그만)
+@Unused	우울한 건! 모두!
+@Unused	파란 하늘에!!!
+@김젼	목적함수
+@김젼	실제적으로는
+@김젼	에러를 많이 써요!
+@p	개념을 파란 하늘에 날렸냐
+@Unused	너?
+@Nemo	세상의 많은 것들은 가우시안
+@김젼	수능을
+@p	너
+@김젼	아무리 어렵게 내든
+@김젼	쉽게 내든
+@Unused	너
+@김젼	가우시안이 나와요.
+@Nemo	N이 충분히 크면
+@김젼	언유도
+@p	그래 언유즈드놈
+@김젼	가우시안입니다.
+@김젼	회사에서 야근하는 포비아도
+@Unused	포비아새기
+@김젼	가우시안입니다.
+@김젼	수업시간에 IRC하는 김젼도
+@김젼	가우시안입니다.
+@Unused	뭐
+@Unused	포비아가 가우시안이라고
+@김젼	가우시안의 마음을 담아서.
+@김젼	가우시안스 룰
+@김젼	가우시안.
+@Unused	적분해버려야지
+@Nemo	statistical physics
+@Nemo	p(x) = 1/z * exp(-(E(x))/K_BT)
+@김젼	K는 볼쯔만 상수
+@김젼	E는 에러, 에너지
+@김젼	P는 확률
+@Unused	에러
+@p	실책은 안 좋지
+@Nemo	Probaboloty (posterior, likelihood)
+@Nemo	앗 오타
+@Nemo	ㅠㅠ
+@Nemo	parameter(theta)에 대한 likelihood
+@Nemo	log P(x|theta) 는 -E(x|theta) 에 비례
+@Nemo	그러므로 error 줄이기나 likelihood 늘리기나 같은거
+@김젼	장교수님
+@김젼	지난 보강때
+@김젼	어디까지 했는데
+@김젼	기억이 안나시나
+@김젼	아니야
+@김젼	복습하면 좋지뭐
+@김젼	P(sigma|D) = P(D|sigma)P(sigma) / P(D)
+@김젼	P(sigma|D) posterior
+@김젼	P(D|sigma) likelihood
+@김젼	theta_map = argmax P(theta|D)
+@김젼	MAP
+@김젼	맥시멈 어프록시메이션
+@김젼	뭐시기
+@김젼	80% 이상은
+@김젼	ML이라는걸 하는데
+@김젼	이거는 뭐냐면
+@김젼	theta_ml = argmax P(D|theta)
+@김젼	likelihood 만 계산하는거에여
+@sgk	정말이지 설명 잘 하시는 거 같운데
+@sgk	뭔 말인지 모르겠다
+@김젼	저게
+@sgk	아니 뭔 말인지는 알겠는데
+@김젼	지금까지 수업하면서
+@김젼	했던 수업
+@김젼	을
+@김젼	데자뷰처럼
+@김젼	반복하면서
+@sgk	어떻게 쓴다는건지 감이 안 잡힘
+@김젼	사이사이에
+@김젼	새로운 내용이있는거라
+@김젼	이거
+@김젼	실제로 쓴는거랑은
+@김젼	거의 상관없는
+@김젼	수업일듯?
+@김젼	적어도 지금은.
+@sgk	나 분명히 어제 로그에서
+@sgk	김젼이 수업시간에 잔 적 없다는 말을 본거 같은데
+@sgk	이제 그 말 하면 까야지
+@Nemo	ㅋㅋㅋㅋㅋㅋㅋ
+@Nemo	꾸벅꾸벅
+@sgk	맨 앞자리에서
+@Nemo	헤드뱅잉
+@sgk	이제는 자리깔고 자는군
+@김젼	너무피곤하다
+@김젼	P(D) = integral P(D|theta)P(theta)dtheta
+@김젼	가우시안 분포다 하면
+@김젼	계산할 수 있어요
+@김젼	그게 아니다면 추론해야돼요
+@김젼	여기에
+@김젼	P를 썼지만
+@김젼	P를 어떻게 표현하는지는
+@김젼	머신러닝 모델마다
+@김젼	P를 표현하는법이
+@김젼	완전히 다 달라요.
+@김젼	그 예를 하나 볼텐데
+@김젼	조고의 마지막이 될텐데
+@김젼	그래서 조끔 지연이 되었는데
+@sgm	조금 지현이 됐는데
+@김젼	와 이거
+@김젼	독학 어떻게하지?
+@김젼	학습률을 한번
+@김젼	유도를 해보는데
+@김젼	얘가
+@sgm	example을 먼저 하고
+@sgm	들어야
+@김젼	목적함수를
+@sgm	이해되는 수업 같은데
+@김젼	Log likelihood
+@김젼	로 정하겠어요
+@김젼	그롸롸..
+@김젼	log likelihood를 맥시마이즈 하는걸 학습이라고보겠다
+@김젼	데이터 D
+@김젼	L(w) = log P(D|W)
+@김젼	이걸
+@김젼	w로 편미분하면
+@김젼	dL(w)/dw 가 0으로 수렴하는
+@김젼	걸 찾는게 기본 테크닉
+@김젼	학습을
+@김젼	더더욱 해도
+@김젼	L 이 변하지 않으며
+@김젼	않으면
+@김젼	학습이 끝났다는뜻
+@Nemo	gradient descent
+@Nemo	라고 부름
+@김젼	우왕..
+@Nemo	이런 함수들은 convex하다는 가정 하에 쓸수있어
+@김젼	ㅇㅎㅇㅎ
+@Nemo	그래야 수렴하겠지
+@김젼	가우시안 분포
+@Nemo	그리고 극점이 여러곳 있으면 한군데로 빠짐
+@Nemo	local minima
+@김젼	x ~ N(x, 뮤, sigma^2)
+@Nemo	neural net같은거에 저런 일이 많이 일어나는데
+@Nemo	사실 상관이 없는게
+@Nemo	그정도 성능으로도 충분해서
+@Nemo	물론 이거 해결하려고 여러가지 기법들이 있긴 함
+@김젼	가우시안 분포의 정의에 따라
+@김젼	P(x|w) = (상수) exp(- (x-뮤)^2/2sigma^2 )
+@김젼	우리의 경우
+@Nemo	여기 보면 미분할때 모든 데이터에 대해서 log likelihood를 구해서 gradient를 계산하는데 실제로 저렇게 학습시키면 시간도 많이들고 local minima에 들기 때문에 한번에 데이터 조금만 아님 심지어 1개씩만 써서 학슶키는걸 stochastic gd 라고 부름
+@Nemo	전자는 사실 batch 라고 부르고
+@김젼	크앙!
+@김젼	도댗
+@김젼	도대체
+@김젼	이거 왜하는거야!
+@김젼	시부엉!
+@김젼	부엉부엉
+@sgk	부먹부먹
+@김젼	볶먹볶먹
+@Nemo	결국은 optimization problem이야
+@김젼	기야아아ㅏㅏㅏㅏㅏㅏㅏㅏ
+@Nemo	ㅋㅋㅋㅋㅋㅋ
+@Nemo	아 배곺
+@김젼	아놔
+@김젼	나처럼 펜 없는사람은
+@김젼	필기는 어떻게 하라고
+@김젼	수식을 저렇게 많이쓰나!
+@김젼	포기
+@김젼	보나마나
+@김젼	저거 편미분하면
+@김젼	x ~ 뮤 인데에서
+@Nemo	LaTex를 배웁시다
+@Nemo	ㅠㅠ
+@김젼	0 나오겠지 뭐
+@김젼	ㅋ
+@Nemo	나도 배워야되는데
+@disjukr_talk	휴대폰으로 찍으면 안되나여=3
+@Nemo	실제로 조교님이 칠판 사진 찍어서
+@Nemo	수업끝나고 올려주십니다
+@김젼	헐
+@김젼	진짜?
+@Nemo	ㅇㅇ bi.snu.ac.kr 가서
+@disjukr_talk	두둥
+@Nemo	courses
+@Nemo	에 machine learning 들어가면 있어
+@김젼	헐....
+@김젼	http://bi.snu.ac.kr/Courses/ML2015f/ML2015.html
+@김젼	착한분이셔써..
+@김젼	저거
+@김젼	당연히
+@김젼	뮤가 x일때에
+@김젼	0으로 가는게 아니냐는..
+@김젼	뮤 = 1/N sigma x(d)
+@Nemo	당연한건데
+@Nemo	이제 가우시안이 아니라 일반적인 경우에도
+@Nemo	같은 방식으로
+@Nemo	ㅇㅇ
+@김젼	그렇구나
+@Nemo	그 1차원 linear regression 같은 거면 당연히 수직선 위의 점들의 평균
+@Nemo	2차원이 되면 weight가 2개고 n차원이면 n개고 뉴럴넷 같은건 무지 많고
+@김젼	ㅠㅠ
+@Nemo	그래도 원리는 같어
+@Nemo	사실 linear regression은 수학적으로도 풀수 있는데
+@Nemo	least mean square problem
+@Nemo	normal equation으로 해결가능
+@김젼	batch learning
+@김젼	데이터를
+@김젼	한번에 싹다 가르치기
+@Nemo	통째로
+@김젼	뮤ㅜ우웅
+@Nemo	아까 말한 stochastic과 대비되는 개념
+@Nemo	이거의 중간으로 minibatch
+@김젼	stochastic은
+@김젼	데이터
+@김젼	점진적으로
+@김젼	늘려나가고
+@Nemo	1개씩
+@김젼	뮤도 변하는
+@김젼	미니배치는 그냥
+@김젼	N개씩 늘리는?
+@Nemo	ㅇㅇㅇ
+@김젼	수업끝
+@김젼	ㄱㅅㄱㅅㄱㅅ
+```
