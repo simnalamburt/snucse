@@ -8,15 +8,15 @@ class complex {
   public:
     complex(int real, int imag) : real{real}, imag{imag} {}
 
-    complex operator+(complex right) const {
+    complex operator+(const complex &right) const {
       return complex { real + right.real, imag + right.imag };
     }
 
-    complex operator-(complex right) const {
+    complex operator-(const complex &right) const {
       return complex { real - right.real, imag - right.imag };
     }
 
-    complex operator*(complex right) const {
+    complex operator*(const complex &right) const {
       return complex {
         real * right.real - imag * right.imag,
         real * right.imag + imag * right.real
