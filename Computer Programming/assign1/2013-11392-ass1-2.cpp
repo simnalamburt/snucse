@@ -64,8 +64,11 @@ int main() {
     bool encrypt;
     while (true) {
       try {
-        cout << "Encrypt (1) Decrypt (2) : " << blue << flush;
-        int mode = stoi(getline());
+        cout << "Encrypt (1), Decrypt (2), Exit (q) : " << blue << flush;
+        string line = getline();
+        if (line == "q") { return 0; }
+
+        int mode = stoi(line);
         cout << reset;
         if (mode != 1 and mode != 2) { throw out_of_range("Please choose between '1' and '2'"); }
         assert(mode == 1 or mode == 2);
