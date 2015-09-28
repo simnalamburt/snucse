@@ -55,21 +55,27 @@ void stringify(string& input) {
 }
 
 int main() {
+  const char *blue = "\e[34m";
+  const char *orange = "\e[33m";
+  const char *green = "\e[32m";
+  const char *reset = "\e[0m";
+
   while (true) {
     bool encrypt;
     while (true) {
       try {
-        cout << "Encrypt (1) Decrypt (2) : " << flush;
+        cout << "Encrypt (1) Decrypt (2) : " << blue << flush;
         int mode = stoi(getline());
+        cout << reset;
         if (mode != 1 and mode != 2) { throw out_of_range("Please choose between '1' and '2'"); }
         assert(mode == 1 or mode == 2);
         encrypt = mode == 1;
         break;
       } catch(invalid_argument) {
         if (cin.eof()) { cout << endl; return 0; }
-        cout << "\n\e[33mPlease choose between '1' and '2'\e[0m" << endl;
+        cout << orange << "Please choose between '1' and '2'" << reset << endl;
       } catch(out_of_range e) {
-        cout << "\n\e[33m" << e.what() << "\e[0m" << endl;
+        cout << orange << e.what() << reset << endl;
       }
     }
 
@@ -77,12 +83,13 @@ int main() {
     string line;
     while (true) {
       try {
-        cout << "Enter string :" << endl;
+        cout << "Enter string :" << blue << endl;
         line = getline();
+        cout << reset;
         numerify(line);
         break;
       } catch(out_of_range e) {
-        cout << "\n\e[33m" << e.what() <<"\e[0m" << endl;
+        cout << orange << e.what() << reset << endl;
       }
     }
 
@@ -90,12 +97,13 @@ int main() {
     int64_t key;
     while (true) {
       try {
-        cout << "Enter key value : " << flush;
+        cout << "Enter key value : " << blue << flush;
         key = stoll(getline());
+        cout << reset;
         break;
       } catch(invalid_argument e) {
         if (cin.eof()) { cout << endl; return 0; }
-        cout << "\n\e[33mPlease type integer as a key\e[0m" << endl;
+        cout << orange << "Please type integer as a key" << reset << endl;
       }
     }
 
@@ -113,7 +121,7 @@ int main() {
 
 
     stringify(line);
-    cout << line << "\n\n\n" << flush;
+    cout << '\n' << green << line << reset << "\n\n\n" << flush;
   }
 
   return 0;
