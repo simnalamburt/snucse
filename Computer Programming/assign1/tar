@@ -1,0 +1,2 @@
+#!/bin/sh
+tar -cvf 2013-11392-ass1.tar 2013-11392-ass1-1.cpp 2013-11392-ass1-2.cpp
