@@ -1,6 +1,9 @@
 Introduction to Machine Learning
 ========
 
+[강의 홈페이지](http://bi.snu.ac.kr/Courses/ML2015f/ML2015.html)<br>
+[강의 게시판](http://bi.snu.ac.kr:8080/category/5/introduction-to-machine-learning-fall-2015)
+
 > 9월 1일
 
 안녕하세요.
