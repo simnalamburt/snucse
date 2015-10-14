@@ -7,3 +7,7 @@ RBFN
 
 [matlab]: http://bi.snu.ac.kr/Courses/ML2015f/projects/mini-project%201_MATLAB.pdf
 [python]: http://bi.snu.ac.kr/Courses/ML2015f/projects/mini-project%201_Python.pdf
+
+```console
+./init
+```

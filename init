@@ -1,0 +1,2 @@
+#!/bin/sh
+curl -fLo data/mnist.pkl.gz --create-dirs http://deeplearning.net/data/mnist/mnist.pkl.gz
