@@ -6,6 +6,9 @@
 
 #include <iostream>
 #include <cassert>
+#include <cstdlib>
+
+typedef unsigned long long ullong;
 
 namespace {
   //
@@ -21,13 +24,13 @@ namespace {
 // 유저에게 적절한 안내메세지를 보여주고, 유저가 입력한 정수를 받음.
 // 음수일경우 입력을 다시 요청하고, EOF일경우 프로그램을 종료한다.
 //
-uint64_t getint(const char *msg) {
+ullong getint(const char *msg) {
   using namespace std;
 
   while (true) {
     try {
       cout << msg << blue << flush;
-      int64_t input;
+      long long input;
       cin >> input;
       if (cin.eof()) { cout << '\n'; exit(0); } // EOF일경우 프로그램 종료
       cout << reset;
@@ -45,8 +48,8 @@ uint64_t getint(const char *msg) {
 //
 // 입력으로 주어진 정수가 십진수로 표현하였을때 총 몇자리 숫자인지 반환
 //
-uint32_t digits(uint64_t input) {
-  uint32_t count = 1;
+size_t digits(ullong input) {
+  size_t count = 1;
   while (input >= 10) {
     input /= 10;
     ++count;
@@ -57,8 +60,8 @@ uint32_t digits(uint64_t input) {
 //
 // (10**iexp)를 반환하는 헬퍼 함수
 //
-uint64_t pow10(uint32_t iexp) {
-  uint64_t ret = 1;
+ullong pow10(size_t iexp) {
+  ullong ret = 1;
   while (iexp > 0) {
     ret *= 10;
     --iexp;
@@ -74,11 +77,11 @@ uint64_t pow10(uint32_t iexp) {
 //   같을경우 true를 반환하고,
 //   다를경우 y에서 제일 낮은 자리의 숫자 하나를 빼어 (y/10), 재귀적으로 다시 비교한다.
 //
-bool substring(uint64_t x, uint64_t y) {
+bool substring(ullong x, ullong y) {
   if (x > y) { return false; }
   if (x == y) { return true; }
 
-  uint64_t mask = pow10(digits(x));
+  ullong mask = pow10(digits(x));
 
   if (y % mask == x) {
     return true;
@@ -95,12 +98,12 @@ bool substring(uint64_t x, uint64_t y) {
 //   같을경우 x와 y의 다음 자리숫자를 다시 재귀적으로 비교하고 (x/10, y/10),
 //   다를경우 x는 그대로 두고 y에서 가장 낮은 자리의 숫자를 하나 빼어 (x, y/10), 재귀적으로 다시 비교한다.
 //
-bool subsequence(uint64_t x, uint64_t y) {
+bool subsequence(ullong x, ullong y) {
   if (x > y) { return false; }
   if (x == y) { return true; }
 
-  uint32_t x0 = x % 10;
-  uint32_t y0 = y % 10;
+  int x0 = x % 10;
+  int y0 = y % 10;
 
   if (x0 == y0) {
     return subsequence(x/10, y/10);
@@ -117,8 +120,8 @@ int main() {
 
   // 프로그램 루프
   while (true) {
-    uint64_t y = getint("Enter Y : ");
-    uint64_t x = getint("Enter X : ");
+    ullong y = getint("Enter Y : ");
+    ullong x = getint("Enter X : ");
 
     // x가 y의 substring일경우, 자명하게 x는 무조건 y의 subsequence이다.
     // 그러므로 먼저 substring인지 여부만 검사하고, 아니었을경우에

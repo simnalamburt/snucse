@@ -7,6 +7,7 @@
 #include <iostream>
 #include <string>
 #include <cassert>
+#include <cstdlib>
 
 using namespace std;
 
@@ -28,11 +29,11 @@ string getline() {
 //
 void numerify(string& input) {
   string::iterator i = input.begin();
-  string::const_iterator end = input.cend();
+  string::const_iterator end = input.end();
 
   // 이터레이터로 각 글자에 대해 모두 실행함
   for (; i != end; ++i) {
-    uint8_t ch = *i;
+    unsigned char ch = *i;
 
     if ('a' <= ch && ch <= 'z') {
       ch = ch - 'a';
@@ -57,10 +58,10 @@ void numerify(string& input) {
 //
 void stringify(string& input) {
   string::iterator i = input.begin();
-  string::const_iterator end = input.cend();
+  string::const_iterator end = input.end();
 
   for (; i != end; ++i) {
-    uint8_t ch = *i;
+    unsigned char ch = *i;
 
     if (ch <= 'z' - 'a') {
       ch += 'a';
@@ -98,7 +99,7 @@ int main() {
         string line = getline();
         if (line == "q") { return 0; }
 
-        int mode = stoi(line);
+        int mode = atoi(line.c_str());
         cout << reset;
         if (mode != 1 and mode != 2) { throw out_of_range("Please choose between '1' and '2'"); }
         assert(mode == 1 or mode == 2);
@@ -129,11 +130,11 @@ int main() {
     }
 
     // 키를 입력받는다
-    int64_t key;
+    long long key;
     while (true) {
       try {
         cout << "Enter key value : " << blue << flush;
-        key = stoll(getline());
+        key = atoi(getline().c_str());
         cout << reset;
         break;
       } catch(invalid_argument e) {
@@ -143,11 +144,11 @@ int main() {
     }
 
     // 문자열의 각 글자에 대해 시저암호를 계산한다
-    string::const_iterator end = line.cend();
+    string::const_iterator end = line.end();
     for (string::iterator i = line.begin(); i != end; ++i) {
-      uint8_t num = *i;
+      unsigned char num = *i;
 
-      int64_t after = (encrypt ? num + key : num - key) % 61ll;
+      long long after = (encrypt ? num + key : num - key) % 61ll;
       if (after < 0) { after += 61ll; }
       assert(0 <= after && after < 61);
 
