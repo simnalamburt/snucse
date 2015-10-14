@@ -1,0 +1,7 @@
+#!/usr/bin/env python2
+import gzip, os
+import cPickle
+
+f = gzip.open(os.path.join(os.path.realpath('..'), "data", 'mnist.pkl.gz'), 'rb')
+train_set, valid_set, test_set = cPickle.load(f)
+f.close()
