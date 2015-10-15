@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from config import *
 from time import time
 t0 = time()
 
@@ -16,7 +17,6 @@ path = os.path.join(os.path.realpath('..'), "data", 'mnist.pkl.gz')
 with gzip.open(path, 'rb') as f:
     train_set, _, _ = cPickle.load(f)
 
-train_count = 5000
 train_x, train_y = (train_set[0][:train_count], train_set[1][:train_count])
 
 t1 = time()
@@ -26,7 +26,6 @@ print '완료 (%f seconds)' % (t1 - t0)
 # PCA
 #
 print 'PCA 수행',
-dimension = 100
 _, vec = np.linalg.eig(np.cov(train_x.transpose()))
 vec = np.real(vec)
 pca = vec.transpose()[:dimension]
@@ -41,7 +40,7 @@ print '완료 (%f seconds)' % (t2 - t1)
 # Clustering
 #
 print 'K-means 클러스터링',
-K = min(train_count, 250)
+K = min(train_count, kernel_count)
 centroids, _ = kmeans(train_x, K)
 groups, _ = vq(train_x, centroids)
 

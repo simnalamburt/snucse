@@ -4,6 +4,7 @@ import gzip, os, cPickle
 import numpy as np
 import tool
 from time import time
+from config import *
 
 t0 = time()
 
@@ -16,7 +17,6 @@ path = os.path.join(os.path.realpath('..'), "data", 'mnist.pkl.gz')
 with gzip.open(path, 'rb') as f:
     _, _, test_set = cPickle.load(f)
 
-test_count = 2000
 test_x, test_y = (test_set[0][:test_count], test_set[1][:test_count])
 
 # PCA
