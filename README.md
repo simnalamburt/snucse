@@ -12,4 +12,5 @@ RBFN
 pip2 install numpy
 
 ./init
+python2 code_2013_11392_HyeonKim/run_rbfn.py
 ```
