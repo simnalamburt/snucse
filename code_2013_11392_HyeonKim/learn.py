@@ -33,8 +33,7 @@ for j in range(K):
 H = tool.get_H(train_x, mu, sigma)
 Ht = H.transpose()
 Y = tool.get_Y(train_y)
+W = np.linalg.lstsq(Ht.dot(H), Ht.dot(Y))[0]
 
 elapsed_time = time.time() - start_time
 print 'Elapsed Time for Training: ', elapsed_time
-
-W = np.linalg.inv(Ht.dot(H)).dot(Ht).dot(Y) # <- opt
