@@ -1,14 +1,16 @@
-import gzip, os, cPickle
+import gzip, os, time, cPickle
 import numpy as np
 import tool
 from scipy.cluster.vq import kmeans, vq
+
+start_time = time.time()
 
 path = os.path.join(os.path.realpath('..'), "data", 'mnist.pkl.gz')
 with gzip.open(path, 'rb') as f:
     train_set, _, _ = cPickle.load(f)
 
-train_count = 100
-K = min(train_count, 1000)
+train_count = 1000
+K = min(train_count, 100)
 
 train_x, train_y = (train_set[0][:train_count], train_set[1][:train_count])
 
@@ -31,4 +33,8 @@ for j in range(K):
 H = tool.get_H(train_x, mu, sigma)
 Ht = H.transpose()
 Y = tool.get_Y(train_y)
+
+elapsed_time = time.time() - start_time
+print 'Elapsed Time for Training: ', elapsed_time
+
 W = np.linalg.inv(Ht.dot(H)).dot(Ht).dot(Y) # <- opt

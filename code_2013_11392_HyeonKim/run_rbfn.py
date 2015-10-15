@@ -1,7 +1,9 @@
-import gzip, os, cPickle
+import gzip, os, time, cPickle
 import numpy as np
 import learn
 import tool
+
+start_time = time.time()
 
 path = os.path.join(os.path.realpath('..'), "data", 'mnist.pkl.gz')
 with gzip.open(path, 'rb') as f:
@@ -27,4 +29,7 @@ for i in range(test_y.shape[0]):
     confusion_matrix[test_y[i], max_idx[i]] += 1
 
 accuracy = np.diag(confusion_matrix).sum() / test_y.shape[0]
-print accuracy
+elapsed_time = time.time() - start_time
+
+print 'Elapsed Time for Testing: ', elapsed_time
+print 'Accuracy: ', accuracy
