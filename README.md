@@ -9,7 +9,7 @@ RBFN
 [python]: http://bi.snu.ac.kr/Courses/ML2015f/projects/mini-project%201_Python.pdf
 
 ```console
-pip2 install numpy
+pip2 install numpy scipy
 
 ./init
 python2 code_2013_11392_HyeonKim/run_rbfn.py
