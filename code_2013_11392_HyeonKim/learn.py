@@ -18,6 +18,7 @@ train_x, train_y = (train_set[0][:train_count], train_set[1][:train_count])
 #
 dimension = 100
 _, vec = np.linalg.eig(np.cov(train_x.transpose()))
+vec = np.real(vec)
 pca = vec.transpose()[:dimension]
 
 train_x = pca.dot(train_x.transpose()).transpose()
