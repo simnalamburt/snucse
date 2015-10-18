@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+# coding: utf-8
 import learn
 import gzip, os, cPickle
 import numpy as np
