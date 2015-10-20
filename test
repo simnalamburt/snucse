@@ -23,3 +23,13 @@ for i in 1..2
 end
 puts 'Done'
 puts
+
+puts 'Archiving ...'
+cmd = <<CMD
+tar -cvf tmp/2013-11392-midterm.tar \
+  2013-11392-midterm1-c11.cpp \
+  2013-11392-midterm2-c11.cpp \
+  2013-11392-midterm3-c11.cpp
+CMD
+system cmd
+puts 'Done -> "./tmp/2013-11392-midterm.tar"'
