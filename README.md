@@ -6,3 +6,5 @@ for (auto &entity : collection) {
   /* ... */
 }
 ```
+
+`not` 이런거 잘 안쓰는 이유 = VS에서 안됨
