@@ -1,5 +1,7 @@
-#!/bin/sh
+#!/usr/bin/env ruby
 
-g++ -O3 -Wall -Wextra -Werror -std=c++11 2013-11392-midterm1-c11.cpp -o tmp/bin.1
-g++ -O3 -Wall -Wextra -Werror -std=c++11 2013-11392-midterm2-c11.cpp -o tmp/bin.2
-g++ -O3 -Wall -Wextra -Werror -std=c++11 2013-11392-midterm3-c11.cpp -o tmp/bin.3
+for i in 1..3
+  puts "Compiling ... (#{i}/3)"
+  `g++ -O3 -Wall -Wextra -Werror -std=c++11 2013-11392-midterm#{i}-c11.cpp -o tmp/bin.#{i}`
+end
+puts "Done"
