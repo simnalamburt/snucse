@@ -36,4 +36,5 @@ int main(int argc, char *argv[]) {
   print(number, base);
 
   cout << output << endl;
+  return 0;
 }
