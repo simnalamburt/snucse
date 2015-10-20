@@ -1,0 +1,5 @@
+#!/bin/sh
+
+g++ -O3 -Wall -Wextra -Werror -std=c++11 2013-11392-midterm1-c11.cpp -o bin.1
+g++ -O3 -Wall -Wextra -Werror -std=c++11 2013-11392-midterm2-c11.cpp -o bin.2
+g++ -O3 -Wall -Wextra -Werror -std=c++11 2013-11392-midterm3-c11.cpp -o bin.3
