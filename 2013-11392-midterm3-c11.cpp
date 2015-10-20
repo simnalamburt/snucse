@@ -95,11 +95,15 @@ public:
       classes.pop_back();
     }
 
-    auto last = classes.back().get();
-    if (last < Class::MIN) {
-      classes.pop_back();
-      in_without_otherjob(last);
+    if (classes.back().get() < Class::MIN) {
       spread();
+
+      // Once more
+      auto last = classes.back().get();
+      if (last < Class::MIN) {
+        classes.pop_back();
+        in_without_otherjob(last);
+      }
     }
 
     print();
