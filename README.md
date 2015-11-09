@@ -8,7 +8,7 @@ Happy Campus Life
 
 *   [Microsoft DreamSpark for Academic Institutions][ELMS]
 
-    행정실에 메일보내서 계정요청하면 됨
+    행정실에 [메일보내서](mailto:esjee@cse.snu.ac.kr) ELMS 계정요청하면 됨
 
 [mySNU]: http://community.snu.ac.kr/bbs/bbs.message.list.screen?bbs_id=574
 [ELMS]: https://e5.onthehub.com/WebStore/ProductsByMajorVersionList.aspx?ws=812e428b-f413-e211-a76f-f04da23e67f6
