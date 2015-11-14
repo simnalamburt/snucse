@@ -90,6 +90,13 @@ public:
 };
 
 
+using Task = vector<vector<Container>::iterator>;
+bool possible(const vector<Task> &tasks, const vector<Item> &items) {
+  // TODO
+  return true;
+}
+
+
 ostream& operator<<(ostream& os, Item::Type ty) {
   switch (ty) {
     case Item::Type::normal:    return os << "normal";
@@ -106,9 +113,15 @@ ostream& operator<<(ostream& os, Container::Type ty) {
   }
 }
 
-// TODO: Remove debug code
 ostream& operator<<(ostream& os, const Container& container) {
-  return os << container.type() << " = { size: " << container.remain() << '/' << container.size() << ", cost: " << container.cost() << " }";
+  return os << container.type() << " (" << container.remain() << '/' << container.size() << ", cost: " << container.cost() << ')';
+}
+
+ostream& operator<<(ostream& os, const Task &task) {
+  os << "Task [\n";
+  for (const auto &it: task) { os << "  " << (*it) << ",\n"; }
+  os << "]\n";
+  return os;
 }
 
 
@@ -186,7 +199,6 @@ int main(int argc, char* argv[]) {
   // 남아있는 컨테이너들에 normal items 들을 냅색해야함.
   //
   // 0, 1, 2, 0-1, 0-2, 1-2, 0-1-2
-  using Task = vector<vector<Container>::iterator>;
   vector<Task> tasks;
   {
     auto _0 = containers.begin();
@@ -204,16 +216,12 @@ int main(int argc, char* argv[]) {
   }
 
   size_t total_size = 0;
-  for (const auto& item: items) { total_size += item.size; }
+  for (const auto &item: items) { total_size += item.size; }
 
   // TODO: Remove debug codes
-  for (const auto& item: items) { cout << item.name << ": " << item.type << " = " << item.size << endl; }
+  for (const auto &item: items) { cout << item.name << ": " << item.type << " = " << item.size << endl; }
   cout << "\n\n";
-  for (const auto& task: tasks) {
-    cout << "[\n";
-    for (const auto& it: task) { cout << "  " << (*it) << ",\n"; }
-    cout << "]\n";
-  }
+  for (const auto &task: tasks) { cout << task; }
 
   // TODO: 냅색 구현
 
