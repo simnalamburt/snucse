@@ -1,9 +1,7 @@
 BINS = 1.out 2.out
+CXXFLAGS += -std=c++11 -O3
 
 all: $(BINS)
-
-CXXFLAGS += -std=c++11
-
 %.out: 2013-11392-assign2-%-c11.o
 	$(CXX) $< -o $@
 

@@ -61,28 +61,32 @@ public:
     }
   }
 
-  const Type type;
-  const size_t size;
-  const size_t cost;
-
 private:
+  Type _type;
+  size_t _size;
+  size_t _cost;
   vector<Item> items;
 
 public:
   Container(char type, size_t size, size_t cost) :
-    type { type_from_ch(type) }, size { size }, cost { cost } {}
+    _type { type_from_ch(type) }, _size { size }, _cost { cost } {}
 
   void put(const Item &item) {
     items.push_back(item);
   }
 
   size_t remain() const {
-    size_t remain = size;
+    size_t remain = _size;
     for (const auto& item: items) {
       remain -= item.size;
     }
     return remain;
   }
+
+  Type type() const { return _type; }
+  size_t size() const { return _size; }
+  size_t cost() const { return _cost; }
+  bool empty() const { return items.empty(); }
 };
 
 
@@ -102,6 +106,11 @@ ostream& operator<<(ostream& os, Container::Type ty) {
   }
 }
 
+// TODO: Remove debug code
+ostream& operator<<(ostream& os, const Container& container) {
+  return os << container.type() << " = { size: " << container.remain() << '/' << container.size() << ", cost: " << container.cost() << " }";
+}
+
 
 int main(int argc, char* argv[]) {
   using namespace std;
@@ -119,7 +128,7 @@ int main(int argc, char* argv[]) {
   const auto iname = argv[1];
   const auto oname = argv[2];
 
-  // 파일 입력 받아서 자료구조에 저장
+  // 입력 파싱
   vector<Container> containers;
   forward_list<Item> items;
   {
@@ -143,38 +152,70 @@ int main(int argc, char* argv[]) {
     }
   }
 
-  // 세 컨테이너 각각 찾아서 변수에 저장
-  auto find = [&](Container::Type ty) -> Container& {
-    auto it = find_if(containers.begin(), containers.end(), [=](const Container& c) {
-      return c.type == ty;
-    });
-    if (it == containers.end()) { panic("Wrong Input : 특정 타입의 컨테이너가 주어지지 않았음"); }
-    return *it;
-  };
-
-  auto &normal  = find(Container::Type::normal);
-  auto &protect = find(Container::Type::protect);
-  auto &cold    = find(Container::Type::cold);
-
   // 타는물건이랑 얼음은 행선지가 유일하므로 일단 해당 컨테이너에 넣고 봄
-  for (const auto& item: items) {
-    switch (item.type) {
-    case Item::Type::normal: break;
-    case Item::Type::flammable: protect.put(item); break;
-    case Item::Type::ice: cold.put(item); break;
+  {
+    // 특수 컨테이너 찾아서 변수에 저장
+    auto find = [&](Container::Type ty) -> Container& {
+      auto it = find_if(containers.begin(), containers.end(), [=](const Container& c) {
+        return c.type() == ty;
+      });
+      if (it == containers.end()) { panic("Wrong Input : 특정 타입의 컨테이너가 주어지지 않았음"); }
+      return *it;
+    };
+
+    auto &protect = find(Container::Type::protect);
+    auto &cold    = find(Container::Type::cold);
+
+    for (const auto& item: items) {
+      switch (item.type) {
+      case Item::Type::normal:    break;
+      case Item::Type::flammable: protect.put(item); break;
+      case Item::Type::ice:       cold.put(item); break;
+      }
     }
+    items.remove_if([](const Item &item) {
+      return item.type != Item::Type::normal;
+    });
   }
-  items.remove_if([](const Item &item) {
-    return item.type != Item::Type::normal;
+
+  // 컨테이너들 가격순으로 정렬
+  sort(containers.begin(), containers.end(), [](const Container& left, const Container& right) {
+    return left.cost() < right.cost();
   });
 
-  // TODO: 남아있는 컨테이너로 냅색을 해야됨
-  for (const auto& container: containers) {
-    cout << container.type << " = { size: " << container.remain() << '/' << container.size << ", cost: " << container.cost << " }\n";
+  // 남아있는 컨테이너들에 normal items 들을 냅색해야함.
+  //
+  // 0, 1, 2, 0-1, 0-2, 1-2, 0-1-2
+  using Task = vector<vector<Container>::iterator>;
+  vector<Task> tasks;
+  {
+    auto _0 = containers.begin();
+    auto _1 = containers.begin() + 1;
+    auto _2 = containers.begin() + 2;
+
+    // 가격순으로 tasks에 넣어줌
+    if (_1->empty() && _2->empty()) { tasks.push_back(Task { _0 }); }
+    if (_0->empty() && _2->empty()) { tasks.push_back(Task { _1 }); }
+    if (_0->empty() && _1->empty()) { tasks.push_back(Task { _2 }); }
+    if (_2->empty()) { tasks.push_back(Task { _0, _1 }); }
+    if (_1->empty()) { tasks.push_back(Task { _0, _2 }); }
+    if (_0->empty()) { tasks.push_back(Task { _1, _2 }); }
+    tasks.push_back(Task { _0, _1, _2 });
   }
-  for (const auto& item: items) {
-    cout << item.name << ": " << item.type << " = " << item.size << endl;
+
+  size_t total_size = 0;
+  for (const auto& item: items) { total_size += item.size; }
+
+  // TODO: Remove debug codes
+  for (const auto& item: items) { cout << item.name << ": " << item.type << " = " << item.size << endl; }
+  cout << "\n\n";
+  for (const auto& task: tasks) {
+    cout << "[\n";
+    for (const auto& it: task) { cout << "  " << (*it) << ",\n"; }
+    cout << "]\n";
   }
+
+  // TODO: 냅색 구현
 
   return 0;
 }
