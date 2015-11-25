@@ -102,6 +102,8 @@ First-order logic이라는 영어단어를 검색하면 거의 솔루션에 가�
 
 [![ccbysa-img][]][ccbysa]
 
+[강의게시판에서 보기](https://ropas.snu.ac.kr/phpbb/viewtopic.php?t=5180)
+
 [hw]: http://ropas.snu.ac.kr/~kwang/4190.310/15/#%EC%88%99%EC%A0%9C%20Homeworks
 [hw-img]: http://i.imgur.com/5yRBq7n.png
 [blackout]: http://community.snu.ac.kr/bbs/bbs.message.view.screen?bbs_id=1&message_id=157848
