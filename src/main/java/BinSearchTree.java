@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+
 public class BinSearchTree {
     private class Node {
         private Node left, right;
@@ -29,6 +31,16 @@ public class BinSearchTree {
             if (left != null) { ret += ' ' + left.toString(); }
             if (right != null) { ret += ' ' + right.toString(); }
             return ret;
+        }
+
+        boolean search(int query, ArrayList<Integer> steps) {
+            steps.add(data);
+
+            if (query == data) { return true; }
+
+            Node selected = query < data ? left : right;
+            if (selected == null) { return false; }
+            return selected.search(query, steps);
         }
 
         void insert(int child) {
@@ -118,10 +130,19 @@ public class BinSearchTree {
         root.right.delete(query);
     }
 
-    public String search(int data) {
-        // TODO: if found node, return the step
-        // TODO: if not found, return NONE
-        return "NONE";
+    public String search(int query) {
+        if (root == null) { return "NONE"; }
+
+        ArrayList<Integer> steps = new ArrayList<Integer>();
+        if (!root.search(query, steps)) { return "NONE"; }
+
+        StringBuffer buf = new StringBuffer();
+        for (int step: steps) {
+            buf.append(step);
+            buf.append(' ');
+        }
+
+        return buf.toString();
     }
 
     @Override
