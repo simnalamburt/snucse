@@ -12,7 +12,10 @@ public class MyVector extends Tensor {
         Arrays.sort(v1);
         Arrays.sort(v2);
 
-        return v1.equals(v2);
+        for (int i = 0; i < v1.length; ++i) {
+            if (v1[i] != v2[i]) { return false; }
+        }
+        return true;
     }
 
     public Tensor add(Tensor right) {
