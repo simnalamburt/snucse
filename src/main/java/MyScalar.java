@@ -19,14 +19,12 @@ public class MyScalar extends Tensor {
         } else if (right instanceof MyMatrix) {
             MyMatrix r = (MyMatrix)right;
 
-            int[][] mat = r.data.clone();
-            for (int y = 0; y < mat.length; ++y) {
-                for (int x = 0; x < mat[y].length; ++x) {
-                    mat[y][x] += data;
-                }
+            MyVector[] ret = new MyVector[r.rows.length];
+            for (int y = 0; y < ret.length; ++y) {
+                ret[y] = (MyVector)this.add(r.rows[y]);
             }
 
-            return new MyMatrix(mat);
+            return new MyMatrix(ret);
         } else {
             return right.add(this);
         }
@@ -49,15 +47,12 @@ public class MyScalar extends Tensor {
         } else if (right instanceof MyMatrix) {
             MyMatrix r = (MyMatrix)right;
 
-            int[][] mat = r.data.clone();
-            for (int y = 0; y < mat.length; ++y) {
-                int[] arr = mat[y];
-                for (int x = 0; x < arr.length; ++x) {
-                    arr[x] *= data;
-                }
+            MyVector[] ret = new MyVector[r.rows.length];
+            for (int y = 0; y < ret.length; ++y) {
+                ret[y] = (MyVector)this.multiply(r.rows[y]);
             }
 
-            return new MyMatrix(mat);
+            return new MyMatrix(ret);
         } else {
             return null;
         }
