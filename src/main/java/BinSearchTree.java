@@ -17,18 +17,21 @@ public class BinSearchTree {
     }
 
     public void insert(int data) {
-        //insert node
+        // TODO: insert node
     }
 
     public void delete(int data) {
-        //delete target node
+        // TODO: delete target node
     }
     public String search(int data) {
-        //if found node, return the step
-        //if not found, return NONE
+        // TODO: if found node, return the step
+        // TODO: if not found, return NONE
+        return "NONE";
     }
 
+    @Override
     public String toString(){
-        //preorder print
+        // TODO: preorder print
+        return "";
     }
 }
