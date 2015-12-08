@@ -2,6 +2,7 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 
 public class FinalDriver {
     public static void main(String[] args) {
@@ -9,13 +10,70 @@ public class FinalDriver {
         tensor(args[2],args[3]);
     }
 
-    public static void tensor(String input, String output) {
-        /**
-         * TODO:
-         *
-         * String input = input file name
-         * String output = output file name
-         */
+    public static void tensor(String fin, String fout) {
+        String input = readfile(fin);
+
+        String[] lines = input.split("\n");
+
+        int count = Integer.parseInt(lines[0]);
+
+        Tensor[] nums = new Tensor[count + 1];
+        for (int i = 1; i <= count; ++i) {
+            String line = lines[i];
+            String[] tokens = line.split(" ");
+
+            switch(tokens[0]) {
+                case "S":
+                    nums[i] = new MyScalar(Integer.parseInt(tokens[1]));
+                    break;
+                case "V":
+                    int size = Integer.parseInt(tokens[1]);
+                    int[] list = new int[size];
+                    for (int x = 0; x < size; ++x) {
+                        list[x] = Integer.parseInt(tokens[2 + x]);
+                    }
+                    nums[i] = new MyVector(list);
+                    break;
+                case "M":
+                    int row = Integer.parseInt(tokens[1]);
+                    int col = Integer.parseInt(tokens[2]);
+                    int[][] mat = new int[row][col];
+                    for (int y = 0; y < row; ++y) {
+                        for (int x = 0; x < col; ++x) {
+                            mat[y][x] = Integer.parseInt(tokens[3 + y*col + x]);
+                        }
+                    }
+                    nums[i] = new MyMatrix(mat);
+                    break;
+            }
+        }
+
+        for (int i = 1; i <= count; ++i) {
+            System.out.println(nums[i]);
+        }
+
+        for (int i = count + 1; i < lines.length; ++i) {
+            String line = lines[i];
+            String[] tokens = line.split(" ");
+
+            Tensor left = nums[Integer.parseInt(tokens[0])];
+            String op = tokens[1];
+            Tensor right = nums[Integer.parseInt(tokens[2])];
+
+            Tensor ret;
+            switch (op) {
+                case "+":
+                    System.out.println(left.add(right));
+                    break;
+                case "*":
+                    System.out.println(left.multiply(right));
+                    break;
+                case "p=":
+                    MyVector v1 = (MyVector)left;
+                    MyVector v2 = (MyVector)right;
+                    System.out.println(v1.permuteCompare(v2) ? "True" : "False");
+            }
+        }
     }
 
     public static void tree(String input, String output) {
