@@ -50,8 +50,11 @@ public class FinalDriver {
             }
         }
 
+        StringBuffer result = new StringBuffer();
+
         for (int i = 1; i <= count; ++i) {
-            System.out.println(nums[i]);
+            result.append(nums[i]);
+            result.append('\n');
         }
 
         for (int i = count + 1; i < lines.length; ++i) {
@@ -65,17 +68,20 @@ public class FinalDriver {
             Tensor ret;
             switch (op) {
                 case "+":
-                    System.out.println(left.add(right));
+                    result.append(left.add(right));
                     break;
                 case "*":
-                    System.out.println(left.multiply(right));
+                    result.append(left.multiply(right));
                     break;
                 case "p=":
                     MyVector v1 = (MyVector)left;
                     MyVector v2 = (MyVector)right;
-                    System.out.println(v1.permuteCompare(v2) ? "True" : "False");
+                    result.append(v1.permuteCompare(v2) ? "True" : "False");
             }
+            result.append('\n');
         }
+
+        writefile(fout, result.toString());
     }
 
     public static void tree(String input, String output) {
