@@ -23,6 +23,14 @@ public class BinSearchTree {
             return left.smallestLeaf();
         }
 
+        @Override
+        public String toString() {
+            String ret = Integer.toString(data);
+            if (left != null) { ret += ' ' + left.toString(); }
+            if (right != null) { ret += ' ' + right.toString(); }
+            return ret;
+        }
+
         void insert(int child) {
             // 낮으면 왼쪽, 같거나 크면 오른쪽
             if (child < data) {
@@ -118,7 +126,8 @@ public class BinSearchTree {
 
     @Override
     public String toString(){
-        // TODO: preorder print
-        return "";
+        if (root == null) { return ""; }
+
+        return root.toString();
     }
 }
