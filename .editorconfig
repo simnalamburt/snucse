@@ -1,0 +1,8 @@
+root = true
+
+[*]
+indent_style = space
+indent_style = 2
+
+[*.java]
+indent_size = 4
