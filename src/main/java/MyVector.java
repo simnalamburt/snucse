@@ -1,3 +1,5 @@
+// 2013-11392 김지현
+
 import java.util.Arrays;
 
 public class MyVector extends Tensor {

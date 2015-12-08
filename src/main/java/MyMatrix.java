@@ -1,3 +1,5 @@
+// 2013-11392 김지현
+
 public class MyMatrix extends Tensor {
     public final MyVector[] rows;
 
