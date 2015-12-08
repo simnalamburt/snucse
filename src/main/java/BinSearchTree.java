@@ -83,7 +83,12 @@ public class BinSearchTree {
             // Case 3: selected.children = [left, right]
             Node smallest = selected.right.smallestLeaf();
             selected.data = smallest.data;
-            selected.right.delete(query);
+            if (selected.right == smallest) {
+                if (selected.right.isLeaf()) { selected.right = null; }
+                else { selected.right = selected.right.onlySon(); }
+            } else {
+                selected.right.delete(smallest.data);
+            }
         }
     }
 
@@ -127,7 +132,12 @@ public class BinSearchTree {
         // Case 3: root.children = [left, right]
         Node smallest = root.right.smallestLeaf();
         root.data = smallest.data;
-        root.right.delete(query);
+        if (root.right == smallest) {
+            if (root.right.isLeaf()) { root.right = null; }
+            else { root.right = root.right.onlySon(); }
+        } else {
+            root.right.delete(smallest.data);
+        }
     }
 
     public String search(int query) {
@@ -142,7 +152,7 @@ public class BinSearchTree {
             buf.append(' ');
         }
 
-        return buf.toString();
+        return buf.toString().trim();
     }
 
     @Override
