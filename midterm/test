@@ -1,0 +1,35 @@
+#!/usr/bin/env ruby
+
+def assert_eq left, right
+  return if left == right
+
+  puts 'Test failed'
+  exit(1)
+end
+
+for i in 1..3
+  puts "Compiling ... (#{i}/3)"
+  `g++ -O3 -Wall -Wextra -Werror -std=c++11 2013-11392-midterm#{i}-c11.cpp -o tmp/bin.#{i}`
+end
+puts "Done"
+puts
+
+puts 'Testing ...'
+assert_eq `tmp/bin.1 139 20`, File.read('fixtures/output.1')
+assert_eq `tmp/bin.2 fixtures/input.2`, File.read('fixtures/output.2')
+for i in 1..2
+  `tmp/bin.3 fixtures/input.3.#{i} tmp/output.3.#{i}`
+  assert_eq File.read("tmp/output.3.#{i}"), File.read("tmp/output.3.#{i}")
+end
+puts 'Done'
+puts
+
+puts 'Archiving ...'
+cmd = <<CMD
+tar -cvf tmp/2013-11392-midterm.tar \
+  2013-11392-midterm1-c11.cpp \
+  2013-11392-midterm2-c11.cpp \
+  2013-11392-midterm3-c11.cpp
+CMD
+system cmd
+puts 'Done -> "./tmp/2013-11392-midterm.tar"'
