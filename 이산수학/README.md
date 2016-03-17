@@ -87,8 +87,6 @@ expressiveness. 언어에 따라 표현력이 다릅니다. 그래서 우리는 
 `⇒`, `if/then` | 4
 `⇔`, `==`      | 5
 
--
-
 ### Applications of Propositional Logic
 명제 논리를 배우면 뭐가 좋을까?
 
@@ -109,3 +107,7 @@ Logically Equivalent: 두 boolean expression의 truth table이 같은 상황
 - Conjunctive Normal Form
 
 Boolean expression을 정규화시키는, 두가지 방법.
+
+<p align=right>셋째주 목요일 (3월 17일) ...</p>
+
+> 교수님 안옴, 조교가 수업중
