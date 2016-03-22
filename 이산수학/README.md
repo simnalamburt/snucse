@@ -74,8 +74,8 @@ expressiveness. 언어에 따라 표현력이 다릅니다. 그래서 우리는 
 ###### Reference: https://en.wikipedia.org/wiki/List_of_logic_symbols
 
 - Converse (역): p->q 를 q->p 로 바꾸는것
-- Contrapositive (이): p->q를 !p->!q 로 바꾸는것
-- Inverse (대우): p->q 를 !q -> !p 로 바꾸는것
+- Inverse (이): p->q를 !p->!q 로 바꾸는것
+- Contrapositive (대우): p->q 를 !q -> !p 로 바꾸는것
 
 논리연산자의 우선순위
 
