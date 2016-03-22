@@ -111,3 +111,11 @@ Boolean expression을 정규화시키는, 두가지 방법.
 <p align=right>셋째주 목요일 (3월 17일) ...</p>
 
 > 교수님 안옴, 조교가 수업중
+
+<p align=right>넷째주 화요일 (3월 22일) ...</p>
+
+Basic Structures: Sets, Functions, Sequences, Sums, and Matrices
+--------
+
+기본적인 시간 자료구조들, 그 자료구조들에 적용시키는 기본적인 연산자들에 대해
+배웠음.
