@@ -17,7 +17,10 @@ public class BigInteger {
 
     // 숫자로 구성된 문자열을 받아 BigInteger 객체를 생성한다
     public BigInteger(String s) {
-        positive = true; // TODO
+        final char first = s.charAt(0);
+        if (first == '+' || first == '-') { s = s.substring(1); }
+
+        positive = first != '-';
         data = new byte[256];
 
         final int len = s.length();
@@ -72,7 +75,10 @@ public class BigInteger {
 
     @Override
     public String toString() {
+        // TODO: "-0" 처리
+
         StringBuffer buf = new StringBuffer();
+        if (!positive) { buf.append('-'); }
 
         int idx = data.length - 1;
         for (; idx >= 0 && data[idx] == 0; --idx) { } // Skip zeros
@@ -81,7 +87,8 @@ public class BigInteger {
         return buf.toString();
     }
 
-    private static final Pattern regex = Pattern.compile("\\s*(\\d+)\\s*\\+\\s*(\\d+)\\s*");
+    // TODO: 여러 연산자 처리
+    private static final Pattern regex = Pattern.compile("\\s*([+-]?\\d+)\\s*\\+\\s*([+-]?\\d+)\\s*");
     static BigInteger evaluate(String input) throws IllegalArgumentException {
         final Matcher m = regex.matcher(input);
         if (!m.matches()) { throw new IllegalArgumentException(); }
@@ -90,7 +97,6 @@ public class BigInteger {
                          rhs = new BigInteger(m.group(2));
 
         System.out.printf((char)27 + "[38;5;239m [ \"%s\", \"%s\" ]\n" + (char)27 + "[0m", lhs, rhs);
-
         return lhs.add(rhs);
     }
 
