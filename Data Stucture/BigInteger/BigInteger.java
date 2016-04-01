@@ -60,49 +60,100 @@ public class BigInteger {
     public BigInteger neg() { return new BigInteger(!positive, data); }
 
     // Binary `+` operator
-    public BigInteger add(BigInteger rhs) {
-        // TODO: 부호 처리
+    public BigInteger add(BigInteger right) {
+        // Handle sign
+        if (this.positive) {
+            if (right.positive) { }
+            else { return this.subtract(right.neg()); }
+        } else {
+            if (right.positive) { return right.subtract(this.neg()); }
+            else { return (this.neg().add(right.neg())).neg(); }
+        }
 
-        byte[] data = this.data.clone();
+        // Constraint: this.positive == right.positive == true
 
-        // Constraint: this.positive == rhs.positive == true
         byte carry = 0;
+        byte[] data = new byte[this.data.length];
+
         for (int idx = 0; idx < data.length; ++idx) {
-            byte digit = (byte)(data[idx] + rhs.data[idx] + carry);
+            byte digit = (byte)(this.data[idx] + right.data[idx] + carry);
 
             // Handle carry
-            if (digit >= 10) {
+            if (10 <= digit) {
                 carry = 1;
                 digit -= 10;
+            } else {
+                carry = 0;
             }
 
             data[idx] = digit;
+
+            // Debug purpose
+            if (digit < 0) { System.err.println((char)27 + "[31mFATAL: Digit was negative" + (char)27 + "[0m"); }
         }
 
         return new BigInteger(true, data);
     }
 
-    public BigInteger subtract(BigInteger big) {
-        // TODO
-        return this;
+    // Binary `-` operator
+    public BigInteger subtract(BigInteger right) {
+        // Handle sign
+        if (this.positive) {
+            if (right.positive) { }
+            else { return this.add(right.neg()); }
+        } else {
+            if (right.positive) { return (this.neg().add(right)).neg(); }
+            else { return right.neg().subtract(this.neg()); }
+        }
+
+        // Constraint: this.positive == right.positive == true
+
+        Ordering cmp = this.cmp(right);
+        if (cmp == Ordering.Equal) { return new BigInteger("0"); }
+        if (cmp == Ordering.Less) { return (right.subtract(this)).neg(); }
+
+        // Constraint: this > right
+
+        byte carry = 0;
+        byte[] data = new byte[this.data.length];
+
+        for (int idx = 0; idx < data.length; ++idx) {
+            int digit = this.data[idx] - right.data[idx] - carry;
+
+            // Handle carry
+            if (digit < 0) {
+                carry = 1;
+                digit += 10;
+            } else {
+                carry = 0;
+            }
+
+            data[idx] = (byte)digit;
+
+            // Debug purpose
+            if (10 <= digit) { System.err.println((char)27 + "[31mFATAL: Digit was greater than 10" + (char)27 + "[0m"); }
+        }
+
+        return new BigInteger(true, data);
     }
 
     public BigInteger multiply(BigInteger big) {
+
+
+
         // TODO
         return this;
     }
 
     @Override
     public String toString() {
-        // TODO: "-0" 처리
+        int idx = data.length - 1;
+        for (; idx >= 0 && data[idx] == 0; --idx) { } // Skip zeros
+        if (idx == -1) { return "0"; }
 
         StringBuffer buf = new StringBuffer();
         if (!positive) { buf.append('-'); }
-
-        int idx = data.length - 1;
-        for (; idx >= 0 && data[idx] == 0; --idx) { } // Skip zeros
         for (; idx >= 0; --idx) { buf.append(data[idx]); }
-
         return buf.toString();
     }
 
