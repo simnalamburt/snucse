@@ -137,12 +137,21 @@ public class BigInteger {
         return new BigInteger(true, data);
     }
 
-    public BigInteger mul(BigInteger big) {
+    public BigInteger mul(BigInteger right) {
+        byte[] data = new byte[this.data.length];
 
+        int carry = 0;
+        for (int idx = 0; idx < data.length; ++idx) {
+            int sum = carry;
+            for (int i = 0; i <= idx; ++i) {
+                sum += this.data[i]*right.data[idx - i];
+            }
 
+            carry = sum / 10;
+            data[idx] = (byte)(sum % 10);
+        }
 
-        // TODO
-        return this;
+        return new BigInteger(this.positive == right.positive, data);
     }
 
     @Override
@@ -157,7 +166,6 @@ public class BigInteger {
         return buf.toString();
     }
 
-    // TODO: 여러 연산자 처리
     private static final Pattern regex = Pattern.compile("\\s*([+-]?\\d+)\\s*([+\\-*])\\s*([+-]?\\d+)\\s*");
     static BigInteger evaluate(String input) throws IllegalArgumentException {
         final Matcher m = regex.matcher(input);
@@ -165,9 +173,6 @@ public class BigInteger {
 
         final BigInteger lhs = new BigInteger(m.group(1)),
                          rhs = new BigInteger(m.group(3));
-
-        // TODO: Remove
-        System.err.printf((char)27 + "[38;5;239m [ \"%s\", \"%s\" ]\n" + (char)27 + "[0m", lhs, rhs);
 
         final String operator = m.group(2);
         if (operator.length() != 1) { throw new IllegalArgumentException(); }
