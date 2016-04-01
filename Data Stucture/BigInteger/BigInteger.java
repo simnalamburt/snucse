@@ -166,17 +166,27 @@ public class BigInteger {
         return buf.toString();
     }
 
-    private static final Pattern regex = Pattern.compile("\\s*([+-]?\\d+)\\s*([+\\-*])\\s*([+-]?\\d+)\\s*");
+    private static final Pattern regex = Pattern.compile(
+            "\\s*([+-]?)\\s*(\\d+)\\s*([+\\-*])\\s*([+-]?)\\s*(\\d+)\\s*");
+    //           '-----'    '----'    '-------'    '-----'    '----'
+    //           1 sign     2 lhs    3 operator    4 sign     5 rhs
+
     static BigInteger evaluate(String input) throws IllegalArgumentException {
         final Matcher m = regex.matcher(input);
         if (!m.matches()) { throw new IllegalArgumentException(); }
 
-        final BigInteger lhs = new BigInteger(m.group(1)),
-                         rhs = new BigInteger(m.group(3));
+        final String lhs_sign = m.group(1),
+                     operator = m.group(3),
+                     rhs_sign = m.group(4);
 
-        final String operator = m.group(2);
         if (operator.length() != 1) { throw new IllegalArgumentException(); }
-        final char op = operator.charAt(0);
+        final char op       = operator.charAt(0);
+
+        if (lhs_sign.length() > 1) { throw new IllegalArgumentException(); }
+        if (rhs_sign.length() > 1) { throw new IllegalArgumentException(); }
+
+        final BigInteger lhs = new BigInteger(lhs_sign + m.group(2)),
+                         rhs = new BigInteger(rhs_sign + m.group(5));
 
         switch (op) {
         case '+': return lhs.add(rhs);
