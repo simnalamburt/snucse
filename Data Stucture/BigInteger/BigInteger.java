@@ -37,6 +37,25 @@ public class BigInteger {
         this.data = data.clone();
     }
 
+    // 비교
+    //
+    // a.cmp(b) == Ordering.Greater    means    a >  b
+    // a.cmp(b) == Ordering.Equal      means    a == b
+    // a.cmp(b) == Ordering.Less       means    a <  b
+    public static enum Ordering { Less, Greater, Equal };
+    public Ordering cmp(BigInteger right) {
+        int idx = data.length - 1;
+        for (; idx >= 0; --idx) {
+            byte lhs = this.data[idx],
+                 rhs = right.data[idx];
+            if (lhs == rhs) { continue; }
+
+            if (lhs < rhs) { return Ordering.Less; }
+            if (lhs > rhs) { return Ordering.Greater; }
+        }
+        return Ordering.Equal;
+    }
+
     // Unary `-` operator
     public BigInteger neg() { return new BigInteger(!positive, data); }
 
