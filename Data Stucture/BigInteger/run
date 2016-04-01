@@ -11,9 +11,10 @@ end
 puts 'Done'
 
 print 'Testing ... '
-actual = `gzcat big.1.in.gz | java BigInteger`
-expected = Zlib::GzipReader.open('big.1.out.gz').read
+actual = `gzcat input.gz | java BigInteger`
+expected = Zlib::GzipReader.open('output.gz').read
 unless actual == expected
+  Diffy::Diff.default_format = :color
   puts 'Failed'
   puts ''
   puts Diffy::Diff.new(expected, actual)
