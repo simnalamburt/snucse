@@ -1,3 +1,4 @@
+import java.io.IOException;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.regex.Matcher;
@@ -80,66 +81,42 @@ public class BigInteger {
         return buf.toString();
     }
 
-    static BigInteger evaluate(String input) throws IllegalArgumentException
-    {
-        // TODO: Remove below
-        return new BigInteger(input);
+    private static final Pattern regex = Pattern.compile("\\s*(\\d+)\\s*\\+\\s*(\\d+)\\s*");
+    static BigInteger evaluate(String input) throws IllegalArgumentException {
+        final Matcher m = regex.matcher(input);
+        if (!m.matches()) { throw new IllegalArgumentException(); }
 
-        // TODO
-        // implement here
-        // parse input
-        // using regex is allowed
-        // Pattern EXPRESSION_PATTERN = Pattern.compile("");
-        //
-        // 숫자 앞뒤 연산자 앞뒤 공백
-        // 탭, 스페이스, 등
+        final BigInteger lhs = new BigInteger(m.group(1)),
+                         rhs = new BigInteger(m.group(2));
 
-        // One possible implementation
-        // BigInteger num1 = new BigInteger(arg1);
-        // BigInteger num2 = new BigInteger(arg2);
-        // BigInteger result = num1.add(num2);
-        // return result;
+        System.out.printf((char)27 + "[38;5;239m [ \"%s\", \"%s\" ]\n" + (char)27 + "[0m", lhs, rhs);
+
+        return lhs.add(rhs);
     }
 
-    public static void main(String[] args) throws Exception
-    {
-        try (InputStreamReader isr = new InputStreamReader(System.in))
-        {
-            try (BufferedReader reader = new BufferedReader(isr))
-            {
-                boolean done = false;
-                while (!done)
-                {
-                    String input = reader.readLine();
 
-                    try
-                    {
-                        done = processInput(input);
-                    }
-                    catch (IllegalArgumentException e)
-                    {
-                        System.err.println("입력이 잘못되었습니다.");
-                    }
+    //
+    // Entry point
+    //
+    public static void main(String[] args) throws IOException {
+        try (InputStreamReader isr = new InputStreamReader(System.in)) {
+            try (BufferedReader reader = new BufferedReader(isr)) {
+                try { while (processInput(reader.readLine())) { } }
+                catch (IllegalArgumentException e) {
+                    System.err.println("입력이 잘못되었습니다.");
+                    System.exit(1);
                 }
             }
         }
     }
 
-    static boolean processInput(String input) throws IllegalArgumentException
-    {
-        boolean quit = isQuitCmd(input);
+    static boolean processInput(String input) throws IllegalArgumentException {
+        if (isQuitCmd(input)) { return false; }
 
-        if (quit)
-        {
-            return true;
-        }
-        else
-        {
-            BigInteger result = evaluate(input);
-            System.out.println(result.toString());
+        BigInteger result = evaluate(input);
+        System.out.println(result.toString());
 
-            return false;
-        }
+        return true;
     }
 
     static boolean isQuitCmd(String input) {
