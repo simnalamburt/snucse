@@ -1,4 +1,7 @@
 #!/usr/bin/env ruby
+require 'zlib'
+require 'diffy'
+
 print 'Compiling ... '
 msg = `javac BigInteger.java 2>&1`
 unless $?.success?
@@ -6,3 +9,14 @@ unless $?.success?
   exit 1
 end
 puts 'Done'
+
+print 'Testing ... '
+actual = `gzcat big.1.in.gz | java BigInteger`
+expected = Zlib::GzipReader.open('big.1.out.gz').read
+unless actual == expected
+  puts 'Failed'
+  puts ''
+  puts Diffy::Diff.new(expected, actual)
+  exit 1
+end
+puts 'Succeeded'
