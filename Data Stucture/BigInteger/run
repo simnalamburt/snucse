@@ -1,0 +1,8 @@
+#!/usr/bin/env ruby
+print 'Compiling ... '
+msg = `javac BigInteger.java 2>&1`
+unless $?.success?
+  puts "Failed\n\n\e[33m#{msg}\n\e[31mCompile Error\e[0m"
+  exit 1
+end
+puts 'Done'

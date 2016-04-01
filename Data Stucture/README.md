@@ -5,12 +5,6 @@
 [게시판](http://soar.snu.ac.kr/course/board/ds2016) |
 [숙제](http://soar.snu.ac.kr:8080/)
 
-```bash
-javac *.java
-java BigInteger
-rm *.class
-```
-
 **Note** 이곳에 있는 과제코드들은 2016년 7월 1일까지는 제 사유재산입니다. 2016년
 7월 1일 전에 이 코드들을 무단으로 도용할 경우, [저작권법 제11장 제136조][law]에
 의거하여 5년 이하의 징역 또는 5천만원 이하의 벌금에 처해질 수 있습니다.
