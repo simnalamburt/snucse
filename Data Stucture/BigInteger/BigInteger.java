@@ -64,9 +64,9 @@ public class BigInteger {
         // Handle sign
         if (this.positive) {
             if (right.positive) { }
-            else { return this.subtract(right.neg()); }
+            else { return this.sub(right.neg()); }
         } else {
-            if (right.positive) { return right.subtract(this.neg()); }
+            if (right.positive) { return right.sub(this.neg()); }
             else { return (this.neg().add(right.neg())).neg(); }
         }
 
@@ -96,21 +96,21 @@ public class BigInteger {
     }
 
     // Binary `-` operator
-    public BigInteger subtract(BigInteger right) {
+    public BigInteger sub(BigInteger right) {
         // Handle sign
         if (this.positive) {
             if (right.positive) { }
             else { return this.add(right.neg()); }
         } else {
             if (right.positive) { return (this.neg().add(right)).neg(); }
-            else { return right.neg().subtract(this.neg()); }
+            else { return right.neg().sub(this.neg()); }
         }
 
         // Constraint: this.positive == right.positive == true
 
         Ordering cmp = this.cmp(right);
         if (cmp == Ordering.Equal) { return new BigInteger("0"); }
-        if (cmp == Ordering.Less) { return (right.subtract(this)).neg(); }
+        if (cmp == Ordering.Less) { return (right.sub(this)).neg(); }
 
         // Constraint: this > right
 
@@ -137,7 +137,7 @@ public class BigInteger {
         return new BigInteger(true, data);
     }
 
-    public BigInteger multiply(BigInteger big) {
+    public BigInteger mul(BigInteger big) {
 
 
 
@@ -158,16 +158,27 @@ public class BigInteger {
     }
 
     // TODO: 여러 연산자 처리
-    private static final Pattern regex = Pattern.compile("\\s*([+-]?\\d+)\\s*\\+\\s*([+-]?\\d+)\\s*");
+    private static final Pattern regex = Pattern.compile("\\s*([+-]?\\d+)\\s*([+\\-*])\\s*([+-]?\\d+)\\s*");
     static BigInteger evaluate(String input) throws IllegalArgumentException {
         final Matcher m = regex.matcher(input);
         if (!m.matches()) { throw new IllegalArgumentException(); }
 
         final BigInteger lhs = new BigInteger(m.group(1)),
-                         rhs = new BigInteger(m.group(2));
+                         rhs = new BigInteger(m.group(3));
 
-        System.out.printf((char)27 + "[38;5;239m [ \"%s\", \"%s\" ]\n" + (char)27 + "[0m", lhs, rhs);
-        return lhs.add(rhs);
+        // TODO: Remove
+        System.err.printf((char)27 + "[38;5;239m [ \"%s\", \"%s\" ]\n" + (char)27 + "[0m", lhs, rhs);
+
+        final String operator = m.group(2);
+        if (operator.length() != 1) { throw new IllegalArgumentException(); }
+        final char op = operator.charAt(0);
+
+        switch (op) {
+        case '+': return lhs.add(rhs);
+        case '-': return lhs.sub(rhs);
+        case '*': return lhs.mul(rhs);
+        default: throw new IllegalArgumentException();
+        }
     }
 
 
