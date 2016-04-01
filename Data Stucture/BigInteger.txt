@@ -7,7 +7,7 @@ import java.util.regex.Pattern;
 public class BigInteger
 {
     public static final String QUIT_COMMAND = "quit";
-    public static final String MSG_INVALID_INPUT = "ÀÔ·ÂÀÌ Àß¸øµÇ¾ú½À´Ï´Ù.";
+    public static final String MSG_INVALID_INPUT = "ì…ë ¥ì´ ì˜ëª»ë˜ì—ˆìŠµë‹ˆë‹¤.";
  
     // implement this
     public static final Pattern EXPRESSION_PATTERN = Pattern.compile("");
