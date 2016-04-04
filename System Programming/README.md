@@ -9,7 +9,7 @@
 
 #### 과제
 - [메모리 마운틴 그리기](mountain)
-- Buffer Lab
+- [Buffer Lab](buflab)
 - Architecture Lab
 - Cache Lab
 - Performance Lab
