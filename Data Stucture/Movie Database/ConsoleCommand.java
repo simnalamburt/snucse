@@ -24,28 +24,28 @@ public interface ConsoleCommand {
  */
 abstract class AbstractConsoleCommand implements ConsoleCommand {
 	/**
-	 * 공통 명령 해석 규칙을 담고 있다. {@code input} 을 분해하여 String[] 으로 만들고, 
+	 * 공통 명령 해석 규칙을 담고 있다. {@code input} 을 분해하여 String[] 으로 만들고,
 	 * {@link AbstractConsoleCommand.parseArguments} 로 인자를 전달한다.
-	 * 
-	 * 만약 어떤 명령이 별도의 해석 규칙이 필요한 경우 이 메소드를 직접 오버라이드하면 된다. 
+	 *
+	 * 만약 어떤 명령이 별도의 해석 규칙이 필요한 경우 이 메소드를 직접 오버라이드하면 된다.
 	 */
 	@Override
 	public void parse(String input) throws CommandParseException {
 		String[] args = input.split(" *% *%? *");
 		if (input.isEmpty())
 			args = new String[0];
-		// TIP: eclipse 에서 parseArguments 위에 커서를 올리고 Ctrl+T 를 누르면 해당 인터페이스를 
+		// TIP: eclipse 에서 parseArguments 위에 커서를 올리고 Ctrl+T 를 누르면 해당 인터페이스를
 		// 실제로 구현하고 있는 클래스들의 목록을 확인할 수 있고, 바로 이동할 수 있다.
 		parseArguments(args);
 	}
 
 	/**
-	 * {@link AbstractConsoleCommand.parse} 메소드에서 분해된 문자열 배열(String[]) 을 이용해 
-	 * 인자를 해석하는 추상 메소드. 
-	 * 
+	 * {@link AbstractConsoleCommand.parse} 메소드에서 분해된 문자열 배열(String[]) 을 이용해
+	 * 인자를 해석하는 추상 메소드.
+	 *
 	 * 자식 클래스들은 parse 메소드가 아니라 이 메소드를 오버라이드하여
 	 * 각 명령에 맞는 규칙으로 인자를 해석한다.
-	 *   
+	 *
 	 * @param args 규칙에 맞게 분해된 명령 인자
 	 * @throws CommandParseException args가 명령의 규약에 맞지 않을 경우
 	 */
@@ -57,7 +57,7 @@ abstract class AbstractConsoleCommand implements ConsoleCommand {
  */
 
 /******************************************************************************
- * DELETE %GENRE% %MOVIE% 
+ * DELETE %GENRE% %MOVIE%
  */
 class DeleteCmd extends AbstractConsoleCommand {
 	private String genre;
@@ -74,9 +74,9 @@ class DeleteCmd extends AbstractConsoleCommand {
 	@Override
 	public void apply(MovieDB db) throws Exception {
 		System.err.printf("[trace] DELETE [genre=%s, title=%s]\n", genre, movie);
-		
+
 		// 아래의 구현은 수정하지 않는 것이 바람직하다. MovieDB 의 내부 자료구조를
-		// 조작하는 코드는 MovieDB 안쪽에 존재하는 것이 바람직하다. 
+		// 조작하는 코드는 MovieDB 안쪽에 존재하는 것이 바람직하다.
 		//
 		// 내용이 단 한 줄인 메소드가 굳이 필요한가 하는 생각이 든다면
 		// PrintCmd 나 SearchCmd 의 apply 메소드를 참고하라.
@@ -85,7 +85,7 @@ class DeleteCmd extends AbstractConsoleCommand {
 }
 
 /******************************************************************************
- * INSERT %GENRE% %MOVIE% 
+ * INSERT %GENRE% %MOVIE%
  */
 class InsertCmd extends AbstractConsoleCommand {
 	private String genre;
@@ -108,7 +108,7 @@ class InsertCmd extends AbstractConsoleCommand {
 }
 
 /******************************************************************************
- * PRINT 
+ * PRINT
  */
 class PrintCmd extends AbstractConsoleCommand {
 	@Override
@@ -135,7 +135,7 @@ class PrintCmd extends AbstractConsoleCommand {
 }
 
 /******************************************************************************
- * SEARCH %TERM% 
+ * SEARCH %TERM%
  */
 class SearchCmd extends AbstractConsoleCommand {
 	private String term;
@@ -165,13 +165,13 @@ class SearchCmd extends AbstractConsoleCommand {
 }
 
 /******************************************************************************
- * 아래의 코드는 ConsoleCommand 에서 사용하는 익셉션들의 모음이다. 
- * 필요하면 수정해도 좋으나 수정하지 않아도 된다. 
+ * 아래의 코드는 ConsoleCommand 에서 사용하는 익셉션들의 모음이다.
+ * 필요하면 수정해도 좋으나 수정하지 않아도 된다.
  *****************************************************************************/
 
 /******************************************************************************
- * ConsoleCommand 처리 중에 발생하는 익셉션의 상위 클래스이다. 
- * {@code throws} 구문이나 {@code catch} 구문을 간단히 하는데 사용된다.  
+ * ConsoleCommand 처리 중에 발생하는 익셉션의 상위 클래스이다.
+ * {@code throws} 구문이나 {@code catch} 구문을 간단히 하는데 사용된다.
  */
 @SuppressWarnings("serial")
 class ConsoleCommandException extends Exception {
@@ -185,7 +185,7 @@ class ConsoleCommandException extends Exception {
 }
 
 /******************************************************************************
- * 명령 파싱 과정에서 발견된 오류상황을 서술하기 위한 예외 클래스 
+ * 명령 파싱 과정에서 발견된 오류상황을 서술하기 위한 예외 클래스
  */
 @SuppressWarnings("serial")
 class CommandParseException extends ConsoleCommandException {
@@ -209,7 +209,7 @@ class CommandParseException extends ConsoleCommandException {
 }
 
 /******************************************************************************
- * 존재하지 않는 명령을 사용자가 요구하는 경우를 서술하기 위한 예외 클래스 
+ * 존재하지 않는 명령을 사용자가 요구하는 경우를 서술하기 위한 예외 클래스
  */
 class CommandNotFoundException extends ConsoleCommandException {
 	private String command;

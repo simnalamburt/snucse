@@ -20,7 +20,7 @@ public class AssignmentGuide {
         try {
         	testLinkedList();
         	testMovieList();
-        	
+
             System.out.println("All test passed! You can move on to MovieDatabaseConsole!");
 
         } catch (Throwable t) {
@@ -64,14 +64,14 @@ public class AssignmentGuide {
         assert next.equals(item3) : VALUE_FAILURE_MSG("it.next()", next, item2);
 
         assert it.hasNext() == false : "it.hasNext() should return false at this line.";
-        
+
         it = l.iterator();
     	it.next();
     	it.remove();
     	assert l.size() == 2 : SIZE_FAILURE_MSG(l.size(), 2);
     	try {
     		it.remove();
-    		assert false : "should not reach here"; 
+    		assert false : "should not reach here";
     	} catch (IllegalStateException e) {
     		// expected
     	}

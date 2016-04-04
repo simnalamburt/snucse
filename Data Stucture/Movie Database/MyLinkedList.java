@@ -14,13 +14,13 @@ public class MyLinkedList<T> implements ListInterface<T> {
     /**
      * {@code Iterable<T>}를 구현하여 iterator() 메소드를 제공하는 클래스의 인스턴스는
      * 다음과 같은 자바 for-each 문법의 혜택을 볼 수 있다.
-     * 
+     *
      * <pre>
      *  for (T item: iterable) {
      *  	item.someMethod();
      *  }
      * </pre>
-     * 
+     *
      * @see PrintCmd#apply(MovieDB)
      * @see SearchCmd#apply(MovieDB)
      * @see java.lang.Iterable#iterator()
