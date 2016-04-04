@@ -1,6 +1,0 @@
-[submodule "Multicore/k-means"]
-	path = Multicore/k-means
-	url = git@github.com:simnalamburt/snucse.k-means.git
-[submodule "Multicore/matmul"]
-	path = Multicore/matmul
-	url = git@github.com:simnalamburt/snucse.matmul.git
