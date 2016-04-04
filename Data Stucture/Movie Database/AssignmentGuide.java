@@ -18,8 +18,8 @@ public class AssignmentGuide {
         testAssert();
 
         try {
-        	testLinkedList();
-        	testMovieList();
+            testLinkedList();
+            testMovieList();
 
             System.out.println("All test passed! You can move on to MovieDatabaseConsole!");
 
@@ -29,7 +29,7 @@ public class AssignmentGuide {
         }
     }
 
-	private static void testLinkedList() {
+    private static void testLinkedList() {
         ListInterface<String> l = new MyLinkedList<>();
 
         // You should not modify these lines below to pass the tests.
@@ -66,28 +66,28 @@ public class AssignmentGuide {
         assert it.hasNext() == false : "it.hasNext() should return false at this line.";
 
         it = l.iterator();
-    	it.next();
-    	it.remove();
-    	assert l.size() == 2 : SIZE_FAILURE_MSG(l.size(), 2);
-    	try {
-    		it.remove();
-    		assert false : "should not reach here";
-    	} catch (IllegalStateException e) {
-    		// expected
-    	}
-    	it.next();
-    	it.remove();
-    	assert l.size() == 1 : SIZE_FAILURE_MSG(l.size(), 1);
-    	it.next();
-    	it.remove();
-    	assert l.size() == 0 : SIZE_FAILURE_MSG(l.size(), 0);;
-    	try {
-    		it.next();
-    		assert false : "should not reach here";
-    	} catch (NoSuchElementException e) {
-    		// expected
-    	}
-	}
+        it.next();
+        it.remove();
+        assert l.size() == 2 : SIZE_FAILURE_MSG(l.size(), 2);
+        try {
+            it.remove();
+            assert false : "should not reach here";
+        } catch (IllegalStateException e) {
+            // expected
+        }
+        it.next();
+        it.remove();
+        assert l.size() == 1 : SIZE_FAILURE_MSG(l.size(), 1);
+        it.next();
+        it.remove();
+        assert l.size() == 0 : SIZE_FAILURE_MSG(l.size(), 0);;
+        try {
+            it.next();
+            assert false : "should not reach here";
+        } catch (NoSuchElementException e) {
+            // expected
+        }
+    }
 
     private static void testMovieList() {
         ListInterface<String> l = new MovieList();
