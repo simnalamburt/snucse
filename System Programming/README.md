@@ -10,10 +10,10 @@
 #### 과제
 - [메모리 마운틴 그리기](mountain)
 - [Buffer Lab](buflab)
-- Architecture Lab
-- Cache Lab
-- Performance Lab
-- Shell Lab
-- Malloc Lab
-- Proxy Lab
+- [Architecture Lab](archlab)
+- [Cache Lab](cachelab)
+- [Performance Lab](perflab)
+- [Shell Lab](shlab)
+- [Malloc Lab](malloclab)
+- [Proxy Lab](proxylab)
 - [필터락으로 세마포어 구현하기](filterlock)
