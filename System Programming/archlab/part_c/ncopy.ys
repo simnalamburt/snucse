@@ -1,0 +1,88 @@
+# ncopy.ys - Copy a src block of len ints to dst.
+# Return the number of positive ints (>0) contained in src.
+#
+# 2013-11392 김지현
+#
+# 먼저, ncopy 함수는 스택프레임에 저장해야할정도로 많은 지역변수를 쓰지 않는다.
+# y86은 calling convention은 callee가 스택을 쌓고 정리하며, callee의 함수 스택이
+# 별도로 필요하지 않은경우 "스택을 쌓지 않아도 된다"는 것이 이러한 정책의
+# 장점이다. 지금 이 문제는 이러한 장점을 살릴 수 있는 경우이므로, 스택을 쌓고
+# 정리하는 코드를 지우고, 함수 파라미터(src, len, dst)를 얻어오는 코드를 %ebp가
+# 아니라 %esp 기준이 되도록 수정한다. %esi, %ebx, %edi 레지스터를 저장해줘야
+# 하므로 12바이트가 쓰이고, 함수가 호출될때 스택에 return address가
+# 저장될것이므로, 파라미터들은 %esp에서 16, 20, 24바이트 떨어진곳에 있다.
+#
+# 그리고 FLAGS를 재활용하지않고 쓸데없이 리셋시켜서 계산을 한번 더 하게 하는
+# 코드를 최적화시키고, 거의 필수적인 명령어인 `iaddl`을 구현하였다.
+#
+# 그리고 Loop unrolling을 하였다. 8개로 처음 시도해봤는데, 오히려 성능이 더
+# 나빠져서 2개로 줄였다.
+#
+# HCL의 분기예측 정책을 보았더니, 이렇게 되어있었다
+#
+#     int f_predPC = [
+#         f_icode in { IJXX, ICALL } : f_valC;
+#         1 : f_valP;
+#     ];
+#
+# 이 분기예측 정책에 맞추어 브랜치 프리딕션과 관련되는 코드를 최적화하였고,
+# 스털링을 줄이기 위해 디펜던스가 있는 두 어셈블리 명령어 사이의 거리를 최대한
+# 늘렸다.
+
+
+ncopy:
+# Prologue
+  pushl     %edi # Save callee-save regs
+  pushl     %esi
+  pushl     %ebx
+  mrmovl    24(%esp), %edx # len
+  mrmovl    16(%esp), %ecx # src
+  mrmovl    20(%esp), %ebx # dst
+
+# Body
+  xorl      %eax, %eax # count = 0;
+  iaddl     $-1, %edx
+  jg        Loop
+  je        One
+  popl      %ebx # Branch prediction
+  popl      %esi
+  popl      %edi
+  ret
+
+Loop:
+  mrmovl    (%ecx), %esi
+  mrmovl    4(%ecx), %edi
+  andl      %esi, %esi
+  jle       N0
+  iaddl     $1, %eax
+N0:
+  andl      %edi, %edi
+  jle       N1
+  iaddl     $1, %eax
+N1:
+  rmmovl    %edi, 4(%ebx)
+  rmmovl    %esi, (%ebx)
+  iaddl     $8, %ecx
+  iaddl     $8, %ebx
+  iaddl     $-2, %edx
+  jg        Loop
+  jl        Done
+
+One:
+  iaddl     $4, %ebx          # dst++
+  mrmovl    (%ecx), %esi      # read val from src...
+  iaddl     $4, %ecx          # src++
+  rmmovl    %esi, -4(%ebx)    # ...and store it to dst
+  andl      %esi, %esi        # val <= 0?
+  jle       N2                # if so, goto N2:
+  iaddl     $1, %eax          # count++
+N2:
+  iaddl     $-1, %edx         # len--
+Done:
+
+# Epilogue
+  popl      %ebx
+  popl      %esi
+  popl      %edi
+  ret
+End: # don't remove
