@@ -8,7 +8,7 @@
 [lab]: note-practice.md
 
 #### 과제
-- 메모리 마운틴 그리기
+- [메모리 마운틴 그리기](mountain)
 - Buffer Lab
 - Architecture Lab
 - Cache Lab
