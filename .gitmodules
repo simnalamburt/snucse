@@ -1,30 +1,6 @@
-[submodule "System Programming/mountain"]
-	path = System Programming/mountain
-	url = git@github.com:simnalamburt/snucse.mountain.git
-[submodule "System Programming/buflab"]
-	path = System Programming/buflab
-	url = git@github.com:simnalamburt/snucse.buflab.git
-[submodule "System Programming/archlab"]
-	path = System Programming/archlab
-	url = git@github.com:simnalamburt/snucse.archlab.git
-[submodule "System Programming/cachelab"]
-	path = System Programming/cachelab
-	url = git@github.com:simnalamburt/snucse.cachelab.git
-[submodule "System Programming/perflab"]
-	path = System Programming/perflab
-	url = git@github.com:simnalamburt/snucse.perflab.git
-[submodule "System Programming/shlab"]
-	path = System Programming/shlab
-	url = git@github.com:simnalamburt/snucse.shlab.git
 [submodule "Multicore/k-means"]
 	path = Multicore/k-means
 	url = git@github.com:simnalamburt/snucse.k-means.git
 [submodule "Multicore/matmul"]
 	path = Multicore/matmul
 	url = git@github.com:simnalamburt/snucse.matmul.git
-[submodule "System Programming/malloclab"]
-	path = System Programming/malloclab
-	url = git@github.com:simnalamburt/snucse.malloclab.git
-[submodule "System Programming/proxylab"]
-	path = System Programming/proxylab
-	url = git@github.com:simnalamburt/snucse.proxylab.git
