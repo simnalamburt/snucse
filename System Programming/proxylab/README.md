@@ -5,7 +5,3 @@ Web Proxy
 * Assigned: May 26
 * Due: June 8, 11:59PM
 * Port range: **10200 ~ 10299**
-
-#### Branches
-* `seq`: sequential implementation
-* `master`: pthread version
