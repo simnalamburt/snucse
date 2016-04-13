@@ -2,6 +2,26 @@
 ========
 
 - [강의 홈페이지](http://bi.snu.ac.kr/Courses/dm2016spring/index.html)
+- Logic and Proofs:
+    [PDF<sup>1</sup>](https://bi.snu.ac.kr/Courses/dm2016spring/slides/Chapter1p1.pdf)
+    [PDF<sup>2</sup>](https://bi.snu.ac.kr/Courses/dm2016spring/slides/Chapter1p2.pdf)
+    [PDF<sup>3</sup>](https://bi.snu.ac.kr/Courses/dm2016spring/slides/Chapter1p3.pdf)
+    [판서](https://bi.snu.ac.kr/Courses/dm2016spring/imgs/blackboard0312.JPG)
+    [연습](https://bi.snu.ac.kr/Courses/dm2016spring/practice/practice1.pdf)
+- Sets: [PDF](https://bi.snu.ac.kr/Courses/dm2016spring/slides/Chapter2_Sets.pdf)
+- Functions: [PDF](https://bi.snu.ac.kr/Courses/dm2016spring/slides/Chapter2_Functions.pdf)
+- Sequences:
+    [PDF<sup>1</sup>](https://bi.snu.ac.kr/Courses/dm2016spring/slides/Chapter2_Sequences_and_Summations.pdf)
+    [PDF<sup>2</sup>](https://bi.snu.ac.kr/Courses/dm2016spring/slides/Chapter2_Cardinality_of_Sets.pdf)
+- Matrices: [PDF](https://bi.snu.ac.kr/Courses/dm2016spring/slides/Chapter2_Matrices.pdf)
+- Algorithms: [PDF](https://bi.snu.ac.kr/Courses/dm2016spring/slides/Chapter3_Algorithms.pdf)
+- The Growth of Functions: [PDF](https://bi.snu.ac.kr/Courses/dm2016spring/slides/Chapter3_The_Growth_of_Functions.pdf)
+- Complexity of Algorithms: [PDF](https://bi.snu.ac.kr/Courses/dm2016spring/slides/Chapter3_Complexity_of_Algorithms.pdf)
+
+<br>
+
+필기
+--------
 
 <p align=right>첫날 ...</p>
 
