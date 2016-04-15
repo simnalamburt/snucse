@@ -4,7 +4,7 @@ import java.util.NoSuchElementException;
 public class MyLinkedList<T> implements MyList<T> {
     // dummy head
     final Node<T> head = new Node<T>(null);
-    int numItems;
+    int numItems; // TODO: Rename into `count`;
 
     //
     // iterator() 메소드를 제공하는 클래스의 인스턴스는 다음과 같은 자바
