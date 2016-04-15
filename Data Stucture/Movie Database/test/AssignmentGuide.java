@@ -19,7 +19,7 @@ public class AssignmentGuide {
 
         try {
             testLinkedList();
-            testMovieList();
+            testSortedSet();
 
             System.out.println("All test passed! You can move on to MovieDatabaseConsole!");
 
@@ -89,8 +89,8 @@ public class AssignmentGuide {
         }
     }
 
-    private static void testMovieList() {
-        MyList<String> l = new MovieList();
+    private static void testSortedSet() {
+        MyList<String> l = new MySortedSet<String>();
 
         // You should not modify these lines below to pass the tests.
         String item1 = "Data Structure";
