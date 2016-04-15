@@ -96,7 +96,7 @@ class Genre extends Node<String> implements Comparable<Genre> {
     }
 }
 
-class MovieList implements ListInterface<String> {
+class MovieList implements MyList<String> {
     public MovieList() {
     }
 

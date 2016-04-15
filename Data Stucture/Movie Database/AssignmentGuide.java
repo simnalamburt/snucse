@@ -30,7 +30,7 @@ public class AssignmentGuide {
     }
 
     private static void testLinkedList() {
-        ListInterface<String> l = new MyLinkedList<>();
+        MyList<String> l = new MyLinkedList<>();
 
         // You should not modify these lines below to pass the tests.
         String item1 = "Data Structure";
@@ -90,7 +90,7 @@ public class AssignmentGuide {
     }
 
     private static void testMovieList() {
-        ListInterface<String> l = new MovieList();
+        MyList<String> l = new MovieList();
 
         // You should not modify these lines below to pass the tests.
         String item1 = "Data Structure";

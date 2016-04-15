@@ -1,7 +1,7 @@
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-public class MyLinkedList<T> implements ListInterface<T> {
+public class MyLinkedList<T> implements MyList<T> {
     // dummy head
     final Node<T> head = new Node<T>(null);
     int numItems;
