@@ -59,7 +59,7 @@ class MyLinkedListIterator<T> implements Iterator<T> {
     // FIXME implement this
     // Implement the iterator for MyLinkedList.
     // You have to maintain the current position of the iterator.
-    private MyLinkedList<T> list;
+    private final MyLinkedList<T> list;
     private Node<T> curr, prev;
 
     public MyLinkedListIterator(MyLinkedList<T> list) {
