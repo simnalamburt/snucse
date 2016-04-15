@@ -4,12 +4,8 @@ import java.util.NoSuchElementException;
 
 public class MyLinkedList<T> implements ListInterface<T> {
     // dummy head
-    final Node<T> head;
+    final Node<T> head = new Node<T>(null);
     int numItems;
-
-    public MyLinkedList() {
-        head = new Node<T>(null);
-    }
 
     /**
      * {@code Iterable<T>}를 구현하여 iterator() 메소드를 제공하는 클래스의 인스턴스는
