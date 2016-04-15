@@ -6,11 +6,14 @@ Movie Database
 구현체는 `MyLinkedList.java`를 참고하세요.
 
 ```bash
-pt TODO                     # 고쳐야 할 코드 찾기
-javac *.java                # Build
+make                                            # Build project
+java MovieDatabaseConsole                       # Run
 
-java -ea AssignmentGuide    # Test
-java MovieDatabaseConsole   # Run
+java MovieDatabaseConsole < test/input > actual # Testing
+vimdiff actual test/output
+rm actual
+
+make clean                                      # Remove build results
 ```
 
 ###### Contributors
