@@ -4,7 +4,11 @@ import java.util.NoSuchElementException;
 public class MyLinkedList<T> implements MyList<T> {
     // dummy head
     final Node<T> head = new Node<T>(null);
-    int numItems; // TODO: Rename into `count`;
+    int count;
+
+    @Override public boolean isEmpty() { return head.getNext() == null; }
+    @Override public int size() { return count; }
+    @Override public T first() { return head.getNext().item; }
 
     //
     // iterator() 메소드를 제공하는 클래스의 인스턴스는 다음과 같은 자바
@@ -27,27 +31,12 @@ public class MyLinkedList<T> implements MyList<T> {
     }
 
     @Override
-    public boolean isEmpty() {
-        return head.getNext() == null;
-    }
-
-    @Override
-    public int size() {
-        return numItems;
-    }
-
-    @Override
-    public T first() {
-        return head.getNext().item;
-    }
-
-    @Override
     public void add(T item) {
         Node<T> last = head;
         while (last.getNext() != null) { last = last.getNext(); }
 
         last.insertNext(item);
-        numItems += 1;
+        count += 1;
     }
 
     @Override
@@ -57,8 +46,6 @@ public class MyLinkedList<T> implements MyList<T> {
 }
 
 class MyLinkedListIterator<T> implements Iterator<T> {
-    // Implement the iterator for MyLinkedList.
-    // You have to maintain the current position of the iterator.
     private final MyLinkedList<T> list;
     private Node<T> curr, prev;
 
@@ -86,7 +73,7 @@ class MyLinkedListIterator<T> implements Iterator<T> {
         if (curr == null) { throw new NoSuchElementException(); }
 
         prev.removeNext();
-        list.numItems -= 1;
+        list.count -= 1;
         curr = prev;
         prev = null;
     }

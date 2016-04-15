@@ -14,7 +14,7 @@ public class MySortedSet<E extends Comparable<E>> extends MyLinkedList<E> {
         }
 
         target.insertNext(elem);
-        super.numItems += 1;
+        super.count += 1;
     }
 
     //
@@ -34,7 +34,7 @@ public class MySortedSet<E extends Comparable<E>> extends MyLinkedList<E> {
         }
 
         prev_target.removeNext();
-        super.numItems -= 1;
+        super.count -= 1;
         return true;
     }
 }
