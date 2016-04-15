@@ -6,14 +6,19 @@ Movie Database
 구현체는 `MyLinkedList.java`를 참고하세요.
 
 ```bash
-make                                            # Build project
-java MovieDatabaseConsole                       # Run
+make                        # Build project
+java MovieDatabaseConsole   # Run
 
-java MovieDatabaseConsole < test/input > actual # Testing
-vimdiff actual test/output
+make clean                  # Remove build results
+
+
+# Testing
+make
+mv test/AssignmentGuide.class .
+java -ea AssignmentGuide
+java MovieDatabaseConsole < test/input > actual
+diff actual test/output
 rm actual
-
-make clean                                      # Remove build results
 ```
 
 ###### Contributors
