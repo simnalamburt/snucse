@@ -8,72 +8,42 @@ import java.util.NoSuchElementException;
 // 유지하는 데이터베이스이다.
 //
 public class MovieDB {
-    public MovieDB() {
-        // TODO implement this
-
-        // HINT: MovieDBGenre 클래스를 정렬된 상태로 유지하기 위한
-        // MyLinkedList 타입의 멤버 변수를 초기화 한다.
-    }
+    private final MySortedSet<MovieDBItem> set = new MySortedSet<MovieDBItem>();
 
     public void insert(MovieDBItem item) {
-        // TODO implement this
-        // Insert the given item to the MovieDB.
-
-        // Printing functionality is provided for the sake of debugging.
-        // This code should be removed before submitting your work.
+        // TODO: Remove debug codes
         System.err.printf("[trace] MovieDB: INSERT [%s] [%s]\n", item.genre, item.title);
+
+        set.add(item);
     }
 
     public void delete(MovieDBItem item) {
-        // TODO implement this
-        // Remove the given item from the MovieDB.
-
-        // Printing functionality is provided for the sake of debugging.
-        // This code should be removed before submitting your work.
+        // TODO: Remove debug codes
         System.err.printf("[trace] MovieDB: DELETE [%s] [%s]\n", item.genre, item.title);
+
+        set.delete(item);
     }
 
     public MyLinkedList<MovieDBItem> search(String term) {
-        // TODO implement this
-        // Search the given term from the MovieDB.
-        // You should return a linked list of MovieDBItem.
-        // The search command is handled at SearchCmd class.
-
-        // Printing search results is the responsibility of SearchCmd class.
-        // So you must not use System.out in this method to achieve specs of the assignment.
-
-        // This tracing functionality is provided for the sake of debugging.
-        // This code should be removed before submitting your work.
+        // TODO: Remove debug codes
         System.err.printf("[trace] MovieDB: SEARCH [%s]\n", term);
 
-        // TODO remove this code and return an appropriate MyLinkedList<MovieDBItem> instance.
-        // This code is supplied for avoiding compilation error.
-        MyLinkedList<MovieDBItem> results = new MyLinkedList<MovieDBItem>();
-
-        return results;
+        MyLinkedList<MovieDBItem> result = new MyLinkedList<MovieDBItem>();
+        for (MovieDBItem item : set) {
+            if (item.title.contains(term)) { result.add(item); }
+        }
+        return result;
     }
 
     public MyLinkedList<MovieDBItem> items() {
-        // TODO implement this
-        // Search the given term from the MovieDatabase.
-        // You should return a linked list of QueryResult.
-        // The print command is handled at PrintCmd class.
-
-        // Printing movie items is the responsibility of PrintCmd class.
-        // So you must not use System.out in this method to achieve specs of the assignment.
-
-        // Printing functionality is provided for the sake of debugging.
-        // This code should be removed before submitting your work.
+        // TODO: Remove debug codes
         System.err.printf("[trace] MovieDB: ITEMS\n");
 
-        // TODO remove this code and return an appropriate MyLinkedList<MovieDBItem> instance.
-        // This code is supplied for avoiding compilation error.
-        MyLinkedList<MovieDBItem> results = new MyLinkedList<MovieDBItem>();
-
-        return results;
+        return set;
     }
 }
 
+// TODO: 이 타입이 필요한가?
 class Genre extends Node<String> implements Comparable<Genre> {
     public Genre(String name) {
         super(name);
