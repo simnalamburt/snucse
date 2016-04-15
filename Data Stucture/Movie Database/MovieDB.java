@@ -9,14 +9,14 @@ import java.util.NoSuchElementException;
  */
 public class MovieDB {
     public MovieDB() {
-        // FIXME implement this
+        // TODO implement this
 
         // HINT: MovieDBGenre 클래스를 정렬된 상태로 유지하기 위한
         // MyLinkedList 타입의 멤버 변수를 초기화 한다.
     }
 
     public void insert(MovieDBItem item) {
-        // FIXME implement this
+        // TODO implement this
         // Insert the given item to the MovieDB.
 
         // Printing functionality is provided for the sake of debugging.
@@ -25,7 +25,7 @@ public class MovieDB {
     }
 
     public void delete(MovieDBItem item) {
-        // FIXME implement this
+        // TODO implement this
         // Remove the given item from the MovieDB.
 
         // Printing functionality is provided for the sake of debugging.
@@ -34,7 +34,7 @@ public class MovieDB {
     }
 
     public MyLinkedList<MovieDBItem> search(String term) {
-        // FIXME implement this
+        // TODO implement this
         // Search the given term from the MovieDB.
         // You should return a linked list of MovieDBItem.
         // The search command is handled at SearchCmd class.
@@ -46,7 +46,7 @@ public class MovieDB {
         // This code should be removed before submitting your work.
         System.err.printf("[trace] MovieDB: SEARCH [%s]\n", term);
 
-        // FIXME remove this code and return an appropriate MyLinkedList<MovieDBItem> instance.
+        // TODO remove this code and return an appropriate MyLinkedList<MovieDBItem> instance.
         // This code is supplied for avoiding compilation error.
         MyLinkedList<MovieDBItem> results = new MyLinkedList<MovieDBItem>();
 
@@ -54,7 +54,7 @@ public class MovieDB {
     }
 
     public MyLinkedList<MovieDBItem> items() {
-        // FIXME implement this
+        // TODO implement this
         // Search the given term from the MovieDatabase.
         // You should return a linked list of QueryResult.
         // The print command is handled at PrintCmd class.
@@ -66,7 +66,7 @@ public class MovieDB {
         // This code should be removed before submitting your work.
         System.err.printf("[trace] MovieDB: ITEMS\n");
 
-        // FIXME remove this code and return an appropriate MyLinkedList<MovieDBItem> instance.
+        // TODO remove this code and return an appropriate MyLinkedList<MovieDBItem> instance.
         // This code is supplied for avoiding compilation error.
         MyLinkedList<MovieDBItem> results = new MyLinkedList<MovieDBItem>();
 

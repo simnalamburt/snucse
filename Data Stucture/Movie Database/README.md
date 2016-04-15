@@ -4,7 +4,7 @@ Movie Database
 구현체는 `MyLinkedList.java`를 참고하세요.
 
 ```bash
-pt -e "FIXME|TODO"          # 고쳐야 할 코드 찾기
+pt TODO                     # 고쳐야 할 코드 찾기
 javac *.java                # Build
 
 java -ea AssignmentGuide    # Test
