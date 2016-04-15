@@ -96,37 +96,5 @@ class Genre extends Node<String> implements Comparable<Genre> {
     }
 }
 
-class MovieList implements MyList<String> {
-    public MovieList() {
-    }
-
-    @Override
-    public Iterator<String> iterator() {
-        throw new UnsupportedOperationException("not implemented yet");
-    }
-
-    @Override
-    public boolean isEmpty() {
-        throw new UnsupportedOperationException("not implemented yet");
-    }
-
-    @Override
-    public int size() {
-        throw new UnsupportedOperationException("not implemented yet");
-    }
-
-    @Override
-    public void add(String item) {
-        throw new UnsupportedOperationException("not implemented yet");
-    }
-
-    @Override
-    public String first() {
-        throw new UnsupportedOperationException("not implemented yet");
-    }
-
-    @Override
-    public void removeAll() {
-        throw new UnsupportedOperationException("not implemented yet");
-    }
-}
+// TODO: 이 타입이 필요한가?
+class MovieList extends MySortedSet<String> { }
