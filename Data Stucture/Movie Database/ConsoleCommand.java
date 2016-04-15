@@ -73,8 +73,6 @@ class DeleteCmd extends AbstractConsoleCommand {
 
     @Override
     public void apply(MovieDB db) throws Exception {
-        System.err.printf("[trace] DELETE [genre=%s, title=%s]\n", genre, movie);
-
         // 아래의 구현은 수정하지 않는 것이 바람직하다. MovieDB 의 내부 자료구조를
         // 조작하는 코드는 MovieDB 안쪽에 존재하는 것이 바람직하다.
         //
@@ -102,7 +100,6 @@ class InsertCmd extends AbstractConsoleCommand {
 
     @Override
     public void apply(MovieDB db) throws Exception {
-        System.err.printf("[trace] INSERT [genre=%s, title=%s]\n", genre, movie);
         db.insert(new MovieDBItem(genre, movie));
     }
 }
@@ -120,8 +117,6 @@ class PrintCmd extends AbstractConsoleCommand {
 
     @Override
     public void apply(MovieDB db) throws Exception {
-        System.err.printf("[trace] PRINT\n");
-
         MyLinkedList<MovieDBItem> result = db.items();
 
         if (result.size() == 0) {
@@ -150,8 +145,6 @@ class SearchCmd extends AbstractConsoleCommand {
 
     @Override
     public void apply(MovieDB db) throws Exception {
-        System.err.printf("[trace] SEARCH [%s]\n", term);
-
         MyLinkedList<MovieDBItem> result = db.search(term);
 
         if (result.size() == 0) {
