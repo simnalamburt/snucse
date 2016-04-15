@@ -1,5 +1,7 @@
 Movie Database
 ========
+[숙제 페이지](http://soar.snu.ac.kr:8080/assignments/2/)
+
 `MovieDB.java`, `Node.java` 두 파일을 고쳐야합니다. 기초적인 링크드리스트
 구현체는 `MyLinkedList.java`를 참고하세요.
 
