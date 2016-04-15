@@ -4,7 +4,7 @@ import java.util.NoSuchElementException;
 
 public class MyLinkedList<T> implements ListInterface<T> {
     // dummy head
-    Node<T> head;
+    final Node<T> head;
     int numItems;
 
     public MyLinkedList() {
@@ -41,22 +41,21 @@ public class MyLinkedList<T> implements ListInterface<T> {
 
     @Override
     public T first() {
-        return head.getNext().getItem();
+        return head.getNext().item;
     }
 
     @Override
     public void add(T item) {
         Node<T> last = head;
-        while (last.getNext() != null) {
-            last = last.getNext();
-        }
+        while (last.getNext() != null) { last = last.getNext(); }
+
         last.insertNext(item);
         numItems += 1;
     }
 
     @Override
     public void removeAll() {
-        head.setNext(null);
+        while (head.getNext() != null) { head.removeNext(); }
     }
 }
 
@@ -65,8 +64,7 @@ class MyLinkedListIterator<T> implements Iterator<T> {
     // Implement the iterator for MyLinkedList.
     // You have to maintain the current position of the iterator.
     private MyLinkedList<T> list;
-    private Node<T> curr;
-    private Node<T> prev;
+    private Node<T> curr, prev;
 
     public MyLinkedListIterator(MyLinkedList<T> list) {
         this.list = list;
@@ -75,27 +73,22 @@ class MyLinkedListIterator<T> implements Iterator<T> {
     }
 
     @Override
-    public boolean hasNext() {
-        return curr.getNext() != null;
-    }
+    public boolean hasNext() { return curr.getNext() != null; }
 
     @Override
     public T next() {
-        if (!hasNext())
-            throw new NoSuchElementException();
+        if (!hasNext()) { throw new NoSuchElementException(); }
 
         prev = curr;
         curr = curr.getNext();
-
-        return curr.getItem();
+        return curr.item;
     }
 
     @Override
     public void remove() {
-        if (prev == null)
-            throw new IllegalStateException("next() should be called first");
-        if (curr == null)
-            throw new NoSuchElementException();
+        if (prev == null) { throw new IllegalStateException("next() should be called first"); }
+        if (curr == null) { throw new NoSuchElementException(); }
+
         prev.removeNext();
         list.numItems -= 1;
         curr = prev;
