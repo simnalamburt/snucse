@@ -1,12 +1,12 @@
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-/**
- * Genre, Title 을 관리하는 영화 데이터베이스.
- *
- * MyLinkedList 를 사용해 각각 Genre와 Title에 따라 내부적으로 정렬된 상태를
- * 유지하는 데이터베이스이다.
- */
+//
+// Genre, Title 을 관리하는 영화 데이터베이스.
+//
+// MyLinkedList 를 사용해 각각 Genre와 Title에 따라 내부적으로 정렬된 상태를
+// 유지하는 데이터베이스이다.
+//
 public class MovieDB {
     public MovieDB() {
         // TODO implement this
