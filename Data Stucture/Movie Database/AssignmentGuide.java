@@ -130,7 +130,7 @@ public class AssignmentGuide {
     }
 
 
-	private static String VALUE_FAILURE_MSG(String target, String value, String expected) {
+    private static String VALUE_FAILURE_MSG(String target, String value, String expected) {
         return String.format("expected %s is [%s] but [%s]", target, expected, value);
     }
 
