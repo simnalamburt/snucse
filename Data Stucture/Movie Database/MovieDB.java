@@ -21,7 +21,7 @@ public class MovieDB {
 
         // Printing functionality is provided for the sake of debugging.
         // This code should be removed before submitting your work.
-        System.err.printf("[trace] MovieDB: INSERT [%s] [%s]\n", item.getGenre(), item.getTitle());
+        System.err.printf("[trace] MovieDB: INSERT [%s] [%s]\n", item.genre, item.title);
     }
 
     public void delete(MovieDBItem item) {
@@ -30,7 +30,7 @@ public class MovieDB {
 
         // Printing functionality is provided for the sake of debugging.
         // This code should be removed before submitting your work.
-        System.err.printf("[trace] MovieDB: DELETE [%s] [%s]\n", item.getGenre(), item.getTitle());
+        System.err.printf("[trace] MovieDB: DELETE [%s] [%s]\n", item.genre, item.title);
     }
 
     public MyLinkedList<MovieDBItem> search(String term) {

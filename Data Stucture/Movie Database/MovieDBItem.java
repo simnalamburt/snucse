@@ -2,7 +2,7 @@
 // MovieDB의 인터페이스에서 공통으로 사용하는 클래스
 //
 public class MovieDBItem implements Comparable<MovieDBItem> {
-    private final String genre, title;
+    public final String genre, title;
 
     public MovieDBItem(String genre, String title) {
         if (genre == null) { throw new NullPointerException("`genre` should not be null"); }
@@ -11,9 +11,6 @@ public class MovieDBItem implements Comparable<MovieDBItem> {
         this.genre = genre;
         this.title = title;
     }
-
-    public String getGenre() { return genre; }
-    public String getTitle() { return title; }
 
     @Override
     public int compareTo(MovieDBItem other) {

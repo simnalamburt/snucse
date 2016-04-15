@@ -128,7 +128,7 @@ class PrintCmd extends AbstractConsoleCommand {
             System.out.println("EMPTY");
         } else {
             for (MovieDBItem item : result) {
-                System.out.printf("(%s, %s)\n", item.getGenre(), item.getTitle());
+                System.out.printf("(%s, %s)\n", item.genre, item.title);
             }
         }
     }
@@ -158,7 +158,7 @@ class SearchCmd extends AbstractConsoleCommand {
             System.out.println("EMPTY");
         } else {
             for (MovieDBItem item : result) {
-                System.out.printf("(%s, %s)\n", item.getGenre(), item.getTitle());
+                System.out.printf("(%s, %s)\n", item.genre, item.title);
             }
         }
     }
