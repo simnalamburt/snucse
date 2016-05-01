@@ -39,7 +39,7 @@ public class CalculatorTest {
             .map((ArrayList<Token<Type>> tokens) ->
                     tokens.stream()
                     .filter(token -> token.kind != Type.Whitespace)
-                    .map(token -> token.kind+"("+token.sequence+")")
+                    .map(token -> token.toString())
                     .collect(Collectors.joining(" "))
             )
             .orElse("ERROR");
@@ -98,4 +98,7 @@ class Token<E> {
         this.sequence = sequence;
         this.kind = kind;
     }
+
+    @Override
+    public String toString() { return kind + "'" + sequence + "'"; }
 }
