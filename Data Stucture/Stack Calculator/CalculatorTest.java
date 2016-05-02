@@ -35,6 +35,9 @@ public class CalculatorTest {
         return lexer.lex(input)
             .map(t -> t.stream()
                 .filter(token -> token.kind != Parser.Type.Whitespace)
+                .collect(Collectors.toList()))
+            .flatMap(Parser::parse)
+            .map(t -> t.stream()
                 .map(token -> token.toString())
                 .collect(Collectors.joining(" "))
             );
@@ -46,15 +49,19 @@ class Parser {
     public static enum Type { Number, Operator, Whitespace }
 
     private final List<Token<Type>> tokens;
-    public Parser(List<Token<Type>> tokens) { this.tokens = tokens; }
+    private Parser(List<Token<Type>> tokens) { this.tokens = tokens; }
+
+    public static Optional<List<Token<Type>>> parse(List<Token<Type>> tokens) {
+        return new Parser(tokens).tryExpr(0)
+            .filter(size -> size == tokens.size())
+            .map(s -> tokens);
+    }
 
     // Alternatives for `tokens.get(idx)` function which is exception-safe
     private Optional<Token<Type>> tokenAt(int index) {
-        if (index < 0 || index >= tokens.size()) {
-            return of(tokens.get(index));
-        } else {
-            return empty();
-        }
+        return 0 <= index && index < tokens.size()
+            ? of(tokens.get(index))
+            : empty();
     }
 
     // Missing `or` function for Optional<T>
