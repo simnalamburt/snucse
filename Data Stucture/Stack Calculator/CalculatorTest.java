@@ -22,18 +22,14 @@ public class CalculatorTest {
     }
 
     private static enum Type { Number, Operator, Whitespace }
-    private static final Lexer lexer = new Lexer<Type>() {{
+    private static final Lexer<Type> lexer = new Lexer<Type>() {{
         add("[0-9]+", Type.Number);
         add("[+\\-*\\/%^()]", Type.Operator);
         add("[ \t]", Type.Whitespace);
     }};
 
     private static void command(final String input) {
-        // TODO: warning: [unchecked] unchecked conversion
         Optional<ArrayList<Token<Type>>> result = lexer.lex(input);
-        //                                                 ^
-        //   required: Optional<ArrayList<Token<Type>>>
-        //   found:    Optional
 
         String msg = result
             .map((ArrayList<Token<Type>> tokens) ->
