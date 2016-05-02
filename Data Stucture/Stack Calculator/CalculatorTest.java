@@ -48,14 +48,18 @@ public class CalculatorTest {
 class Parser {
     public static enum Type { Number, Operator, Whitespace }
 
+    public static Optional<List<Token<Type>>> parse(List<Token<Type>> tokens) {
+        Parser p = new Parser(tokens);
+        Context c0 = new Context();
+
+        return p.tryExpr(c0)
+            .filter(c -> c.cursor == tokens.size())
+            .map(c -> tokens);
+    }
+
+    // Internal class constructor
     private final List<Token<Type>> tokens;
     private Parser(List<Token<Type>> tokens) { this.tokens = tokens; }
-
-    public static Optional<List<Token<Type>>> parse(List<Token<Type>> tokens) {
-        return new Parser(tokens).tryExpr(0)
-            .filter(size -> size == tokens.size())
-            .map(s -> tokens);
-    }
 
     // Alternatives for `tokens.get(idx)` function which is exception-safe
     private Optional<Token<Type>> tokenAt(int index) {
@@ -71,6 +75,17 @@ class Parser {
             : empty();
     }
 
+    // Parser context
+    private static class Context {
+        public final int cursor;
+
+        // Create a new empty ctxt
+        public Context() { cursor = 0; }
+
+        // Create a new ctxt from existing data
+        public Context(int cursor) { this.cursor = cursor; }
+    }
+
     // Parsing rules
     //
     // ```bnf
@@ -84,70 +99,70 @@ class Parser {
     //       <mult-op> ::= "*" | "/" | "%"
     // ```
 
-    private Optional<Integer> tryExpr(int cursor) {
+    private Optional<Context> tryExpr(Context ctxt) {
         return or(
-            of(cursor)
+            of(ctxt)
                 .flatMap(this::tryTerm)
                 .flatMap(tryOp("+", "-"))
                 .flatMap(this::tryExpr),
-            of(cursor)
+            of(ctxt)
                 .flatMap(this::tryTerm)
         );
     }
 
-    private Optional<Integer> tryTerm(int cursor) {
+    private Optional<Context> tryTerm(Context ctxt) {
         return or(
-            of(cursor)
+            of(ctxt)
                 .flatMap(this::trySignedFactor)
                 .flatMap(tryOp("*", "/", "%"))
                 .flatMap(this::tryTerm),
-            of(cursor)
+            of(ctxt)
                 .flatMap(this::trySignedFactor)
         );
     }
 
-    private Optional<Integer> trySignedFactor(int cursor) {
+    private Optional<Context> trySignedFactor(Context ctxt) {
         return or(
-            of(cursor)
+            of(ctxt)
                 .flatMap(tryOp("-"))
                 .flatMap(this::trySignedFactor),
-            of(cursor)
+            of(ctxt)
                 .flatMap(this::tryFactor)
         );
     }
 
-    private Optional<Integer> tryFactor(int cursor) {
+    private Optional<Context> tryFactor(Context ctxt) {
         return or(
-            of(cursor)
+            of(ctxt)
                 .flatMap(this::tryElement)
                 .flatMap(tryOp("^"))
                 .flatMap(this::tryFactor),
-            of(cursor)
+            of(ctxt)
                 .flatMap(this::tryElement)
         );
     }
 
-    private Optional<Integer> tryElement(int cursor) {
+    private Optional<Context> tryElement(Context ctxt) {
         return or(
-            of(cursor)
+            of(ctxt)
                 .flatMap(tryOp("("))
                 .flatMap(this::tryExpr)
                 .flatMap(tryOp(")")),
-            of(cursor)
+            of(ctxt)
                 .flatMap(this::tryNumber)
         );
     }
 
-    private Function<Integer, Optional<Integer>> tryOp(String... ops) {
-        return cursor -> tokenAt(cursor)
+    private Function<Context, Optional<Context>> tryOp(String... ops) {
+        return ctxt -> tokenAt(ctxt.cursor)
             .filter(t -> t.kind == Type.Operator)
             .filter(t -> Arrays.asList(ops).contains(t.sequence))
-            .map(t -> cursor + 1);
+            .map(t -> new Context(ctxt.cursor + 1));
     }
 
-    private Optional<Integer> tryNumber(int cursor) {
-        return tokenAt(cursor)
+    private Optional<Context> tryNumber(Context ctxt) {
+        return tokenAt(ctxt.cursor)
             .filter(t -> t.kind == Type.Number)
-            .map(t -> cursor + 1);
+            .map(t -> new Context(ctxt.cursor + 1));
     }
 }
