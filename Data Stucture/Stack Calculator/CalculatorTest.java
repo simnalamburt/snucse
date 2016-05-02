@@ -3,6 +3,7 @@
 import java.io.*;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.function.Function;
 
 // Parser
 import static java.util.Optional.empty;
@@ -56,6 +57,13 @@ class Parser {
         }
     }
 
+    // Missing `or` function for Optional<T>
+    private static <T> Optional<T> or(Optional<T> left, Optional<T> right) {
+        return left.isPresent() ? left
+            : right.isPresent() ? right
+            : empty();
+    }
+
     // Parsing rules
     //
     // ```bnf
@@ -69,18 +77,64 @@ class Parser {
     //       <mult-op> ::= "*" | "/" | "%"
     // ```
 
-    private Optional<Integer> tryAddOp(int cursor) {
-        return tryOp(cursor, "+", "-");
+    private Optional<Integer> tryExpr(int cursor) {
+        return or(
+            of(cursor)
+                .flatMap(this::tryTerm)
+                .flatMap(tryOp("+", "-"))
+                .flatMap(this::tryExpr),
+            of(cursor)
+                .flatMap(this::tryTerm)
+        );
     }
 
-    private Optional<Integer> tryMultOp(int cursor) {
-        return tryOp(cursor, "*", "/", "%");
+    private Optional<Integer> tryTerm(int cursor) {
+        return or(
+            of(cursor)
+                .flatMap(this::trySignedFactor)
+                .flatMap(tryOp("*", "/", "%"))
+                .flatMap(this::tryTerm),
+            of(cursor)
+                .flatMap(this::trySignedFactor)
+        );
     }
 
-    private Optional<Integer> tryOp(int cursor, String... ops) {
-        return tokenAt(cursor)
+    private Optional<Integer> trySignedFactor(int cursor) {
+        return or(
+            of(cursor)
+                .flatMap(tryOp("-"))
+                .flatMap(this::trySignedFactor),
+            of(cursor)
+                .flatMap(this::tryFactor)
+        );
+    }
+
+    private Optional<Integer> tryFactor(int cursor) {
+        return or(
+            of(cursor)
+                .flatMap(this::tryElement)
+                .flatMap(tryOp("^"))
+                .flatMap(this::tryFactor),
+            of(cursor)
+                .flatMap(this::tryElement)
+        );
+    }
+
+    private Optional<Integer> tryElement(int cursor) {
+        return or(
+            of(cursor)
+                .flatMap(tryOp("("))
+                .flatMap(this::tryExpr)
+                .flatMap(tryOp(")")),
+            of(cursor)
+                .flatMap(this::tryNumber)
+        );
+    }
+
+    private Function<Integer, Optional<Integer>> tryOp(String... ops) {
+        return cursor -> tokenAt(cursor)
             .filter(t -> t.kind == Type.Operator)
-            .filter(Arrays.asList(ops)::contains)
+            .filter(t -> Arrays.asList(ops).contains(t.sequence))
             .map(t -> cursor + 1);
     }
 
