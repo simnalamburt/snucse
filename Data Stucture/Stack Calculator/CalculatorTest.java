@@ -4,6 +4,10 @@ import java.io.*;
 import java.util.*;
 import java.util.stream.Collectors;
 
+// Parser
+import static java.util.Optional.empty;
+import static java.util.Optional.of;
+
 public class CalculatorTest {
     public static void main(final String args[]) {
         final BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -36,6 +40,53 @@ public class CalculatorTest {
     }
 }
 
+// Parser
 class Parser {
     public static enum Type { Number, Operator, Whitespace }
+
+    private final List<Token<Type>> tokens;
+    public Parser(List<Token<Type>> tokens) { this.tokens = tokens; }
+
+    // Alternatives for `tokens.get(idx)` function which is exception-safe
+    private Optional<Token<Type>> tokenAt(int index) {
+        if (index < 0 || index >= tokens.size()) {
+            return of(tokens.get(index));
+        } else {
+            return empty();
+        }
+    }
+
+    // Parsing rules
+    //
+    // ```bnf
+    //          <expr> ::= <term> | <term> <add-op> <expr>
+    //          <term> ::= <signed-factor> | <signed-factor> <mult-op> <term>
+    // <signed-factor> ::= <factor> | "-" <signed-factor>
+    //        <factor> ::= <element> | <element> "^" <factor>
+    //       <element> ::= "(" <expr> ")" | <number>
+    //
+    //        <add-op> ::= "+" | "-"
+    //       <mult-op> ::= "*" | "/" | "%"
+    // ```
+
+    private Optional<Integer> tryAddOp(int cursor) {
+        return tryOp(cursor, "+", "-");
+    }
+
+    private Optional<Integer> tryMultOp(int cursor) {
+        return tryOp(cursor, "*", "/", "%");
+    }
+
+    private Optional<Integer> tryOp(int cursor, String... ops) {
+        return tokenAt(cursor)
+            .filter(t -> t.kind == Type.Operator)
+            .filter(Arrays.asList(ops)::contains)
+            .map(t -> cursor + 1);
+    }
+
+    private Optional<Integer> tryNumber(int cursor) {
+        return tokenAt(cursor)
+            .filter(t -> t.kind == Type.Number)
+            .map(t -> cursor + 1);
+    }
 }
