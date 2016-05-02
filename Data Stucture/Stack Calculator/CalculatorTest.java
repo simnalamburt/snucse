@@ -47,6 +47,16 @@ public class CalculatorTest {
 }
 
 class Lexer<E> {
+    private static class Rule<E> {
+        public final Pattern regex;
+        public final E kind;
+
+        public Rule(final String rule, final E kind) {
+            this.regex = Pattern.compile("^("+rule+")");
+            this.kind = kind;
+        }
+    }
+
     final ArrayList<Rule<E>> rules = new ArrayList<Rule<E>>();
 
     public void add(final String rule, final E kind) {
@@ -73,16 +83,6 @@ class Lexer<E> {
 
         // 렉싱 결과물 반환
         return Optional.of(result);
-    }
-}
-
-class Rule<E> {
-    public final Pattern regex;
-    public final E kind;
-
-    public Rule(final String rule, final E kind) {
-        this.regex = Pattern.compile("^("+rule+")");
-        this.kind = kind;
     }
 }
 
