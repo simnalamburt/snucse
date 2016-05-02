@@ -52,11 +52,14 @@ Description
 아래의 규칙에 맞춰서 재귀하향파서를 구현하였다.
 
 ```bnf
-   <expr> ::= <term> | <term> "+" <expr> | <term> "-" <expr>
-   <term> ::= <signed> | <signed> "*" <term> | <signed> "/" <term> | <signed> "%" <term>
- <signed> ::= <factor> | "-" <signed-factor>
- <factor> ::= <element> | <element> "^" <factor>
-<element> ::= "(" <expr> ")" | <number>
+         <expr> ::= <term> | <term> <add-op> <expr>
+         <term> ::= <signed-factor> | <signed-factor> <mult-op> <term>
+<signed-factor> ::= <factor> | "-" <signed-factor>
+       <factor> ::= <element> | <element> "^" <factor>
+      <element> ::= "(" <expr> ")" | <number>
+
+       <add-op> ::= "+" | "-"
+      <mult-op> ::= "*" | "/" | "%"
 ```
 
 괄호의 짝이 맞지 않는 등의 틀린 문법으로 인해 파싱이 불가능할경우 에러를 낸다.
