@@ -32,15 +32,16 @@ public class CalculatorTest {
     }};
 
     private static Optional<String> eval(final String input) {
+        // TODO: 익셉션 핸들링
         return lexer.lex(input)
             .map(t -> t.stream()
                 .filter(token -> token.kind != Type.Whitespace)
                 .collect(Collectors.toList()))
             .flatMap(Parser::parse)
-            .map(t -> t.stream()
-                .map(token -> token.toString())
-                .collect(Collectors.joining(" "))
-            );
+            .flatMap(Calc::calc)
+            .map(t -> t.postfix.stream()
+                .map(token -> token.sequence)
+                .collect(Collectors.joining(" ")) + "\n" + t.result);
     }
 }
 
@@ -164,19 +165,20 @@ class Parser {
 
         private static int precedence(Token<Type> op) {
             switch (op.sequence) {
-            case "(": case ")":             return 5;
             case "^":                       return 4;
             case "~":                       return 3;
             case "*": case "/": case "%":   return 2;
             case "+": case "-":             return 1;
-            default:                        return 0;
+            default: throw new IllegalArgumentException();
             }
         }
 
         private static boolean is_left_assoc(Token<Type> op) {
             switch (op.sequence) {
-            case "^": case "~": return false;
-            default:            return true;
+            case "*": case "/": case "%":
+            case "+": case "-":             return true;
+            case "^": case "~":             return false;
+            default: throw new IllegalArgumentException();
             }
         }
     }
@@ -267,5 +269,67 @@ class Parser {
         return tokenAt(ctxt.cursor)
             .filter(t -> t.kind == Type.Number)
             .map(ctxt::push);
+    }
+}
+
+// Calc
+class Calc {
+    static Optional<CalcResult> calc(List<Token<Type>> postfix) {
+        Stack<Long> operands = new Stack<Long>();
+
+        for (Token<Type> token: postfix) {
+            switch (token.kind) {
+            case Number:
+                operands.push(Long.parseLong(token.sequence));
+                break;
+            case Operator:
+                Long result;
+
+                if (token.sequence.equals("~")) {
+                    // Unary operator
+                    Long operand = operands.pop();
+
+                    result = -operand;
+                } else {
+                    // Binary operator
+                    Long right = operands.pop();
+                    Long left = operands.pop();
+
+                    switch (token.sequence) {
+                    case "+": result = left + right; break;
+                    case "-": result = left - right; break;
+                    case "*": result = left * right; break;
+                    case "/":
+                        if (right == 0) { return empty(); }
+                        result = left / right;
+                        break;
+                    case "%":
+                        if (right == 0) { return empty(); }
+                        result = left % right;
+                        break;
+                    case "^":
+                        if (left == 0 && right < 0) { return empty(); }
+                        result = (long) Math.pow(left, right);
+                        break;
+                    default: throw new IllegalArgumentException();
+                    }
+                }
+
+                operands.push(result);
+                break;
+            }
+        }
+
+        return of(new CalcResult(postfix, operands.pop()));
+    }
+}
+
+class CalcResult {
+    public final List<Token<Type>> postfix;
+    public final long result;
+
+    public CalcResult(List<Token<Type>> postfix, long result) {
+        this.postfix = postfix;
+        this.result = result;
     }
 }
