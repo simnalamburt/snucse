@@ -3,6 +3,9 @@ import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+//
+// 범용적으로 사용할 수 있는 렉서 클래스.
+//
 class Lexer<E> {
     private static class Rule<E> {
         public final Pattern regex;
@@ -43,6 +46,10 @@ class Lexer<E> {
     }
 }
 
+
+//
+// 토큰 클래스. 렉싱 결과를 반환할때, Optional<ArrayList<Token<E>>> 를 반환한다.
+//
 class Token<E> {
     public final String sequence;
     public final E kind;
