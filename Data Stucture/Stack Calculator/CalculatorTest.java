@@ -25,16 +25,16 @@ public class CalculatorTest {
         }
     }
 
-    private static final Lexer<Parser.Type> lexer = new Lexer<Parser.Type>() {{
-        add("[0-9]+",           Parser.Type.Number);
-        add("[+\\-*\\/%^()]",   Parser.Type.Operator);
-        add("[ \t]",            Parser.Type.Whitespace);
+    private static final Lexer<Type> lexer = new Lexer<Type>() {{
+        add("[0-9]+",           Type.Number);
+        add("[+\\-*\\/%^()]",   Type.Operator);
+        add("[ \t]",            Type.Whitespace);
     }};
 
     private static Optional<String> eval(final String input) {
         return lexer.lex(input)
             .map(t -> t.stream()
-                .filter(token -> token.kind != Parser.Type.Whitespace)
+                .filter(token -> token.kind != Type.Whitespace)
                 .collect(Collectors.toList()))
             .flatMap(Parser::parse)
             .map(t -> t.stream()
@@ -45,16 +45,17 @@ public class CalculatorTest {
 }
 
 // Parser
-class Parser {
-    public static enum Type { Number, Operator, Whitespace }
+enum Type { Number, Operator, Whitespace }
 
+class Parser {
     public static Optional<List<Token<Type>>> parse(List<Token<Type>> tokens) {
         Parser p = new Parser(tokens);
         Context c0 = new Context();
 
         return p.tryExpr(c0)
             .filter(c -> c.cursor == tokens.size())
-            .map(c -> tokens);
+            .map(c -> c.terminate())
+            .map(c -> c.output);
     }
 
     // Internal class constructor
@@ -76,14 +77,108 @@ class Parser {
     }
 
     // Parser context
+    //
+    // Reference: Shunting-yard Algorithm
     private static class Context {
         public final int cursor;
+        public final ArrayList<Token<Type>> output;
+        public final ArrayList<Token<Type>> op_stack;
 
-        // Create a new empty ctxt
-        public Context() { cursor = 0; }
+        private Context(int cursor,
+                ArrayList<Token<Type>> output,
+                ArrayList<Token<Type>> op_stack)
+        {
+            this.cursor = cursor;
+            this.output = output;
+            this.op_stack = op_stack;
+        }
 
-        // Create a new ctxt from existing data
-        public Context(int cursor) { this.cursor = cursor; }
+        public Context() {
+            cursor = 0;
+            output = new ArrayList<Token<Type>>();
+            op_stack = new ArrayList<Token<Type>>();
+        }
+
+        public Context push(Token<Type> t) {
+            switch (t.kind) {
+            case Number: {
+                final ArrayList<Token<Type>> output = new ArrayList<Token<Type>>(this.output) {{
+                    add(t);
+                }};
+
+                return new Context(cursor + 1, output, op_stack); }
+            case Operator: {
+                final ArrayList<Token<Type>>
+                    output = new ArrayList<Token<Type>>(this.output),
+                    op_stack = new ArrayList<Token<Type>>(this.op_stack);
+
+                switch (t.sequence) {
+                case "(":
+                    op_stack.add(t);
+                    break;
+                case ")":
+                    while (true) {
+                        if (op_stack.isEmpty()) { throw new IllegalArgumentException(); }
+
+                        Token<Type> pop = op_stack.remove(op_stack.size() - 1);
+                        if (pop.sequence.equals("(")) { break; }
+
+                        output.add(pop);
+                    }
+                    break;
+                default:
+                    while (!op_stack.isEmpty()) {
+                        Token<Type> top = op_stack.get(op_stack.size() - 1);
+                        boolean condition = !top.sequence.equals("(") &&
+                            ( is_left_assoc(t)
+                            ? precedence(t) <= precedence(top)
+                            : precedence(t) < precedence(top) );
+
+                        if (!condition) { break; }
+
+                        output.add(top);
+                        op_stack.remove(op_stack.size() - 1);
+                    }
+
+                    op_stack.add(t);
+                }
+
+                return new Context(cursor + 1, output, op_stack); }
+            default:
+                return this;
+            }
+        }
+
+        public Context terminate() {
+            final ArrayList<Token<Type>>
+                output = new ArrayList<Token<Type>>(this.output),
+                op_stack = new ArrayList<Token<Type>>(this.op_stack);
+
+            while (!op_stack.isEmpty()) {
+                Token<Type> t = op_stack.remove(op_stack.size() - 1);
+                output.add(t);
+            }
+
+            return new Context(cursor, output, op_stack);
+        }
+
+        private static int precedence(Token<Type> op) {
+            switch (op.sequence) {
+            case "(": case ")":             return 5;
+            case "^":                       return 4;
+            case "~":                       return 3;
+            case "*": case "/": case "%":   return 2;
+            case "+": case "-":             return 1;
+            default:                        return 0;
+            }
+        }
+
+        private static boolean is_left_assoc(Token<Type> op) {
+            switch (op.sequence) {
+            case "^": case "~": return false;
+            default:            return true;
+            }
+        }
     }
 
     // Parsing rules
@@ -124,11 +219,19 @@ class Parser {
     private Optional<Context> trySignedFactor(Context ctxt) {
         return or(
             of(ctxt)
-                .flatMap(tryOp("-"))
+                .flatMap(this::tryUnaryMinus)
                 .flatMap(this::trySignedFactor),
             of(ctxt)
                 .flatMap(this::tryFactor)
         );
+    }
+
+    private Optional<Context> tryUnaryMinus(Context ctxt) {
+        return tokenAt(ctxt.cursor)
+            .filter(t -> t.kind == Type.Operator)
+            .filter(t -> t.sequence.equals("-"))
+            .map(t -> new Token<Type>("~", Type.Operator))
+            .map(ctxt::push);
     }
 
     private Optional<Context> tryFactor(Context ctxt) {
@@ -157,12 +260,12 @@ class Parser {
         return ctxt -> tokenAt(ctxt.cursor)
             .filter(t -> t.kind == Type.Operator)
             .filter(t -> Arrays.asList(ops).contains(t.sequence))
-            .map(t -> new Context(ctxt.cursor + 1));
+            .map(ctxt::push);
     }
 
     private Optional<Context> tryNumber(Context ctxt) {
         return tokenAt(ctxt.cursor)
             .filter(t -> t.kind == Type.Number)
-            .map(t -> new Context(ctxt.cursor + 1));
+            .map(ctxt::push);
     }
 }
