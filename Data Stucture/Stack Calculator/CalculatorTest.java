@@ -163,6 +163,11 @@ class Parser {
             return new Context(cursor, output, op_stack);
         }
 
+        @Override
+        public String toString() {
+            return "Content(cursor: "+cursor+", output: "+output+", op_stack: "+op_stack+")";
+        }
+
         private static int precedence(Token<Type> op) {
             switch (op.sequence) {
             case "^":                       return 4;
@@ -247,15 +252,17 @@ class Parser {
         );
     }
 
+    HashMap<Context, Optional<Context>> cache = new HashMap<Context, Optional<Context>>();
     private Optional<Context> tryElement(Context ctxt) {
-        return or(
-            of(ctxt)
+        // Memoization
+        return cache.computeIfAbsent(ctxt, c -> or(
+            of(c)
                 .flatMap(tryOp("("))
                 .flatMap(this::tryExpr)
                 .flatMap(tryOp(")")),
-            of(ctxt)
+            of(c)
                 .flatMap(this::tryNumber)
-        );
+        ));
     }
 
     private Function<Context, Optional<Context>> tryOp(String... ops) {
