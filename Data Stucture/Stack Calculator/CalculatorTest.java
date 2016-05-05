@@ -85,8 +85,6 @@ import java.io.*;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.function.Function;
-import static java.util.Optional.empty;
-import static java.util.Optional.of;
 
 
 //
@@ -120,7 +118,7 @@ public class CalculatorTest {
 
     // Infix expression이 담긴 문자열을 주면, 실행 결과를 반환하거나 실패사실을
     // 반환함. Exception-safe 함.
-    private static Optional<String> eval(final String input) {
+    private static Option<String> eval(final String input) {
         return lexer.lex(input)
             .map(t -> t.stream()
                 .filter(token -> token.kind != Type.Whitespace)
@@ -138,7 +136,7 @@ enum Type { Number, Operator, Whitespace }
 
 // Monadic composition으로 구현한 재귀하향파서
 class Parser {
-    public static Optional<List<Token<Type>>> parse(List<Token<Type>> tokens) {
+    public static Option<List<Token<Type>>> parse(List<Token<Type>> tokens) {
         Parser p = new Parser(tokens);
         Context c0 = new Context();
 
@@ -153,17 +151,17 @@ class Parser {
     private Parser(List<Token<Type>> tokens) { this.tokens = tokens; }
 
     // Alternatives for `tokens.get(idx)` function which is exception-safe
-    private Optional<Token<Type>> tokenAt(int index) {
+    private Option<Token<Type>> tokenAt(int index) {
         return 0 <= index && index < tokens.size()
-            ? of(tokens.get(index))
-            : empty();
+            ? Option.of(tokens.get(index))
+            : Option.empty();
     }
 
-    // Missing `or` function for Optional<T>
-    private static <T> Optional<T> or(Optional<T> left, Optional<T> right) {
+    // Missing `or` function for Option<T>
+    private static <T> Option<T> or(Option<T> left, Option<T> right) {
         return left.isPresent() ? left
             : right.isPresent() ? right
-            : empty();
+            : Option.empty();
     }
 
     // Parser context. 파서가 파싱중 사용하는 컨텍스트 클래스이다.
@@ -293,71 +291,71 @@ class Parser {
     //
     //        <add-op> ::= "+" | "-"
     //       <mult-op> ::= "*" | "/" | "%"
-    private Optional<Context> tryExpr(Context ctxt) {
+    private Option<Context> tryExpr(Context ctxt) {
         return or(
-            of(ctxt)
+            Option.of(ctxt)
                 .flatMap(this::tryTerm)
                 .flatMap(tryOp("+", "-"))
                 .flatMap(this::tryExpr),
-            of(ctxt)
+            Option.of(ctxt)
                 .flatMap(this::tryTerm)
         );
     }
-    private Optional<Context> tryTerm(Context ctxt) {
+    private Option<Context> tryTerm(Context ctxt) {
         return or(
-            of(ctxt)
+            Option.of(ctxt)
                 .flatMap(this::trySignedFactor)
                 .flatMap(tryOp("*", "/", "%"))
                 .flatMap(this::tryTerm),
-            of(ctxt)
+            Option.of(ctxt)
                 .flatMap(this::trySignedFactor)
         );
     }
-    private Optional<Context> trySignedFactor(Context ctxt) {
+    private Option<Context> trySignedFactor(Context ctxt) {
         return or(
-            of(ctxt)
+            Option.of(ctxt)
                 .flatMap(this::tryUnaryMinus)
                 .flatMap(this::trySignedFactor),
-            of(ctxt)
+            Option.of(ctxt)
                 .flatMap(this::tryFactor)
         );
     }
-    private Optional<Context> tryUnaryMinus(Context ctxt) {
+    private Option<Context> tryUnaryMinus(Context ctxt) {
         return tokenAt(ctxt.cursor)
             .filter(t -> t.kind == Type.Operator)
             .filter(t -> t.sequence.equals("-"))
             .map(t -> new Token<Type>("~", Type.Operator))
             .map(ctxt::push);
     }
-    private Optional<Context> tryFactor(Context ctxt) {
+    private Option<Context> tryFactor(Context ctxt) {
         return or(
-            of(ctxt)
+            Option.of(ctxt)
                 .flatMap(this::tryElement)
                 .flatMap(tryOp("^"))
                 .flatMap(this::tryFactor),
-            of(ctxt)
+            Option.of(ctxt)
                 .flatMap(this::tryElement)
         );
     }
-    private HashMap<Context, Optional<Context>> cache = new HashMap<Context, Optional<Context>>();
-    private Optional<Context> tryElement(Context ctxt) {
+    private HashMap<Context, Option<Context>> cache = new HashMap<Context, Option<Context>>();
+    private Option<Context> tryElement(Context ctxt) {
         // Memoization
         return cache.computeIfAbsent(ctxt, c -> or(
-            of(c)
+            Option.of(c)
                 .flatMap(tryOp("("))
                 .flatMap(this::tryExpr)
                 .flatMap(tryOp(")")),
-            of(c)
+            Option.of(c)
                 .flatMap(this::tryNumber)
         ));
     }
-    private Function<Context, Optional<Context>> tryOp(String... ops) {
+    private Function<Context, Option<Context>> tryOp(String... ops) {
         return ctxt -> tokenAt(ctxt.cursor)
             .filter(t -> t.kind == Type.Operator)
             .filter(t -> Arrays.asList(ops).contains(t.sequence))
             .map(ctxt::push);
     }
-    private Optional<Context> tryNumber(Context ctxt) {
+    private Option<Context> tryNumber(Context ctxt) {
         return tokenAt(ctxt.cursor)
             .filter(t -> t.kind == Type.Number)
             .map(ctxt::push);
@@ -369,9 +367,9 @@ class Parser {
 // Postfix Expression 계산기
 //
 class Calc {
-    // 주어진 postfix expression을 계산하여 of(CalcResult)로 그 결과를 반환한다.
-    // Devide by 0와 같이 에러가 있었을경우 empty() 를 반환한다.
-    static Optional<CalcResult> calc(List<Token<Type>> postfix) {
+    // 주어진 postfix expression을 계산하여 Option.of(CalcResult)로 그 결과를 반환한다.
+    // Devide by 0와 같이 에러가 있었을경우 Option.empty() 를 반환한다.
+    static Option<CalcResult> calc(List<Token<Type>> postfix) {
         Stack<Long> operands = new Stack<Long>();
 
         for (Token<Type> token: postfix) {
@@ -397,15 +395,15 @@ class Calc {
                     case "-": result = left - right; break;
                     case "*": result = left * right; break;
                     case "/":
-                        if (right == 0) { return empty(); }
+                        if (right == 0) { return Option.empty(); }
                         result = left / right;
                         break;
                     case "%":
-                        if (right == 0) { return empty(); }
+                        if (right == 0) { return Option.empty(); }
                         result = left % right;
                         break;
                     case "^":
-                        if (left == 0 && right < 0) { return empty(); }
+                        if (left == 0 && right < 0) { return Option.empty(); }
                         result = (long) Math.pow(left, right);
                         break;
                     default: throw new IllegalArgumentException();
@@ -417,7 +415,7 @@ class Calc {
             }
         }
 
-        return of(new CalcResult(postfix, operands.pop()));
+        return Option.of(new CalcResult(postfix, operands.pop()));
     }
 }
 
