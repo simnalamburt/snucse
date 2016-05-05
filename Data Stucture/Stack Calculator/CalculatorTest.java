@@ -172,7 +172,7 @@ class Parser {
                 public Option<List<Token<Type>>> apply(Context c) {
                     if (c.cursor != tokens.size()) { return Option.empty(); }
 
-                    return Option.of(c.terminate().output);
+                    return Option.<List<Token<Type>>>of(c.terminate().output);
                 }
             });
     }
@@ -185,14 +185,14 @@ class Parser {
     private Option<Token<Type>> tokenAt(int index) {
         return 0 <= index && index < tokens.size()
             ? Option.of(tokens.get(index))
-            : Option.empty();
+            : Option.<Token<Type>>empty();
     }
 
     // Missing `or` function for Option<T>
     private static <T> Option<T> or(Option<T> left, Option<T> right) {
         return left.isPresent() ? left
             : right.isPresent() ? right
-            : Option.empty();
+            : Option.<T>empty();
     }
 
     // Parser context. 파서가 파싱중 사용하는 컨텍스트 클래스이다.
