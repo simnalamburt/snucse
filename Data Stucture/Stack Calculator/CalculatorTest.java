@@ -162,7 +162,7 @@ class Parser {
     public static Function<List<Token<Type>>, Option<List<Token<Type>>>> parse = new Function<List<Token<Type>>, Option<List<Token<Type>>>>() {
         @Override public Option<List<Token<Type>>> apply(List<Token<Type>> t) { return _parse(t); }
     };
-    private static Option<List<Token<Type>>> _parse(List<Token<Type>> tokens) {
+    private static Option<List<Token<Type>>> _parse(final List<Token<Type>> tokens) {
         Parser p = new Parser(tokens);
         Context c0 = new Context();
 
@@ -226,7 +226,7 @@ class Parser {
             @Override
             public Context apply(Token<Type> t) { return _push(t); }
         };
-        private Context _push(Token<Type> t) {
+        private Context _push(final Token<Type> t) {
             switch (t.kind) {
             case Number: {
                 final ArrayList<Token<Type>> output = new ArrayList<Token<Type>>(this.output) {{
@@ -404,7 +404,7 @@ class Parser {
         }
         return value;
     }
-    private Function<Context, Option<Context>> tryOp(String... ops) {
+    private Function<Context, Option<Context>> tryOp(final String... ops) {
         return new Function<Context, Option<Context>>() {
             @Override
             public Option<Context> apply(Context ctxt) {
