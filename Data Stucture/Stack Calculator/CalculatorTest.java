@@ -132,8 +132,8 @@ public class CalculatorTest {
                     return t;
                 }
             })
-            .flatMap(Parser::parse)
-            .flatMap(Calc::calc)
+            .flatMap(Parser.parse)
+            .flatMap(Calc.calc)
             .map(new Function<CalcResult, String>() {
                 @Override
                 public String apply(CalcResult t) {
@@ -162,11 +162,14 @@ enum Type { Number, Operator, Whitespace }
 
 // Monadic composition으로 구현한 재귀하향파서
 class Parser {
-    public static Option<List<Token<Type>>> parse(List<Token<Type>> tokens) {
+    public static Function<List<Token<Type>>, Option<List<Token<Type>>>> parse = new Function<List<Token<Type>>, Option<List<Token<Type>>>>() {
+        @Override public Option<List<Token<Type>>> apply(List<Token<Type>> t) { return _parse(t); }
+    };
+    private static Option<List<Token<Type>>> _parse(List<Token<Type>> tokens) {
         Parser p = new Parser(tokens);
         Context c0 = new Context();
 
-        return p.tryExpr(c0)
+        return p.tryExpr.apply(c0)
             .flatMap(new Function<Context, Option<List<Token<Type>>>>() {
                 @Override
                 public Option<List<Token<Type>>> apply(Context c) {
@@ -222,7 +225,11 @@ class Parser {
 
         // Shunting-yard Algorithm에 맞춰, 토큰들의 순서를 Infix에서 Postfix로
         // 재배열한다.
-        public Context push(Token<Type> t) {
+        public Function<Token<Type>, Context> push = new Function<Token<Type>, Context>() {
+            @Override
+            public Context apply(Token<Type> t) { return _push(t); }
+        };
+        private Context _push(Token<Type> t) {
             switch (t.kind) {
             case Number: {
                 final ArrayList<Token<Type>> output = new ArrayList<Token<Type>>(this.output) {{
@@ -322,36 +329,36 @@ class Parser {
     //
     //        <add-op> ::= "+" | "-"
     //       <mult-op> ::= "*" | "/" | "%"
-    private Option<Context> tryExpr(Context ctxt) {
+    private Option<Context> _tryExpr(Context ctxt) {
         return or(
             Option.of(ctxt)
-                .flatMap(this::tryTerm)
-                .flatMap(tryOp("+", "-"))
-                .flatMap(this::tryExpr),
+                .flatMap(this.tryTerm)
+                .flatMap(this.tryOp("+", "-"))
+                .flatMap(this.tryExpr),
             Option.of(ctxt)
-                .flatMap(this::tryTerm)
+                .flatMap(this.tryTerm)
         );
     }
-    private Option<Context> tryTerm(Context ctxt) {
+    private Option<Context> _tryTerm(Context ctxt) {
         return or(
             Option.of(ctxt)
-                .flatMap(this::trySignedFactor)
-                .flatMap(tryOp("*", "/", "%"))
-                .flatMap(this::tryTerm),
+                .flatMap(this.trySignedFactor)
+                .flatMap(this.tryOp("*", "/", "%"))
+                .flatMap(this.tryTerm),
             Option.of(ctxt)
-                .flatMap(this::trySignedFactor)
+                .flatMap(this.trySignedFactor)
         );
     }
-    private Option<Context> trySignedFactor(Context ctxt) {
+    private Option<Context> _trySignedFactor(Context ctxt) {
         return or(
             Option.of(ctxt)
-                .flatMap(this::tryUnaryMinus)
-                .flatMap(this::trySignedFactor),
+                .flatMap(this.tryUnaryMinus)
+                .flatMap(this.trySignedFactor),
             Option.of(ctxt)
-                .flatMap(this::tryFactor)
+                .flatMap(this.tryFactor)
         );
     }
-    private Option<Context> tryUnaryMinus(Context ctxt) {
+    private Option<Context> _tryUnaryMinus(Context ctxt) {
         return tokenAt(ctxt.cursor)
             .flatMap(new Function<Token<Type>, Option<Token<Type>>>() {
                 @Override
@@ -361,31 +368,31 @@ class Parser {
                     return Option.of(new Token<Type>("~", Type.Operator));
                 }
             })
-            .map(ctxt::push);
+            .map(ctxt.push);
     }
-    private Option<Context> tryFactor(Context ctxt) {
+    private Option<Context> _tryFactor(Context ctxt) {
         return or(
             Option.of(ctxt)
-                .flatMap(this::tryElement)
-                .flatMap(tryOp("^"))
-                .flatMap(this::tryFactor),
+                .flatMap(this.tryElement)
+                .flatMap(this.tryOp("^"))
+                .flatMap(this.tryFactor),
             Option.of(ctxt)
-                .flatMap(this::tryElement)
+                .flatMap(this.tryElement)
         );
     }
     private HashMap<Context, Option<Context>> cache = new HashMap<Context, Option<Context>>();
-    private Option<Context> tryElement(Context ctxt) {
+    private Option<Context> _tryElement(Context ctxt) {
         final Parser self = this;
         Function<Context, Option<Context>> compute = new Function<Context, Option<Context>>() {
             @Override
             public Option<Context> apply(Context c) {
                 return or(
                     Option.of(c)
-                        .flatMap(tryOp("("))
-                        .flatMap(self::tryExpr)
-                        .flatMap(tryOp(")")),
+                        .flatMap(self.tryOp("("))
+                        .flatMap(self.tryExpr)
+                        .flatMap(self.tryOp(")")),
                     Option.of(c)
-                        .flatMap(self::tryNumber)
+                        .flatMap(self.tryNumber)
                 );
             }
         };
@@ -405,11 +412,11 @@ class Parser {
                                 && Arrays.asList(ops).contains(t.sequence);
                         }
                     })
-                    .map(ctxt::push);
+                    .map(ctxt.push);
             }
         };
     }
-    private Option<Context> tryNumber(Context ctxt) {
+    private Option<Context> _tryNumber(Context ctxt) {
         return tokenAt(ctxt.cursor)
             .filter(new Predicate<Token<Type>>() {
                 @Override
@@ -417,8 +424,17 @@ class Parser {
                     return t.kind == Type.Number;
                 }
             })
-            .map(ctxt::push);
+            .map(ctxt.push);
     }
+
+    private final Function<Context, Option<Context>>
+        tryExpr         = new Function<Context, Option<Context>>() { @Override public Option<Context> apply(Context c) { return _tryExpr        (c); } },
+        tryTerm         = new Function<Context, Option<Context>>() { @Override public Option<Context> apply(Context c) { return _tryTerm        (c); } },
+        trySignedFactor = new Function<Context, Option<Context>>() { @Override public Option<Context> apply(Context c) { return _trySignedFactor(c); } },
+        tryUnaryMinus   = new Function<Context, Option<Context>>() { @Override public Option<Context> apply(Context c) { return _tryUnaryMinus  (c); } },
+        tryFactor       = new Function<Context, Option<Context>>() { @Override public Option<Context> apply(Context c) { return _tryFactor      (c); } },
+        tryElement      = new Function<Context, Option<Context>>() { @Override public Option<Context> apply(Context c) { return _tryElement     (c); } },
+        tryNumber       = new Function<Context, Option<Context>>() { @Override public Option<Context> apply(Context c) { return _tryNumber      (c); } };
 }
 
 
@@ -428,7 +444,10 @@ class Parser {
 class Calc {
     // 주어진 postfix expression을 계산하여 Option.of(CalcResult)로 그 결과를 반환한다.
     // Devide by 0와 같이 에러가 있었을경우 Option.empty() 를 반환한다.
-    static Option<CalcResult> calc(List<Token<Type>> postfix) {
+    public static Function<List<Token<Type>>, Option<CalcResult>> calc = new Function<List<Token<Type>>, Option<CalcResult>>() {
+        @Override public Option<CalcResult> apply(List<Token<Type>> p) { return _calc(p); }
+    };
+    private static Option<CalcResult> _calc(List<Token<Type>> postfix) {
         Stack<Long> operands = new Stack<Long>();
 
         for (Token<Type> token: postfix) {
