@@ -1,5 +1,4 @@
 import java.util.ArrayList;
-import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -23,7 +22,7 @@ class Lexer<E> {
         rules.add(new Rule<E>(rule, kind));
     }
 
-    public Optional<ArrayList<Token<E>>> lex(String input) {
+    public Option<ArrayList<Token<E>>> lex(String input) {
         ArrayList<Token<E>> result = new ArrayList<Token<E>>();
 
         while (!input.isEmpty()) {
@@ -38,17 +37,17 @@ class Lexer<E> {
                 break;
             }
             // 렉싱에 실패한경우, empty 반환
-            if (failed) { return Optional.empty(); }
+            if (failed) { return Option.empty(); }
         }
 
         // 렉싱 결과물 반환
-        return Optional.of(result);
+        return Option.of(result);
     }
 }
 
 
 //
-// 토큰 클래스. 렉싱 결과를 반환할때, Optional<ArrayList<Token<E>>> 를 반환한다.
+// 토큰 클래스. 렉싱 결과를 반환할때, Option<ArrayList<Token<E>>> 를 반환한다.
 //
 class Token<E> {
     public final String sequence;
