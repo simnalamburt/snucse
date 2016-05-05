@@ -1,6 +1,4 @@
 import java.util.Objects;
-import java.util.function.Function;
-import java.util.function.Predicate;
 
 //
 // Java 1.7에 호환되도록 구현한 모나딕 Option 타입

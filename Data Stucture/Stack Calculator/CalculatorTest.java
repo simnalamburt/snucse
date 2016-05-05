@@ -83,9 +83,6 @@
 
 import java.io.*;
 import java.util.*;
-import java.util.stream.Collectors;
-import java.util.function.Function;
-import java.util.function.Predicate;
 
 
 //
@@ -383,7 +380,7 @@ class Parser {
     private HashMap<Context, Option<Context>> cache = new HashMap<Context, Option<Context>>();
     private Option<Context> _tryElement(Context ctxt) {
         final Parser self = this;
-        Function<Context, Option<Context>> compute = new Function<Context, Option<Context>>() {
+        java.util.function.Function<Context, Option<Context>> compute = new java.util.function.Function<Context, Option<Context>>() {
             @Override
             public Option<Context> apply(Context c) {
                 return or(
