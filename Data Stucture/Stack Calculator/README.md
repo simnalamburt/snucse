@@ -7,6 +7,9 @@ Stack Calculator
 # Execute program
 make run
 
+# Automatic test
+make test
+
 # Remove build results
 make clean
 ```
