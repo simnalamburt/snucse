@@ -380,7 +380,7 @@ class Parser {
     private HashMap<Context, Option<Context>> cache = new HashMap<Context, Option<Context>>();
     private Option<Context> _tryElement(Context ctxt) {
         final Parser self = this;
-        java.util.function.Function<Context, Option<Context>> compute = new java.util.function.Function<Context, Option<Context>>() {
+        Function<Context, Option<Context>> compute = new Function<Context, Option<Context>>() {
             @Override
             public Option<Context> apply(Context c) {
                 return or(
@@ -395,7 +395,14 @@ class Parser {
         };
 
         // Memoization
-        return cache.computeIfAbsent(ctxt, compute);
+        Option<Context> value = cache.get(ctxt);
+        if (value == null) {
+            value = compute.apply(ctxt);
+            if (value != null) {
+                cache.put(ctxt, value);
+            }
+        }
+        return value;
     }
     private Function<Context, Option<Context>> tryOp(String... ops) {
         return new Function<Context, Option<Context>>() {
