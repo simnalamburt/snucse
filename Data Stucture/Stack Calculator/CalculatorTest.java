@@ -85,6 +85,7 @@ import java.io.*;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.function.Function;
+import java.util.function.Predicate;
 
 
 //
@@ -120,14 +121,39 @@ public class CalculatorTest {
     // 반환함. Exception-safe 함.
     private static Option<String> eval(final String input) {
         return lexer.lex(input)
-            .map(t -> t.stream()
-                .filter(token -> token.kind != Type.Whitespace)
-                .collect(Collectors.toList()))
+            .map(new Function<List<Token<Type>>, List<Token<Type>>>() {
+                @Override
+                public List<Token<Type>> apply(List<Token<Type>> t) {
+                    for (Iterator<Token<Type>> iter = t.listIterator(); iter.hasNext(); ) {
+                        Token<Type> token = iter.next();
+                        if (token.kind == Type.Whitespace) { iter.remove(); }
+                    }
+
+                    return t;
+                }
+            })
             .flatMap(Parser::parse)
             .flatMap(Calc::calc)
-            .map(t -> t.postfix.stream()
-                .map(token -> token.sequence)
-                .collect(Collectors.joining(" ")) + "\n" + t.result);
+            .map(new Function<CalcResult, String>() {
+                @Override
+                public String apply(CalcResult t) {
+                    StringBuilder buf = new StringBuilder();
+
+                    Iterator<Token<Type>> iter = t.postfix.listIterator();
+                    if (iter.hasNext()) {
+                        buf.append(iter.next().sequence);
+
+                        while (iter.hasNext()) {
+                            buf.append(' ');
+                            buf.append(iter.next().sequence);
+                        }
+                    }
+
+                    buf.append('\n');
+                    buf.append(t.result);
+                    return buf.toString();
+                }
+            });
     }
 }
 
@@ -141,9 +167,14 @@ class Parser {
         Context c0 = new Context();
 
         return p.tryExpr(c0)
-            .filter(c -> c.cursor == tokens.size())
-            .map(c -> c.terminate())
-            .map(c -> c.output);
+            .flatMap(new Function<Context, Option<List<Token<Type>>>>() {
+                @Override
+                public Option<List<Token<Type>>> apply(Context c) {
+                    if (c.cursor != tokens.size()) { return Option.empty(); }
+
+                    return Option.of(c.terminate().output);
+                }
+            });
     }
 
     // Internal class constructor
@@ -322,9 +353,14 @@ class Parser {
     }
     private Option<Context> tryUnaryMinus(Context ctxt) {
         return tokenAt(ctxt.cursor)
-            .filter(t -> t.kind == Type.Operator)
-            .filter(t -> t.sequence.equals("-"))
-            .map(t -> new Token<Type>("~", Type.Operator))
+            .flatMap(new Function<Token<Type>, Option<Token<Type>>>() {
+                @Override
+                public Option<Token<Type>> apply(Token<Type> t) {
+                    if (!(t.kind == Type.Operator && t.sequence.equals("-"))) { return Option.empty(); }
+
+                    return Option.of(new Token<Type>("~", Type.Operator));
+                }
+            })
             .map(ctxt::push);
     }
     private Option<Context> tryFactor(Context ctxt) {
@@ -339,25 +375,48 @@ class Parser {
     }
     private HashMap<Context, Option<Context>> cache = new HashMap<Context, Option<Context>>();
     private Option<Context> tryElement(Context ctxt) {
+        final Parser self = this;
+        Function<Context, Option<Context>> compute = new Function<Context, Option<Context>>() {
+            @Override
+            public Option<Context> apply(Context c) {
+                return or(
+                    Option.of(c)
+                        .flatMap(tryOp("("))
+                        .flatMap(self::tryExpr)
+                        .flatMap(tryOp(")")),
+                    Option.of(c)
+                        .flatMap(self::tryNumber)
+                );
+            }
+        };
+
         // Memoization
-        return cache.computeIfAbsent(ctxt, c -> or(
-            Option.of(c)
-                .flatMap(tryOp("("))
-                .flatMap(this::tryExpr)
-                .flatMap(tryOp(")")),
-            Option.of(c)
-                .flatMap(this::tryNumber)
-        ));
+        return cache.computeIfAbsent(ctxt, compute);
     }
     private Function<Context, Option<Context>> tryOp(String... ops) {
-        return ctxt -> tokenAt(ctxt.cursor)
-            .filter(t -> t.kind == Type.Operator)
-            .filter(t -> Arrays.asList(ops).contains(t.sequence))
-            .map(ctxt::push);
+        return new Function<Context, Option<Context>>() {
+            @Override
+            public Option<Context> apply(Context ctxt) {
+                return tokenAt(ctxt.cursor)
+                    .filter(new Predicate<Token<Type>>() {
+                        @Override
+                        public boolean test(Token<Type> t) {
+                            return t.kind == Type.Operator
+                                && Arrays.asList(ops).contains(t.sequence);
+                        }
+                    })
+                    .map(ctxt::push);
+            }
+        };
     }
     private Option<Context> tryNumber(Context ctxt) {
         return tokenAt(ctxt.cursor)
-            .filter(t -> t.kind == Type.Number)
+            .filter(new Predicate<Token<Type>>() {
+                @Override
+                public boolean test(Token<Type> t) {
+                    return t.kind == Type.Number;
+                }
+            })
             .map(ctxt::push);
     }
 }
