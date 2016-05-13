@@ -199,9 +199,7 @@ public class SortingTest
         while (rhs < end) { buf[idx++] = arr[rhs++]; }
 
         // Copy back
-        for (int b = 0, a = begin; a < end; ++b, ++a) {
-            arr[a] = buf[b];
-        }
+        System.arraycopy(buf, 0, arr, begin, end - begin);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////
