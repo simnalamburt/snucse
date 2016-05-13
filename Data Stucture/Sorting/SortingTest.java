@@ -3,6 +3,9 @@ import java.util.*;
 
 public class SortingTest
 {
+    //
+    // Program entry point
+    //
     public static void main(String args[])
     {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -94,30 +97,80 @@ public class SortingTest
         }
     }
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////////
-    private static int[] DoBubbleSort(int[] value)
-    {
-        // TODO : Bubble Sort 를 구현하라.
-        // value는 정렬안된 숫자들의 배열이며 value.length 는 배열의 크기가 된다.
-        // 결과로 정렬된 배열은 리턴해 주어야 하며, 두가지 방법이 있으므로 잘 생각해서 사용할것.
-        // 주어진 value 배열에서 안의 값만을 바꾸고 value를 다시 리턴하거나
-        // 같은 크기의 새로운 배열을 만들어 그 배열을 리턴할 수도 있다.
-        return (value);
+    // Swap function
+    private static void swap(int[] array, int idx1, int idx2) {
+        int temp = array[idx1];
+        array[idx1] = array[idx2];
+        array[idx2] = temp;
     }
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////////
-    private static int[] DoInsertionSort(int[] value)
+    // Bubble sort
+    private static int[] DoBubbleSort(int[] arr)
     {
-        // TODO : Insertion Sort 를 구현하라.
-        return (value);
+        // TODO: 한 이터레이션 안에서 swap이 없었을경우 바로 종료하도록
+
+        for (int iter = 0; iter < arr.length - 1; ++iter) {
+            for (int i = 0; i < arr.length - 1 - iter; ++i) {
+                if (arr[i] <= arr[i+1]) { continue; }
+                swap(arr, i, i+1);
+            }
+        }
+
+        return arr;
     }
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////////
-    private static int[] DoHeapSort(int[] value)
+    // Insertion sort
+    private static int[] DoInsertionSort(int[] arr)
     {
-        // TODO : Heap Sort 를 구현하라.
-        return (value);
+        for (int i = 1; i < arr.length; ++i) {
+            int j = i;
+            while (j > 0 && arr[j-1] > arr[j]) {
+                swap(arr, j, j-1);
+                --j;
+            }
+        }
+
+        return arr;
     }
+
+    // Heap sort
+    private static int[] DoHeapSort(int[] arr) {
+        // Build heap
+        for (int i = 0; i < arr.length; ++i) { heap_up(arr, i); }
+
+        // Pop it
+        for (int i = arr.length - 1; i > 0; --i) {
+            swap(arr, 0, i);
+            heap_fix(arr, i, 0);
+        }
+
+        return arr;
+    }
+    private static void heap_up(int[] arr, int idx) {
+        // Base case
+        if (idx == 0) { return; }
+
+        int up = heap_parent(idx);
+        if (arr[up] >= arr[idx]) { return; }
+
+        swap(arr, up, idx);
+        heap_up(arr, up);
+    }
+    private static void heap_fix(int[] arr, int size, int idx) {
+        int max = idx,
+            lhs = heap_left(idx),
+            rhs = heap_right(idx);
+
+        if (lhs < size && arr[lhs] > arr[max]) { max = lhs; }
+        if (rhs < size && arr[rhs] > arr[max]) { max = rhs; }
+
+        if (max == idx) { return; }
+        swap(arr, idx, max);
+        heap_fix(arr, size, max);
+    }
+    private static int heap_parent(int n) { return (n + 1)/2 - 1; }
+    private static int heap_left  (int n) { return n*2 + 1; }
+    private static int heap_right (int n) { return n*2 + 2; }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     private static int[] DoMergeSort(int[] value)
