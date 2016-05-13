@@ -202,11 +202,30 @@ public class SortingTest
         System.arraycopy(buf, 0, arr, begin, end - begin);
     }
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////////
-    private static int[] DoQuickSort(int[] value)
-    {
-        // TODO : Quick Sort 를 구현하라.
-        return (value);
+    // Quick sort
+    private static int[] DoQuickSort(int[] arr) {
+        quick_sort(arr, 0, arr.length - 1);
+        return arr;
+    }
+    private static void quick_sort(int[] arr, int lo, int hi) {
+        // Base case
+        if (lo >= hi) { return; }
+
+        int p = partition(arr, lo, hi);
+        quick_sort(arr, lo, p);
+        quick_sort(arr, p + 1, hi);
+    }
+    private static int partition(int[] arr, int lo, int hi) {
+        int pivot = arr[lo],
+            i = lo - 1,
+            j = hi + 1;
+
+        while (true) {
+            do { ++i; } while (arr[i] < pivot);
+            do { --j; } while (arr[j] > pivot);
+            if (i >= j) { return j; }
+            swap(arr, i, j);
+        }
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////
