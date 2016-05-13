@@ -233,23 +233,23 @@ public class SortingTest
         radix_sort(arr, 10, 10);
         return arr;
     }
-    private static void radix_sort(int[] data, int p, int k) {
-        int size = data.length;
-        int[] counts = new int[k],
-              temp = new int[size];
+    private static void radix_sort(int[] arr, int digits, int base) {
+        int[] counts = new int[base],
+              tmp = new int[arr.length];
 
         // Iterate over digits
-        for (int n = 0; n < p; ++n) {
+        for (int n = 0; n < digits; ++n) {
             Arrays.fill(counts, 0);
-            final int pval = (int)Math.pow(k, n);
-            for (int j = 0; j < size; ++j) { ++counts[(data[j] / pval) % k]; }
-            for (int i = 1; i < k; ++i) { counts[i] += counts[i - 1]; }
-            for (int j = size - 1; j >= 0; --j) {
-                int idx = (data[j] / pval) % k;
-                temp[counts[idx] - 1] = data[j];
+            final int pval = (int)Math.pow(base, n);
+            // Count sort
+            for (int j = 0; j < arr.length; ++j) { ++counts[(arr[j] / pval) % base]; }
+            for (int i = 1; i < base; ++i) { counts[i] += counts[i - 1]; }
+            for (int j = arr.length - 1; j >= 0; --j) {
+                int idx = (arr[j] / pval) % base;
+                tmp[counts[idx] - 1] = arr[j];
                 --counts[idx];
             }
-            System.arraycopy(temp, 0, data, 0, size);
+            System.arraycopy(tmp, 0, arr, 0, arr.length);
         }
     }
 }
