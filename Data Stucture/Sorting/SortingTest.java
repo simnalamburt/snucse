@@ -234,7 +234,7 @@ public class SortingTest
         return arr;
     }
     private static void radix_sort(int[] arr, int digits, int base) {
-        int[] counts = new int[base],
+        int[] counts = new int[base*2],
               tmp = new int[arr.length];
 
         // Iterate over digits
@@ -242,10 +242,10 @@ public class SortingTest
             Arrays.fill(counts, 0);
             final int pval = (int)Math.pow(base, n);
             // Count sort
-            for (int j = 0; j < arr.length; ++j) { ++counts[(arr[j] / pval) % base]; }
-            for (int i = 1; i < base; ++i) { counts[i] += counts[i - 1]; }
+            for (int j = 0; j < arr.length; ++j) { ++counts[base + (arr[j] / pval) % base]; }
+            for (int i = 1; i < counts.length; ++i) { counts[i] += counts[i - 1]; }
             for (int j = arr.length - 1; j >= 0; --j) {
-                int idx = (arr[j] / pval) % base;
+                int idx = base + (arr[j] / pval) % base;
                 tmp[counts[idx] - 1] = arr[j];
                 --counts[idx];
             }
