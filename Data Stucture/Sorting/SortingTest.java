@@ -172,11 +172,36 @@ public class SortingTest
     private static int heap_left  (int n) { return n*2 + 1; }
     private static int heap_right (int n) { return n*2 + 2; }
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////////
-    private static int[] DoMergeSort(int[] value)
-    {
-        // TODO : Merge Sort 를 구현하라.
-        return (value);
+    // Merge sort
+    private static int[] DoMergeSort(int[] arr) {
+        merge_sort(arr, 0, arr.length);
+        return arr;
+    }
+    private static void merge_sort(int[] arr, int begin, int end) {
+        // Base case
+        if (end - begin <= 1) { return; }
+
+        // Recursion
+        int mid = (begin + end)/2;
+        merge_sort(arr, begin, mid);
+        merge_sort(arr, mid, end);
+
+        // Merge [begin, mid) and [mid, end)
+        int[] buf = new int[end - begin];
+        int idx = 0,
+            lhs = begin,
+            rhs = mid;
+
+        while (lhs < mid && rhs < end) {
+            buf[idx++] = arr[arr[lhs] <= arr[rhs] ? lhs++ : rhs++];
+        }
+        while (lhs < mid) { buf[idx++] = arr[lhs++]; }
+        while (rhs < end) { buf[idx++] = arr[rhs++]; }
+
+        // Copy back
+        for (int b = 0, a = begin; a < end; ++b, ++a) {
+            arr[a] = buf[b];
+        }
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////
