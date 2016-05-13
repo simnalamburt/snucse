@@ -228,10 +228,28 @@ public class SortingTest
         }
     }
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////////
-    private static int[] DoRadixSort(int[] value)
-    {
-        // TODO : Radix Sort 를 구현하라.
-        return (value);
+    // Radix sort
+    private static int[] DoRadixSort(int[] arr) {
+        radix_sort(arr, 10, 10);
+        return arr;
+    }
+    private static void radix_sort(int[] data, int p, int k) {
+        int size = data.length;
+        int[] counts = new int[k],
+              temp = new int[size];
+
+        // Iterate over digits
+        for (int n = 0; n < p; ++n) {
+            Arrays.fill(counts, 0);
+            final int pval = (int)Math.pow(k, n);
+            for (int j = 0; j < size; ++j) { ++counts[(data[j] / pval) % k]; }
+            for (int i = 1; i < k; ++i) { counts[i] += counts[i - 1]; }
+            for (int j = size - 1; j >= 0; --j) {
+                int idx = (data[j] / pval) % k;
+                temp[counts[idx] - 1] = data[j];
+                --counts[idx];
+            }
+            System.arraycopy(temp, 0, data, 0, size);
+        }
     }
 }
