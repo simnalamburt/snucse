@@ -1,0 +1,17 @@
+#!/usr/bin/env ruby
+puts 'n,Bubble,Insertion,Heap,Merge,Quick,Radix'
+
+for n in (1..9).to_a.map { |x| x*1000 } + (1..6).to_a.map { |x| x*10000 }
+  stdout = `java SortingTest <<END
+r #{n} -1000000 1000000
+B
+I
+H
+M
+Q
+R
+X
+END`
+
+  puts "#{n},#{stdout.split("\n").map { |x| x.gsub!(/ ms$/, '') }.join(',')}"
+end
