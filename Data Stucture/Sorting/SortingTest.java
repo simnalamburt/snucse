@@ -230,7 +230,7 @@ public class SortingTest
 
     // Radix sort
     private static int[] DoRadixSort(int[] arr) {
-        radix_sort(arr, 10, 10);
+        radix_sort(arr, 4, 256);
         return arr;
     }
     private static void radix_sort(int[] arr, int digits, int base) {
