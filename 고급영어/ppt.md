@@ -7,6 +7,8 @@
 Hi I'm Hyeon Kim. I've taken my 1 year off when I was sophomore, and worked at
 
 난 김지현이다. 한국회사와 미국회사의 직장문화 차이에 대해 설명해주도록 하겠다.
+
+너희중에 몇몇은 미국에 가서 일하고싶을수도 있을거야.
 난 휴학하고 한국회사에서도 일해보고 샌프란에서 미국회사에서도 일해봤다.
 내 경험을 공유해주마.
 
