@@ -21,14 +21,18 @@ Hi I'm Hyeon Kim. I've taken my 1 year off when I was sophomore, and worked at
 
 자 맞춰볼사람 손
 
-> (손) 이거 뭐뭐에요
+*(손) 이거 뭐뭐에요*
 
 1.  양식에서 무슨 차이가 제일 눈에 띄었나요?
-    > 뫄뫄뫄한거요
+
+    *뫄뫄뫄한거요*
+
     네 맞습니다
 
 2.  어떻게 맞췄나요?
-    > 뫄뫄뫄 보고 알았어요
+
+    *뫄뫄뫄 보고 알았어요*
+
     좋습니다
 
 한국꺼는 삼성과 파티게임즈
@@ -113,3 +117,6 @@ LA
 해고 빠름
 
 * 한국 입사지원서 포맷 보여주기
+
+###### References
+- http://dvdprime.donga.com/g5/bbs/board.php?bo_table=comm&wr_id=7780393
