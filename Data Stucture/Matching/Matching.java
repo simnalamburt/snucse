@@ -7,6 +7,14 @@ class AVLTree<K extends Comparable<K>, V> {
         Node parent, left, right;
 
         Node(K k, V v) { key = k; value = v; }
+
+        @Override
+        public String toString() {
+            String ret = key.toString();
+            if (left != null) { ret = left.toString() + ' ' + ret; }
+            if (right != null) { ret += ' ' + right.toString(); }
+            return ret;
+        }
     }
 
     Node root = null;
@@ -33,6 +41,9 @@ class AVLTree<K extends Comparable<K>, V> {
 
         // TODO: Balancing
     }
+
+    @Override
+    public String toString() { return root == null ? "" : root.toString(); }
 }
 
 public class Matching {
@@ -42,6 +53,7 @@ public class Matching {
         while (true) {
             try {
                 String input = br.readLine();
+                if (input == null) { break; }
                 if (input.compareTo("QUIT") == 0) { break; }
 
                 command(input);
@@ -52,7 +64,10 @@ public class Matching {
     }
 
     // TODO: Implement
-    private static void command(String input) {
-        System.out.println("<< command 함수에서 " + input + " 명령을 처리할 예정입니다 >>");
+    static AVLTree<Integer, Void> map = new AVLTree<Integer, Void>();
+    private static void command(String line) {
+        int input = Integer.parseInt(line);
+        map.insert(input, null);
+        System.out.printf("Inserted %d : %s\n", input, map);
     }
 }
