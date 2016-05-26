@@ -18,14 +18,14 @@ public class Matching
 			}
 			catch (IOException e)
 			{
-				System.out.println("ÀÔ·ÂÀÌ Àß¸øµÇ¾ú½À´Ï´Ù. ¿À·ù : " + e.toString());
+				System.out.println("ì…ë ¥ì´ ì˜ëª»ë˜ì—ˆìŠµë‹ˆë‹¤. ì˜¤ë¥˜ : " + e.toString());
 			}
 		}
 	}
 
 	private static void command(String input)
 	{
-		// TODO : ¾Æ·¡ ¹®ÀåÀ» »èÁ¦ÇÏ°í ±¸ÇöÇØ¶ó.
-		System.out.println("<< command ÇÔ¼ö¿¡¼­ " + input + " ¸í·ÉÀ» Ã³¸®ÇÒ ¿¹Á¤ÀÔ´Ï´Ù >>");
+		// TODO : ì•„ë˜ ë¬¸ì¥ì„ ì‚­ì œí•˜ê³  êµ¬í˜„í•´ë¼.
+		System.out.println("<< command í•¨ìˆ˜ì—ì„œ " + input + " ëª…ë ¹ì„ ì²˜ë¦¬í•  ì˜ˆì •ì…ë‹ˆë‹¤ >>");
 	}
 }
