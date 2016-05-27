@@ -58,12 +58,6 @@ public class Matching {
                     // Dup
                     entry.add(pos);
                 }
-
-                // TODO: Remove debug codes
-                System.out.printf("\u001B[38;5;241m%s\u001B[0m", line.substring(0, i));
-                System.out.print(slice);
-                System.out.printf("\u001B[38;5;241m%s\u001B[0m  hash: %02d, %s\n",
-                        line.substring(i + 6), HybridMap.hash(slice), pos);
             }
             ++row;
         }
