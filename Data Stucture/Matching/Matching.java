@@ -1,5 +1,7 @@
 import java.io.*;
-import java.util.ArrayList;
+import java.util.*;
+import java.nio.file.*;
+import java.nio.charset.Charset;
 
 public class Matching {
     public static void main(String args[]) {
@@ -16,10 +18,7 @@ public class Matching {
                 String param = input.substring(2);
 
                 switch (cmd) {
-                case '<':
-                    // TODO: Remove below
-                    System.out.printf("\u001B[38;5;241m데이터 입력 \"%s\"\u001B[0m\n", param);
-                    break;
+                case '<': input(param); break;
                 case '@':
                     // TODO: Remove below
                     System.out.printf("\u001B[38;5;241m슬롯 \"%s\"\u001B[0m\n", param);
@@ -31,6 +30,24 @@ public class Matching {
                 }
             } catch (IOException e) {
                 System.out.println("입력이 잘못되었습니다. 오류 : " + e.toString());
+            }
+        }
+    }
+
+    static void input(String filename) throws IOException {
+        System.out.printf("\u001B[38;5;241m데이터 입력 \"%s\"\u001B[0m\n", filename);
+        List<String> lines = Files.readAllLines(Paths.get(filename), Charset.forName("US-ASCII"));
+
+        for (String line : lines) {
+            final int len = line.length();
+            for (int i = 0; i <= len - 6; ++i) {
+                String a = line.substring(0, i);
+                String b = line.substring(i, i + 6);
+                String c = line.substring(i + 6);
+
+                System.out.printf("\u001B[38;5;241m%s\u001B[0m", a);
+                System.out.print(b);
+                System.out.printf("\u001B[38;5;241m%s\u001B[0m\n", c);
             }
         }
     }
