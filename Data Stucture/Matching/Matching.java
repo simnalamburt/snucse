@@ -5,6 +5,7 @@ class AVLTree<K extends Comparable<K>, V> {
         private K key;
         private V value;
         private Node parent, left, right;
+        private int balance;
 
         private Node(K k, V v) { key = k; value = v; }
 
@@ -14,6 +15,10 @@ class AVLTree<K extends Comparable<K>, V> {
             if (left != null) { ret = left.toString() + ' ' + ret; }
             if (right != null) { ret += ' ' + right.toString(); }
             return ret;
+        }
+
+        private void calc_balance() {
+            balance = height(right) - height(left);
         }
 
         // BST의 부모자식 포인터가 서로 상대방을 올바르게 가리키고있는지, BST의
@@ -62,12 +67,15 @@ class AVLTree<K extends Comparable<K>, V> {
         }
     }
 
+    private int height(Node n) {
+        if (n == null) { return -1; }
+        return Math.max(height(n.left), height(n.right)) + 1;
+    }
+
     @Override
     public String toString() { return root == null ? "" : root.toString(); }
 
     // 올바른 바이너리서치트리인지 검사한다.
-    //
-    // TODO: AVLTree invariant 만족여부 확인하기
     boolean validate() { return root == null || root.validate(null); }
 }
 
