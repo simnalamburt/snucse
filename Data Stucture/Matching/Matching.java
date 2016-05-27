@@ -143,6 +143,50 @@ class AVLTree<K extends Comparable<K>, V> {
             root = Z; // Z is the new root
     }
 
+    private void rotate_RightLeft(Node X, Node Z) {
+        // Z is by 2 higher than its sibling
+        Node Y = Z.left; // Inner child of Z
+        // Y is by 1 higher than sibling
+        Node t3 = Y.right;
+        Z.left = t3;
+        if (t3 != null)
+            t3.parent = Z;
+        Y.right = Z;
+        Z.parent = Y;
+        Node t2 = Y.left;
+        X.right = t2;
+        if (t2 != null)
+            t2.parent = X;
+        Y.left = X;
+        X.parent = Y;
+
+        if (Y.balance_factor > 0) {
+            Z.balance_factor = -1;
+            X.balance_factor = 0;
+        } else
+            // Does not occur with insert:
+            if (Y.balance_factor == 0) {
+                Z.balance_factor = 0;
+                X.balance_factor = 0;
+            } else
+            {
+                Z.balance_factor = 0;
+                X.balance_factor = +1;
+            }
+        Y.balance_factor = 0;
+
+        Node G = X.parent; // Was parent of X
+        Y.parent = G;
+        if (G != null) {
+            if (X == G.left)
+                G.left = Y;
+            else
+                G.right = Y;
+        }
+        else
+            root = Y; // Y is the new root
+    }
+
     @Override
     public String toString() { return root == null ? "" : root.toString(); }
 
