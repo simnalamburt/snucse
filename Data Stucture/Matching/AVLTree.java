@@ -9,7 +9,7 @@ class AVLTree<K extends Comparable<K>, V> {
 
         @Override
         public String toString() {
-            String ret = key.toString();
+            String ret = value.toString();
             if (left != null) { ret = left.toString() + ' ' + ret; }
             if (right != null) { ret += ' ' + right.toString(); }
             return ret;

@@ -1,4 +1,5 @@
 import java.io.*;
+import java.util.ArrayList;
 
 public class Matching {
     public static void main(String args[]) {
@@ -19,7 +20,7 @@ public class Matching {
     }
 
     // TODO: Implement
-    static AVLTree<Integer, Void> map = new AVLTree<Integer, Void>();
+    static AVLTree<Integer, ArrayList<Integer>> map = new AVLTree<Integer, ArrayList<Integer>>();
     private static void command(String line) {
         int input;
         try {
@@ -28,12 +29,23 @@ public class Matching {
             System.out.println("\u001B[38;5;241mParse Error\u001B[0m");
             return;
         }
-        boolean inserted = map.insert(input, null);
 
-        // TODO: Remove debug codes
+        ArrayList<Integer> entry = map.get(input);
+        if (entry == null) {
+            // New entry
+            ArrayList<Integer> value = new ArrayList<Integer>();
+            value.add(input);
+
+            boolean ret = map.insert(input, value);
+
+            if (!ret) { System.out.println("\u001B[31mSomething went wrong\u001B[0m"); }
+        } else {
+            // Dup
+            entry.add(input);
+        }
+
+        if (!map.validate()) { System.out.println("\u001B[31mInvalid AVL Tree\u001B[0m"); }
         System.out.printf("\u001B[33m%s\u001B[0m", map);
-        if (inserted) { System.out.printf(" (Inserted %d)", input); }
         System.out.println();
-        if (!map.validate()) { System.out.println("\u001B[31mInvalid BST warning\u001B[0m"); }
     }
 }
