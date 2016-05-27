@@ -143,6 +143,38 @@ class AVLTree<K extends Comparable<K>, V> {
             root = Z; // Z is the new root
     }
 
+    private void rotate_Right(Node X, Node Z) {
+        // Z is by 2 higher than its sibling
+        Node t23 = Z.right; // Inner child of Z
+        X.left = t23;
+        if (t23 != null)
+            t23.parent = X;
+
+        Z.right = X;
+        X.parent = Z;
+
+        // Does not occur with insert:
+        if (Z.balance_factor == 0) {
+            X.balance_factor = +1;
+            Z.balance_factor = -1;
+        } else
+        {
+            X.balance_factor = 0;
+            Z.balance_factor = 0;
+        }
+
+        Node G = X.parent; // Was parent of X
+        X.parent = G;
+        if (G != null) {
+            if (X == G.right)
+                G.right = Z;
+            else
+                G.left = Z;
+        }
+        else
+            root = Z; // Z is the new root
+    }
+
     private void rotate_RightLeft(Node X, Node Z) {
         // Z is by 2 higher than its sibling
         Node Y = Z.left; // Inner child of Z
