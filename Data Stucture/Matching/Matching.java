@@ -17,8 +17,92 @@ class AVLTree<K extends Comparable<K>, V> {
             return ret;
         }
 
-        private void calc_balance() {
+        // `this.balance`의 값을 업데이트한다
+        private void calc_balance_factor() {
             balance = height(right) - height(left);
+        }
+
+        // `this` 이하의 서브트리들을 다시 밸런싱한다.
+        private void rebalance() {
+            calc_balance_factor();
+
+            Node n;
+            if (balance == -2) {
+                n = height(this.left.left) >= height(this.left.right) ?
+                    rotateRight() :
+                    rotateLeftRight();
+            } else if (balance == 2) {
+                n = height(this.right.right) >= height(this.right.left) ?
+                    rotateLeft() :
+                    rotateRightLeft();
+            } else {
+                n = this;
+            }
+
+            if (n.parent != null) {
+                n.parent.rebalance();
+            } else {
+                root = n;
+            }
+        }
+
+        private Node rotateLeft() {
+            Node target = this.right;
+            target.parent = this.parent;
+
+            this.right = target.left;
+
+            if (this.right != null) { this.right.parent = this; }
+
+            target.left = this;
+            this.parent = target;
+
+            if (target.parent != null) {
+                if (target.parent.right == this) {
+                    target.parent.right = target;
+                } else {
+                    target.parent.left = target;
+                }
+            }
+
+            this.calc_balance_factor();
+            target.calc_balance_factor();
+            return target;
+        }
+
+        private Node rotateRight() {
+            Node target = this.left;
+            target.parent = this.parent;
+
+            this.left = target.right;
+
+            if (this.left != null)
+                this.left.parent = this;
+
+            target.right = this;
+            this.parent = target;
+
+            if (target.parent != null) {
+                if (target.parent.right == this) {
+                    target.parent.right = target;
+                } else {
+                    target.parent.left = target;
+                }
+            }
+
+            this.calc_balance_factor();
+            target.calc_balance_factor();
+            return target;
+        }
+
+        private Node rotateLeftRight() {
+            this.left = this.left.rotateLeft();
+            return this.rotateRight();
+        }
+
+        private Node rotateRightLeft() {
+            this.right = this.right.rotateRight();
+            return this.rotateLeft();
         }
 
         // BST의 부모자식 포인터가 서로 상대방을 올바르게 가리키고있는지, BST의
@@ -62,7 +146,7 @@ class AVLTree<K extends Comparable<K>, V> {
             if (cmp < 0) { parent.left = n; }
             else { parent.right = n; }
             n.parent = parent;
-            // TODO: parent.rebalance();
+            parent.rebalance();
             return true;
         }
     }
