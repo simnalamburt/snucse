@@ -80,10 +80,8 @@ public class Matching {
             LinkedList<Pair<Integer, Integer>> entry = dict.get(slice);
             if (entry == null) { return false; }
 
-            Iterator<Pair<Integer, Integer>> iter = first_entry.iterator();
-            while (iter.hasNext()) {
-                Pair<Integer, Integer> pos = iter.next();
-
+            LinkedList<Pair<Integer, Integer>> temp = new LinkedList<Pair<Integer, Integer>>(first_entry);
+            for (Pair<Integer, Integer> pos : first_entry) {
                 boolean contains = false;
                 for (Pair<Integer, Integer> newpos : entry) {
                     if (pos.first == newpos.first && pos.second + i == newpos.second) {
@@ -92,8 +90,9 @@ public class Matching {
                     }
                 }
 
-                if (!contains) { iter.remove(); }
+                if (!contains) { temp.remove(pos); }
             }
+            first_entry = temp;
         }
 
         if (first_entry.size() == 0) { return false; }
