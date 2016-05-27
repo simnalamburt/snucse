@@ -84,7 +84,7 @@ public class Matching {
             for (Pair<Integer, Integer> pos : first_entry) {
                 boolean contains = false;
                 for (Pair<Integer, Integer> newpos : entry) {
-                    if (pos.first == newpos.first && pos.second + i == newpos.second) {
+                    if (pos.first + 0 == newpos.first && pos.second + i == newpos.second) {
                         contains = true;
                         break;
                     }
