@@ -10,9 +10,25 @@ public class Matching {
                 String input = br.readLine();
                 if (input == null) { break; } // Handle EOF properly
                 if (input.compareTo("QUIT") == 0) { break; }
-                if (input.compareTo("") == 0) { continue; } // Ignore empty line
+                if (input.length() < 2) { continue; }
 
-                command(input);
+                char cmd = input.charAt(0);
+                String param = input.substring(2);
+
+                switch (cmd) {
+                case '<':
+                    // TODO: Remove below
+                    System.out.printf("\u001B[38;5;241m데이터 입력 \"%s\"\u001B[0m\n", param);
+                    break;
+                case '@':
+                    // TODO: Remove below
+                    System.out.printf("\u001B[38;5;241m슬롯 \"%s\"\u001B[0m\n", param);
+                    break;
+                case '?':
+                    // TODO: Remove below
+                    System.out.printf("\u001B[38;5;241m패턴매칭 \"%s\"\u001B[0m\n", param);
+                    break;
+                }
             } catch (IOException e) {
                 System.out.println("입력이 잘못되었습니다. 오류 : " + e.toString());
             }
