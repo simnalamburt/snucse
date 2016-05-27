@@ -100,7 +100,13 @@ public class Matching {
     // TODO: Implement
     static AVLTree<Integer, Void> map = new AVLTree<Integer, Void>();
     private static void command(String line) {
-        int input = Integer.parseInt(line);
+        int input;
+        try {
+            input = Integer.parseInt(line);
+        } catch(NumberFormatException e) {
+            System.out.println("\u001B[38;5;241mParse Error\u001B[0m");
+            return;
+        }
         boolean inserted = map.insert(input, null);
 
         // TODO: Remove debug codes
