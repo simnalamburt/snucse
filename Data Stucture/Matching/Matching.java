@@ -20,7 +20,7 @@ public class Matching {
     }
 
     // TODO: Implement
-    static AVLTree<Integer, ArrayList<Integer>> map = new AVLTree<Integer, ArrayList<Integer>>();
+    static AVLTree<Integer, ArrayList<Pair<Integer, Integer>>> map = new AVLTree<Integer, ArrayList<Pair<Integer, Integer>>>();
     private static void command(String line) {
         int input;
         try {
@@ -30,18 +30,18 @@ public class Matching {
             return;
         }
 
-        ArrayList<Integer> entry = map.get(input);
+        ArrayList<Pair<Integer, Integer>> entry = map.get(input);
         if (entry == null) {
             // New entry
-            ArrayList<Integer> value = new ArrayList<Integer>();
-            value.add(input);
+            ArrayList<Pair<Integer, Integer>> value = new ArrayList<Pair<Integer, Integer>>();
+            value.add(Pair.of(input, input));
 
             boolean ret = map.insert(input, value);
 
             if (!ret) { System.out.println("\u001B[31mSomething went wrong\u001B[0m"); }
         } else {
             // Dup
-            entry.add(input);
+            entry.add(Pair.of(input, input));
         }
 
         if (!map.validate()) { System.out.println("\u001B[31mInvalid AVL Tree\u001B[0m"); }
