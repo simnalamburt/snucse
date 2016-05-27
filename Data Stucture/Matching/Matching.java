@@ -157,6 +157,18 @@ class AVLTree<K extends Comparable<K>, V> {
         }
     }
 
+    V get(K query) {
+        if (root == null) { return null; }
+        for (Node i = root;;) {
+            int cmp = query.compareTo(i.key);
+            if (cmp == 0) { return i.value; }
+
+            Node parent = i;
+            i = cmp < 0 ? i.left : i.right;
+            if (i == null) { return null; }
+        }
+    }
+
     private int height(Node n) {
         if (n == null) { return -1; }
         return Math.max(height(n.left), height(n.right)) + 1;
