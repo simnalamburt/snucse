@@ -17,7 +17,7 @@ class AVLTree<K extends Comparable<K>, V> {
             return ret;
         }
 
-        // `this.balance`의 값을 업데이트한다
+        // 단일 노드의 `this.balance`의 값을 업데이트한다
         private void calc_balance_factor() {
             balance = height(right) - height(left);
         }
@@ -117,12 +117,18 @@ class AVLTree<K extends Comparable<K>, V> {
         //
         // 위와 같이 호출할경우, `node`의 부모가 `p`가 맞는지 여부를 검사한 뒤,
         // node를 루트로 하는 BST가 올바른 트리인지 검사하게된다.
-        //
-        // TODO: AVLTree invariant 만족 여부 검증
         boolean validate(Node parent) {
-            return this.parent == parent &&
-                (left  == null || (left .key.compareTo(this.key) < 0 && left .validate(this))) &&
-                (right == null || (right.key.compareTo(this.key) > 0 && right.validate(this)));
+            if (!(this.parent == parent)) { return false; }
+            if (!(-1 <= balance && balance <= 1)) { return false; }
+            if (left != null) {
+                if (!(left.key.compareTo(this.key) < 0)) { return false; }
+                if (!left.validate(this)) { return false; }
+            }
+            if (right != null) {
+                if (!(right.key.compareTo(this.key) > 0)) { return false; }
+                if (!right.validate(this)) { return false; }
+            }
+            return true;
         }
     }
 
@@ -160,7 +166,20 @@ class AVLTree<K extends Comparable<K>, V> {
     public String toString() { return root == null ? "" : root.toString(); }
 
     // 올바른 바이너리서치트리인지 검사한다.
-    boolean validate() { return root == null || root.validate(null); }
+    boolean validate() {
+        if (root == null) { return true; }
+
+        refresh_balance_factor(root);
+        return root.validate(null);
+    }
+
+    // 재귀적으로 모든 노드들의 balance factor를 다시 계산한다
+    private void refresh_balance_factor(Node node) {
+        if (node == null) { return; }
+        node.calc_balance_factor();
+        refresh_balance_factor(node.left);
+        refresh_balance_factor(node.right);
+    }
 }
 
 public class Matching {
