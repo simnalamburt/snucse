@@ -41,13 +41,19 @@ public class Matching {
         for (String line : lines) {
             final int len = line.length();
             for (int i = 0; i <= len - 6; ++i) {
-                String a = line.substring(0, i);
-                String b = line.substring(i, i + 6);
-                String c = line.substring(i + 6);
+                String slice = line.substring(i, i + 6);
+                int hash = (
+                    slice.charAt(0) +
+                    slice.charAt(1) +
+                    slice.charAt(2) +
+                    slice.charAt(3) +
+                    slice.charAt(4) +
+                    slice.charAt(5) ) % 100;
 
-                System.out.printf("\u001B[38;5;241m%s\u001B[0m", a);
-                System.out.print(b);
-                System.out.printf("\u001B[38;5;241m%s\u001B[0m\n", c);
+                System.out.printf("\u001B[38;5;241m%s\u001B[0m", line.substring(0, i));
+                System.out.print(slice);
+                System.out.printf("\u001B[38;5;241m%s\u001B[0m (%d)\n",
+                        line.substring(i + 6), hash);
             }
         }
     }
