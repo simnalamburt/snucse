@@ -96,6 +96,8 @@ public class Matching {
             }
         }
 
+        if (first_entry.size() == 0) { return false; }
+
         StringBuilder buf = new StringBuilder();
         for (Pair pos : first_entry) {
             buf.append(pos.toString());
