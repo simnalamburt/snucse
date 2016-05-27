@@ -5,6 +5,7 @@ class AVLTree<K extends Comparable<K>, V> {
         K key;
         V value;
         Node parent, left, right;
+        byte balance_factor;
 
         Node(K k, V v) { key = k; value = v; }
 
@@ -69,9 +70,45 @@ class AVLTree<K extends Comparable<K>, V> {
 
         // Check if initial insertion
         if (root == null) { root = n; return true; }
-        return root.insert(n);
+        if (!root.insert(n)) { return false; }
 
-        // TODO: Balancing
+        // TODO: Refactoring
+        Node X, Z = n;
+        while ((X = Z.parent) != null) { // Loop (possibly up to the root)
+            // X.balance_factor has not yet been updated!
+            if (Z == X.right) { // The right subtree decreases
+                if (X.balance_factor == +1) {
+                    // ===> the temporary X.balance_factor == +2 ===> rebalancing is required.
+                    if (Z.balance_factor == -1) // Left Right Case
+                        rotate_LeftRight(X,Z); // Double rotation: first Left(Z) then Right(X)
+                    else // Left Left Case: single rotation Right(X)
+                        rotate_Right(X,Z);
+                    break; // Height does not change: Leave the loop
+                }
+                if (X.balance_factor == -1) {
+                    X.balance_factor = 0; // Z’s height increase is absorbed at X.
+                    break; // Leave the loop
+                }
+                X.balance_factor = +1; // Height increases at X
+            } else { // Z == left_child(X): the left subtree decreases
+                if (X.balance_factor == -1) {
+                    // ===> the temporary X.balance_factor == -2 ===> rebalancing is required.
+                    if (Z.balance_factor == +1) // Right Left Case
+                        rotate_RightLeft(X,Z); // Double rotation: first Right(Z) then Left(X)
+                    else // Right Right Case: single rotation Left(X)
+                        rotate_Left(X,Z);
+                    break; // Height does not change: Leave the loop
+                }
+                if (X.balance_factor == +1) {
+                    X.balance_factor = 0; // Z’s height increase is absorbed at X.
+                    break; // Leave the loop
+                }
+                X.balance_factor = -1; // Height increases at X
+            }
+            Z = X;
+        }
+
+        return true;
     }
 
     @Override
