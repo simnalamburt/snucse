@@ -29,66 +29,43 @@ public class Matching {
                     break;
                 }
             } catch (IOException e) {
-                System.out.println("입력이 잘못되었습니다. 오류 : " + e.toString());
+                System.err.println("입력이 잘못되었습니다. 오류 : " + e.toString());
             }
         }
     }
 
+    static HybridMap<LinkedList<Pair<Integer, Integer>>> dict;
     static void input(String filename) throws IOException {
-        System.out.printf("\u001B[38;5;241m데이터 입력 \"%s\"\u001B[0m\n", filename);
         List<String> lines = Files.readAllLines(Paths.get(filename), Charset.forName("US-ASCII"));
+
+        dict = new HybridMap<LinkedList<Pair<Integer, Integer>>>();
 
         int row = 1;
         for (String line : lines) {
             final int len = line.length();
             for (int i = 0; i <= len - 6; ++i) {
-                Pair<Integer, Integer> pos = Pair.of(row, i + 1);
                 String slice = line.substring(i, i + 6);
-                int hash = (
-                    slice.charAt(0) +
-                    slice.charAt(1) +
-                    slice.charAt(2) +
-                    slice.charAt(3) +
-                    slice.charAt(4) +
-                    slice.charAt(5) ) % 100;
+                Pair<Integer, Integer> pos = Pair.of(row, i + 1);
+
+                LinkedList<Pair<Integer, Integer>> entry = dict.get(slice);
+                if (entry == null) {
+                    // New entry
+                    LinkedList<Pair<Integer, Integer>> newentry = new LinkedList<Pair<Integer, Integer>>();
+                    newentry.add(pos);
+
+                    dict.insert(slice, entry);
+                } else {
+                    // Dup
+                    entry.add(pos);
+                }
 
                 // TODO: Remove debug codes
                 System.out.printf("\u001B[38;5;241m%s\u001B[0m", line.substring(0, i));
                 System.out.print(slice);
                 System.out.printf("\u001B[38;5;241m%s\u001B[0m  hash: %02d, %s\n",
-                        line.substring(i + 6), hash, pos);
+                        line.substring(i + 6), HybridMap.hash(slice), pos);
             }
             ++row;
         }
-    }
-
-    // TODO: Implement
-    static AVLTree<Integer, ArrayList<Pair<Integer, Integer>>> map = new AVLTree<Integer, ArrayList<Pair<Integer, Integer>>>();
-    private static void command(String line) {
-        int input;
-        try {
-            input = Integer.parseInt(line);
-        } catch(NumberFormatException e) {
-            System.out.println("\u001B[38;5;241mParse Error\u001B[0m");
-            return;
-        }
-
-        ArrayList<Pair<Integer, Integer>> entry = map.get(input);
-        if (entry == null) {
-            // New entry
-            ArrayList<Pair<Integer, Integer>> value = new ArrayList<Pair<Integer, Integer>>();
-            value.add(Pair.of(input, input));
-
-            boolean ret = map.insert(input, value);
-
-            if (!ret) { System.out.println("\u001B[31mSomething went wrong\u001B[0m"); }
-        } else {
-            // Dup
-            entry.add(Pair.of(input, input));
-        }
-
-        if (!map.validate()) { System.out.println("\u001B[31mInvalid AVL Tree\u001B[0m"); }
-        System.out.printf("\u001B[33m%s\u001B[0m", map);
-        System.out.println();
     }
 }
