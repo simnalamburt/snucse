@@ -20,10 +20,7 @@ public class Matching {
                 switch (cmd) {
                 case '<': input(param); break;
                 case '@': slot(param); break;
-                case '?':
-                    // TODO: Remove below
-                    System.out.printf("\u001B[38;5;241m패턴매칭 \"%s\"\u001B[0m\n", param);
-                    break;
+                case '?': match(param); break;
                 }
             } catch (IOException e) {
                 System.err.println("입력이 잘못되었습니다. 오류 : " + e.toString());
@@ -64,5 +61,47 @@ public class Matching {
         int input = Integer.parseInt(param);
         AVLTree tree = dict.slots.get(input);
         System.out.println(tree == null ? "EMPTY" : tree);
+    }
+
+    static void match(String query) {
+        if (!try_match(query)) { System.out.println("(0, 0)"); }
+    }
+
+    static boolean try_match(String query) {
+        // TODO: 최적화
+
+        String first_slice = query.substring(0, 6);
+        LinkedList<Pair<Integer, Integer>> first_entry = dict.get(first_slice);
+        if (first_entry == null) { return false; }
+
+        final int len = query.length();
+        for (int i = 1; i <= len - 6; ++i) {
+            String slice = query.substring(i, i + 6);
+            LinkedList<Pair<Integer, Integer>> entry = dict.get(slice);
+            if (entry == null) { return false; }
+
+            Iterator<Pair<Integer, Integer>> iter = first_entry.iterator();
+            while (iter.hasNext()) {
+                Pair<Integer, Integer> pos = iter.next();
+
+                boolean contains = false;
+                for (Pair<Integer, Integer> newpos : entry) {
+                    if (pos.first == newpos.first && pos.second + i == newpos.second) {
+                        contains = true;
+                        break;
+                    }
+                }
+
+                if (!contains) { iter.remove(); }
+            }
+        }
+
+        StringBuilder buf = new StringBuilder();
+        for (Pair pos : first_entry) {
+            buf.append(pos.toString());
+            buf.append(' ');
+        }
+        System.out.println(buf.toString().trim());
+        return true;
     }
 }
