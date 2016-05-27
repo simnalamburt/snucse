@@ -8,6 +8,30 @@ class AVLTree<K extends Comparable<K>, V> {
 
         Node(K k, V v) { key = k; value = v; }
 
+        // `this` 노드의 자식노드로 `new_node`를 삽입한다. `this` 노드의
+        // `left`와 `right`가 모두 이미 할당되어있다면, `left`와 `right`의
+        // 자식들에 대해 재귀적으로 `insert()`를 실행하게된다.
+        //
+        // 만약 `this` 노드와 `new_node`의 키가 같을경우 실패하여 `false`를
+        // 반환한다. 성공적으로 삽입에 성공한경우 `true`를 반환한다.
+        boolean insert(Node new_node) {
+            int compare = new_node.key.compareTo(this.key);
+
+            if (compare == 0) { return false; }
+            if (compare < 0) {
+                // new_node < this
+                if (left != null) { return left.insert(new_node); }
+                this.left = new_node;
+            } else {
+                // new_node > this
+                if (right != null) { return right.insert(new_node); }
+                this.right = new_node;
+            }
+
+            new_node.parent = this;
+            return true;
+        }
+
         @Override
         public String toString() {
             String ret = key.toString();
@@ -39,25 +63,13 @@ class AVLTree<K extends Comparable<K>, V> {
 
     Node root = null;
 
-    void insert(K key, V value) {
+    boolean insert(K key, V value) {
         // New node which will be inserted
         Node n = new Node(key, value);
 
         // Check if initial insertion
-        if (root == null) { root = n; return; }
-
-        // Standard BST insertion
-        Node y, x = root;
-        do {
-            y = x;
-            x = n.key.compareTo(x.key) < 0 ? x.left : x.right;
-        } while (x != null);
-        n.parent = y;
-        if (n.key.compareTo(y.key) < 0) {
-            y.left = n;
-        } else {
-            y.right = n;
-        }
+        if (root == null) { root = n; return true; }
+        return root.insert(n);
 
         // TODO: Balancing
     }
@@ -92,7 +104,11 @@ public class Matching {
     static AVLTree<Integer, Void> map = new AVLTree<Integer, Void>();
     private static void command(String line) {
         int input = Integer.parseInt(line);
-        map.insert(input, null);
-        System.out.printf("Inserted %d, %s. <%s>\n", input, map.validate() ? "valid" : "invalid", map);
+        boolean ret = map.insert(input, null);
+        if (!ret) { return; }
+
+        // TODO: Remove debug codes
+        if (!map.validate()) { System.out.println("\u001B[33mInvalid BST warning\u001B[0m"); }
+        System.out.printf("Inserted %d, [ %s ]\n", input, map);
     }
 }
