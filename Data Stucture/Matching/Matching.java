@@ -56,8 +56,8 @@ class AVLTree<K extends Comparable<K>, V> {
         // TODO: AVLTree invariant 만족 여부 검증
         boolean validate(Node parent) {
             return this.parent == parent &&
-                (left  == null || (left .validate(this) && left .key.compareTo(this.key) < 0)) &&
-                (right == null || (right.validate(this) && right.key.compareTo(this.key) > 0));
+                (left  == null || (left .key.compareTo(this.key) < 0 && left .validate(this))) &&
+                (right == null || (right.key.compareTo(this.key) > 0 && right.validate(this)));
         }
     }
 
