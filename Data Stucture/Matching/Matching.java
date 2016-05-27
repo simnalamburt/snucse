@@ -38,9 +38,11 @@ public class Matching {
         System.out.printf("\u001B[38;5;241m데이터 입력 \"%s\"\u001B[0m\n", filename);
         List<String> lines = Files.readAllLines(Paths.get(filename), Charset.forName("US-ASCII"));
 
+        int row = 1;
         for (String line : lines) {
             final int len = line.length();
             for (int i = 0; i <= len - 6; ++i) {
+                Pair<Integer, Integer> pos = Pair.of(row, i + 1);
                 String slice = line.substring(i, i + 6);
                 int hash = (
                     slice.charAt(0) +
@@ -50,11 +52,13 @@ public class Matching {
                     slice.charAt(4) +
                     slice.charAt(5) ) % 100;
 
+                // TODO: Remove debug codes
                 System.out.printf("\u001B[38;5;241m%s\u001B[0m", line.substring(0, i));
                 System.out.print(slice);
-                System.out.printf("\u001B[38;5;241m%s\u001B[0m (%d)\n",
-                        line.substring(i + 6), hash);
+                System.out.printf("\u001B[38;5;241m%s\u001B[0m  hash: %02d, %s\n",
+                        line.substring(i + 6), hash, pos);
             }
+            ++row;
         }
     }
 
