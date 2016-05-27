@@ -1,36 +1,12 @@
 import java.io.*;
 
 class AVLTree<K extends Comparable<K>, V> {
-    class Node {
-        K key;
-        V value;
-        Node parent, left, right;
+    private class Node {
+        private K key;
+        private V value;
+        private Node parent, left, right;
 
-        Node(K k, V v) { key = k; value = v; }
-
-        // `this` 노드의 자식노드로 `new_node`를 삽입한다. `this` 노드의
-        // `left`와 `right`가 모두 이미 할당되어있다면, `left`와 `right`의
-        // 자식들에 대해 재귀적으로 `insert()`를 실행하게된다.
-        //
-        // 만약 `this` 노드와 `new_node`의 키가 같을경우 실패하여 `false`를
-        // 반환한다. 성공적으로 삽입에 성공한경우 `true`를 반환한다.
-        boolean insert(Node new_node) {
-            int compare = new_node.key.compareTo(this.key);
-
-            if (compare == 0) { return false; }
-            if (compare < 0) {
-                // new_node < this
-                if (left != null) { return left.insert(new_node); }
-                this.left = new_node;
-            } else {
-                // new_node > this
-                if (right != null) { return right.insert(new_node); }
-                this.right = new_node;
-            }
-
-            new_node.parent = this;
-            return true;
-        }
+        private Node(K k, V v) { key = k; value = v; }
 
         @Override
         public String toString() {
@@ -69,9 +45,21 @@ class AVLTree<K extends Comparable<K>, V> {
 
         // Check if initial insertion
         if (root == null) { root = n; return true; }
-        return root.insert(n);
 
-        // TODO: Balancing
+        for (Node i = root;;) {
+            int cmp = key.compareTo(i.key);
+            if (cmp == 0) { return false; }
+
+            Node parent = i;
+            i = cmp < 0 ? i.left : i.right;
+            if (i != null) { continue; }
+
+            if (cmp < 0) { parent.left = n; }
+            else { parent.right = n; }
+            n.parent = parent;
+            // TODO: parent.rebalance();
+            return true;
+        }
     }
 
     @Override
