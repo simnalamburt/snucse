@@ -90,7 +90,7 @@ class AVLTree<K extends Comparable<K>, V> {
                     break; // Leave the loop
                 }
                 X.balance_factor = +1; // Height increases at X
-            } else { // Z == left_child(X): the left subtree decreases
+            } else { // Z == X.left: the left subtree decreases
                 if (X.balance_factor == -1) {
                     // ===> the temporary X.balance_factor == -2 ===> rebalancing is required.
                     if (Z.balance_factor == +1) // Right Left Case
@@ -109,6 +109,38 @@ class AVLTree<K extends Comparable<K>, V> {
         }
 
         return true;
+    }
+
+    private void rotate_Left(Node X, Node Z) {
+        // Z is by 2 higher than its sibling
+        Node t23 = Z.left; // Inner child of Z
+        X.right = t23;
+        if (t23 != null)
+            t23.parent = X;
+
+        Z.left = X;
+        X.parent = Z;
+
+        // Does not occur with insert:
+        if (Z.balance_factor == 0) {
+            X.balance_factor = -1;
+            Z.balance_factor = +1;
+        } else
+        {
+            X.balance_factor = 0;
+            Z.balance_factor = 0;
+        }
+
+        Node G = X.parent; // Was parent of X
+        X.parent = G;
+        if (G != null) {
+            if (X == G.left)
+                G.left = Z;
+            else
+                G.right = Z;
+        }
+        else
+            root = Z; // Z is the new root
     }
 
     @Override
