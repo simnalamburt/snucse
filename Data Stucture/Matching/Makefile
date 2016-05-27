@@ -8,4 +8,4 @@ clean:
 	rm -f *.class
 
 run: Matching.class
-	java Matching
+	@java Matching
