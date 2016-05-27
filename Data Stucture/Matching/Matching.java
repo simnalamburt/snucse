@@ -19,10 +19,7 @@ public class Matching {
 
                 switch (cmd) {
                 case '<': input(param); break;
-                case '@':
-                    // TODO: Remove below
-                    System.out.printf("\u001B[38;5;241m슬롯 \"%s\"\u001B[0m\n", param);
-                    break;
+                case '@': slot(param); break;
                 case '?':
                     // TODO: Remove below
                     System.out.printf("\u001B[38;5;241m패턴매칭 \"%s\"\u001B[0m\n", param);
@@ -61,5 +58,10 @@ public class Matching {
             }
             ++row;
         }
+    }
+
+    static void slot(String param) {
+        int input = Integer.parseInt(param);
+        System.out.println(dict.slots.get(input));
     }
 }
