@@ -62,6 +62,7 @@ public class Matching {
 
     static void slot(String param) {
         int input = Integer.parseInt(param);
-        System.out.println(dict.slots.get(input));
+        AVLTree tree = dict.slots.get(input);
+        System.out.println(tree == null ? "EMPTY" : tree);
     }
 }
