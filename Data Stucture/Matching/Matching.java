@@ -50,7 +50,7 @@ public class Matching {
                     LinkedList<Pair<Integer, Integer>> newentry = new LinkedList<Pair<Integer, Integer>>();
                     newentry.add(pos);
 
-                    dict.insert(slice, entry);
+                    dict.insert(slice, newentry);
                 } else {
                     // Dup
                     entry.add(pos);
