@@ -1359,3 +1359,66 @@ June 9, 2016
 
 4, 5문단이면 충분함. 5문단 이상은 과한거같음. 그 외에 제한은 없음. 다른 그림이나
 그래프를 넣는건 자유임.
+
+에세이 잘쓰는법
+--------
+
+#### 1. Introduction
+Make it unique and interesting!
+
+1.  Question. 쉬운 문제를 내지 마라. 흥미롭고, 다음 내용이 더 궁금해지는 질문을
+    해라.
+2.  Proverb. 주제와 연관된 속담. 교육에 관한거였다면, 사람에게 물고기를 주거나
+    물고기 잡는법을 알려주는 속담을 들 수 있겠다.
+3.  Quote.
+4.  Surprising Information
+5.  Anecdote
+6.  Definition
+
+Quote를 만들때엔, 쌍따옴표 안에 마침표를 찍어라.
+
+- "A dog is man's best friend". &rarr; X
+- "A dog is man's best friend." &rarr; O
+
+맨 처음 2문장 이내에 Grabber를 만들어라. 글 뒷부분이 정말 궁금해지게 만들어야함.
+
+-   Education has been an important part of our lives from the beginning of
+    society.
+
+    **GRABBER** 흥미로운 사실 제시
+
+-   Despite this importance, the values and traditions of education vary from
+    country to country. Two such countries whose educations are different are
+    The Unites States of America and South Korea.
+
+    **TOPIC** 이야기를 꺼내기 시작함
+
+-   **ELABORATE**. 인트로덕션에서 배경지식을 충분히 전달하라. 내가 만약 파이널
+    페이퍼를 쓴다면 Elaborate로 페이지 반을 채우겠음.
+
+-   **Thesis Statement**. 인트로덕션 마지막부분에는 강한 주제선언이
+    들어가야한다. 여기서 *강한*의 의미는, 페이퍼에서 Maybe와 같은 말을 쓰지
+    말아야한다는말임. Make it sound strong and clear.
+
+    우리는 우리가 발표했던 토픽들에 대해 쓸거고, 대부분의사람은 그냥 여러
+    현상들을 비교하기만했다. 그래서 우리의경우는 꼭 뭔가를 주장할필요는 없고,
+    중립적인 위치에 서있어도 상관없다. 하지만 여전히 흥미롭게 들리도록 하긴
+    해야함.
+
+-   예시로 주어진 Introduction에 들어가는 마지막 문장의 세 예시가, 자세히보면
+    그다음 세 body paragraph의 각 주제임.
+
+에세이에서 `In this essay`, `Now I will ...` 이런말 절대쓰지마라.
+
+#### 2. Body paragraphs
+**ELABORATE!!!**
+
+데이터와 사진을 넣어도 된다. 문단과 문단 사이에 그림이나 그래프, 표 등을 넣고
+문장에는 `As you can see in the following paragraph` 이런거 하면 됨.
+
+#### 3. Conclusion
+- Benefits that we can get
+- 좀더 흥미롭게 만들어라
+
+#### 4. Reference
+레퍼런스 써야됨. 다음시간에 배움
