@@ -44,7 +44,9 @@
 아래의 루비코드를 써서 위의 답을 검증할 수 있다.
 
 ```ruby
-(0 .. 2**10-1).map { |x| '%010b' % x } .count { |x| x.include?('00000') | x.include?('11111') }
+(0 .. 2**10-1) \
+  .map { |x| '%010b' % x } \
+  .count { |x| x.include?('00000') | x.include?('11111') }
 #=> 222
 ```
 
@@ -70,7 +72,9 @@ C(10, 2)*C(15, 4) + C(10, 1)*C(15, 5) + C(10, 0)*C(15, 6)
 아래의 루비 코드로 검산할 수 있다.
 
 ```ruby
-([:man]*10 + [:woman]*15).combination(6).count { |x| x.count(:woman) > x.count(:man) }
+([:man]*10 + [:woman]*15) \
+  .combination(6) \
+  .count { |x| x.count(:woman) > x.count(:man) }
 #=> 96460
 ```
 
@@ -140,7 +144,9 @@ m+n개의 자릿수 가운데 m개를 골라 `0`, 나머지를 모두 `1`로 만
 섞는다고 보면 된다. `C(5, 2) = 10`이 답이다.
 
 ```ruby
-(0..9).flat_map { |n| (n..9).map { |m| [0...n, n...m, m...9] } } .count { |x| x.all? { |c| c.count >= 2 } }
+(0..9) \
+  .flat_map { |n| (n..9).map { |m| [0...n, n...m, m...9] } } \
+  .count { |x| x.all? { |c| c.count >= 2 } }
 #=> 10
 ```
 ### 7. 5150
