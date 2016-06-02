@@ -228,6 +228,23 @@ P(A|E) = ?
 
 ### 11. <font color=red>TODO</font>
 
-### 12. <font color=red>TODO</font>
+### 12.
+> E(X + Y) = E(X) + E(Y)
+>
+> V(X) = E( (X-E(X))^2 )
+>
+> Cov(X, Y) = E( (X-E(X))(Y-E(Y)) )
+
+편의상 `x := E(X), y := E(Y)` 로 `x`, `y`를 정의하겠다.
+
+```
+  V(X) + V(Y) + 2Cov(X, Y)
+= E( (X-x)^2 ) + E( (Y-y)^2 ) + 2*E( (X-x)(Y-y) )
+= E( (X-x)^2 + (Y-y)^2 + 2*(X-x)(Y-y) )
+= E( (X-x + Y-y)^2 )
+= E( (X+Y - (x+y))^2 )        ; E(X) + E(Y) = E(X+Y)
+= E( (X+Y - E(X+Y))^2 )
+  V(X + Y)
+```
 
 ### 13. <font color=red>TODO</font>
