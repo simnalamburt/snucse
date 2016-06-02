@@ -244,7 +244,43 @@ P(A|E) = ?
 = 21/29 ~= 0.724137...
 ```
 
-### 11. <font color=red>TODO</font>
+### 11.
+원문을 해석하면 아래와 같다.
+```
+P(late|car)     = 0.5
+P(late|bus)     = 0.2
+P(late|bicycle) = 0.05
+```
+#### a) 2/3
+> Bayes' theorem
+>
+> P(A|B) = P(B|A) * P(A) / P(B)
+
+베이즈 정리를 적용하면 답이 나온다.
+
+```
+P(car) = P(bus) = P(bicycle) = 1/3
+
+  P(car|late)
+= P(late|car) * P(car) / P(late)
+= P(late|car) * P(car) / { P(late|car)*P(car) + P(late|bus)*P(bus) + P(late|bicycle)*P(bicycle) }
+= 0.5 * 1/3 / (0.5 * 1/3 + 0.2 * 1/3 + 0.05 * 1/3)
+= 2/3
+```
+
+#### b) 0.75
+동일하다.
+```
+P(car)     = 0.3
+P(bus)     = 0.1
+P(bicycle) = 0.6
+
+  P(car|late)
+= P(late|car) * P(car) / P(late)
+= P(late|car) * P(car) / { P(late|car)*P(car) + P(late|bus)*P(bus) + P(late|bicycle)*P(bicycle) }
+= 0.5 * 0.3 / (0.5 * 0.3 + 0.2 * 0.1 + 0.05 * 0.6)
+= 0.75
+```
 
 ### 12.
 > E(X + Y) = E(X) + E(Y)
