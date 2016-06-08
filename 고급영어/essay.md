@@ -1,66 +1,12 @@
-Differences between Korean and American Company Culture
+Differences of Company Culture between Korea and America
 --------
 
-- 표지
-- 인트로덕션
-- 출처
-- 인쇄
-- 자료사진
+Have you ever imagined, how different that two different countries’ company which do the same job, make the same products and compete in the same market can be in cultural way? Can you believe if Samsung and Apple have completely different atmosphere although both are IT companies? Company culture is affected by various factor; national sentiment, the country’s history, the company’s background, and so on. Although it has been over 300 years since the history of capitalism has begun, the actual figure of each country’s company culture is too different to group all those companies under the term “company”. Let’s see how different the company culture between two countries can be different by comparing the process of getting job, daily life in company, resignation and dismissal.
 
-*Introduction*
+Differences between Korean and American company culture is quite obvious that you can even realize when you apply for a company. The first notable difference is the written self-introduction. It is very common for Koreans to write a long essay to introduce themselves and explain the reason why they applied for the company. Korean companies want to know applicants’ passion, aspiration and personality through those long essays. However, in America most HR manager just simply checks if applicants meet the qualification of the company. Thus, instead of long essay, a cover letter less than one page which simply contains applicant’s objective qualification and contact information is all written self-introduction for them. The second part that’ll make you surprise is the form of résumé. In America, companies receive free formed résumé and all applicants make their own résumé in the form which they think most effective. But in Korea you’ll have to rewrite your résumé every time you apply for a company to fit in the form that the company gave you. Korean conglomerates have their own form of résumé to handle a lot of applicants’ résumé efficiently, and such company culture affected the other Korean companies to make each company’s own résumé form. And the most disturbing difference is a request of personal information. In America, there is a law that prevents company from asking applicants sensitive questions such as birthday, family information or military records. If a company which doesn’t hire a model or actor requires applicants’ photo, applicants can even sue the company considering such requirement as a discrimination. However, meanwhile in Korea, no law prevents companies from asking sensitive personal information so companies literally ask everything they can. Almost all company requires applicants’ photo and no one raises a question for it. Some conservative companies like Hyundai or LG even ask the job and age of the applicant’s each family member. This is a sad aspect of the authoritarian Korean company culture.
 
+The biggest difference in company culture of two countries is the employees’ daily life. In Korea, you should call your colleagues not by their name but by their family name with their position since many Korean company consider hierarchy and title important. But in America no such culture does exist and calling colleagues by their name is natural for them. So sometimes they do not remember their colleague or business partners’ position correctly. Another good example is company meeting. Most American companies schedule the meeting in advance by email and they tend to hold meetings to be short if possible. However, according to “Diagnosis on the organizational health and corporate culture of Korean companies”, (Korea Chamber of Commerce & Industry, McKinsey & Company, 2016) Korean companies do not properly schedule the meeting so they have a long tedious meeting since attendants could not understand the agenda of the meeting and prepare for it. And also since most Korean companies do not let staff member dispute their senior’s decision, Korean companies’ meeting tend to be a report session rather than a place for brainstorming. Vacation is also another good example to compare two cultures. Actually the vacation system of both countries is very similar but there is a big difference in how employees of two countries use it. Manager of Korean companies let employees excuse their vacation so many people somehow disclose their privacy to the company. So Korean people tend to have a big vacation at once since it is not easy to make a proper reason every time they take a day off. However, in America, they relatively use their vacation more freely and take a day or semi off more often than Korea. This is due to the American culture which takes higher priority to family than work. And there is a unique culture in Korean business society called “Hoesik”. Hoesik is a half-compulsory dinner meeting which implicitly requires all team members to join. Usually Hoesik takes place at barbeque house or bar and does not end at one place but happens several times successively, so Hoesik have a negative effect on employees’ family or personal life. Also, Hoesik forces people to drink unwanted alcohol which causes many social ills. There is a group dinner after work also in America but they do not require all team members to join or drink. They try to be friends outside of the office and respect each other’s personal life so Korean Hoesik culture usually shocks the American businessmen. Instead, they rather enjoy the year-end party at the office.
 
-같은 양복을 입고, 같은 일을 하고, 같은 시장에서 경쟁하는 두 나라의 기업문화가
-얼마나 다를지 생각해본적 있는가?
+Dismissal and resignation are also the interesting cultural differences between two countries. In Korea, dismissal requires complex process and strict condition so usually does not happen in big company. Such labor laws were established to protect weak people who cannot afford a long lawsuit. However, “at-will employment” is the default rule of all employment contract in America. Under at-will employment, employee can be dismissed by an employer for any reason, and without warning. (Shepherd, 2011) Hence, dismissal happens more often than Korea and people consider it more common and dry. And Korean people usually consider resignation sad event. This is because of not only that most Korean businessman tries to devote to a single company for their whole life, but also that resignation in Korea is often another form of unfair dismissal. Since Korean labor law does not allow companies to easily dismiss the employees, many Korean companies circumvent the labor law by forcing employees to resign by transferring or treating badly in the office. In America, resignation is also a sad event for them. But they also regard it as a good opportunity to raise their own value and salary. In the most cases, they resign willingly to find another job or catch another opportunity, and resignation happens more frequently.
 
-우리에겐 그냥 같은 'IT 회사'인 삼성과 애플이,
-한곳은 완전한 군대이고 한곳은 전혀 아니라면 믿을 수 있겠는가?
-
-회사의 기업문화는 여러가지것들에서 영향을 받는다; 국민정서, 그 나라의 역사, 그
-회사의 배경 and etc.
-
-자본주의의 역사가 시작된 이래로 전 세계에는 크고 작은 수많은 회사들이
-세워졌지만, 그 회사들의 기업문화를 살펴보면 같은 '회사'라고 부르기엔 그 모습이
-너무나도 다른것을 알 수 있다.
-
-미국과 한국의 회사에서 일자리를 구하고, 회사생활을 하고 마지막으로 그만두는
-과정을 비교해보면서, 두나라의 기업문화가 얼마나 달라질 수 있는지 비교해보자.
-
-
-* 입사
-    * 자기소개서, 지원동기 등등 질문
-    * 얼굴사진 X
-    * 고등학교, 가족정보 X
-    * 국가 O
-    * 자기소개서 양식의 존재유무
-    * 그 외 기타 민감한 질문
-
-* 회사생활
-    * 직급
-        - 한국은 상급자와 하급자로 나눔
-        - 미국은 직원과 매니저로 나눔
-        - 직급으로 부르지 않음
-    * 회의
-        - 상급자가 말하면 듣고있기
-        - 회의시간
-    * 휴가
-        - 사유 써야함
-        - 휴가가서 연락받음
-        - 휴가안쓰면 돈으로 받음
-    * 회식
-        - 2차 3차 술마시기
-        - 미국에선 저녁에 간단하게 맥주하나 하는경우가 많음
-        - 대신 이동네에는 아예 날잡고 파티를 함
-
-* 퇴사
-    - 한국에선 한번 취직하면 거기에 뼈를 묻는 경향이 큼
-    - 퇴사를 부정적인 일로 받아들이는 경우가 많다
-    - 미국에선 퇴사를 자기 몸값을 올릴 수 있는 기회로 받아들이는 경향이 크다
-    - 한국에서는 해고절차가 복잡함
-    - 미국은 At will employment라는 제도가 있어서 언제든 하루만에 해고가 가능함
-    - 하지만 우리나라도 대기업의 경우는 오지로 전근을 보낸다던가 화장실도 못가게
-        대기발령을 내린다던가 등의 부당노동행위를 통해 사실상 사직을
-        얻어냄
-    - 해고절차
-
-*Conclusion*
+Korean and American company show various differences which implies two countries’ cultural differences. Korean companies are more hierarchical and authoritarian in several ways, and American companies are more liberal, but also less protective to the labors. Both culture have its pros and cons but also we should admit the fact that Korean companies should learn from American company culture and try to get better in some way; Hoesik, forced resignation, etc. If you are fully aware of these differences, you will be able to make a better decision when you get a job opportunity abroad.
