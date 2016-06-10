@@ -83,7 +83,7 @@ public class Subway {
                 continue;
             }
 
-            find_path(db.values(), from, to);
+            System.out.print(find_path(db.values(), from, to));
         }
     }
 
@@ -146,7 +146,7 @@ public class Subway {
     //
     // Find shortest path
     //
-    static void find_path(Collection<Station> stations, Station start, Station dest) {
+    static String find_path(Collection<Station> stations, Station start, Station dest) {
         class Entry implements Comparable<Entry> {
             long cost;
             ArrayList<Edge> path;
@@ -204,6 +204,27 @@ public class Subway {
             }
         }
 
-        System.out.println("ㅇㅅㅇ)/");
+        StringBuilder buf = new StringBuilder();
+        buf.append(start);
+        for (ListIterator<Edge> iter = entry.path.listIterator(); iter.hasNext(); ) {
+            Edge edge = iter.next();
+
+            // Detect if transfer occurs
+            final boolean transfer = iter.hasNext()
+                && !edge.kind.equals(entry.path.get(iter.nextIndex()).kind);
+
+            buf.append(' ');
+            if (transfer) {
+                buf.append('[');
+                buf.append(edge.dest);
+                buf.append(']');
+            } else {
+                buf.append(edge.dest);
+            }
+        }
+        buf.append('\n');
+        buf.append(entry.cost);
+        buf.append('\n');
+        return buf.toString();
     }
 }
