@@ -204,6 +204,9 @@ public class Subway {
             }
         }
 
+        // TODO: 환승 똑바로처리
+        long additional = 0;
+
         StringBuilder buf = new StringBuilder();
         buf.append(start);
         for (ListIterator<Edge> iter = entry.path.listIterator(); iter.hasNext(); ) {
@@ -218,12 +221,14 @@ public class Subway {
                 buf.append('[');
                 buf.append(edge.dest);
                 buf.append(']');
+
+                additional += 5;
             } else {
                 buf.append(edge.dest);
             }
         }
         buf.append('\n');
-        buf.append(entry.cost);
+        buf.append(entry.cost + additional);
         buf.append('\n');
         return buf.toString();
     }
