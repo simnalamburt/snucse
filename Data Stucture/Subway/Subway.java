@@ -146,7 +146,7 @@ public class Subway {
     //
     // Find shortest path
     //
-    static String find_path(Collection<Station> stations, Station start, Station dest) {
+    static String find_path(Collection<Station> stations, final Station start, Station dest) {
         class Entry implements Comparable<Entry> {
             long cost;
             ArrayList<Edge> path;
