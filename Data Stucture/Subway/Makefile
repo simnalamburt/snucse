@@ -4,7 +4,7 @@ all: Subway.class
 	javac $<
 
 run: all
-	java Subway data
+	java Subway tests/data < tests/stdin
 
 clean:
 	rm -f *.class
