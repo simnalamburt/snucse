@@ -2,6 +2,5 @@ Subway
 ========
 
 ```
-make
-java Subway
+make run
 ```
