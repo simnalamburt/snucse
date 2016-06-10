@@ -5,18 +5,18 @@ import static java.nio.charset.Charset.forName;
 
 class Station {
     final String name;
-    final PriorityQueue<Edge> neighbors;
+    final ArrayList<Edge> neighbors;
 
     Station(String name) {
         this.name = name;
-        this.neighbors = new PriorityQueue<Edge>();
+        this.neighbors = new ArrayList<Edge>();
     }
 
     @Override
     public String toString() { return name; }
 }
 
-class Edge implements Comparable<Edge> {
+class Edge {
     final Station dest;
     final String kind;
     final long weight;
@@ -25,11 +25,6 @@ class Edge implements Comparable<Edge> {
         this.dest = dest;
         this.kind = kind;
         this.weight = weight;
-    }
-
-    @Override
-    public int compareTo(Edge other) {
-        return Long.compare(this.weight, other.weight);
     }
 
     @Override
@@ -58,7 +53,7 @@ public class Subway {
         }
 
         // Parse stdin
-        BufferedReader stdin = new BufferedReader(new InputStreamReader(System.in));
+        final BufferedReader stdin = new BufferedReader(new InputStreamReader(System.in));
         while (true) {
             final String line;
             try {
@@ -152,9 +147,63 @@ public class Subway {
     // Find shortest path
     //
     static void find_path(Collection<Station> stations, Station start, Station dest) {
-        System.out.printf("%s -> %s\n", start, dest);
+        class Entry implements Comparable<Entry> {
+            long cost;
+            ArrayList<Edge> path;
 
-        HashSet<Station> unvisited = new HashSet<Station>(stations);
-        // TODO
+            Entry() {
+                this.cost = 0;
+                this.path = new ArrayList<Edge>();
+            }
+
+            private Entry(Entry other) {
+                this.cost = other.cost;
+                this.path = new ArrayList<Edge>(other.path);
+            }
+
+            @Override
+            public int compareTo(Entry other) {
+                return Long.compare(this.cost, other.cost);
+            }
+
+            Station last() {
+                return path.size() == 0
+                    ? start
+                    : path.get(path.size() - 1).dest;
+            }
+
+            Entry extend(Edge edge) {
+                // TODO: Copy-on-write
+                Entry ret = new Entry(this);
+
+                ret.cost += edge.weight;
+                ret.path.add(edge);
+                return ret;
+            }
+        }
+
+        final PriorityQueue<Entry> shortest = new PriorityQueue<Entry>();
+        final HashSet<Station> unvisited = new HashSet<Station>(stations);
+
+        // Insert initial task
+        shortest.add(new Entry());
+        unvisited.remove(start);
+
+        // Iteration
+        Entry entry;
+        while ((entry = shortest.poll()) != null) {
+            Station last = entry.last();
+            if (last == dest) { break; }
+
+            for (Edge neighbor : last.neighbors) {
+                if (!unvisited.contains(neighbor.dest)) { continue; }
+
+                // Insert new task
+                shortest.add(entry.extend(neighbor));
+                unvisited.remove(neighbor.dest);
+            }
+        }
+
+        System.out.println("ㅇㅅㅇ)/");
     }
 }
