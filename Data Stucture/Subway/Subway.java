@@ -189,20 +189,19 @@ public class Subway {
 
         // Insert initial task
         shortest.add(new Entry());
-        unvisited.remove(start);
 
         // Iteration
         Entry entry;
         while ((entry = shortest.poll()) != null) {
             Station last = entry.last();
             if (last == dest) { break; }
+            unvisited.remove(last);
 
             for (Edge neighbor : last.neighbors) {
                 if (!unvisited.contains(neighbor.dest)) { continue; }
 
                 // Insert new task
                 shortest.add(entry.extend(neighbor));
-                unvisited.remove(neighbor.dest);
             }
         }
 
