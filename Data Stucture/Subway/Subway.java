@@ -95,7 +95,7 @@ public class Subway {
 
         // Cache which stores side information
         class CacheEntry { Station station; String kind; }
-        final HashMap<Long, CacheEntry> cache = new HashMap<Long, CacheEntry>();
+        final HashMap<String, CacheEntry> cache = new HashMap<String, CacheEntry>();
 
         final List<String> lines = Files.readAllLines(path, forName("UTF-8"));
         final Iterator<String> iter = lines.iterator();
@@ -107,9 +107,9 @@ public class Subway {
             final String[] params = line.split(" ");
             if (params.length != 3) { throw new IOException(); }
 
-            long id = Long.parseLong(params[0]);
-            String  name = params[1],
-                    kind = params[2];
+            String id   = params[0],
+                   name = params[1],
+                   kind = params[2];
 
             // Lookup for the station with same name
             Station station = db.get(name);
@@ -131,8 +131,8 @@ public class Subway {
             final String[] params = iter.next().split(" ");
             if (params.length != 3) { throw new IOException(); }
 
-            CacheEntry  from    = cache.get(Long.parseLong(params[0])),
-                        to      = cache.get(Long.parseLong(params[1]));
+            CacheEntry from = cache.get(params[0]),
+                       to   = cache.get(params[1]);
             long weight  = Long.parseLong(params[2]);
             if (!from.kind.equals(to.kind)) { throw new IOException(); }
 
