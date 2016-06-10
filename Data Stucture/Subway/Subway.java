@@ -19,9 +19,9 @@ class Station {
 class Edge implements Comparable<Edge> {
     final Station dest;
     final String kind;
-    final int weight;
+    final long weight;
 
-    Edge(Station dest, String kind, int weight) {
+    Edge(Station dest, String kind, long weight) {
         this.dest = dest;
         this.kind = kind;
         this.weight = weight;
@@ -29,7 +29,7 @@ class Edge implements Comparable<Edge> {
 
     @Override
     public int compareTo(Edge other) {
-        return Integer.compare(this.weight, other.weight);
+        return Long.compare(this.weight, other.weight);
     }
 
     @Override
@@ -100,7 +100,7 @@ public class Subway {
 
         // Cache which stores side information
         class CacheEntry { Station station; String kind; }
-        final HashMap<Integer, CacheEntry> cache = new HashMap<Integer, CacheEntry>();
+        final HashMap<Long, CacheEntry> cache = new HashMap<Long, CacheEntry>();
 
         final List<String> lines = Files.readAllLines(path, forName("UTF-8"));
         final Iterator<String> iter = lines.iterator();
@@ -112,7 +112,7 @@ public class Subway {
             final String[] params = line.split(" ");
             if (params.length != 3) { throw new IOException(); }
 
-            int id = Integer.parseInt(params[0]);
+            long id = Long.parseLong(params[0]);
             String  name = params[1],
                     kind = params[2];
 
@@ -136,9 +136,9 @@ public class Subway {
             final String[] params = iter.next().split(" ");
             if (params.length != 3) { throw new IOException(); }
 
-            CacheEntry  from    = cache.get(Integer.parseInt(params[0])),
-                        to      = cache.get(Integer.parseInt(params[1]));
-            int weight  = Integer.parseInt(params[2]);
+            CacheEntry  from    = cache.get(Long.parseLong(params[0])),
+                        to      = cache.get(Long.parseLong(params[1]));
+            long weight  = Long.parseLong(params[2]);
             if (!from.kind.equals(to.kind)) { throw new IOException(); }
 
             // Connect stations
