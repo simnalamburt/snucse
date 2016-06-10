@@ -88,7 +88,7 @@ public class Subway {
                 continue;
             }
 
-            find_path(from, to);
+            find_path(db.values(), from, to);
         }
     }
 
@@ -151,9 +151,10 @@ public class Subway {
     //
     // Find shortest path
     //
-    static void find_path(Station start, Station dest) {
+    static void find_path(Collection<Station> stations, Station start, Station dest) {
         System.out.printf("%s -> %s\n", start, dest);
 
+        HashSet<Station> unvisited = new HashSet<Station>(stations);
         // TODO
     }
 }
