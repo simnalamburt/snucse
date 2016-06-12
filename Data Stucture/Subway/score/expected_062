@@ -18,12 +18,3 @@
 91
 태평16 가천대역16 복정16 수서16 대모산입구16 개포동16 구룡16 도곡16 한티16 [선릉16] 역삼16 강남16 교대16 서초16 방배16 사당16 낙성대16 [서울대입구] 낙성대17 [사당17] 총신대입구(이수)17 동작17 이촌17 신용산17 삼각지17 숙대입구17 서울역17 회현17 명동17 충무로17 동대문역사문화공원17 동대문17 혜화17 한성대입구17 성신여대입구17 길음17 미아사거리17 미아17 수유17 쌍문17 [창동17] 방학17 도봉17 도봉산17 망월사17 회룡17 의정부17 가능17 녹양17 양주17 덕계17 덕정17 지행17 동두천중앙17 보산17 동두천17
 152
-
---- Your Output ---
-Exception in thread "main" java.lang.NumberFormatException: For input string: "P1421"
-	at java.lang.NumberFormatException.forInputString(NumberFormatException.java:65)
-	at java.lang.Long.parseLong(Long.java:441)
-	at java.lang.Long.parseLong(Long.java:483)
-	at Subway.parse_data(Subway.java:110)
-	at Subway.main(Subway.java:48)
-

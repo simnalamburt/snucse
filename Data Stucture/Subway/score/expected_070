@@ -18,12 +18,3 @@
 94
 개포동1 구룡1 도곡1 한티1 [선릉1] 역삼1 강남1 교대1 서초1 방배1 사당1 낙성대1 [서울대입구] 낙성대3 [사당3] 남태령3 선바위3 경마공원3 대공원3 과천3 정부과천청사3 인덕원3 평촌3 범계3 금정3 산본3 수리산3 대야미3 반월3 상록수3 한대앞3 중앙3 고잔3 초지3 안산3
 98
-
---- Your Output ---
-Exception in thread "main" java.lang.NumberFormatException: For input string: "P1421"
-	at java.lang.NumberFormatException.forInputString(NumberFormatException.java:65)
-	at java.lang.Long.parseLong(Long.java:441)
-	at java.lang.Long.parseLong(Long.java:483)
-	at Subway.parse_data(Subway.java:110)
-	at Subway.main(Subway.java:48)
-
