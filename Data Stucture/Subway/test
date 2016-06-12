@@ -31,6 +31,7 @@ def test(i, arg, verbose)
         assert.call lhs == rhs, '최소값을 못찾았음'
         assert.call (/\A\d+\z/ === lhs.chomp), '출력 포맷이 틀림'
       end
+      puts "#{num}: OK" if verbose
     rescue RuntimeError => e
       puts "#{num}: Wrong Answer (#{e.message})"
       puts Diff.new(expected, stdout) if verbose
