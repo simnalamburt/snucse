@@ -177,24 +177,42 @@ public class Subway {
         assert src_stations.size() > 0;
         assert dst_stations.size() > 0;
 
+        class Cost implements Comparable<Cost> {
+            long transfer, time;
+            Cost(long transfer, long time) { this.transfer = transfer; this.time = time; }
+            Cost(Cost other) { this.transfer = other.transfer; this.time = other.time; }
+
+            @Override
+            public int compareTo(Cost other) {
+                if (params.type == Params.Type.MinimumTransfer) {
+                    int ret = Long.compare(this.transfer, other.transfer);
+                    if (ret != 0) { return ret; }
+                }
+                return Long.compare(this.time, other.time);
+            }
+
+            @Override
+            public String toString() { return Long.toString(time); }
+        }
+
         class Entry implements Comparable<Entry> {
-            long cost;
+            Cost cost;
             ArrayList<Station> path;
 
             Entry(Station start) {
-                this.cost = 0;
+                this.cost = new Cost(0, 0);
                 this.path = new ArrayList<Station>();
                 this.path.add(start);
             }
 
             private Entry(Entry other) {
-                this.cost = other.cost;
+                this.cost = new Cost(other.cost);
                 this.path = new ArrayList<Station>(other.path);
             }
 
             @Override
             public int compareTo(Entry other) {
-                return Long.compare(this.cost, other.cost);
+                return this.cost.compareTo(other.cost);
             }
 
             Station last() {
@@ -205,7 +223,8 @@ public class Subway {
             Entry extend(Edge edge) {
                 // TODO: Copy-on-write
                 Entry ret = new Entry(this);
-                ret.cost += edge.weight;
+                if (this.last().name.equals(edge.dest.name)) { ret.cost.transfer += 1; }
+                ret.cost.time += edge.weight;
                 ret.path.add(edge.dest);
                 return ret;
             }
@@ -214,14 +233,16 @@ public class Subway {
         final PriorityQueue<Entry> dijkstra = new PriorityQueue<Entry>();
         final HashSet<Station> undecided = new HashSet<Station>();
         final HashSet<Station> destination = new HashSet<Station>(dst_stations);
-        final HashMap<Station, Long> weight = new HashMap<Station, Long>();
+        final HashMap<Station, Cost> weight = new HashMap<Station, Cost>();
 
         // Initialize
         for (Map.Entry<String, ArrayList<Station>> entry : db.entrySet()) {
             boolean is_start = entry.getKey().equals(params.from);
             for (final Station station : entry.getValue()) {
                 undecided.add(station);
-                weight.put(station, is_start ? 0 : Long.MAX_VALUE);
+                weight.put(station, is_start
+                        ? new Cost(0, 0)
+                        : new Cost(Long.MAX_VALUE, Long.MAX_VALUE));
             }
         }
 
