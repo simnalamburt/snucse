@@ -3,8 +3,10 @@ all: Subway.class
 %.class: %.java
 	javac $<
 
-run: all
+test: all
 	java -ea Subway tests/data < tests/stdin > tests/stdout
+score: all
+	@./test
 
 clean:
 	rm -f *.class

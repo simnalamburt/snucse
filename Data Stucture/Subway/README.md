@@ -5,5 +5,8 @@ Subway
 [FAQ](http://soar.snu.ac.kr/course/board/ds2016/1624659)
 
 ```
-make run
+make test
+make score
+
+./test 100
 ```
