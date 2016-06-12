@@ -214,13 +214,16 @@ public class Subway {
         final PriorityQueue<Entry> dijkstra = new PriorityQueue<Entry>();
         final HashSet<Station> undecided = new HashSet<Station>();
         final HashSet<Station> destination = new HashSet<Station>(dst_stations);
-        final HashMap<Station, Long> weight = new HashMap<Station, Long>(); // TODO: weight
+        final HashMap<Station, Long> weight = new HashMap<Station, Long>();
 
         // Initialize
-        for (final ArrayList<Station> stations : db.values()) {
-            for (final Station station : stations) { undecided.add(station); }
+        for (Map.Entry<String, ArrayList<Station>> entry : db.entrySet()) {
+            boolean is_start = entry.getKey().equals(params.from);
+            for (final Station station : entry.getValue()) {
+                undecided.add(station);
+                weight.put(station, is_start ? 0 : Long.MAX_VALUE);
+            }
         }
-        // TODO: weight
 
         // Insert initial tasks
         for (final Station start : src_stations) { dijkstra.add(new Entry(start)); }
