@@ -8,14 +8,14 @@ Diff.default_format = :color
 def test(i, arg, verbose)
   num = '%03d' % i
 
-  msg = `java -ea Subway score/#{arg} < score/stdin_#{num} 2>&1 1>score/stdout_#{num}`
+  msg = `java -ea Subway fixtures/#{arg} < fixtures/stdin_#{num} 2>&1 1>fixtures/stdout_#{num}`
   if not $?.success?
     puts "#{num}: Aborted (#{msg})"
   elsif not msg.empty?
     puts "#{num}: Failed (#{msg})"
   else
-    expected = File.read("score/expected_#{num}")
-    stdout   = File.read("score/stdout_#{num}")
+    expected = File.read("fixtures/expected_#{num}")
+    stdout   = File.read("fixtures/stdout_#{num}")
 
     begin
       assert = ->(cond, msg){ unless cond; raise msg; end }
@@ -37,10 +37,10 @@ def test(i, arg, verbose)
       puts Diff.new(expected, stdout) if verbose
     end
   end
-  `rm -f score/stdout_#{num}`
+  `rm -f fixtures/stdout_#{num}`
 end
 
-db = JSON.parse(File.read('score/db.json')).flat_map { |arg, nums| nums.map { |i| [i, arg] } }.to_h
+db = JSON.parse(File.read('fixtures/db.json')).flat_map { |arg, nums| nums.map { |i| [i, arg] } }.to_h
 if ARGV.empty?
   Parallel.map(db) { |i, arg| test(i, arg, false) }
 else
