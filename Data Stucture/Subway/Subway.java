@@ -67,18 +67,24 @@ public class Subway {
             if (line == null) { break; }
             if (line.equals("QUIT")) { break; }
 
-            final String[] params = line.split(" ");
-            if (params.length != 2) {
-                System.err.println("\u001B[31mstdin\u001B[33m의 형식이 잘못되었습니다.\u001B[0m");
+            final Params params;
+            try {
+                params = Params.parse_input(line);
+            } catch(IllegalArgumentException e) {
+                final String msg = e.getMessage();
+                if (msg == null) {
+                    System.err.print("\u001B[33m");
+                    System.err.print(msg);
+                    System.err.println("\u001B[0m");
+                } else {
+                    System.err.println("\u001B[31mstdin\u001B[33m의 형식이 잘못되었습니다.\u001B[0m");
+                }
                 continue;
             }
 
-            final String from = params[0],
-                         to   = params[1];
-
             final String result;
             try {
-                result = find_path(db, from, to);
+                result = find_path(db, params.from, params.to);
             } catch(IllegalArgumentException e) {
                 final String msg = e.getMessage();
                 System.err.print("\u001B[33m");
@@ -278,5 +284,31 @@ public class Subway {
         buf.append(entry.cost);
         buf.append('\n');
         return buf.toString();
+    }
+}
+
+class Params {
+    static enum Type { MinimumTime, MinimumTransfer };
+
+    public final String from;
+    public final String to;
+    public final Type type;
+
+    private Params(String from, String to, Type type) {
+        this.from = from;
+        this.to   = to;
+        this.type = type;
+    }
+
+    static Params parse_input(String line) {
+        final String[] params = line.split(" ");
+        if (params.length < 2) { throw new IllegalArgumentException("도착지를 입력해주세요."); }
+
+        final Type type = params.length < 3 ? Type.MinimumTime : Type.MinimumTransfer;
+        if (type == Type.MinimumTransfer && !"!".equals(params[2])) {
+            throw new IllegalArgumentException("세번째 인자는 '!' 외의 글자는 허용되지 않습니다.");
+        }
+
+        return new Params(params[0], params[1], type);
     }
 }
