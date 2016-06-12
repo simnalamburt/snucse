@@ -84,7 +84,7 @@ public class Subway {
 
             final String result;
             try {
-                result = find_path(db, params.from, params.to);
+                result = find_path(db, params);
             } catch(IllegalArgumentException e) {
                 final String msg = e.getMessage();
                 System.err.print("\u001B[33m");
@@ -169,11 +169,11 @@ public class Subway {
     //
     // Find shortest path
     //
-    static String find_path(HashMap<String, ArrayList<Station>> db, final String src_name, final String dst_name) {
-        final ArrayList<Station> src_stations = db.get(src_name);
-        final ArrayList<Station> dst_stations = db.get(dst_name);
-        if (src_stations == null) { throw new IllegalArgumentException('\'' + src_name + "'는 없는 지하철역입니다."); }
-        if (dst_stations == null) { throw new IllegalArgumentException('\'' + dst_name + "'는 없는 지하철역입니다."); }
+    static String find_path(HashMap<String, ArrayList<Station>> db, final Params params) {
+        final ArrayList<Station> src_stations = db.get(params.from);
+        final ArrayList<Station> dst_stations = db.get(params.to);
+        if (src_stations == null) { throw new IllegalArgumentException('\'' + params.from + "'는 없는 지하철역입니다."); }
+        if (dst_stations == null) { throw new IllegalArgumentException('\'' + params.to + "'는 없는 지하철역입니다."); }
         assert src_stations.size() > 0;
         assert dst_stations.size() > 0;
 
@@ -242,7 +242,7 @@ public class Subway {
         }
 
         if (entry == null) {
-            throw new IllegalArgumentException('\'' + src_name + "'에서 '" + dst_name + "'로 갈 수 있는 길이 없습니다.");
+            throw new IllegalArgumentException('\'' + params.from + "'에서 '" + params.to + "'로 갈 수 있는 길이 없습니다.");
         }
         assert entry.path != null;
         assert entry.path.size() > 0;
