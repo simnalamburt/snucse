@@ -5,23 +5,10 @@
 [게시판](http://soar.snu.ac.kr/course/board/ds2016) |
 [숙제](http://soar.snu.ac.kr:8080/)
 
-**Note** 이곳에 있는 과제코드들은 2016년 7월 1일까지는 제 사유재산입니다. 2016년
-7월 1일 전에 이 코드들을 무단으로 도용할 경우, [저작권법 제11장 제136조][law]에
-의거하여 5년 이하의 징역 또는 5천만원 이하의 벌금에 처해질 수 있습니다.
-
-저작권 침해로 인하여 성적상의 불이익이 발생할 경우, 법적 절차를 밟을 것이며 그
-어떤 조건으로도 합의할 의사가 없음을 미리 밝힙니다.
-
-[law]: http://www.law.go.kr/%EB%B2%95%EB%A0%B9/%EC%A0%80%EC%9E%91%EA%B6%8C%EB%B2%95
-
-###### Test cases
+#### Test cases
 - [SNUCSE](http://www.snucse.org/374693)
 - [Jhuni0123/DSHWTC](https://github.com/Jhuni0123/DSHWTC)
 - [kalakuthien/DataStructure](https://github.com/kalaluthien/DataStructure)
-
-<br>
-
---------
 
 <br>
 
