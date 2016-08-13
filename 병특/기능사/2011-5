@@ -79,9 +79,19 @@ actual = <<END.lines.map { |l| l.split[1] }
 60 다
 END
 
+len = actual.length
+
 count = 0
-for i in 1..60
+for i in 0...len
   count += 1 if expected[i] == actual[i]
 end
 
-p "#{100.0/60.0*count}점입니다. 60문제중 #{count}개 맞음."
+for i in 0...len
+  if expected[i] == actual[i]
+    puts '%3d - %s' % [i+1, actual[i]]
+  else
+    puts '%3d - %s (Not %s)' % [i+1, expected[i], actual[i]]
+  end
+end
+puts
+puts "#{100.0/len*count}점입니다. #{len}문제중 #{count}개 맞고 #{len-count}개 틀림."
