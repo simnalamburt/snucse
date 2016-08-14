@@ -1,0 +1,97 @@
+#!/usr/bin/env ruby
+
+A, a, B, b, C, c, D, d, E, e, F, f = <<END.lines.map { |l| l.split }
+1 2 3 4 5 6 7 8 9 10
+나 가 가 가 가 가 가 라 가 나
+11 12 13 14 15 16 17 18 19 20
+라 나 라 가 라 다 라 나 라 라
+21 22 23 24 25 26 27 28 29 30
+나 나 라 다 가 나 다 라 다 다
+31 32 33 34 35 36 37 38 39 40
+가 나 나 가 라 다 다 다 가 라
+41 42 43 44 45 46 47 48 49 50
+다 가 가 나 나 가 다 나 가 나
+51 52 53 54 55 56 57 58 59 60
+다 나 라 라 가 다 라 나 나 가
+END
+expected = [a, b, c, d, e, f].flatten
+
+actual = <<END.lines.map { |l| l.split[1] }
+1 나
+2 가
+3 가
+4 가
+5 가
+6 가
+7 가
+8 나
+9 가
+10 나
+11 가
+12 나
+13 라
+14 라
+15 다
+16 다
+17 나
+18 나
+19 라
+20 나
+21 라
+22 나
+23 라
+24 다
+25 가
+26 나
+27 다
+28 라
+29 다
+30 다
+31 가
+32 나
+33 나
+34 가
+35 라
+36 다
+37 다
+38 다
+39 가
+40 라
+41 다
+42 다
+43 가
+44 나
+45 라
+46 가
+47 다
+48 나
+49 가
+50 나
+51 다
+52 다
+53 라
+54 다
+55 가
+56 가
+57 라
+58 나
+59 다
+60 가
+END
+
+len = actual.length
+
+count = 0
+for i in 0...len
+  count += 1 if expected[i] == actual[i]
+end
+
+for i in 0...len
+  if expected[i] == actual[i]
+    puts '%3d - %s' % [i+1, actual[i]]
+  else
+    puts '%3d - %s (Not %s)' % [i+1, expected[i], actual[i]]
+  end
+end
+puts
+puts "#{100.0/len*count}점입니다. #{len}문제중 #{count}개 맞고 #{len-count}개 틀림."
