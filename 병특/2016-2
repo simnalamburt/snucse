@@ -143,3 +143,16 @@ for i in 0...len
 end
 puts
 puts "#{100.0/len*count}점입니다. #{len}문제중 #{count}개 맞고 #{len-count}개 틀림."
+puts
+
+
+cla = <<END.split
+데이터베이스
+전자계산기구조
+시스템분석설계
+운영체제
+정보통신개론
+END
+cla.each_with_index do |txt, i|
+  puts "%s: %d/20" % [txt, (i*20...i*20+20).select { |i| expected[i] == actual[i] } .count]
+end
