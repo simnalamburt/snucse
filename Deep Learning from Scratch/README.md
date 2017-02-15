@@ -11,5 +11,5 @@ Deep Learning from Scratch
 - @simnalamburt
 - [@JungWinter](https://github.com/JungWinter/Code_Study/tree/master/Book/DeepLearningFromScratch)
 - [@malkoG](https://github.com/malkoG/academic/tree/master/data-science/deep-learning-from-scratch)
-- @initNirvana
+- [@initNirvana](https://github.com/initNirvana/LifeCoding/tree/master/DeeplearningScratch)
 - [@Cura-inthelab](https://github.com/Cura-inthelab/deep-learning)
