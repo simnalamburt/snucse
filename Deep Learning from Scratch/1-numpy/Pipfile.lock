@@ -8,9 +8,170 @@
         ],
         "requires": {},
         "hash": {
-            "sha256": "cb65967bdf3a7372749ce6144be4ee63f412aeeac624342fda3a2b58b1c43c15"
+            "sha256": "6757becda867b24da8c33826943e61722052b28daaca6ed6efdd3da51e46c069"
         }
     },
-    "default": {},
+    "default": {
+        "ptyprocess": {
+            "hash": "sha256:464cb76f7a7122743dd25507650db89cd447c51f38e4671602b3eaa2e38e05ae",
+            "version": "==0.5.1"
+        },
+        "decorator": {
+            "hash": "sha256:73cbaadb8bc4e3c65fe1100773d56331a2d756cc0f5c7b9d8d5d5223fe04f600",
+            "version": "==4.0.11"
+        },
+        "simplegeneric": {
+            "hash": "sha256:dc972e06094b9af5b855b3df4a646395e43d1c9d0d39ed345b7393560d0b9173",
+            "version": "==0.8.1"
+        },
+        "mistune": {
+            "hash": "sha256:ee7447aadcf1962b5af767ff0443dcb0499c16bf73ad36dc99d230e7574571e5",
+            "version": "==0.7.3"
+        },
+        "nbformat": {
+            "hash": "sha256:1b4e0f21a3278483be384e77ae310d194bc73819fa8d9645f6c08482477359b7",
+            "version": "==4.2.0"
+        },
+        "ipywidgets": {
+            "hash": "sha256:44d5ae2c1a86cf9841c125532010e56c69a18727634fffabc1b3846d108029ce",
+            "version": "==5.2.2"
+        },
+        "notebook": {
+            "hash": "sha256:f6bca184c119b0462adb2ae0ebfcfab1163b0ea666be04f6c1258e678bb09cd6",
+            "version": "==4.4.1"
+        },
+        "ipython": {
+            "hash": "sha256:56c1ffe6a8b6825ba38258acb432be46f6d5b66152255f1c9c7f7981484ccef2",
+            "version": "==5.2.2"
+        },
+        "jsonschema": {
+            "hash": "sha256:000e68abd33c972a5248544925a0cae7d1125f9bf6c58280d37546b946769a08",
+            "version": "==2.6.0"
+        },
+        "jupyter-core": {
+            "hash": "sha256:63218bb5c1c0f3bba25027e1b51cf00a71ce2a1b06d1bb4bbb6e311492790125",
+            "version": "==4.3.0"
+        },
+        "six": {
+            "hash": "sha256:0ff78c403d9bccf5a425a6d31a12aa6b47f1c21ca4dc2573a7e2f32a97335eb1",
+            "version": "==1.10.0"
+        },
+        "pygments": {
+            "hash": "sha256:78f3f434bcc5d6ee09020f92ba487f95ba50f1e3ef83ae96b9d5ffa1bab25c5d",
+            "version": "==2.2.0"
+        },
+        "bleach": {
+            "hash": "sha256:e67f46adcec78dbc3c04462f3aba3213a673d5652eba2609ed1ef15492a44b8d",
+            "version": "==1.5.0"
+        },
+        "jupyter": {
+            "hash": "sha256:5b290f93b98ffbc21c0c7e749f054b3267782166d72fa5e3ed1ed4eaf34a2b78",
+            "version": "==1.0.0"
+        },
+        "terminado": {
+            "hash": "sha256:2c0ba1f624067dccaaead7d2247cfe029806355cef124dc2ccb53c83229f0126",
+            "version": "==0.6"
+        },
+        "tornado": {
+            "hash": "sha256:2898f992f898cd41eeb8d53b6df75495f2f423b6672890aadaf196ea1448edcc",
+            "version": "==4.4.2"
+        },
+        "ipython-genutils": {
+            "hash": "sha256:6218e9abd612fb5acfb175ea7c7b026006de4df9691d9a73c9b390cfa1a41c2b",
+            "version": "==0.1.0"
+        },
+        "wcwidth": {
+            "hash": "sha256:f4ebe71925af7b40a864553f761ed559b43544f8f71746c2d756c7fe788ade7c",
+            "version": "==0.1.7"
+        },
+        "traitlets": {
+            "hash": "sha256:50522e46dd7b66c80686d50ff1b774000f1d2a80c84b2bcfbd657d588e99a368",
+            "version": "==4.3.1"
+        },
+        "widgetsnbextension": {
+            "hash": "sha256:d177773d363c643430c7b10c46d655e0eac2615aec653cd99d92330ea0d4505c",
+            "version": "==1.2.6"
+        },
+        "pickleshare": {
+            "hash": "sha256:c9a2541f25aeabc070f12f452e1f2a8eae2abd51e1cd19e8430402bdf4c1d8b5",
+            "version": "==0.7.4"
+        },
+        "MarkupSafe": {
+            "hash": "sha256:a4ec1aff59b95a14b45eb2e23761a0179e98319da5a7eb76b56ea8cdc7b871c3",
+            "version": "==0.23"
+        },
+        "pyzmq": {
+            "hash": "sha256:39f78f422730d0447e612bd0f00f02ecd84dffa8b6bebb0aca8ae8c2f01ff17d",
+            "version": "==16.0.2"
+        },
+        "jupyter-console": {
+            "hash": "sha256:9ed0bc03a8fa4a32e2f61a068508b4d133aeda772e28d481ef3c0bcb6cc5508e",
+            "version": "==5.1.0"
+        },
+        "numpy": {
+            "hash": "sha256:818a09855c5a257aea637c73755806dfec130ecf190130a34bf1546ef69b77e3",
+            "version": "==1.12.0"
+        },
+        "appdirs": {
+            "hash": "sha256:85e58578db8f29538f3109c11250c2a5514a2fcdc9890d9b2fe777eb55517736",
+            "version": "==1.4.0"
+        },
+        "qtconsole": {
+            "hash": "sha256:2725b13171152fcadda581e4189a6365d1eee47559e4c734db6dcd7241eff74e",
+            "version": "==4.2.1"
+        },
+        "ipykernel": {
+            "hash": "sha256:cf515c26a31bb76de61f349dc5172e27f7eeb0f32e77220700b46b9d274890ac",
+            "version": "==4.5.2"
+        },
+        "setuptools": {
+            "hash": "sha256:75d352eeeddd96a3fb702b1da9f8b89e5f8c045dbd86e3894516733eb5f99713",
+            "version": "==34.2.0"
+        },
+        "pandocfilters": {
+            "hash": "sha256:ec8bcd100d081db092c57f93462b1861bcfa1286ef126f34da5cb1d969538acd",
+            "version": "==1.4.1"
+        },
+        "jupyter-client": {
+            "hash": "sha256:8bb42fb013f3a70367ae4a8854d2cf90df6ba4c333731a98a717d9a4a10a01a5",
+            "version": "==4.4.0"
+        },
+        "pyparsing": {
+            "hash": "sha256:67101d7acee692962f33dd30b5dce079ff532dd9aa99ff48d52a3dad51d2fe84",
+            "version": "==2.1.10"
+        },
+        "pexpect": {
+            "hash": "sha256:f853b52afaf3b064d29854771e2db509ef80392509bde2dd7a6ecf2dfc3f0018",
+            "version": "==4.2.1"
+        },
+        "nbconvert": {
+            "hash": "sha256:e7ab8ac54ca9c34e3f1bbeb3143bf294e7437b39a9b2839dc32ab76927d74494",
+            "version": "==5.1.1"
+        },
+        "html5lib": {
+            "hash": "sha256:2612a191a8d5842bfa057e41ba50bbb9dcb722419d2408c78cff4758d0754868",
+            "version": "==0.9999999"
+        },
+        "testpath": {
+            "hash": "sha256:f16b2cb3b03e1ada4fb0200b265a4446f92f3ba4b9d88ace34f51c54ab6d294e",
+            "version": "==0.3"
+        },
+        "packaging": {
+            "hash": "sha256:99276dc6e3a7851f32027a68f1095cd3f77c148091b092ea867a351811cfe388",
+            "version": "==16.8"
+        },
+        "entrypoints": {
+            "hash": "sha256:0a0685962ee5ac303f470acbb659f0f97aef5b9deb6b85d059691c706ef6e45e",
+            "version": "==0.2.2"
+        },
+        "prompt-toolkit": {
+            "hash": "sha256:7deb7d6efb3e59cdfa28afe6deb50243ac881a2c40da92cc3d29f69284da5796",
+            "version": "==1.0.13"
+        },
+        "jinja2": {
+            "hash": "sha256:a7b7438120dbe76a8e735ef7eba6048eaf4e0b7dbc530e100812f8ec462a4d50",
+            "version": "==2.9.5"
+        }
+    },
     "develop": {}
 }
