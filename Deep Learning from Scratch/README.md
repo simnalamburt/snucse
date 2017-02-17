@@ -22,3 +22,6 @@ pipenv run jupyter -- notebook --no-browser \
 - [@malkoG](https://github.com/malkoG/academic/tree/master/data-science/deep-learning-from-scratch)
 - [@initNirvana](https://github.com/initNirvana/LifeCoding/tree/master/DeeplearningScratch)
 - [@Cura-inthelab](https://github.com/Cura-inthelab/deep-learning)
+
+### 다음 모임때 할 발표주제
+- numpy가 빠른이유
