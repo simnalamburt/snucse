@@ -23,5 +23,8 @@ pipenv run jupyter -- notebook --no-browser \
 - [@initNirvana](https://github.com/initNirvana/LifeCoding/tree/master/DeeplearningScratch)
 - [@Cura-inthelab](https://github.com/Cura-inthelab/deep-learning)
 
-### 다음 모임때 할 발표주제
-- numpy가 빠른이유
+### 해볼만한 발표주제
+- (챕터 1 관련) numpy가 빠른이유
+- (챕터 2 관련) perceptron을 1st class function으로 쓰기
+- (챕터 2 관련) imshow로 퍼셉트론 시각화하기
+- (챕터 2 관련) 다층 퍼셉트론만으로 함수 만들어보자
