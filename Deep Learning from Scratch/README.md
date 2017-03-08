@@ -28,3 +28,5 @@ pipenv run jupyter -- notebook --no-browser \
 - (챕터 2 관련) perceptron을 1st class function으로 쓰기
 - (챕터 2 관련) imshow로 퍼셉트론 시각화하기
 - (챕터 2 관련) 다층 퍼셉트론만으로 함수 만들어보자
+- (챕터 3 관련) 텐서를 쓰는 이유
+- (챕터 3 관련) `@` 연산자 오버로딩
