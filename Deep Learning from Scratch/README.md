@@ -16,12 +16,14 @@ pipenv run jupyter -- notebook --no-browser \
 - 예시 코드 : https://github.com/WegraLee/deep-learning-from-scratch
 
 ### Peers
-- [@pinkrespect](https://github.com/pinkrespect/DeepLearningFromScratch)
 - @simnalamburt
+- [@pinkrespect](https://github.com/pinkrespect/DeepLearningFromScratch)
 - [@JungWinter](https://github.com/JungWinter/Code_Study/tree/master/Book/DeepLearningFromScratch)
 - [@malkoG](https://github.com/malkoG/academic/tree/master/data-science/deep-learning-from-scratch)
 - [@initNirvana](https://github.com/initNirvana/LifeCoding/tree/master/DeeplearningScratch)
 - [@Cura-inthelab](https://github.com/Cura-inthelab/deep-learning)
+- [@nellaG](https://github.com/nellaG/dlfs)
+- [@VanilaJelly](https://github.com/VanilaJelly/ddl)
 
 ### 해볼만한 발표주제
 - (챕터 1 관련) numpy가 빠른이유
