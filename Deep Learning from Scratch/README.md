@@ -33,3 +33,4 @@ pipenv run jupyter -- notebook --no-browser \
 - (챕터 3 관련) 텐서를 쓰는 이유
 - (챕터 3 관련) `@` 연산자 오버로딩
 - (챕터 4 관련) 에러함수 해석적으로 미분 안하는 이유
+- (챕터 4 관련) Cross Entropy Error를 쓰는 이유
