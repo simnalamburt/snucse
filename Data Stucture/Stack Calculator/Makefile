@@ -1,7 +1,7 @@
 all: $(patsubst %.java, %.class, $(wildcard *.java))
 
 %.class: %.java
-	javac $< -Xlint:unchecked
+	javac $< -Xdiags:verbose -Xlint:unchecked
 
 .PHONY: run test clean
 run: all

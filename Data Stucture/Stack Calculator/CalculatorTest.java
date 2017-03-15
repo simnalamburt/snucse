@@ -83,6 +83,10 @@
 
 import java.io.*;
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.function.Function;
+import static java.util.Optional.empty;
+import static java.util.Optional.of;
 
 
 //
@@ -116,41 +120,16 @@ public class CalculatorTest {
 
     // Infix expression이 담긴 문자열을 주면, 실행 결과를 반환하거나 실패사실을
     // 반환함. Exception-safe 함.
-    private static Option<String> eval(final String input) {
+    private static Optional<String> eval(final String input) {
         return lexer.lex(input)
-            .map(new Function<List<Token<Type>>, List<Token<Type>>>() {
-                @Override
-                public List<Token<Type>> apply(List<Token<Type>> t) {
-                    for (Iterator<Token<Type>> iter = t.listIterator(); iter.hasNext(); ) {
-                        Token<Type> token = iter.next();
-                        if (token.kind == Type.Whitespace) { iter.remove(); }
-                    }
-
-                    return t;
-                }
-            })
-            .flatMap(Parser.parse)
-            .flatMap(Calc.calc)
-            .map(new Function<CalcResult, String>() {
-                @Override
-                public String apply(CalcResult t) {
-                    StringBuilder buf = new StringBuilder();
-
-                    Iterator<Token<Type>> iter = t.postfix.listIterator();
-                    if (iter.hasNext()) {
-                        buf.append(iter.next().sequence);
-
-                        while (iter.hasNext()) {
-                            buf.append(' ');
-                            buf.append(iter.next().sequence);
-                        }
-                    }
-
-                    buf.append('\n');
-                    buf.append(t.result);
-                    return buf.toString();
-                }
-            });
+            .map(t -> t.stream()
+                .filter(token -> token.kind != Type.Whitespace)
+                .collect(Collectors.toList()))
+            .flatMap(Parser::parse)
+            .flatMap(Calc::calc)
+            .map(t -> t.postfix.stream()
+                .map(token -> token.sequence)
+                .collect(Collectors.joining(" ")) + "\n" + t.result);
     }
 }
 
@@ -159,22 +138,14 @@ enum Type { Number, Operator, Whitespace }
 
 // Monadic composition으로 구현한 재귀하향파서
 class Parser {
-    public static Function<List<Token<Type>>, Option<List<Token<Type>>>> parse = new Function<List<Token<Type>>, Option<List<Token<Type>>>>() {
-        @Override public Option<List<Token<Type>>> apply(List<Token<Type>> t) { return _parse(t); }
-    };
-    private static Option<List<Token<Type>>> _parse(final List<Token<Type>> tokens) {
+    public static Optional<List<Token<Type>>> parse(List<Token<Type>> tokens) {
         Parser p = new Parser(tokens);
         Context c0 = new Context();
 
-        return p.tryExpr.apply(c0)
-            .flatMap(new Function<Context, Option<List<Token<Type>>>>() {
-                @Override
-                public Option<List<Token<Type>>> apply(Context c) {
-                    if (c.cursor != tokens.size()) { return Option.empty(); }
-
-                    return Option.<List<Token<Type>>>of(c.terminate().output);
-                }
-            });
+        return p.tryExpr(c0)
+            .filter(c -> c.cursor == tokens.size())
+            .map(c -> c.terminate())
+            .map(c -> c.output);
     }
 
     // Internal class constructor
@@ -182,17 +153,17 @@ class Parser {
     private Parser(List<Token<Type>> tokens) { this.tokens = tokens; }
 
     // Alternatives for `tokens.get(idx)` function which is exception-safe
-    private Option<Token<Type>> tokenAt(int index) {
+    private Optional<Token<Type>> tokenAt(int index) {
         return 0 <= index && index < tokens.size()
-            ? Option.of(tokens.get(index))
-            : Option.<Token<Type>>empty();
+            ? of(tokens.get(index))
+            : empty();
     }
 
-    // Missing `or` function for Option<T>
-    private static <T> Option<T> or(Option<T> left, Option<T> right) {
+    // Missing `or` function for Optional<T>
+    private static <T> Optional<T> or(Optional<T> left, Optional<T> right) {
         return left.isPresent() ? left
             : right.isPresent() ? right
-            : Option.<T>empty();
+            : empty();
     }
 
     // Parser context. 파서가 파싱중 사용하는 컨텍스트 클래스이다.
@@ -222,11 +193,7 @@ class Parser {
 
         // Shunting-yard Algorithm에 맞춰, 토큰들의 순서를 Infix에서 Postfix로
         // 재배열한다.
-        public Function<Token<Type>, Context> push = new Function<Token<Type>, Context>() {
-            @Override
-            public Context apply(Token<Type> t) { return _push(t); }
-        };
-        private Context _push(final Token<Type> t) {
+        public Context push(Token<Type> t) {
             switch (t.kind) {
             case Number: {
                 final ArrayList<Token<Type>> output = new ArrayList<Token<Type>>(this.output) {{
@@ -326,119 +293,75 @@ class Parser {
     //
     //        <add-op> ::= "+" | "-"
     //       <mult-op> ::= "*" | "/" | "%"
-    private Option<Context> _tryExpr(Context ctxt) {
+    private Optional<Context> tryExpr(Context ctxt) {
         return or(
-            Option.of(ctxt)
-                .flatMap(this.tryTerm)
-                .flatMap(this.tryOp("+", "-"))
-                .flatMap(this.tryExpr),
-            Option.of(ctxt)
-                .flatMap(this.tryTerm)
+            of(ctxt)
+                .flatMap(this::tryTerm)
+                .flatMap(tryOp("+", "-"))
+                .flatMap(this::tryExpr),
+            of(ctxt)
+                .flatMap(this::tryTerm)
         );
     }
-    private Option<Context> _tryTerm(Context ctxt) {
+    private Optional<Context> tryTerm(Context ctxt) {
         return or(
-            Option.of(ctxt)
-                .flatMap(this.trySignedFactor)
-                .flatMap(this.tryOp("*", "/", "%"))
-                .flatMap(this.tryTerm),
-            Option.of(ctxt)
-                .flatMap(this.trySignedFactor)
+            of(ctxt)
+                .flatMap(this::trySignedFactor)
+                .flatMap(tryOp("*", "/", "%"))
+                .flatMap(this::tryTerm),
+            of(ctxt)
+                .flatMap(this::trySignedFactor)
         );
     }
-    private Option<Context> _trySignedFactor(Context ctxt) {
+    private Optional<Context> trySignedFactor(Context ctxt) {
         return or(
-            Option.of(ctxt)
-                .flatMap(this.tryUnaryMinus)
-                .flatMap(this.trySignedFactor),
-            Option.of(ctxt)
-                .flatMap(this.tryFactor)
+            of(ctxt)
+                .flatMap(this::tryUnaryMinus)
+                .flatMap(this::trySignedFactor),
+            of(ctxt)
+                .flatMap(this::tryFactor)
         );
     }
-    private Option<Context> _tryUnaryMinus(Context ctxt) {
+    private Optional<Context> tryUnaryMinus(Context ctxt) {
         return tokenAt(ctxt.cursor)
-            .flatMap(new Function<Token<Type>, Option<Token<Type>>>() {
-                @Override
-                public Option<Token<Type>> apply(Token<Type> t) {
-                    if (!(t.kind == Type.Operator && t.sequence.equals("-"))) { return Option.empty(); }
-
-                    return Option.of(new Token<Type>("~", Type.Operator));
-                }
-            })
-            .map(ctxt.push);
+            .filter(t -> t.kind == Type.Operator)
+            .filter(t -> t.sequence.equals("-"))
+            .map(t -> new Token<Type>("~", Type.Operator))
+            .map(ctxt::push);
     }
-    private Option<Context> _tryFactor(Context ctxt) {
+    private Optional<Context> tryFactor(Context ctxt) {
         return or(
-            Option.of(ctxt)
-                .flatMap(this.tryElement)
-                .flatMap(this.tryOp("^"))
-                .flatMap(this.tryFactor),
-            Option.of(ctxt)
-                .flatMap(this.tryElement)
+            of(ctxt)
+                .flatMap(this::tryElement)
+                .flatMap(tryOp("^"))
+                .flatMap(this::tryFactor),
+            of(ctxt)
+                .flatMap(this::tryElement)
         );
     }
-    private HashMap<Context, Option<Context>> cache = new HashMap<Context, Option<Context>>();
-    private Option<Context> _tryElement(Context ctxt) {
-        final Parser self = this;
-        Function<Context, Option<Context>> compute = new Function<Context, Option<Context>>() {
-            @Override
-            public Option<Context> apply(Context c) {
-                return or(
-                    Option.of(c)
-                        .flatMap(self.tryOp("("))
-                        .flatMap(self.tryExpr)
-                        .flatMap(self.tryOp(")")),
-                    Option.of(c)
-                        .flatMap(self.tryNumber)
-                );
-            }
-        };
-
+    private HashMap<Context, Optional<Context>> cache = new HashMap<Context, Optional<Context>>();
+    private Optional<Context> tryElement(Context ctxt) {
         // Memoization
-        Option<Context> value = cache.get(ctxt);
-        if (value == null) {
-            value = compute.apply(ctxt);
-            if (value != null) {
-                cache.put(ctxt, value);
-            }
-        }
-        return value;
+        return cache.computeIfAbsent(ctxt, c -> or(
+            of(c)
+                .flatMap(tryOp("("))
+                .flatMap(this::tryExpr)
+                .flatMap(tryOp(")")),
+            of(c)
+                .flatMap(this::tryNumber)
+        ));
     }
-    private Function<Context, Option<Context>> tryOp(final String... ops) {
-        return new Function<Context, Option<Context>>() {
-            @Override
-            public Option<Context> apply(Context ctxt) {
-                return tokenAt(ctxt.cursor)
-                    .filter(new Predicate<Token<Type>>() {
-                        @Override
-                        public boolean test(Token<Type> t) {
-                            return t.kind == Type.Operator
-                                && Arrays.asList(ops).contains(t.sequence);
-                        }
-                    })
-                    .map(ctxt.push);
-            }
-        };
+    private Function<Context, Optional<Context>> tryOp(String... ops) {
+        return ctxt -> tokenAt(ctxt.cursor)
+            .filter(t -> t.kind == Type.Operator)
+            .filter(t -> Arrays.asList(ops).contains(t.sequence))
+            .map(ctxt::push);
     }
-    private Option<Context> _tryNumber(Context ctxt) {
+    private Optional<Context> tryNumber(Context ctxt) {
         return tokenAt(ctxt.cursor)
-            .filter(new Predicate<Token<Type>>() {
-                @Override
-                public boolean test(Token<Type> t) {
-                    return t.kind == Type.Number;
-                }
-            })
-            .map(ctxt.push);
+            .filter(t -> t.kind == Type.Number)
+            .map(ctxt::push);
     }
-
-    private final Function<Context, Option<Context>>
-        tryExpr         = new Function<Context, Option<Context>>() { @Override public Option<Context> apply(Context c) { return _tryExpr        (c); } },
-        tryTerm         = new Function<Context, Option<Context>>() { @Override public Option<Context> apply(Context c) { return _tryTerm        (c); } },
-        trySignedFactor = new Function<Context, Option<Context>>() { @Override public Option<Context> apply(Context c) { return _trySignedFactor(c); } },
-        tryUnaryMinus   = new Function<Context, Option<Context>>() { @Override public Option<Context> apply(Context c) { return _tryUnaryMinus  (c); } },
-        tryFactor       = new Function<Context, Option<Context>>() { @Override public Option<Context> apply(Context c) { return _tryFactor      (c); } },
-        tryElement      = new Function<Context, Option<Context>>() { @Override public Option<Context> apply(Context c) { return _tryElement     (c); } },
-        tryNumber       = new Function<Context, Option<Context>>() { @Override public Option<Context> apply(Context c) { return _tryNumber      (c); } };
 }
 
 
@@ -446,12 +369,9 @@ class Parser {
 // Postfix Expression 계산기
 //
 class Calc {
-    // 주어진 postfix expression을 계산하여 Option.of(CalcResult)로 그 결과를 반환한다.
-    // Devide by 0와 같이 에러가 있었을경우 Option.empty() 를 반환한다.
-    public static Function<List<Token<Type>>, Option<CalcResult>> calc = new Function<List<Token<Type>>, Option<CalcResult>>() {
-        @Override public Option<CalcResult> apply(List<Token<Type>> p) { return _calc(p); }
-    };
-    private static Option<CalcResult> _calc(List<Token<Type>> postfix) {
+    // 주어진 postfix expression을 계산하여 of(CalcResult)로 그 결과를 반환한다.
+    // Devide by 0와 같이 에러가 있었을경우 empty() 를 반환한다.
+    static Optional<CalcResult> calc(List<Token<Type>> postfix) {
         Stack<Long> operands = new Stack<Long>();
 
         for (Token<Type> token: postfix) {
@@ -477,15 +397,15 @@ class Calc {
                     case "-": result = left - right; break;
                     case "*": result = left * right; break;
                     case "/":
-                        if (right == 0) { return Option.empty(); }
+                        if (right == 0) { return empty(); }
                         result = left / right;
                         break;
                     case "%":
-                        if (right == 0) { return Option.empty(); }
+                        if (right == 0) { return empty(); }
                         result = left % right;
                         break;
                     case "^":
-                        if (left == 0 && right < 0) { return Option.empty(); }
+                        if (left == 0 && right < 0) { return empty(); }
                         result = (long) Math.pow(left, right);
                         break;
                     default: throw new IllegalArgumentException();
@@ -497,7 +417,7 @@ class Calc {
             }
         }
 
-        return Option.of(new CalcResult(postfix, operands.pop()));
+        return of(new CalcResult(postfix, operands.pop()));
     }
 }
 
