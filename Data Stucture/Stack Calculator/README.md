@@ -3,6 +3,12 @@ Stack Calculator
 [숙제 페이지](http://soar.snu.ac.kr:8080/assignments/3) |
 [FAQ](http://soar.snu.ac.kr/course/board/ds2016/1623076)
 
+> **Note!** 여기엔 코드가 Java 8로 짜여져있지만, 당시엔 Java 7 코드가 아니면
+> 채점을 해주지 않았어서 실제 과제 제출은 Java 7 코드로 이뤄졌었다. Java 7 버전
+> 소스코드를 보고싶으면 [`0a9eb4c1`] 클릭.
+
+[`0a9eb4c1`]: https://github.com/simnalamburt/snucse/tree/0a9eb4c16b029c981fd73e9cc44ff650f4d324e0/Data%20Stucture/Stack%20Calculator
+
 ```bash
 # Execute program
 make run
