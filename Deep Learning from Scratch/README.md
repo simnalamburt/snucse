@@ -34,3 +34,4 @@ pipenv run jupyter -- notebook --no-browser \
 - (챕터 4 관련) 에러함수 해석적으로 미분 안하는 이유
 - (챕터 4 관련) Cross Entropy Error를 쓰는 이유
 - (챕터 2, 4 관련) 퍼셉트론, 미분, 편미분, 그래디언트를 함수로 표현해보자
+- (챕터 4 관련) 오탈자
