@@ -66,7 +66,7 @@ def download():
     return dataset
 
 
-def load(normalize=True, flatten=True, one_hot_label=False):
+def load(normalize=True, flatten=True, one_hot_label=True):
     """
     MNIST 데이터셋을 로드하는 함수.
 
