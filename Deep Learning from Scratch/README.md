@@ -27,6 +27,7 @@ pipenv run jupyter -- notebook --no-browser \
 
 ### 해볼만한 발표주제
 - (챕터 1 관련) numpy가 빠른이유
+- (챕터 1 관련) http://www.labri.fr/perso/nrougier/from-python-to-numpy/#memory-layout
 - (챕터 2 관련) imshow로 퍼셉트론 시각화하기
 - (챕터 2 관련) 다층 퍼셉트론만으로 함수 만들어보자
 - (챕터 3 관련) 텐서를 쓰는 이유
