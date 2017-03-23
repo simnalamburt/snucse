@@ -38,3 +38,4 @@ pipenv run jupyter -- notebook --no-browser \
 - (챕터 4 관련) 오탈자
 - (챕터 4 관련) https://docs.scipy.org/doc/numpy/reference/generated/numpy.einsum.html
 - (챕터 5 관련) k-fold cross-validation
+- (챕터 5 관련) http://playground.tensorflow.org
