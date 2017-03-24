@@ -41,6 +41,8 @@ pipenv run jupyter -- notebook --no-browser \
 - (챕터 5 관련) http://playground.tensorflow.org
 - [Vanishing gradient problem](https://en.wikipedia.org/wiki/Vanishing_gradient_problem)
 - [Dying Relu problem], [LReLUs]
+- 시그모이드 다음에 CEE 바로쓰면 그래디언트 계산 안좋게됨
+- [sigmoid_cross_entropy_with_logits](https://www.tensorflow.org/api_docs/python/tf/nn/sigmoid_cross_entropy_with_logits)
 
 [Dying Relu problem]: https://en.wikipedia.org/wiki/Rectifier_(neural_networks)#Potential_problems
 [LReLUs]: https://en.wikipedia.org/wiki/Rectifier_(neural_networks)#Leaky_ReLUs
