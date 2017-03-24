@@ -44,6 +44,8 @@ pipenv run jupyter -- notebook --no-browser \
 - 시그모이드 다음에 CEE 바로쓰면 그래디언트 계산 안좋게됨
 - [sigmoid_cross_entropy_with_logits](https://www.tensorflow.org/api_docs/python/tf/nn/sigmoid_cross_entropy_with_logits)
 - d_step g_step 비율을 1:1이 아닌걸로 해야 잘된대
+- 내가 만든 뉴럴넷 웹서비스로 올리자
+- 소프트맥스-CEE 미분
 
 [Dying Relu problem]: https://en.wikipedia.org/wiki/Rectifier_(neural_networks)#Potential_problems
 [LReLUs]: https://en.wikipedia.org/wiki/Rectifier_(neural_networks)#Leaky_ReLUs
