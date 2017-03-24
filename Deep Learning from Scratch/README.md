@@ -39,3 +39,8 @@ pipenv run jupyter -- notebook --no-browser \
 - (챕터 4 관련) https://docs.scipy.org/doc/numpy/reference/generated/numpy.einsum.html
 - (챕터 5 관련) k-fold cross-validation
 - (챕터 5 관련) http://playground.tensorflow.org
+- [Vanishing gradient problem](https://en.wikipedia.org/wiki/Vanishing_gradient_problem)
+- [Dying Relu problem], [LReLUs]
+
+[Dying Relu problem]: https://en.wikipedia.org/wiki/Rectifier_(neural_networks)#Potential_problems
+[LReLUs]: https://en.wikipedia.org/wiki/Rectifier_(neural_networks)#Leaky_ReLUs
