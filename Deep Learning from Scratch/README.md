@@ -15,6 +15,7 @@ jupyter notebook --no-browser --ip=$(dig +short myip.opendns.com @resolver1.open
 ![책 표지](https://raw.githubusercontent.com/oreilly-japan/deep-learning-from-scratch/images/deep-learning-from-scratch.png)
 
 - 예시 코드 : https://github.com/WegraLee/deep-learning-from-scratch
+- 수식 및 그림들 : https://github.com/WegraLee/deep-learning-from-scratch/blob/master/equations_and_figures.zip
 
 ### Peers
 - @simnalamburt
