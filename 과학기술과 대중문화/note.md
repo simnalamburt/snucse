@@ -1043,19 +1043,15 @@ media.
 못쓸정도로 돈을 줌. 우리가 생각하는 전형적인 사회주의적 낙원의 모습이
 그려져있음.
 
-##### [Aldous Huxley - 멋진 신세계(Brave New World)][new world]
+##### Aldous Huxley - 멋진 신세계(Brave New World)
 디스토피아 소설. 과학문명이 극도로 발달한 미래.
 
-[new world]: https://namu.wiki/w/%EB%A9%8B%EC%A7%84%20%EC%8B%A0%EC%84%B8%EA%B3%84
-
-##### [Dr. Strangelove or: How I Learned to Stop Worrying and Love the Bomb][strangelove]
+##### Dr. Strangelove or: How I Learned to Stop Worrying and Love the Bomb
 > 내가 어떻게 걱정하기를 그만두고 (핵)폭탄을 사랑하는 방법을 배우게 되었는가?
 
 > Mein Fuhrer, I can walk!
 
-[strangelove]: https://namu.wiki/w/%EB%8B%A5%ED%84%B0%20%EC%8A%A4%ED%8A%B8%EB%A0%88%EC%9D%B8%EC%A7%80%EB%9F%AC%EB%B8%8C
-
-##### [Metropolis](https://namu.wiki/w/%EB%A9%94%ED%8A%B8%EB%A1%9C%ED%8F%B4%EB%A6%AC%EC%8A%A4)
+##### Metropolis
 
 --------
 
