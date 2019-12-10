@@ -3,7 +3,7 @@ Happy Campus Life
 학교 수업 필기, 학교 과제, 개인 공부 노트 리퍼지토리
 
 ### 학교에서 주는 소프트웨어 목록
-*   **[mySNU 캠퍼스 소프트웨어]** - Adobe CC, 한컴오피스, etc
+*   **[mySNU 캠퍼스 소프트웨어]** - Adobe CC, 한컴오피스, ...
 
     학내 서버로 프록시하여 마이스누 접속 &rarr; 로그인 &rarr; 다운받으면 됨
 
@@ -23,6 +23,10 @@ Happy Campus Life
 *   **[Microsoft Azure for Students]** - Visual Studio Enterprise, Windows, SQL Server, ...
 
     Dreamspark가 MS Imagine이 되었다가, 지금은 Azure for Students가 되었다. 설치할 수 있는 소프트웨어 숫자가 매우 많아졌다! 학교 최고
+
+*   **G Suite** - 무제한 구글 드라이브, ...
+
+    Office 365로 활성화했던 학교 메일을 다시 구글 메일로 바꾸면 된다.
 
 <br>
 
