@@ -16,9 +16,9 @@ Happy Campus Life
     brew cask install microsoft-office
     ```
 
-*   **[Microsoft Imagine]** - Windows, Visual Studio, Azure, etc
+*   **[OnTheHub]** - Windows, Visual Studio, Azure, etc
 
-    행정실에 [메일보내서](mailto:esjee@cse.snu.ac.kr) ELMS 계정요청
+    원래는 행정실에 메일보내서 ELMS(E-academy License Management System) 계정 받아서 했었는데, 뭔가 홈페이지가 개편되면서 ELMS 계정은 어떻게 쓰는건지 모르게 되었음. MS Imagine은 Azure for Students라는것으로 바뀐듯 하다.
 
 <br>
 
@@ -29,6 +29,6 @@ Public License v3.0] or any later version. See [COPYRIGHT] for details.
 
 [mySNU 캠퍼스 소프트웨어]: http://board.snu.ac.kr/apiboard/574
 [Office 365]: http://my.snu.ac.kr/mysnu/
-[Microsoft Imagine]: https://e5.onthehub.com/WebStore/ProductsByMajorVersionList.aspx?ws=812e428b-f413-e211-a76f-f04da23e67f6
+[OnTheHub]: https://snu.onthehub.com/WebStore/ProductsByMajorVersionList.aspx
 [GNU Affero General Public License v3.0]: LICENSE
 [COPYRIGHT]: COPYRIGHT
