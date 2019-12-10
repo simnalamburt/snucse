@@ -18,7 +18,11 @@ Happy Campus Life
 
 *   **[OnTheHub]** - Windows, Visual Studio, Azure, etc
 
-    원래는 행정실에 메일보내서 ELMS(E-academy License Management System) 계정 받아서 했었는데, 뭔가 홈페이지가 개편되면서 ELMS 계정은 어떻게 쓰는건지 모르게 되었음. MS Imagine은 Azure for Students라는것으로 바뀐듯 하다.
+    원래는 행정실에 메일보내서 ELMS(E-academy License Management System) 계정 받아서 했었는데, 뭔가 홈페이지가 개편되면서 ELMS 계정은 어떻게 쓰는건지 모르게 되었다.
+
+*   **[Microsoft Azure for Students]** - Visual Studio Enterprise, Windows, SQL Server, ...
+
+    Dreamspark가 MS Imagine이 되었다가, 지금은 Azure for Students가 되었다. 설치할 수 있는 소프트웨어 숫자가 매우 많아졌다! 학교 최고
 
 <br>
 
@@ -30,5 +34,6 @@ Public License v3.0] or any later version. See [COPYRIGHT] for details.
 [mySNU 캠퍼스 소프트웨어]: http://board.snu.ac.kr/apiboard/574
 [Office 365]: http://my.snu.ac.kr/mysnu/
 [OnTheHub]: https://snu.onthehub.com/WebStore/ProductsByMajorVersionList.aspx
+[Microsoft Azure for Students]: https://portal.azure.com/#blade/Microsoft_Azure_Education/EducationMenuBlade/software
 [GNU Affero General Public License v3.0]: LICENSE
 [COPYRIGHT]: COPYRIGHT
