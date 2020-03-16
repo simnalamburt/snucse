@@ -1,5 +1,12 @@
 Principles and Practices of Software Development
 ========
+
+수업명 | 소프트웨어 개발의 원리와 실제 
+:----:|----
+교수 | [전병곤](https://cse.snu.ac.kr/professor/%EC%A0%84%EB%B3%91%EA%B3%A4)
+강의번호 | M1522.000100
+강의 시점 | 2015, Spring
+
 **컴퓨터 사용이 금지**된 수업이었기 때문에 노트필기가 하나도 없다.
 
 솔직히 수업 들을 당시에 나는 다 아는거여서 하나도 재미가 없어서 불만이 많았다.

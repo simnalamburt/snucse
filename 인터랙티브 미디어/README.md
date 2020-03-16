@@ -1,5 +1,12 @@
 인터랙티브 미디어
 ========
+
+수업명 | 인터랙티브 미디어
+:----:|----
+교수 | 이준
+강의번호 | 2114.417
+강의 시점 | 2016, Spring
+
 **14조** ― 김지현, [norang](https://github.com/norangLemon)
 ```bash
 # Prerequisites

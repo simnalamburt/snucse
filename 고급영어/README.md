@@ -1,5 +1,11 @@
-고급영어
+Advanced English: Culture and Society
 ========
+
+수업명 | 고급영어: 문화와 사회
+:----:|----
+교수 | Joel J. Park
+강의번호 | 032.024
+강의 시점 | 2016, Spring
 
 <p align=right>첫날 ...</p>
 

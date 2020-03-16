@@ -1,5 +1,11 @@
-이산수학
+Discrete Mathematics
 ========
+
+수업명 | 이산수학
+:----:|----
+교수 | [장병탁](https://cse.snu.ac.kr/professor/%EC%9E%A5%EB%B3%91%ED%83%81)
+강의번호 | 4190.101
+강의 시점 | 2016, Spring
 
 - [강의 홈페이지](http://bi.snu.ac.kr/Courses/dm2016spring/index.html)
 - Logic and Proofs:

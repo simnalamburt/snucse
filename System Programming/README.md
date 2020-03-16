@@ -1,6 +1,11 @@
-시스템 프로그래밍
+System Programming
 ========
-> M1522.000800, Spring 2015
+
+수업명 | 시스템 프로그래밍
+:----:|----
+교수 | [염헌영](https://cse.snu.ac.kr/professor/%EC%97%BC%ED%97%8C%EC%98%81)
+강의번호 | M1522.000800
+강의 시점 | 2015, Spring
 
 [**수업 필기**][note] | [실습수업 필기][lab]
 

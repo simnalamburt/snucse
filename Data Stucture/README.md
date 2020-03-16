@@ -1,5 +1,11 @@
-자료구조
+Data Structure
 ========
+
+수업명 | 자료구조
+:----:|----
+교수 | [문병로](https://cse.snu.ac.kr/professor/%EB%AC%B8%EB%B3%91%EB%A1%9C)
+교과목 번호 | M1522.000900
+강의 시점 | 2016, Spring
 
 [페이지](http://soar.snu.ac.kr/course/ds/20161/) |
 [게시판](http://soar.snu.ac.kr/course/board/ds2016) |

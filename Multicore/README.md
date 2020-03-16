@@ -1,10 +1,11 @@
 Multicore Computing
 ========
 
-수업명 | 멀티코어 컴퓨팅
+수업명 | 기계학습 개론
 :----:|----
 교수 | [이재진](https://cse.snu.ac.kr/professor/%EC%9D%B4%EC%9E%AC%EC%A7%84)
 강의번호 | 4980.441A-001
+강의 시점 | 2015, Spring
 
 **[수업 필기](note.md)**
 
