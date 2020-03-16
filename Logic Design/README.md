@@ -11,4 +11,4 @@ Logic Design
 
 [ETL]: http://etl.snu.ac.kr/course/view.php?id=173770
 
-> Zoom으로 실시간 비대면 강의
+> Zoom으로 실시간 비대면 강의, 수업자료는 ETL
