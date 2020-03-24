@@ -12,10 +12,6 @@ Happy Campus Life
     포털 로그인 &rarr; 마이페이지 &rarr; 클라우드 메일 사용신청 &rarr;
     Office365가 무료로 나옴
 
-    ```bash
-    brew cask install microsoft-office
-    ```
-
 *   **[OnTheHub]** - Windows, Visual Studio, Azure, etc
 
     원래는 행정실에 메일보내서 ELMS(E-academy License Management System) 계정 받아서 했었는데, 뭔가 홈페이지가 개편되면서 ELMS 계정은 어떻게 쓰는건지 모르게 되었다.
