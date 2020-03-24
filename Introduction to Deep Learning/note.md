@@ -46,7 +46,7 @@ ML의 브랜치로는 뭐가 있을까? DL, RL, 지도학습, 비지도학습, R
 
 2.  Sequence Analysis
 
-    Find a latent casual sequence for observations (HMM, Kalman Filter, etc)
+    Find a latent causal sequence for observations (HMM, Kalman Filter, etc)
 
     ex: 시간에 따라 노이지한 데이터가 들어오는 상황에서 그걸로 미래의 데이터 예측하기
 
