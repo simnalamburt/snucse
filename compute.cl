@@ -41,6 +41,10 @@ static const double factors[FACTORS][N - 1] = {
 static double cum_normal_inv(double u) {
   const double x = u - 0.5;
 
+  // TODO: 아래와 같이 이 if문을 없앨 수 있음
+  //
+  //     int flag = fabs(x) < 0.42;
+  //     flag*(...) + (1 - flag)*(...)
   if (fabs(x) < 0.42) {
     // 얘만 수행하는 병렬화를 해야됨
     double r = x * x;
