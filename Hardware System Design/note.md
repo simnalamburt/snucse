@@ -64,3 +64,85 @@ CNN에 대한 자세한 설명은 http://cs231n.github.io/convolutional-networks
 직접 CNN을 구현하는게 첫 과제인데, 이후의 프로젝트에서도 이 구현체를 계속 사용하게된다.
 
 Q: 하드웨어 가속기를 호출할때마다 매번 끝나기를 기다려야해서 오버헤드가 큰듯한데, 파이프라이닝을 하거나 비동기적으로 호출결과를 받아볼수는 없나요?
+
+&nbsp;
+
+Week 2, Tue
+========
+Verilog Design의 기본과, testbench에 대해 배워보자. Verilog와 Vivado에 대해 배울것이다.
+
+우리의 어플리케이션은 MLP(멀티레이어 퍼셉트론)다. 블록 행렬곱 부분을 하드웨어로 치환할것인데, 이를 위해선 하드웨어를 디자인할 줄 알아야한다.
+
+HDL(Hardware Description Language)이란? 하드웨어의 디자인을 추상적으로 표현하고, 디자인 수준에서 하드웨어의 디자인을 테스트할수있다. 쉽게 하드웨어를 디자인할 수 있다. Verilog는 아주 유명한 HDL중 하나다.
+
+Number representation (피피티 참고). Sized number과 Unsized number이 있는데 unsized는 기본으로 32비트.
+
+- x: Unknown Value. 한 회로에 두개 이상의 드라이버가 연결되면 x가 된다
+- z: High impedance. 한 회로에 드라이버가 없으면 z가 된다
+
+데이터타입
+
+- Nets, `wire`: 와이어
+- Variable, `reg`: 데이터 저장소
+  - Integer variable
+  - Time variable: 시간을 표현하기 위한 특수한 변수
+
+Vectors, 배열이다. 메모리안의 원소를 표현하기 위해 주로 사용됨
+
+Memory, 모델 ROM이나 RAM, 레지스터 파일 등을 추상화한것
+
+`assign`, 물리적으로 와이어로 연결하는것을 뜻함
+
+Verilog에는 다양한 연산자가 존재한다. 그러나 `Unsynthesizable Operators`라고 너무 복잡해서 하드웨어로 그대로 매핑될 수 없는 연산자도 존재함.
+
+산술연산을 할때엔 기본적으로 2의 보수를 쓴다
+
+Concatenation/Replication Operator: 여러 값을 하나로 붙이거나 복제해주는 특이한 연산자
+
+Reduction Operators: Vector를 입력으로 받아 1bit 결과를 냄. 예를들어 모든 비트가 1인지 검사하는 연산자가 리덕션 연산자에 해당됨
+
+Relational Operators: 비교연산자
+
+Equality Operators: 두 유형의 이퀄리티가 있음
+
+- Logical equality, `==`, `!=`: 자료형의 크기가 달라도 zero-extend 해서 비교함
+- Case equality, `==`, `!=`: 자료형의 크기까지 같아야만 같다고 쳐줌
+
+`initial` Block: 시뮬레이션 맨 처음에 딱 한번만 실행되는 블락, 여러 이니셜 블락이 있으면 동시에 병렬실행됨. `always` Block: 시뮬레이션을 하는 내내 연속적으로 계속하여 실행되는 블락. 우리의 모델 코드는 `initial`이나 `always` 둘중 하나 안에는 반드시 들어가야함.
+
+Regular Delay Control: 연산자 사이에 딜레이를 줄 수 있음. testbench에 사용함
+
+Intra-Assignment Delay Control: Assignment 도중에 발생하는 딜레이를 HDL로 기술하는게 가능해짐
+
+Blocking Assignments, `=`: Assignment가 실행 순서대로 차례대로 순차적으로 일어남. Assignment 하나 할때마다 딜레이가 발생함.
+
+Non-Blocking Assignments, `<=`: 넌블럭IO마냥 대입문을 만나도 일단 진행하고 일정시간이 지나면 Assignment가 끝남.
+
+#### Event Timing Control
+Event란 무엇인가? 레지스터나 넷의 값이 변하는 일
+
+- Edge-Triggered Event Control
+  - `@(posedge clock)`, `@(negedge clock)`와 같이 클락 엣지에 의해 발생되는 이벤트들
+- Level-sensitive Event Control
+
+`@(posedge clock or negedge reset_n)` 이런식으로 여러 이벤트를 조합할 수 있다.
+
+#### Modules
+기본적인 빌딩블록 하나가 모듈이 된다. 모듈은 함수처럼 `input`, `output`, `inout` 이렇게 파라미터를 노출한다. `defparam`으로 파라미터의 기본값을 만들 수 있다. 그리고 모듈 호출할때에 positional arguments 말고도 swift처럼 named parameter 문법을 쓸 수 있으니 잘 활용하자.
+
+모듈을 사용할때엔 instantiation이 필요하다
+
+#### Simulation
+테스트하고싶은 유닛이 있을때 그 유닛을 테스트시켜주는 테스트코드를 Stimulus Block 혹은 TestBench라고 부른다.
+
+&nbsp;
+
+Week 2, Tue, Lab
+========
+Zoom이 중간에 끊기면 TA에게 이메일을 남겨주세요!
+
+Vivado Tutorial 죄다 스킵함. PPT 보고 독학하기. MY_IP에서 IP는 Integrated Processor의 약자다.
+
+테스트벤치 하는법도 아주 빠르게 넘어갔음.
+
+NOTE: Vivado 프로젝트 만들때에 "Copy sources into project"를 체크 안하면 프로젝트 파일을 압축해도 소스코드가 포함되지 않을 수 있음. 과제 제출하기 전에 반드시 압축파일 안쪽을 살펴봐서 과제 소스코드가 정상적으로 잘 포함되어있는지 체크해주세요.
