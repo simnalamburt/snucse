@@ -35,3 +35,21 @@ https://www.tinkercad.com 웹기반 빵판 홈페이지인데, 이걸로 실습�
 2. 저항이 색깔에 따라 어떤 의미를 갖는지 설명해주세요
 
 프로젝트, 숙제와 보고서는 모두 개인이고 팀은 실습시간을 위해서만 있는것이다.
+
+&nbsp;
+
+Week 2
+========
+TinkerCad로 아래 두개의 실습을 하면 갈 수 있다.
+
+1.  빵판에서 Pull-up and pull-down resistor 구현하기. 330Ohm 저항 사용이 권장되며, 인버터와 LED로 테스트하라. 입력 전압은 Multimeter로 체크
+2.  빵판에서 Half adder 구현하기. LED로 정상동작여부를 확인하고, 주석(comment)으로 input과 output을 문서화하라.
+
+풀업 레지스터와 풀다운 레지스터는, 플로팅 상태가 된 회로의 전압을 정규화하기 위해 사용한다. 인터넷에 [설명글이 많으니](https://kocoafab.cc/tutorial/view/526) 참고.
+
+숙제
+
+1.  TinkerCad Breadboard로 1-bit full adder 구현하기
+2.  TinkerCad Breadboard로 2-bit full adder 구현하기
+3.  PPT에 있는 서킷 다이어그램의 Truth table 만들기
+4.  PPT에 있는 서킷 다이어그램을 NOT 1개, AND 2개, OR 1개만으로 표현하기. Logisim을 활용하라.
