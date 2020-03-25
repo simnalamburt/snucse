@@ -105,3 +105,111 @@ Week 2, Mon
 순차논리에는 시간의 개념이 존재하기때문에, 클락(clock)이 필요해진다! 그리고 State에 따라 출력이 달라지므로, Truth table이 아니라 State table 혹은 FSM으로 동작을 기술해야한다.
 
 순차논리는 조합논리에 State/Clock만 더한것으로 생각할 수 있다.
+
+&nbsp;
+
+Week 2, Wed
+========
+모의 중간고사, 모의 기말고사 시험지를 나눠줘서 공부를 할 수 있게 할것이다.
+
+### Boolean algebra
+Algebraic structure란 무엇인가. 원소와 Binary/unary operators, 그리고 몇가지 Axiom으로 구성된 수학적 구조이다. 어떤 Axiom들이 있을까
+
+1.  셋 안에 원소가 최소 두개 존재한다
+2.  Closure, 연산에 대해 닫혀있음
+3.  Commutativity, 교환법칙
+4.  Associativity, 결합법칙
+5.  Identity, 연산에 대해 항등원이 존재함
+6.  Distributivity, 분배법칙
+7.  Complementarity, 연산에 대해 역원이 존재함
+
+Boolean algebra는 집합에 원소가 `true`, `false` 둘뿐이고 binary operator `or`, `and`와 unary operator `not`이 존재하는 algebraic structure이다. 위에서 언급한 7개의 axiom을 모두 만족시킬 수 있다.
+
+Truth table로 표현 가능한 모든 임의의 Logic function은 AND, OR, NOT의 조합으로 표현할 수 있다.
+
+Boolean algebra에서의 Axiom들과 Theorem들
+
+1.  Identity, 항등원
+    - X or false = X
+    - X and true = X
+2.  Null
+    - X or true = true
+    - X and false = false
+3.  Idempotency, 멱등성
+    - X or X = X
+    - X and X = X
+4.  Involution
+    - !(!X) = X
+5.  Complementarity, 역원
+    - X or !X = true
+    - X and !X = false
+6.  Commutativity
+    - X or Y = Y or X
+    - X and Y = Y and X
+7.  Associativity
+    - (X or Y) or Z = X or (Y or Z)
+    - (X and Y) and Z = X and (Y and Z)
+8.  Distributivity, 분배법칙
+    - X and (Y or Z) = (X and Y) or (X and Z)
+    - X or (Y and Z) = (X or Y) and (X or Z)
+9.  Uniting
+    - (X and Y) or (X and !Y) = X
+    - (X or Y) and (X or !Y) = X
+10. Absorption
+    - X or (X and Y) = X
+    - X and (X or Y) = X
+    - (X or !Y) and Y = X and Y
+    - (X and !Y) or Y = X or Y
+11. Factoring
+    - (X or Y) and (!X or Z) = (X and Z) or (!X or Y)
+    - (X and Y) or (!X or Z) = (X or Z) and (!X or Y)
+12. Concensus
+    - (X and Y) or (Y and Z) or (!X and Z) = (X and Y) or (!X and Z)
+    - (X or Y) and (Y or Z) and (!X or Z) = (X or Y) and (!X or Z)
+13. de Morgan's Law
+    - !(X or Y) = !X and !Y
+    - !(X1 or X2 or ... Xn) = !X1 and !X2 and ... !Xn
+    - !(X and Y) = !X or !Y
+    - !(X1 and X2 and ... Xn) = !X1 or !X2 or ... !Xn
+14. Generalized de Morgan's Law
+    - !f(X1, X2, ... Xn, 0, 1, or, and) = f(!X1, !X2, ... !Xn, 1, 0, and, or)
+15. Duality (Meta-theorem)
+    - 한 Boolean expression 안에 있는 모든 and와 or를 맞바꾸고 true와 false를 맞바꿔서, 한 expression의 dual을 얻을 수 있다.
+    - f(X1, X2, ... Xn, 0, 1, or, and) 의 Dual은 f(X1, X2, ... Xn, 1, 0, and, or)
+
+Theorems을 증명하는데엔 크게 두가지 방법이 있다.
+
+Rewrite로 증명하기
+
+1.  Rewrite로 증명하기
+
+    ```
+    (X and Y) or (X and !Y)
+    = X and (Y or !Y)                 (Distributivity)
+    = X and true                      (Complementarity)
+    = X                               (Identity)
+    ```
+
+    ```
+    X or (X and Y)
+    = (X and true) or (X and Y)       (Identity)
+    = X and (true or Y)               (Distributivity)
+    = X and true                      (Null)
+    = X                               (Identity)
+    ```
+
+2.  Complete Truth table로 증명하기, Perfect induction
+
+    가능한 입력의 경우의 수를 모두 다 써서 수식이 맞다는걸 증명하면 증명된거임
+
+### Realizing Boolean Formulas
+입력이 2개일 경우, 16개의 가능한 논리회로 조합이 있다. 입력이 x개일 경우 2**(2**x)개의 가능한 논리회로 조합이 있다.
+
+한 회로를 구현하는데엔 여러가지 방법이 있고, 방법에 따라 구현 비용이 모두 다르다. 어떤 회로는 구현하는데에 아주 적은 스위치가 소모되고, 어떤 회로는 아주 많은 스위치가 소모된다. 우리는 가능하면 회로를 싸게 구현해야한다.
+
+AND, OR, NOT 보다 NAND, NOR, NOT이 더 저렴하다! 그리고 모든 논리회로는 NAND 단 하나만으로, 혹은 NOR 단 하나만으로 구현이 가능하다.
+
+NAND와 NOR은 서로 듀얼이기때문에, 한 회로를 NAND로 구현했다면 그 듀얼에 해당하는 회로도 쉽게 만들 수 있음.
+
+#### Waveform view of logic functions
+시간에 따라 다른 입력을 연속적으로 흘려줌으로써 진리표를 쉽게 뽑을 수 있음. Propagation Delay때문에 출력이 약간 늦게 나오는것을 감안해라.
