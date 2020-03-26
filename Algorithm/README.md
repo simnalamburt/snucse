@@ -3,7 +3,7 @@ Algorithm
 
 수업명 | 알고리즘
 :----:|----
-교수 | [문병로]](https://cse.snu.ac.kr/professor/%EB%AC%B8%EB%B3%91%EB%A1%9C)
+교수 | [문병로](https://cse.snu.ac.kr/professor/%EB%AC%B8%EB%B3%91%EB%A1%9C)
 교과목 번호 | 4190.407
 강의 시점 | 2020, Spring
 
