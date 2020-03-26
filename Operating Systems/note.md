@@ -268,6 +268,8 @@ Interrupt Handling도 익셉션이랑 매우 비슷하게 동작함. 파이프�
 
 I/O 유형들마다 DMA Controller가 따로 존재한다. SATA같은경우는 메인보드의 SATA Controller에 DMA Controller가 들어있고, NVMe같은경우 SSD가 외부 도움 없이 자체적으로 DMA를 할 수 있다.
 
+결론: 아키텍처는 OS를 위해 인터럽트를 지원해야한다!
+
 #### Issue 2. Protection
 유저가 시스템을 망치는것을 어떻게 막을것인가? 여기에선 하드웨어의 도움이 반드시 필요해진다.
 
@@ -296,6 +298,8 @@ Modes of Operation. CPU가 현재 저런 privileged instructions를 실행할 �
 옛날에 커널을 아무리 잘 짜도 커널에 붙는 디바이스 드라이버때문에 컴퓨터가 죽는 경우가 많았음. 그래서 디바이스 드라이버의 권한을 축소시키려고 Ring 1, Ring 2같은게 만들어졌음. 근데 굉장히 복잡하고 성능이 안좋아서 이렇게 세밀하게 권한을 구분하는 경우가 적음. 윈도우와 리눅스 모두 두 모드만을 사용함.
 
 커널의 엄밀한 정의: 커널모드로 실행되는 코드를 커널코드라고 한다.
+
+결론: 아키텍처는 OS를 위해 커널모드, 유저모드 구분을 나눠줘야한다!
 
 #### Issue 3. Servicing Requests
 이렇게 유저모드/커널모드 구분을 통해 유저가 아무것도 하지 못하게 막고, 시스템콜을 통해서만 일을 할 수 있게 만들어놨다. 시스템콜을 어떻게 만들까?
@@ -334,3 +338,105 @@ Exception, interrupt, fault, trap, abort 등 비슷한걸 뜻하는 용어들이
     - 정말 심각한 상황을 부름
 
 이 단어는 CPU마다 용어가 다르니 유의하자.
+
+&nbsp;
+
+Week 3, Thu
+========
+시스템콜을 구현해보자!
+
+유저는 정해진 프로토콜에 따라 지정된 레지스터에 파라미터들과 시스템콜 번호를 입력한 뒤, `ecall` 명령어를 실행한다.
+
+`ecall` 명령어가 실행되면 Trap Handler가 실행됨. Trap Handler의 주소는 `stvec` 레지스터에 미리 지정이 되어있어야한다. 시스템콜이 끝난 뒤 돌아갈 장소의 주소가 어딘가에 저장이 되어야 하는데, 이건 `sepc`(Supervisored Exception Program Counter) 레지스터에 저장됨.
+
+문제는 RISC-V와 같은 경우 OS Trap이든, 소프트웨어 익셉션이든 (divide by 0, illegal instruction, ...) 하드웨어 인터럽트든 모두 같은 Trap Handler로 진행하기떄문에, 이걸 구분해주는 작업을 먼저 해야한다.
+
+Trap Handler가 호출되면 일단 모든 유저의 레지스터들을 Trap Frame에 저장한다. 그럼 이제부터 모든 레지스터들은 커널이 사용할 수 있다. 그리고 `scause`라는 레지스터에 Trap Handler가 호출된 원인이 저장되어있는데, 그걸 읽는다.
+
+`scause`를 읽어서 원인이 시스템콜이었을 경우, Systemcall Table을 읽는다. Systemcall Table에는 각 시스템콜별로 어느 커널 함수를 호출해주면 되는지가 씌여있다.
+
+시스템콜이 끝난 뒤엔 Trap Frame으로부터 유저의 레지스터들을 복구한 뒤, 프로그램 카운터를 `sepc`에 저장되어있는 주소로 복구시켜서 유저 코드로 돌아간다. 이걸 손으로 하는게 아니라 `sret`이라는 명령어를 쓴다. `sret`을 쓰면 프로그램 카운터가 복구되면서 CPU 모드가 유저모드로 바뀌게된다.
+
+결론: 아키텍처는 OS를 위해 Trap 명령어를 만들어줘야한다!
+
+#### Issue 4. Control
+OS가 시간을 많이 쓰면 안좋은게 맞긴 한데, OS도 소프트웨어이기때문에 중간중간 OS가 CPU시간을 써야한다. OS도 휴먼이야 휴먼
+
+근데 유저프로세스가 시스템콜도 안부르고, 인터럽트도 없이 유저프로세스가 무한루프를 돌면 어떻게될까? 다른 프로세스들에 스케줄링도 못해주고 컴퓨터가 Hang된다! 안돼!
+
+OS가 CPU를 유저한테 주는건 쉽다. 다시 뺏어오는건 어렵다. 어떻게 뺏어올 수 있을까?
+
+1.  Cooperative Approach
+
+    유저 프로세스가 주기적으로 `yield()`같은 시스템콜을 호출하게 해서 알아서 양보하게 시키기. 프로세스의 협조가 필요하다. 프로세스가 협조하지 않고 양보를 전혀 안해주면..? 으앙
+
+    타이머 하드웨어가 없을때엔 이런 접근을 써야함. 임베디드 환경과 같이, 컴퓨터 안에 돌아가는 모든 소프트웨어를 직접 작성하는 경우에는 이런 접근을 많이 씀.
+
+    Can be used when OS trusts user applications.
+
+2.  Non-cooperative Approach
+
+    CPU 밖에 타이머 하드웨어를 둬서, 주기적으로 무조건 하드웨어 인터럽트가 발생하도록 세팅한다! 프로세스의 협조가 필요 없다.
+
+타이머는 privileged자원이여서 OS만 사용할 수 있게 세팅한다. 그리고 OS는 타이머에 미리 어느 주기로 인터럽트가 발생할지 주기를 세팅한다. Linux 2.4는 10ms, Linux 2.6은 1ms, Linux 5.5는 4ms, xv6는 10ms.
+
+어떤 프로그램이 무한루프에 빠졌는지 안빠졌는지 판단하는건 굉장히 어려운 문제에요. Halting Problem이라고 들어보셨나요? 옛날에 삼성에서 무한룹에 빠진 앱 죽이는거 가능하냐고 물어본적도 있었는데 어려웠다.
+
+결론: 아키텍처는 OS를 위해 타이머 하드웨어를 줘야한다!
+
+#### Issue 5. Memory Protection
+어플리케이션이 아무 메모리를 쓸 수 있으면 안된다. 어떻게 하면 좋을까?
+
+어플리케이션이 메모리 액세스도 시스템콜로 한다면? 매우 느릴것이다 ㅠ
+
+간단한 접근: CPU에 special한 레지스터 두개를 둔다. `base` 레지스터에 접근할 수 있는 메모리의 시작주소가 써있고, `limit` 레지스터에 접근할 수 있는 메모리의 끝 주소가 써있다. 그리고 OS는 유저 어플리케이션을 실행할때마다 레지스터에 "이 어플리케이션은 어느 메모리까지 접근할 수 있다"를 지정해준다. 이렇게 하면 OS의 개입 없이도 CPU가 금지된 메모리 액세스를 빠르고 효율적으로 막아준다. 간단한 임베디드 환경에선 이렇게 구현한다.
+
+실제로는 접근할 수 있는 메모리 영역이 연속적이진 않기때문에 Virtual Memory를 쓴다. MMU(Memory Managemnt Unit)에서 privileged option을 지원한다.
+
+결론: MMU가 있어야하고, MMU가 메모리 권한제어도 해줘야한다!
+
+#### Issue 6. Synchronization
+여러 인스트럭션들이 아토믹하게 실행되게 하고싶다. 락을 어떻게 구현하면 좋을까?
+
+싱글코어 CPU에서는 그냥 잠깐 인터럽트를 껐댜 켜면 그게 락이다. 멀티코어에선 이 접근을 쓸 수 없다.
+
+스핀락을 구현하면 되긴 하는데 이러면 오버헤드가 엄청나기때문에 하드웨어의 Atomic 명령어가 필요하다.
+
+- Read-Modify-Write (INC, DEC)
+- Test-and-Set
+- Compare-and-Set
+- LOCK in IA-32
+- LL (Load Locked) & SC (Store Conditional) in MIPS
+
+RISC-V에는 "A" instruction set이 있다.
+
+- LR(Load Reserved) & SC(Store Conditional)
+- AMO (Atomic Memory Operation)
+
+#### 요약
+좋은 OS를 만들으려면 CPU 아키텍처의 도움이 필요하다. (MS-DOS/8086에서 멀티프로세싱 하기?)
+
+CPU 아키텍처의 도움이 있으면 OS를 훨씬 간단하고 효율적으로 만들 수 있다. (인터럽트, DMA, 아토믹, ...)
+
+대부분의 유명한 OS들은 이런 아키텍처 서포트를 염두에 두고 만들어져있다.
+
+- SPARC 위의 SunOS/Solaris
+- PPC 위의 IBM AIX
+- PA-RISC 위의 HP-UX
+
+두번째 과제: `setpgid`, `getpgid` 시스템콜 구현하기! https://github.com/snu-csl/os-pa2 참고
+
+대부분의 UNIX에는 프로세스 그룹이라는게 있어서 pgid를 고치고 읽는게 가능한데, xv6에는 지금 그 기능이 없다. 이걸 만들어보자.
+
+그리고 지금 xv6에선 <kbd>Ctrl</kbd>+<kbd>P</kbd>를 누르면 현재 실행중인 프로세스 목록이 찍힌다. 그떄 PID뿐만 아니라 PGID도 같이 찍히게 만들면 된다.
+
+setpgid 호출하는 프로그램 유틸리티로 만들어져있으니 그걸로 테스트하면 된다.
+
+### Process
+여러분들 다 아시죠? 후루룩 빠르게 넘어갑시다
+
+What is a Process? An instance of a program in execution. 그리고 Protection의 최소단위이기도 하다.
+
+자바로 비유하면 Class : Object = Program : Process.
+
+프로세서별로 고유한 정수 ID인 PID가 있어야한다. 그리고 프로세스별로 CPU context, address space, open file table, 등등을 따로 가진다.
