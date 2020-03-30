@@ -213,3 +213,83 @@ NAND와 NOR은 서로 듀얼이기때문에, 한 회로를 NAND로 구현했다�
 
 #### Waveform view of logic functions
 시간에 따라 다른 입력을 연속적으로 흘려줌으로써 진리표를 쉽게 뽑을 수 있음. Propagation Delay때문에 출력이 약간 늦게 나오는것을 감안해라.
+
+&nbsp;
+
+Week 1, Mon
+========
+#### Choosing different realizations of a function
+하나의 진리표를 논리게이트로 옮길때에, 여러 구현방법이 존재할 수 있다. 구현 방법에 따라 Trade-off가 존재할 수 있다.
+
+- 비싸고 게이트가 많은 방법
+- 싸고 게이트가 적은 방법
+- 단순하게 생겼지만 비싼 방법
+
+XOR은 단순하게 생겼지만 내부 구현이 복잡하다. NAND도 AND와 비슷해보이지만 훨씬 싸다. 그리기에 단순한것과 실제로 단순한것은 별개이니 유의하자.
+
+어떤 구현이 제일 나을까?
+
+- 입력이 적을수록 좋다
+  - 구현이 심플해짐, 서킷이 저렴해짐. 입력이 적으면 보통 게이트 수도 적기때문에 더 빠름.
+- 게이트 수가 적을수록 좋다
+  - 게이트 숫자가 회로 가격에 가장 직접적인 영향을 줌
+
+### Two-level logic
+논리회로를 잘 만드는 방법을 알아보자.
+
+#### Canonical forms
+하나의 Boolean function마다 유니크한 하나의 진리표가 존재한다. 그 진리표를 구현하는 방법에는 여러가지가 있을텐데, Canonical form은 그중에서 가장 standard한 형태를 의미한다.
+
+- Sum-of-products (S-o-P) canonical forms
+  - Truth table에서 결과가 1인 경우를 모두 모아놓은 형태
+  - Disjunctive normal form, Minterm expansion 이라고도 불림
+- Product-of-sums (P-o-S) canonical forms
+  - Truth table에서 결과가 0인 경우를 모두 모아놓은 형태
+  - Conjunctive normal form, Maxterm expansion 이라고도 불림
+
+PoS form은 SoP form의 Dual이라고 볼 수 있음. Canonical Form이 Minimal form이 아님에 유의하라
+
+- Minterm form과 Maxterm form은 간편하게 변환 가능함
+  - Σm(1, 3, 5, 6, 7) = ΠM(0, 2, 4)
+- F의 minterm과 F'(not F)의 minterm도 간편하게 변환 가능함
+  - F = Σm(1, 3, 5, 6, 7), F' = Σm(0, 2, 4)
+- F의 maxterm과 F'(not F)의 maxterm도 간편하게 변환 가능함
+  - - F = ΠM(0, 2, 4), F' = ΠM(1, 3, 5, 6, 7)
+
+교수님께서 수업하다가 터치펜이 고장나서 손가락으로 수업하심. 장인의 손맛
+
+#### Incompletely specified functions
+지금까지 배운 Canonical forms에선 on-set과 off-set중 하나에만 초점을 맞췄는데, "Don't care"도 표현할 수 있어야 한다. 아래 둘중 하나로 표현해야함
+
+- on-set + dc-set
+- off-set + dc-set
+
+수식은 PPT 참고
+
+### Motivation for Two-level simplification
+논리회로 단순화 하는 방법들
+
+- Minimal S-o-P, P-o-S realization 찾기
+  - Exploit "Don't care" information in the process
+  - Don't Care output은 아무렇게나 정의해도 상관이 없으니까, 이걸 이용해서 수식을 간편하게 만드는데에 쓸 수 있다.
+- Algebraic simplification
+  - Algorithmic/Systematic procedure가 아니여서, 지금의 표현이 minimum realization이라는것을 알 수 없다.
+- Computer-Aided Design (CAD)
+  - NP문제여서 최적해 찾기는 아주 오래걸린다. 특히 입력이 10개 초과로 넘어가면 아주 느려짐
+  - Educated guesses 휴리스틱으로 풀수는 있긴 한데 최적해는 아님
+- 손으로 하는것도 의미가 있음
+  - 자동화 툴의 장단점을 익혀야히는데에 좋음
+  - 작은 예제에 대해선 직접 결과를 체크하는 능력을 키워줌
+
+논리회로를 단순화하는 두 테크닉
+
+- Boolean Cubes
+- Karnaugh-maps (K-maps)
+
+두 방법 모두 Uniting Theorem에 기반한것임
+
+#### The Uniting Theorem
+A(B' + B) = A. Two-level logic 단순화의 핵심이다. 변수 X의 값과 무관하게 변수 Y의 값에 의해서만 결정되는 출력이 있다면 거기에 Uniting Theorem을 적용할 수 있음
+
+#### Boolean Cubes
+Uniting Theorem을 적용시키기 쉽도록 진리표를 시각화하는 방법. 입력이 N개이면 N-dimensional Cube에 매핑된다. 방법은 PPT 참고
