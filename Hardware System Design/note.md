@@ -141,7 +141,7 @@ Week 2, Tue, Lab
 ========
 Zoom이 중간에 끊기면 TA에게 이메일을 남겨주세요!
 
-Vivado Tutorial 죄다 스킵함. PPT 보고 독학하기. MY_IP에서 IP는 Integrated Processor의 약자다.
+Vivado Tutorial 죄다 스킵함. Vivado는 2018.3 버전을 쓰자. PPT 보고 독학하기. MY_IP에서 IP는 Integrated Processor의 약자다.
 
 테스트벤치 하는법도 아주 빠르게 넘어갔음.
 
