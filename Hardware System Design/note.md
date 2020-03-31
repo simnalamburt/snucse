@@ -146,3 +146,60 @@ Vivado Tutorial 죄다 스킵함. Vivado는 2018.3 버전을 쓰자. PPT 보고 
 테스트벤치 하는법도 아주 빠르게 넘어갔음.
 
 NOTE: Vivado 프로젝트 만들때에 "Copy sources into project"를 체크 안하면 프로젝트 파일을 압축해도 소스코드가 포함되지 않을 수 있음. 과제 제출하기 전에 반드시 압축파일 안쪽을 살펴봐서 과제 소스코드가 정상적으로 잘 포함되어있는지 체크해주세요.
+
+&nbsp;
+
+Week 3, Tue
+========
+for, while, repeat 문을 쓸 수 있음. genvar와 generate 문을 써서, 반복적인 코드를 생략할 수 있음.
+
+모듈 모델링 스타일에 여러가지가 있다.
+
+- Structural style
+  - Gate Level
+- Dataflow style
+  - Gate level보다 상위의 표현, 여러 비트들에 대한 계산을 겹쳐서 한번에 표현하기
+- Behavioral or Algorithmic style
+  - C 코드 처럼 절차적으로 서술하기
+- Mixed style
+  - RTL = synthesizable behavioral + dataflow constructs
+
+모듈 인스턴스화 할때에 배열을 쓸 수도 있음.
+
+```verilog
+wire [3:0] out, in1, in2;
+
+// basic array instantiations of nand gate.
+nand n_gate[3:0] (out, in1, in2);
+
+// this is equivalent to the following
+nand n_gate0 (out[0], in1[0], in2[0]);
+nand n_gate1 (out[1], in1[1], in2[1]);
+nand n_gate2 (out[2], in1[2], in2[2]);
+nand n_gate3 (out[3], in1[3], in2[3]);
+```
+
+### Understanding bus interface
+베릴로그 코딩을 한 결과를 실제 하드웨어로 만들어보자.
+
+실제로 구현을 할때엔 Synthesizable code를 매번 새로 구현하기보단, 기존 하드웨어를 재사용하는것이 좋다. IP Catalog에서 재사용 가능한 하드웨어 컴포넌트들중 하나를 고를 수 있다.
+
+한 하드웨어 컴포넌트에는 기능이 엄청 많은데, 사용할 기능만 체크해주자. Flow Control도 Blocking, NonBlocking이 있는데 우리는 Non Blocking만 쓸거다.
+
+이렇게 하면 하드웨어 컴포넌트에서 안 쓰는 핀이 없어지게된다.
+
+Blocking/NonBlocking은 Bus Interconnect와 관련이 있다. 현대 하드웨어 시스템에선 CPU나 Memory와 같은 여러가지 컴포넌트들이 하나의 Bus에 붙어있다. CPU와 같은 Master component가 메모리 읽기와 같은 요청을 Bus에 보내면, Bus는 그 요청을 처리할 Slave가 무엇인지 찾아 전달한다. 우리는 ARM AMBA AXI bus를 쓰니 AXI 스펙대로 배워보자.
+
+AXI 마스터가 AXI 슬레이브에 요쳥을 보낼 때 요청에 필요한 각종 정보를 보내는데, 그중 핸드셰이킹에 쓰이는 두 중요한 신호가 있다. Valid와 Ready이다.
+
+#### Blocking
+마스터에선 정보를 보내는것과 동시에 Valid 신호를 1로 셋해줘야한다. 받는 쪽에선 매 클락마다 Valid를 체크하여 Valid가 1이면 들어온 정보를 사용하고, Valid가 0이면 입력 정보들을 모두 무시한다.
+
+반면 Raedy는 슬레이브가 컨트롤하는 신호다. 슬레이브가 받을 준비가 되었다면 Ready를 1로 설정하고, 준비가 되지 않았다면 0으로 설정한다.
+
+Clock rising edge일 때 valid과 ready가 모두 1이면 커뮤니케이션이 발생한다.
+
+Clock rising edge일 때 Valid가 1이지만 Ready가 0이면? 아무일도 일어나지 않는다. 보내는쪽에선 Valid가 1로 변할때까지 대기해야한다. 이래서 이 프로토콜은 Blocking이다.
+
+#### Non-blocking
+Non-blocking에선 ready가 항상 1이다. Ready 비트에 대해 신경쓸 필요가 없고, Sender가 절대 block되지 않기때문에 회로가 간단해진다. Non-blocking이 어떻게 동작하는지는 다음 시간에 더 자세히 설명하기로 함
