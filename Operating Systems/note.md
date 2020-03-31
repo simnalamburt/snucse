@@ -347,7 +347,7 @@ Week 3, Thu
 
 유저는 정해진 프로토콜에 따라 지정된 레지스터에 파라미터들과 시스템콜 번호를 입력한 뒤, `ecall` 명령어를 실행한다.
 
-`ecall` 명령어가 실행되면 Trap Handler가 실행됨. Trap Handler의 주소는 `stvec` 레지스터에 미리 지정이 되어있어야한다. 시스템콜이 끝난 뒤 돌아갈 장소의 주소가 어딘가에 저장이 되어야 하는데, 이건 `sepc`(Supervisored Exception Program Counter) 레지스터에 저장됨.
+`ecall` 명령어가 실행되면 Trap Handler가 실행됨. Trap Handler의 주소는 `stvec` 레지스터에 미리 지정이 되어있어야한다. 시스템콜이 끝난 뒤 돌아갈 장소의 주소가 어딘가에 저장이 되어야 하는데, 이건 `sepc`(Supervisored Exception Program Counter) 레지스터에 저장됨. (`mepc`, `hepc`라고 Machine Exception Program Counter, Hypervisor Exception Program Counter는 또 따로 있음)
 
 문제는 RISC-V와 같은 경우 OS Trap이든, 소프트웨어 익셉션이든 (divide by 0, illegal instruction, ...) 하드웨어 인터럽트든 모두 같은 Trap Handler로 진행하기떄문에, 이걸 구분해주는 작업을 먼저 해야한다.
 
@@ -440,3 +440,95 @@ What is a Process? An instance of a program in execution. 그리고 Protection�
 자바로 비유하면 Class : Object = Program : Process.
 
 프로세서별로 고유한 정수 ID인 PID가 있어야한다. 그리고 프로세스별로 CPU context, address space, open file table, 등등을 따로 가진다.
+
+&nbsp;
+
+Week 3, Tue
+========
+프로그램에는 Code와 Data가 들어있다. 프로그램이 실행되면 프로그램이 모두 메모리에 올라가서 Code와 Data가 램에 상주하게되고, Heap 메모리와 Stack 메모리가 생기게 된다. Program Counter 레지스터는 Code 영역중에서 현재 실행중인 장소를 가리키고, Stack Pointer 레지스터는 현재 스택의 맨 위가 Stack 영역중에서 어디인지를 가리킨다. 프로세스의 실행은 Mem[PC]를 Fetch하고, Decode하고, Execute한 뒤 PC를 Update하는 과정의 연속이다. 멀티스레드 프로그램일 경우 스택이 여러개가 됨.
+
+근데 실제로는 한 코어가 여러개의 프로세스를 interleave하게 실행할 수 있어야한다. 한 코어가 여러 프로세스를 왔다갔다하며 실행할 수 있어야함. OS는 한정된 자원인 CPU를 여러 프로세스에 분배시켜주면서, 각각의 프로세스에는 각 프로세스가 자신만의 한개의 CPU를 가진것처럼 동작하도록 해주는데 (virtualizing the CPU) 이를 스케줄링이라고 한다.
+
+#### Process Hierarchy
+UNIX에선 `fork()`로만 프로세스를 만들 수 있다. (fork 동작원리, 사용법, 구현방법 생략) fork는 한번 호출되고 두번 리턴되는 함수.
+
+포크로만 프로세스를 만들기때문에 프로세스들끼리 부모자식 관계가 생긴다. (Process Hierarchy) Process Group도 만들 수 있음.
+
+`exec()`은 현재 실행중인 프로세스를 다른 프로세스로 변신시켜주는 함수. 한번 호출되고, (에러를 제외하면) 리턴되지 않는 함수.
+
+UNIX에서 새 프로세스를 실행하려면 fork()를 부른 뒤 exec()을 호출해야한다. 왜 UNIX에선 프로세스를 만들때에 fork()와 exec()을 두번 하게 만들었을까? 이게 사실 되게 생각하고 만든거다. fork()와 exec()를 나눴기때문에 자식 프로세스가 로딩되기 전에 IO를 파이프한다던가 하는 행위가 가능함.
+
+윈도우는 fork()로 프로세스를 만드는것도 아니고, 프로세스 그룹이라는 개념도 없음. 윈도우에는 CreateProcess가 있는데 fork()와 exec()을 합친것.
+
+왜 윈도우는 이렇게 대충배우나요? 전세계에서 생산되는 인텔 CPU 비율이 얼마일까? 2~3%밖에 안됨. 윈도우도 마찬가지임. 일반 사용자용 OS나 윈도우가 많고 심지어 요즘은 스마트폰 때문에 일반 사용자용 조차도 UNIX가 더 많다. 윈도우 몰라도 돼요.
+
+김진수 교수님께선 vi를 좋아하신다!
+
+#### Process Termination
+프로세스가 죽는 경우
+
+- 자발적으로 꺼지는 경우
+- 에러나 발생해서 자발적으로 꺼지는 경우
+- OS에 의해 비자발적으로 죽는 경우
+  - Segmentation Fault, 잘못된 메모리 접근
+  - Protection Fault
+  - Exceeded allocated resources
+  - etc
+- 다른 프로세스에 의해 죽임당하는 경우
+  - Signal을 받은 경우
+
+Zombie process: Terminated, but not removed. 모든 리소스들(메모리, 오픈 파일, 등)을 다 반환해서 죽은거나 다름이 없는 상태이고, 왜 죽었는지 정보만 남아있음. `waitpid()` 이런 시스템콜을 써서 parent나 다른 프로세스들이 그 프로세스가 왜 죽었는지 정보를 읽어가면 좀비가 사라짐. 자식 프로세스가 죽으면 `SIGCHILD` 시그널이 발생한다. 저걸 써서 `waitpid()` 처리를 효율적으로 할 수 있다.
+
+#### Process State Transitions
+Time slice, Time quantum: 프로세스가 실행될 수 있는 허용된 최대의 시간.
+
+Process는 항상 아래의 세 state중 하나를 가진다
+
+- Ready
+  - 실행될 수 있는 상태
+  - Ready state인 프로세스들은 Ready Queue에 들어가서, 스케줄링의 대상이 된다.
+  - 프로세스가 생성된 직후에 이 상태가 된다
+- Running
+  - 실행중인 상태. 시스템 콜 때문에 커널 코드를 실행중인 프로세스도 Running 상태이다.
+  - 이 상태에 너무 오래 머물러서 Time slice를 모두 소진하면 (time slice exhausted) OS가 실행을 멈추고 Ready 상태로 돌려버린다.
+- Blocked
+  - 프로세스가 IO를 하거나 이벤트를 기다리느라 Block되어버리면 이 상태가 된다
+  - Blocked 상태인 프로세스들은 Ready Queue에서 빠져서, 스케줄링되지 않는다.
+  - IO가 끝나거나 대기가 끝나면 다시 Ready 상태로 넘어간다.
+
+보통 Time slice가 Timer inturrupt의 주기(tick 주기)의 배수이다.
+
+#### Process 구현하기
+Process Control Block(PCB) 혹은 Process Descriptor에 그 프로세스에 관한 모든 정보가 있어야한다. 하나의 PCB는 하나의 프로세스
+
+- CPU 레지스터
+- PID, PPID, PGID, priority(nice), 프로세스 상태, 시그널, 등
+- CPU 스케줄링 관련 정보
+- 메모리 관리 관련 정보
+- Accounting information: CPU 사용량이 얼마인지, IO를 얼마나 했는지 등의 통계
+- File management 관련 정보
+- I/O 상태 관련 정보
+- Credentials: 프로세스들이 갖고있는 접근권한들. UID, GID.
+
+리눅스 4.15.0-91 기준으로 `struct task`의 크기는 6016 바이트. xv6의 `struct proc`은 360바이트.
+
+#### Context Switch
+한 코어가 실행하던 프로세스에서 다른 프로세스로 넘어가는 과정. 컨텍스트 스위치가 많아지면 Administrative overhead가 커지기때문에 가능한 한 아껴야함.
+
+- Trapframe에 레지스터들 저장/복구하기
+- 각종 메모리맵들 저장/restore 하기
+- TLB와 같은 메모리 Cache Flush/리로딩하기
+- 각종 테이블과 리스트들 업데이트하기
+
+하드웨어마나 컨텍스트스위치 오버헤드가 다르다.
+
+- UltraSPARC에선 레지스터 셋이 여러개가 있어서 함수 호출할때의 레지스터 저장/리로드 오버헤드는 비교적 적었지만, 레지스터가 너무 많아서 컨텍스트 스위치 오버헤드는 오히려 늘었다.
+- Advanced memory management 기술을 적용한 경우 컨텍스트 스위치를 할때에 저장해야하는 정보가 늘어날 수 있다.
+
+컨텍스트 스위치는 보통 1초에 수백번에서 수천번 일어난다. 커널모드에 있더라도 컨텍스트 스위치가 발생한다.
+
+커널 안에선 Atomic한 실행이 필요하거나 락이 필요한 경우를 위해, 잠시 컨텍스트 스위치를 막아주는 기능을 쓸 수 있음.
+
+Trapframe이 왜 있는가? 요즘은 유저모드일때 접근 가능한 메모리와 커널모드일때 접근 가능한 메모리를 완전히 나누는게 유행이다. 각종 CPU 취약점때문에.. 근데 유저모드일때와 커널모드일때 모두 접근 가능한 메모리 영역이 Trapframe임.
+
+트램폴린 페이지: 커널이 유저모드의 프로세스에 데이터를 전달할 일이 있을때 쓰는 작은 메모리 영역
