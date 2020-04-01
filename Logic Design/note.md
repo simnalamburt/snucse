@@ -293,3 +293,20 @@ A(B' + B) = A. Two-level logic 단순화의 핵심이다. 변수 X의 값과 무
 
 #### Boolean Cubes
 Uniting Theorem을 적용시키기 쉽도록 진리표를 시각화하는 방법. 입력이 N개이면 N-dimensional Cube에 매핑된다. 방법은 PPT 참고
+
+Week 3, Wed
+========
+Boolean Cubes는 input 수가 올라가면 힘들어진다. 그러면 어떻게 하면 될까
+
+#### Karnaugh Maps
+Flat map of Boolean cube. Adjacencies를 잘 보여주는 진리표의 대체재이다.
+
+입력이 세개 이상일 경우, Gray-code를 기반으로 입력을 나열하면, 서로 인접한 칸끼리 입력이 1비트씩만 변하기 때문에 adjacenies를 쉽게 파악할 수 있다. 카너프맵의 양쪽 끝은 연결되어있다. 토폴로지가 도넛 모양임.
+
+(카너프맵으로 수식 최적화하는거 PPT 참고)
+
+변수가 5개 넘어가면 카너프맵으로도 어려워지는데, 이러면 사람이 안하고 컴퓨터가 해줘요!
+
+숙제: ~~인풋이 26개인 아주 거대한 진리표를 minimize하는 회로를 만들어보세요!~~ 이건 만우절 농담이고, Chapter 2에 있는 Problem Set을 풀고, 스캔해서 온라인으로 Submit하세요. Pass/Fail임
+
+카너프 맵은 중간고사에 반드시 나오니까 꼭 연습을 하세요!
