@@ -53,3 +53,13 @@ TinkerCad로 아래 두개의 실습을 하면 갈 수 있다.
 2.  TinkerCad Breadboard로 2-bit full adder 구현하기
 3.  PPT에 있는 서킷 다이어그램의 Truth table 만들기
 4.  PPT에 있는 서킷 다이어그램을 NOT 1개, AND 2개, OR 1개만으로 표현하기. Logisim을 활용하라.
+
+&nbsp;
+
+Week 3
+========
+ETL 공지사항과 Q&A 게시판을 정기적으로 확인해주세요!
+
+TinkerCad와 Xiling ISE로 2-bit Comparator를 만들어보자.
+
+ISE는 Integrated Software Environment의 약자다. Xilinx ISE는 Vivado의 구버전으로, 하시설 수업에서 배운것과 비슷하게 사용할 수 있다. Vivado에 Xilinx ISE에 있는 기능들이 대부분 있는데, Schematic Design을 하는 기능은 빠져있다.
