@@ -7,7 +7,7 @@ ETL은 많이 안쓸거고 학교 홈페이지를 확인해주세요. 그리고 
 
 **이번 학기는 RISC-V 머신 위에서 돌아가는 OS를 만든다!**
 
-### What is an OS?
+### 1. What is an OS?
 하드웨어(CPU, Memory, IO) 위에서 곧바로 동작하면서 Application들을 위한 System call을 노출하면 뭐든지 OS다.
 
 OS는 하드웨어를 여러 Application들이 공유할 수 있도록 나눠주는 역할도 하고, Application들이 하드웨어에 직접 접근하지 못하게 막는 역할도 한다.
@@ -20,7 +20,7 @@ OS-aware 하드웨어를 설계할때에도 OS를 배워야해요. 하드웨어�
 
 Linux Torvalds, "Just For Fun", 재미로 배울수도 있어요
 
-### Textbook
+#### Textbook
 Operating Systems: Three Easy Pieces, http://ostep.org 에서 무료로 제공. 오픈소스 도서이다 https://github.com/remzi-arpacidusseau/ostep-projects 제목이 Three Pieces인 이유는? 리처드 파인만의 "Six Easy Pieces"라는 책에 영감을 받아, OS는 물리학보다 반정도 어려운것같으니 세 조각으로 이름을 붙였다.
 
 약간 구버전인 0.91버전을 기준으로 한국어 번역도 존재하니 참고 https://github.com/remzi-arpacidusseau/ostep-translations
@@ -31,7 +31,7 @@ MINIX 제작자가 만든 https://en.wikipedia.org/wiki/Modern_Operating_Systems
 
 시스템프로그래밍 공부가 필요하다면 CSAPP http://csapp.cs.cmu.edu/ 이 책 뒷부분도 참고하세요. 챕터 8 프로세스, 챕터 10 파일시스템을 주로 보시면 됨.
 
-### Course Plan
+#### Course Plan
 강의 토픽은 주로 세개를 다룬다. 케이스 스터디로 Linux와 xv6를 다룬다.
 
 - Virtualization: 프로세스, CPU 스케줄링, 버추얼메모리
@@ -44,14 +44,14 @@ MINIX 제작자가 만든 https://en.wikipedia.org/wiki/Modern_Operating_Systems
 
 교육용 OS가 아니라 오래 전에 쓰였던 역사적인 실제 OS로 공부하게될것이다! 27m LoC를 자랑하는 리눅스와 다르게 라인수가 6k 정도이다. QEMU로 쉽게 설치할 수 있다.
 
-### 프로젝트
+#### 프로젝트
 4~5개의 개인 프로젝트를 준비중이다. 5개의 "slip days"를 사용할 수 있음. 한학기동안 과제를 늦게 내출할 수 있는 총 5일의 여유가 있음. 프로젝트는 뒤로 갈수록 배점이 높아진다.
 
 시험을 하나라도 안보면 F가 나간다. 2/3 이상 출석을 안하면 F가 나간다. 치팅도 F
 
 임베디드 시스템, 클라우드 컴퓨팅, 분산 시스템, 보안 등 OS는 컴퓨터 연구개발 전반에 쓰이는 지식이에요. 역사적으로 OS는 힘든 과목으로 알려져있으니 각오하세용. Happy hacking!
 
-### Why OS? What is an OS?
+#### Why OS? What is an OS?
 LAPD 경찰차를 보면 항상 [To protect and to serve](https://en.wikipedia.org/wiki/To_protect_and_to_serve) 라는 글자가 붙어있다. OS도 이것과 비슷하다. Application을 Protect하고 Serve한다.
 
 Software that converts hardware into a useful form for Application.
@@ -100,18 +100,18 @@ OS is highly-concurrent, event-driven software.
 
 요즘은 어플리케이션에서도 멀티스레딩을 하지만, OS는 태초부터 컨커런시를 지원해야만 했기때문에, 스핀락이나 락같은 스레드 동기화기술들은 대부분 OS를 위해 처음 만들어진것들이다.
 
-### OS의 역사
-#### 처음엔 운영체제가 없었음
+#### OS의 역사
+##### 처음엔 운영체제가 없었음
 1세대 (1945 ~ 1955) 컴퓨터, 진공관과 Plugboard로 프로그래밍하던 시절. OS 없음, PL 없음, 어셈블리어도 없음
 
-#### Batch System
+##### Batch System
 2세대 (1955 ~ 1965) 컴퓨터, 트랜지스터와 메인프레임으로 프로그래밍하던 시절
 
 - Batch System: One job at a time
 - 천공카드, Tape drives, Line printers 사용
 - OS는 메모리에 항상 상주하며, 거의 실행되지 않았다. 하는일이 거의 없기때문. IO가 병목이었기때문에 CPU는 underutilized 되었음
 
-#### Multiprogramming system
+##### Multiprogramming system
 3세대 (1965 ~ 1980) 컴퓨터, Integrated circuit(집적회로)가 만들어져서 컴퓨터가 싸지고 빨라짐, 디스크 드라이브도 발전함, On-line terminals도 생김
 
 하드웨어 호환을 유지하기위해 "Computer Architecture"라는 개념이 처음 나옴. IBM System/360 Family, ISA 스펙이 정의된 처음의 컴퓨터
@@ -129,7 +129,7 @@ Multiprogramming systems이 등장함. IBM OS/360 (1964), 여러사람이 job을
 - Protection
 - Spooling (Simultaneous Peripheral Operation On-Line): 출력하는동안 컴퓨터가 계속 프린터에 block되어있지 않아도 됨
 
-#### Time-sharing system
+##### Time-sharing system
 Time-sharing systems가 등장함. 응답시간이 훨씬 좋아짐. MIT CTSS (1961), Multics (1965), Unix (1969), 등. 우리가 쓰고있는 OS의 거의 대부분의 기능은 이 시점에 개발되었다.
 
 - 복잡하고 미세한 CPU 스케줄링
@@ -140,7 +140,7 @@ Time-sharing systems가 등장함. 응답시간이 훨씬 좋아짐. MIT CTSS (1
 - Interactive shell
 - 더 많은 보호, etc
 
-#### Modern OS
+##### Modern OS
 4세대 컴퓨터 (1980 ~ now), 마이크로프로세서(LSIs & VLSIs)가 나오면서 더 작고 빨라짐. 스토리지도 더 좋아짐. PC의 시대. GPU같은 I/O 장치들이 CPU의 계산을 돕기시작함
 
 - GUI
@@ -149,7 +149,7 @@ Time-sharing systems가 등장함. 응답시간이 훨씬 좋아짐. MIT CTSS (1
 - 모바일, 네트워킹, 분산
 - 가상머신, etc
 
-### 유명한 OS들
+#### 유명한 OS들
 - CTSS (1961, MIT)
   - Compatible Time-Sharing System
 - OS/360 (1964, IBM)
@@ -157,7 +157,7 @@ Time-sharing systems가 등장함. 응답시간이 훨씬 좋아짐. MIT CTSS (1
 - Unix (1969, Bell Labs)
   - MULTICS를 탈퇴하고 나와서 만든 OS
 
-#### MULTICS
+##### MULTICS
 - MULTiplexed Information and Computing Service
 - Time-shared, Multi-processor 메인프레임. OS 대신 "Computing Facility"라는 말을 씀
 - 너무 비싼 하드웨어(GE-645, 36비트 시스템)를 요구하고, 개발기간도 너무 늘어나서 실패함
@@ -173,7 +173,7 @@ Time-sharing systems가 등장함. 응답시간이 훨씬 좋아짐. MIT CTSS (1
 - NSCS B2 등급 받음
 - https://www.multicians.org/ 멀틱스 팬들이 있음
 
-#### UNIX
+##### UNIX
 MULTICS에서 Bell Labs가 탈퇴한 다음, MULTICS에서 돌아가던 Space travel이라는 게임을 연구소에 있던 DEC PDP-7라는 작은 머신에서 돌리고싶었다. MULTICS에서 기능을 많이 뺐다(emasculated)는 의미로 UNICS라고 이름을 붙였고 UNIX로 이름이 바뀜.
 
 켄 톰슨의 아내가 캘리포니아로 휴가를 갔을때, OS짜는데에 1주, 셸 짜는데에 1주, 에디터 짜는데에 1주, 어셈블러 만드는데 1주 이렇게 한달만에 UNIX를 만듦
@@ -219,7 +219,7 @@ Unix
 
 Week 2, Tue
 ========
-### Architectural Support for OS
+### 2. Architectural Support for OS
 컴퓨터에 특정 기능이 있다면 OS를 훨씬 효율적으로 만들 수 있다. 아키텍처가 OS를 위해 어떤 서포트를 해줘야하는지 알아보자
 
 #### Issue 1. I/O
@@ -432,7 +432,7 @@ CPU 아키텍처의 도움이 있으면 OS를 훨씬 간단하고 효율적으�
 
 setpgid 호출하는 프로그램 유틸리티로 만들어져있으니 그걸로 테스트하면 된다.
 
-### Process
+### 3. Process
 여러분들 다 아시죠? 후루룩 빠르게 넘어갑시다
 
 What is a Process? An instance of a program in execution. 그리고 Protection의 최소단위이기도 하다.
@@ -510,7 +510,7 @@ Process Control Block(PCB) 혹은 Process Descriptor에 그 프로세스에 관�
 - I/O 상태 관련 정보
 - Credentials: 프로세스들이 갖고있는 접근권한들. UID, GID.
 
-리눅스 4.15.0-91 기준으로 `struct task`의 크기는 6016 바이트. xv6의 `struct proc`은 360바이트.
+리눅스 4.15.0-91 기준으로 `struct task`의 크기는 6016 바이트. xv6의 `struct proc`은 360바이트. OS 입장에선 프로세스 하나 만드는게 부담이 큰 일이다.
 
 #### Context Switch
 한 코어가 실행하던 프로세스에서 다른 프로세스로 넘어가는 과정. 컨텍스트 스위치가 많아지면 Administrative overhead가 커지기때문에 가능한 한 아껴야함.
@@ -524,10 +524,174 @@ Process Control Block(PCB) 혹은 Process Descriptor에 그 프로세스에 관�
 - UltraSPARC에선 레지스터 셋이 여러개가 있어서 함수 호출할때의 레지스터 저장/리로드 오버헤드는 비교적 적었지만, 레지스터가 너무 많아서 컨텍스트 스위치 오버헤드는 오히려 늘었다.
 - Advanced memory management 기술을 적용한 경우 컨텍스트 스위치를 할때에 저장해야하는 정보가 늘어날 수 있다.
 
-컨텍스트 스위치는 보통 1초에 수백번에서 수천번 일어난다. 커널모드에 있더라도 컨텍스트 스위치가 발생한다.
+컨텍스트 스위치는 보통 1초에 수백번에서 수천번 일어난다. 커널모드에 있더라도 컨텍스트 스위치가 발생한다. 이 횟수는 70~80년대와 크게 차이가 없다. 이정도 횟수면 사람이 작업이 동시에 느껴진다고 느끼기에 충분해서, 더 많이 할 필요가 없음.
 
 커널 안에선 Atomic한 실행이 필요하거나 락이 필요한 경우를 위해, 잠시 컨텍스트 스위치를 막아주는 기능을 쓸 수 있음.
 
 xv6에선 레지스터들을 trapframe에 저장함. Trapframe이 왜 있는가? 요즘은 유저모드일때 접근 가능한 메모리와 커널모드일때 접근 가능한 메모리를 완전히 나누는게 유행이다. 각종 CPU 취약점때문에.. 근데 유저모드일때와 커널모드일때 모두 접근 가능한 메모리 영역이 Trapframe임.
 
 트램폴린 페이지: 커널이 유저모드의 프로세스에 데이터를 전달할 일이 있을때 쓰는 작은 메모리 영역
+
+&nbsp;
+
+Week 3, Thu
+========
+컨텍스트 스위치 회수 세는법
+
+```bash
+# 컴퓨터가 부팅된 이후 흐른 시간을 초로 표현한것
+awk '{print $1}' /proc/uptime
+# 컴퓨터가 부팅된 이후 있었던 컨텍스트 스위치 횟수
+awk '/^ctxt/ {print $2}' /proc/stat
+
+# 아래 숫자를 코어 수로 나누면 코어당 컨텍스트 스위치 횟수가 나옴
+python <<< "print( \
+  $(awk '/^ctxt/ {print $2}' /proc/stat) / \
+  $(awk '{print $1}' /proc/uptime) / \
+  $(awk '/^cpu cores/ {print $4}' /proc/cpuinfo | uniq)
+)"
+```
+
+xv6에서의 컨텍스트 스위치 과정
+
+1.  시간이 지나 하드웨어로부터 Timer interrupt가 발생함
+2.  RISC-V
+    - PC 백업함: `sepc ← pc`
+    - 인터럽트 비활성화
+    - 커널모드로 전환시킴
+    - `stvec`에 있는 트랩 핸들러로 점프
+3.  xv6
+    - 유저 레지스터를 A의 트랩프레임에 저장
+    - 커널 페이지 테이블로 바꿈
+    - 프로세스 A를 Runnable 상태로 바꿈
+    - 프로세스 B를 Running 상태로 바꿈
+    - B의 컨텍스트를 PCB로부터 읽어옴
+4.  xv6
+    - 유저 페이지 테이블로 바꿈
+    - 유저의 레지스터를 B의 트랩프레임으로부터 읽음. 이 과정에서 `sepc`가 프로세스 B의 것이 되기때문에, 트랩 프레임을 종료하면 프로세스 B로 시작하게된다.
+    - `return-from-trap` 실행, 트랩 핸들러 종료
+5.  RISC-V
+    - 유저모드로 바꿈
+    - PC 복구함: `pc ← sepc`
+6.  프로세스 B가 실행되기 시작한다!
+
+컨텍스트 스위칭을 당한 프로세스들 입장에선, 인터럽트가 와서 다른것들을 처리하다가 온 것 처럼 느껴짐.
+
+OS는 켜져있는 모든 프로세스들의 상태를 나타내는 큐들을 관리해야한다
+
+- Ready Queue, Runnable Queue: 스케줄링될 준비가 된 프로세스
+- Wait Queues: Device, Timer, Message등 이벤트 유형마다 Wait Q가 하나씩 존재한다
+
+각 PCB는 항상 현재 상태를 나타내는 하나의 큐에 들어가있어야한다. 프로세스의 상태가 바뀌면 큐를 바꿔야한다.
+
+#### `fork()` 구현하기
+- 새 PCB를 만들고 내용물 초기화
+- 새 Address Space 만들고 초기화
+- Address Space의 내용물들을 부모 프로세스의 것을 보고 모두 복사하는 방식으로 초기화
+- Open Files와 같은 커널 리소스들도 부모 프로세스의 것을 보고 모두 같은 곳을 가리키도록 초기화
+- PCB를 ready queue에 넣음
+- 레지스터를 조작하여, 부모 프로세스에선 자식프로세스의 PID를 리턴하고, 자식 프로세스에선 0을 리턴함
+
+#### `exec()` 구현하기
+- 현재 프로세스를 멈춤
+- 새로 실행할 프로세스의 Address Space를 로드함
+- 새 프로그램을 위한 하드웨어 컨텍스트와 `args`를 초기화함
+- PCB를 ready queue에 넣음
+
+`exec()` 함수는 에러가 난 경우에만 리턴한다.
+
+#### Policy vs Mechanism
+OS 분야에서 Policy와 메커니즘이라는 용어가 쓰이는데, 의미를 구분하여 사용하므로 주의해야한다.
+
+- Policy, 정책
+  - 무엇이 일어나야 하는가
+  - 모든 자원 할당과 스케줄링을 할때에 항상 정책이 있어야한다.
+  - ex: Priority가 항상 제일 높은 프로세스를 스케줄링해주자
+- Mechanism, 메커니즘
+  - 어떻게 해야하는가
+  - 이 정책들을 어떻게 구현할것인가를 의미함
+  - ex: 그러려면 PCB에 priority 정보가 있어야하고, priority queue같은 자료구조를 OS 내에 구현해야한다.
+
+OS 디자인의 핵심철학이 "Separating Policy from Mechanism"이다. Policy는 해결하고싶은 문제나 workload에 따라 변할 수 있다. 메커니즘은 최대한 General하게 만들어서 Policy가 변한다고 OS 코드가 바뀌지 않게 만들면, 모듈러한 OS를 만들 수 있다.
+
+### 4. CPU Scheduling
+스케줄링: 컨텍스트 스위치가 일어나서 프로세스 하나가 일시중지되었다. 이제 뭘 켤까? 에 대한 정책
+
+스케줄링은 아주 빠르게 해야함. 스케줄링은 자주 일어나기때문에 빨리 끝내야한다.
+
+- Scheduling Policy: 언제 전환할까? 누구로 전환할까?
+- Scheduling Mechanism: 어떻게 전환할까?
+
+#### Basic Approaches
+- Non-preemptive scheduling, Cooperative scheduling
+  - 프로세스가 자발적으로 yield할때까지 스케줄링이 발생하지 않음
+  - 프로세스의 협조가 필요함
+- Preemptive scheduling
+  - 스케줄러가 실행중인 프로세스를 강제로 멈추고 컨텍스트 스위칭을 강제할 수 있음
+
+실행되는 모든 프로세스를 믿을 수 있고, 하드웨어 지원이 작은 임베디드 기계에선 Cooperative scheduling도 쓰기도 하나 보통은 Preemptive scheduling을 씀
+
+Preemptive scheduling에선 이런 문제가 발생함
+
+- 공유 데이터를 업데이트 하던 도중 preempt 당하면 어쩌지?
+- 시스템 콜이 preempt 당하면 어쩌지?
+
+용어 정리
+
+- Workload: Job의 descriptions들. Arrival time, Run time, 등
+- Scheduler: Job이 언제 실행될지 결정시켜주는 로직
+- Metric: Scheduling이 얼마나 잘되고있는지를 측정하기 위해 사용하는 Measurement. Turnaround time, response time, fairness, 등
+
+#### FIFO
+만약 워크로드에 아래와 같은 가정이 걸려있다면 어떤 스케줄링 알고리즘이 제일 좋을까? (사실 내용을 보면 말도안되는 가정인데 문제를 단순화하기 위해 하는거임)
+
+1.  각 job들은 같은 시간만큼 실행된다
+2.  모든 job들은 같은 시간에 도착한다
+3.  시작하면, 끝날때까지 실행된다
+4.  모든 job들은 CPU만 씀 (IO 안함)
+5.  각 job이 얼마나 실행될 예정인지 (run time) 이미 알고있음
+
+메트릭은 Turnaround Time이다. `T_turnaround = T_completion - T_arrival`
+
+이러면 FIFO가 제일 좋다.
+
+먼저온거 먼저 처리하기. 도착하는 순서대로 스케줄링됨. 마치 슈퍼마켓 계산대에서 줄을 선 사람들처럼. 새치기가 불가능하므로 Non-preemptive이고, 모두 언젠가는 실행되므로 Starvation이 없다.
+
+단점: Convoy effect: 맨 앞놈이 너무 느리면 그 다음 job들이 단체로 느려진다
+
+#### SJF: Shortest Job First
+Assumption 1 relaxed: 만약 각 job들이 실행되는 시간이 각각 다르면 어떤게 제일 좋을까? SJF가 제일 좋다
+
+가장 빨리 실행되는 job을 가장 먼저 실행함. 이렇게 할때의 Turnaround Time이 가장 작다는게 증명이 가능하다.
+
+단점: Starve 가능성이 있다
+
+#### (Non work-conserving scheduler)
+Assumption 2 relaxed: 만약 job들이 모두 동시에 도착하는게 아닐경우 어떻게 될까? 이경우 SJF가 최적해가 아니게된다.
+
+Job들이 도착하는 시간이 모두 같지 않을경우 어떻게 하면 될까? 긴 job이 도착할경우 짧은 job이 도착할수도 있으니 잠깐 일을 안하고 기다리는것도 방법이다. 이렇게 노는 시간을 허용하는가에 따라 스케줄러를 아래의 두개로 분류하기도 한다
+
+- Work-conserving scheduler: 항상 일을 하는 유형의 스케줄러, 보통 이거
+- Non work-conserving scheduler: 어떤 이유로든 노는 시간을 허용하는 스케줄러
+
+#### STCF: Shortest Time-to-Completion First
+Assumption 3 relaxed: 만약 Preemption이 가능하다면 어떤 정책이 제일 좋을까?
+
+가장 빨리 끝나는 작업 먼저. 새 Job이 도착했을 때, 새 Job이 원래 Job보다 더 빨리 끝난다면 새 Job으로 preempt해버린다.
+
+#### (New metric in time sharing system)
+요즘은 제출하고 끝날 때 까지 기다리는게 아니라, 타임 셰어링 시스템이기 때문에 Turnaround Time은 부적절한 메트릭이 되었다. 그러면 어떤 메트릭이 제일 좋을까? Response Time이다. `T_response = T_firstrun - T_arrival`
+
+#### RR: Round Robin
+FIFO의 Time Sharing 버전. 원형 FIFO Queue를 만들어서 그냥 모든 job을 순서대로 실행한다.
+
+각 Job은 허용된 time slice(=Scheduling Quantum를 갖는다. 모든 Job이 다 똑같은 Time Slice를 실행한 뒤 다음 잡으로 넘어감.
+
+- Timer-interrupt period 혹은 Timer tick의 정수배
+- 너무 짧으면: 스케줄링 오버헤드가 커짐
+- 너무 길면: Response Time이 커짐
+- 보통 10 ~ 100ms
+
+Preemptive하고, 공평하게 실행하므로 Starvation이 없다.
+
+RR은 SJF보다 Turnaround Time이 높지만, Response Time이 훨씬 좋기 때문에 Time-sharing 시스템에 좋다.
