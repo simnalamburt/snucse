@@ -96,8 +96,8 @@ ML의 브랜치로는 뭐가 있을까? DL, RL, 지도학습, 비지도학습, R
     [Cardinality]: https://en.wikipedia.org/wiki/Cardinality
 
 #### Discriminative vs Generative
-
-(TODO)
-
-Q: casual sequence가 뭔소리임
-Q: dictionary learning이 뭐임
+- Discriminative models: p(y|x) 를 직접 계산한다. 더 잘 수렴하고 솔루션이 더 간단함
+- Generative models
+  - Estimate the joint distribution over p(y, x)
+  - 조건부 확률 p(y|x)를 구하기 위해 p(y, x)/p(x) 를 계산한다
+  - Can use p(x) to generate data
