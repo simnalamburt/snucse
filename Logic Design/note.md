@@ -121,7 +121,7 @@ Algebraic structure란 무엇인가. 원소와 Binary/unary operators, 그리고
 4.  Associativity, 결합법칙
 5.  Identity, 연산에 대해 항등원이 존재함
 6.  Distributivity, 분배법칙
-7.  Complementarity, 연산에 대해 역원이 존재함
+7.  Complementarity, 상보성
 
 Boolean algebra는 집합에 원소가 `true`, `false` 둘뿐이고 binary operator `or`, `and`와 unary operator `not`이 존재하는 algebraic structure이다. 위에서 언급한 7개의 axiom을 모두 만족시킬 수 있다.
 
@@ -140,7 +140,7 @@ Boolean algebra에서의 Axiom들과 Theorem들
     - X and X = X
 4.  Involution
     - !(!X) = X
-5.  Complementarity, 역원
+5.  Complementarity, 상보성
     - X or !X = true
     - X and !X = false
 6.  Commutativity
