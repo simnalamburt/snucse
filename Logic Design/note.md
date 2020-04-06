@@ -294,6 +294,8 @@ A(B' + B) = A. Two-level logic 단순화의 핵심이다. 변수 X의 값과 무
 #### Boolean Cubes
 Uniting Theorem을 적용시키기 쉽도록 진리표를 시각화하는 방법. 입력이 N개이면 N-dimensional Cube에 매핑된다. 방법은 PPT 참고
 
+&nbsp;
+
 Week 3, Wed
 ========
 Boolean Cubes는 input 수가 올라가면 힘들어진다. 그러면 어떻게 하면 될까
@@ -301,12 +303,61 @@ Boolean Cubes는 input 수가 올라가면 힘들어진다. 그러면 어떻게 
 #### Karnaugh Maps
 Flat map of Boolean cube. Adjacencies를 잘 보여주는 진리표의 대체재이다.
 
-입력이 세개 이상일 경우, Gray-code를 기반으로 입력을 나열하면, 서로 인접한 칸끼리 입력이 1비트씩만 변하기 때문에 adjacenies를 쉽게 파악할 수 있다. 카너프맵의 양쪽 끝은 연결되어있다. 토폴로지가 도넛 모양임.
+입력이 세개 이상일 경우, Gray-code를 기반으로 입력을 나열하면, 서로 인접한 칸끼리 입력이 1비트씩만 변하기 때문에 adjacenies를 쉽게 파악할 수 있다. 카르노맵의 양쪽 끝은 연결되어있다. 토폴로지가 도넛 모양임.
 
-(카너프맵으로 수식 최적화하는거 PPT 참고)
+(카르노맵으로 수식 최적화하는거 PPT 참고)
 
-변수가 5개 넘어가면 카너프맵으로도 어려워지는데, 이러면 사람이 안하고 컴퓨터가 해줘요!
+변수가 5개 넘어가면 카르노맵으로도 어려워지는데, 이러면 사람이 안하고 컴퓨터가 해줘요!
 
 숙제: ~~인풋이 26개인 아주 거대한 진리표를 minimize하는 회로를 만들어보세요!~~ 이건 만우절 농담이고, Chapter 2에 있는 Problem Set을 풀고, 스캔해서 온라인으로 Submit하세요. Pass/Fail임
 
-카너프 맵은 중간고사에 반드시 나오니까 꼭 연습을 하세요!
+카르노 맵은 중간고사에 반드시 나오니까 꼭 연습을 하세요!
+
+&nbsp;
+
+Week 4, Mon
+========
+2x2-bit multiplier를 카르노맵으로 최적화하는중
+
+왜 2-level simplification인가? 최적화한 결과가 2-level logic이여서.
+
+2-level simplification에 등장하는 용어들
+
+- Implicant: ON-set과 DC-set으로만 이뤄진 subcube
+- Prime implicant: 다른 Larger subcube에 합쳐질 수 없는 Implicant
+- Essential prime implicant: 특정 ON-set을 이 prime implicant만으로만 커버할 수 있으면, Essential prime implicant. DC-set만 덮고있는건 essential하지 않음.
+- Optimization Objective
+  - Implicant들을 모두 Prime implicants들로 키우기
+  - ON-set들을 제일 작은 숫자의 Prime implicants로만 덮기
+
+2-level simplification 알고리즘
+
+1.  카르노맵에 ON-set과 DC-set, OFF-set을 모두 그린다
+2.  모든 Prime Implicants를 찾는다
+    - 카르노맵의 맨 윗줄과 맨 아랫줄, 맨 왼쪽줄과 맨 오른쪽줄, 각 코너들이 모두 연결되어있다는 사실을 기억하라
+3.  Essential Prime Implicant를 모두 찾아라. Essential Prime Implicants는 무조건 결과에 포함되어야함
+4.  이제 Essential Prime Implicant에 의해 커버되지 않는 1들을 제일 적은 수의 Prime Implicant로 덮으려고 시도하면 된다 (NP-hard)
+
+### HDL: Hardware Description Languages
+하시설에서 배운거. 우리는 Verilog를 배운다.
+
+HDL의 역사
+
+- Abel, 약 1983
+- ISP, 약 1977
+- Verilog, 약 1985
+  - 파스칼, C와 유사한 문법
+  - 코드가 짧고 작성하기 쉬움
+  - IEEE 표준
+- VHDL, 약 1987
+  - Ada와 유사한 문법
+  - Very general하지만 너무 verbose함
+  - IEEE 표준
+
+Abel, ISP는 프로토타입이고 Verilog와 VHDL은 널리 쓰임. Verilog가 한국 미국 등지에선 더 많이 쓰이는데 VHDL은 유럽에서 많이 쓰임
+
+하시설에서 안배운거
+
+- `$display`: 콘솔에 글자 찍는 명령어
+- `$finish`: 시뮬레이션 멈추는 명령어
+- Assign에도 delay를 줄 수 있다. Propagation Delay를 묘사 가능
