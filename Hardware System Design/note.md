@@ -203,3 +203,89 @@ Clock rising edge일 때 Valid가 1이지만 Ready가 0이면? 아무일도 일�
 
 #### Non-blocking
 Non-blocking에선 ready가 항상 1이다. Ready 비트에 대해 신경쓸 필요가 없고, Sender가 절대 block되지 않기때문에 회로가 간단해진다. Non-blocking이 어떻게 동작하는지는 다음 시간에 더 자세히 설명하기로 함
+
+&nbsp;
+
+Week 4, Tue
+========
+중간고사가 취소되었다.
+
+7주차에 중간고사를 볼 예정이었지만, 중간고사는 취소. 8주차 어린이날에 출석체크가 없는, Optional Lab 세션을 할 예정임.
+
+앞으로 Lab Session을 17:30 시작한다. 미리 와서 미리 질문할 수 있음. 그리고 공식 Lab Session은 18:30 에 시작하고, 출석체크도 18:30에 한다.
+
+Matrix Multiplication IP를 만들어보자.
+
+2~3주차에는 Float32 MUL+ACC를 만들었다. 4주차에는 Processing Element를 만들게되고, 5주차에는 IP 전체를 만들게된다.
+
+### BRAM Model
+메모리가 32KB이므로 15bit로 모든 메모리영역을 표현할 수 있다. 하지만 모든 데이터가 4 byte align되어있어서, 실제로는 13bit만으로도 모든 데이터에 접근할 수 있다. 1 byte만 읽고싶으면, 4바이트를 통쨰로 읽은 뒤 하나만 고르면 됨.
+
+4바이트중 일부 byte만 쓰고싶다면? Write Mask가 있어서 조절이 가능하다. 근데 우리는 이런상황이 없을거임
+
+### Processing Element for Dot Product
+1. peram이라는 곳에 먼저 곱셈을 수행할 Matrix의 row가 저장된다. `addr`과 `din` 핀을 쓴다. `we` 시그널이 켜져서 쓰기를 수행하게됨.
+2. 그 다음 `ain`으로 벡터가 입력되고, `addr`로 peram안의 행렬을 입력한다. `valid` 시그널이 켜져서 계산을 시작함.
+3. 부분합을 계속 계산하다가, 곱셈이 끝나면 출력하게된다. `dvalid`로 계산이 끝났다는것을 알림
+
+Matrix는 PE 안에 저장되는데, Vector는 PE 밖에 저장된다. PE를 여러개 두고 하나의 Vector를 여러 PE에 동일하게 쓰기 위해서다.
+
+### Components in Sequential Logic
+조합논리와는 달리, 순차논리에는 아래와 같은 state들이 존재한다.
+
+- Flip-flops
+- Memory elements
+- Shift registers
+- Counters
+
+#### Flip-flop
+Positive Edge Triggered Flip-Flop이나, Transparent (level-sensitive) Latch나, 동작이 같지만 우리는 플립플랍만 쓸거다. Latch로 디자인하면 굉장히 복잡해서 우린 Latch는 안쓸거다.
+
+- D-Type Flip-Flops: 평범한 플립플랍, 리셋 없음
+- Asynchronous Reset D-Type Flip-Flops: 리셋이 들어오면 출력인 Q값이 즉시 리셋된다.
+- Synchronous Reset D-Type Flip-Flops: 리셋이 들어와도 Rising Clock Edge에서만 값이 초기화됨.
+
+#### Data Registers
+Flip Flop의 배열. 얘에도 클락과 load, reset 등의 값을 넣어줄 수 있어요
+
+#### Register File
+여러 레지스터의 집합. 두개의 주소를 동시에 읽을 수 있음. 여러 주소를 동시에 읽을 수 있게 만들어서 ALU에서 덧셈할때 두 operand를 동시에 읽을 수 있게 만들거임.
+
+#### Synchronous RAM
+큰 레지스터 파일은 SRAM회로로 구현함.
+
+#### Shift Register
+레지스터인데, 클락이 하나 지나갈때마다 값이 한칸씩 Shift됨.
+
+#### Binary Ripple Counter
+플립플랍 여러개를 결합해서 카운터를 구현할 수 있다.
+
+#### Binary Up/Down Counter
+할뚜이따
+
+#### Finite-State Machine
+State는 항상 Input과 이전 State로 결정된다. Input ⨉ State → State
+
+Output Function은 아래의 두 스타일중 하나로 만들 수 있다.
+- Moore Machine: State → Output
+- Mealy Machine: Input ⨉ State → Output
+
+FSM은 항상 아래의 세 스텝으로 이뤄짐
+
+1. State 초기화/업데이트
+2. 다음 State로 넘어감
+3. Output 출력
+
+FSM의 예시
+
+1. 0101 Sequence Detector
+2. Vending Machine (자판기)
+3. Simple PE (Processing Element) Controller
+
+&nbsp;
+
+Week 4, Tue, Lab
+========
+Practice 5는 PE implementation & BRAM Modeling다.
+
+Practice 4에서는 FMA, Fused Multiply-Add를 했지만, 이제부턴 MAC,Multiply-Accumulate 을 한다.
