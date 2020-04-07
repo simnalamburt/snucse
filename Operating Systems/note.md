@@ -695,3 +695,136 @@ FIFO의 Time Sharing 버전. 원형 FIFO Queue를 만들어서 그냥 모든 job
 Preemptive하고, 공평하게 실행하므로 Starvation이 없다.
 
 RR은 SJF보다 Turnaround Time이 높지만, Response Time이 훨씬 좋기 때문에 Time-sharing 시스템에 좋다.
+
+#### Static/Dynamic Priority Scheduling
+Job들마다 static/Dynamic priority를 갖고있다.
+
+Dynamic Priority는 `nice()`, `renice()`, `setpriority()`, `getpriority()` 등의 함수로 런타임에 priority를 바꾸는게 가능함. UNIX에선 nice 값이 기본이 0이고 [-20, 20) 으로 총 40개의 단계를 갖고있음. 스스로 Priority를 낮추는것은 가능하나, Priority를 올리려면 관리자 권한이 있어야만 한다.
+
+가장 Priority가 높은 Job을 다음에 실행함. Round-Robin과 FIFO는 모든 프로세스의 Priority가 동일한 것이라고 볼 수 있음.
+
+Preemptive하게 만들수도 있고, Non-preemptive하게 만들수도 있다.
+
+Starvation problem: 높은 Priority의 Job이 끝없이 제공되면, 낮은 Priority의 Job은 절대 실행되지 못한다!
+
+#### Incorporating I/O
+Assumption 4 relaxed: 중간중간에 I/O를 한다면 어떻게될까?
+
+프로세스는 CPU를 많이 쓰는 CPU-bound process와 IO-bound process가 있다. IO-bound process는 Interactive Process와 Non-interactive process로 나뉨
+
+IO때문에 프로세스가 멈춰있는동안 다른 프로세스를 실행해도 문제가 없다. 한 프로세스가 CPU-burst 하는 시간과, I/O-burst 하는 시간을 구분해 둘을 독립된 job으로 취급하자. 한 프로세스가 I/O를 하느라 점유되어있는 시간동안 다른 job을 실행하면 됨.
+
+ex: I/O-aware STCF, 프로세스가 I/O를 하는동안 다른 job을 실행하고있다가, I/O가 끝나면 원래 job으로 돌아옴.
+
+#### Towards a General CPU Scheduler
+Assumption 5 relaxed: 현실에선 Job들이 실행되는 시간을 미리 알 수 없다.
+
+목표
+
+1. Turnaround Time 최소화
+2. Interactive Job들은 Minimize response time
+
+그리고 CPU를 놀게두지말고, 최대한 CPU를 Utilize 해야한다. 스케줄러가 어떻게 특정 프로세스가 Interactive Process인지, Non-interactive process인지 등의 특징을 구분할 수 있을까? 과거의 행동을 모니터링해서 유추한다.
+
+이 경우엔 어떻게 만들어야할까?
+
+#### MLFQ: Multi-Level Feedback Queue
+각 Priority Level별로 여러개의 Queue가 존재함. 가장 높은 Priority Queue부터 차례대로 실행하고, 같은 Priority에 Job이 여럿 있으면 같은 Priority끼리는 Round-Robin 한다. 가장 높은 Priority Queue가 비어야 다음 Job이 실행될 수 있다.
+
+규칙
+
+1. Priority(A) > Priority(B) 이면, A가 실행되고 B는 실행되지 않는다.
+2. Priority(A) == Priority(B) 이면, A와 B는 Round-Robin으로 실행됨.
+
+Priority는 스케줄러가 Job의 행동을 보고 다양하게 메겨준다. Priority를 어떻게 메겨주면 될까.
+
+대부분의 Job은 아래 두 유형중 하나이다.
+
+- Interactive Jobs: 짧게 실행되고, 빠른 응답속도를 요구함
+- CPU-intensive Jobs: 긴 CPU 시간을 요구하고, 응답속도가 별로 중요하지 않음
+
+##### Attempt 1
+- Job이 맨 처음 실행되면, 일단 가장 높은 Priority에 둠
+- Time Slice가 끝나기 전에 CPU를 반환하면, Priority를 유지함 (Interactive Job인가보다)
+- Time Slice가 끝날떄까지 CPU를 반환하지 않으면, Priority를 한단계씩 낮춤 (CPU-intensive Job인가보다)
+
+얘의 문제
+
+- Interactive Job이 너무 많으면 오래 실행되는 job은 starve할 수 있음
+- Time Slice가 다 되기 전에 일부러 CPU를 놓으면, 높은 Priority가 유지됨
+- Priority가 한번 떨어지면 복구가 안됨
+
+##### Attempt 2
+Attempt 1이랑 똑같이 하되 주기적으로 Priority를 초기화하면 되겠네!
+
+Starvation은 막을 수 있을지 모르겠으나, 일부러 Priority를 유지시키는 악의적인 사용자는 막을 수 없음.
+
+##### Attempt 3
+Time Slice가 끝나기 전에 CPU를 반환했는지 안했는지 여부가 아니라, 총 실행된 시간 총합을 기준으로 우선순위를 결정한다면 어떨까
+
+#### Summary: Unix Scheduler
+실제 UNIX에선 이런식의 휴리스틱이 아주 복잡하게 붙어있음. (Many ugly heuristics for voo-doo constants)
+
+기본적으로 MLFQ다.
+
+- Preemptive, Dynamic Priority Scheduling
+- Time-shared based on time slice
+- 3~4 classes spanning ~170 priority levels (Solaris 2)
+  - kernel 안에서의 priority, 유저모드에서의 priority 이렇게 class를 여러개 구분시켜놨음
+
+Interactive Process를 CPU-bound Process보다 선호함. Starvation을 막기위해 aging 기법을 쓴다. Wait Time이 커질수록 우선순위가 올라가고, CPU Time이 커질수록 우선순위가 내려감.
+
+Priority와 Time Slice는 서로 관계가 없어도 무방할것같은데, 많은 OS들은 Priority가 높아지면 Time Slice도 길어짐. UNIX가 그러함. 반면 Windows는 Priority를 높이는것과, Time Slice를 늘리는걸 독립적으로 할 수 있음.
+
+&nbsp;
+
+### Linux CFS (Completely Fair Scheduler)
+리눅스의 스케줄러!
+
+Linux 2.4: Epoch-based Priority Scheduling, O(n). 프로세스들에 식권을 하나씩 나눠주고, Priority 순서대로 실행한다. 그리고 Timer Tick마다 식권을 모두 나눠준다. 그리고 모든 프로세스의 식권이 사라지면 다시 모든 프로세스에 식권을 하나씩 준다.
+
+Linux 2.6 ~ 2.6.22: 2.4 스케줄러와 동일한 알고리즘을 효율적으로 구현했음.
+
+Linux 2.6.23 ~: Ingo Molnar가 CFS 구현함
+
+스케줄링 클래스가 여러개 있는데 크게 중요하지 않음.
+
+왜 CFS이냐? 우선순위에 정확하게 비례하게 CPU Time을 쓰게 만들어줘서.
+
+#### Linux Task Priority
+[0, 140)으로 총 140 레벨이 존재함. 작은 값일수록 높은 우선순위를 가짐.
+
+일반 유저 프로세스는 [100, 140)의 Priority를 갖고, nice 명령어를 사용해서 이를 [-20, 20) 범위에서 조절 가능. (nice = priority - 120)
+
+#### Proportional Share Scheduling
+기본 개념: Task마다 Weight Value가 존재함. Weight에 정비례해서 CPU를 사용하게 만들고싶음.
+
+#### Nice to Weight
+리눅스 개발자는 Nice 값이 하나 차이날때마다, CPU Time이 10% 차이가 나게 해줬다.
+
+Nice 0은 1024로 두고, Nice 1 = 820, Nice -1 = 1277 이런식으로 Nice 값마다 Weight 차이가 나게 만들었음.
+
+#### Virtual Runtime
+Nice 값이 0인 프로세스를 기준으로 실행시간을 정규화한다.
+
+VR(T) = PR(T) * Weight0 / Weight(T) = (PR(T) * (2**32)/Weight(T) * Weight0) >> 32
+
+- Weight0: Nice가 0인 프로세스의 Weight (1024)
+- Weight(T): T의 Weight-
+- PR(T): T의 실제 Runtime
+- VR(T): T의 Virtual Runtime (vruntime)
+
+Priority가 높은 Task는, vruntime이 천천히 증가하고, Priority가 낮은 Task는, vruntime이 빠르게 증가한다.
+
+왜 2**32를 곱했다가 다시 나누나요? 커널은 가급적이면 floating point 계산을 안하려고함. floating point 레지스터를 유저랑 나눠쓰는것도 피곤하고, floating point 계산기가 없는 컴퓨터에서도 동작해야하니까.
+
+#### Runqueue
+CFS는 모든 runnable tasks를 vruntime에 따라 정렬시킨 Red-Black Tree를 관리한다. O(log N)으로 vruntime이 가장 작은 Task를 고를 수 있음. 트리 관리하는 비용 때문에 Heap을 안쓰고 RBTree를 쓴다.
+
+새로 들어온 Task의 vruntime은 현재 모든 task의 vruntime중 가장 작은 값으로 둔다.
+
+Time Slice는 가변적임. Task가 많으면 Time Slice가 작아지고, Task가 적으면 Time Slice가 커짐.
+
+vruntime이 작으면, 이 태스크가 실제 실제 실행되어야하는것보다 덜 실행되었다 이렇게 이해하면 됨.
+
+과제: https://github.com/snu-csl/os-pa3
