@@ -822,8 +822,10 @@ Priority가 높은 Task는, vruntime이 천천히 증가하고, Priority가 낮�
 CFS는 모든 runnable tasks를 vruntime에 따라 정렬시킨 Red-Black Tree를 관리한다. O(log N)으로 vruntime이 가장 작은 Task를 고를 수 있음. 트리 관리하는 비용 때문에 Heap을 안쓰고 RBTree를 쓴다.
 
 새로 들어온 Task의 vruntime은 현재 모든 task의 vruntime중 가장 작은 값으로 둔다.
-그 외에도 IO같은 이유로 자다가 깨어난 프로세스들도 runqueue에서 빠졌다가 다시
-들어오게 되는데, 이런 프로세스들도 minimum vruntime 값을 가지며 시작함.
+
+마찬가지로 IO같은 이유로 자다가 깨어난 프로세스들도 runqueue에서 빠졌다가 다시
+들어오게 되는데, 이런 프로세스들도 minimum vruntime 값을 가지며 시작함. 다만 맨
+처음 한번은 min vruntime보다 약간 작은 값으로 보정을 하는 부분이 있음.
 
 Time Slice는 가변적임. Task가 많으면 Time Slice가 작아지고, Task가 적으면 Time Slice가 커짐.
 
