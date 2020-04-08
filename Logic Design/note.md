@@ -339,7 +339,7 @@ Week 4, Mon
 4.  이제 Essential Prime Implicant에 의해 커버되지 않는 1들을 제일 적은 수의 Prime Implicant로 덮으려고 시도하면 된다 (NP-hard)
 
 ### HDL: Hardware Description Languages
-하시설에서 배운거. 우리는 Verilog를 배운다.
+하시설에서 배운거. 우리는 Verilog를 배운다. 손으로 논리회로를 그리는걸 Schematic Diagram이라고 하는데, Verilog를 쓰면 그것보다 훨씬 더 쉽게 논리회로를 짤 수 있다.
 
 HDL의 역사
 
@@ -361,3 +361,35 @@ Abel, ISP는 프로토타입이고 Verilog와 VHDL은 널리 쓰임. Verilog가 
 - `$display`: 콘솔에 글자 찍는 명령어
 - `$finish`: 시뮬레이션 멈추는 명령어
 - Assign에도 delay를 줄 수 있다. Propagation Delay를 묘사 가능
+
+&nbsp;
+
+Week 4, Wed
+========
+
+#### Verilog Design Flow
+1. Hierarchy/Block Diagram
+2. Coding
+3. Compilation
+4. Simulation/Verification
+5. Synthesis
+6. Fitting/Place+Route
+7. Timing verification
+
+5/6 단계 이후 그 결과를 보고 최적화를 위해 힘들지만 2나 1로 돌아오기도 한다.
+
+### Realizing SoP and PoS logic networks
+Two-level logic을 NAND나 NOR 만으로 표현해보자.
+
+드 모르간 법칙 `A' + B' = (AB)'`을 사용해 AND와 OR의 중첩으로 표현된 SoP Two-level logic을 쉽게 NAND + NAND 회로로 바꿀 수 있다. 마찬가지로 PoS도 쉽게 NOR + NOR 회로로 표현할 수 있다.
+
+### Multilevel Logic
+입력에서 출력까지 거치는 게이트가 두개 이상으로 여러개 있을 수 있다면 Multilevel Logic이다. Multilevel Logic의 장점은?
+
+- 더 직관적인 모양을 만들 수 있다
+- 칩을 덜써서 더 쌀 수 있다
+
+Multilevel Logic도 SoP, PoS와 마찬가지로 NAND/NOR로 편리하게 변환이 가능함.
+
+#### AND-OR-Invert (AOI) Gate
+AND, OR, NOT 게이트 세개를 하나로 합쳐놓은것. 얘를 트랜지스터로 바로 구현하면 NAND, NOR 여러개를 쓰거나 AND, OR, NOT을 여러개 쓰는것보다 훨씬 컴팩트하다. 이런걸로 회로를 최적화할수도 있음.
