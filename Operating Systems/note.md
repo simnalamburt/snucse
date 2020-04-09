@@ -7,6 +7,8 @@ ETL은 많이 안쓸거고 학교 홈페이지를 확인해주세요. 그리고 
 
 **이번 학기는 RISC-V 머신 위에서 돌아가는 OS를 만든다!**
 
+&nbsp;
+
 ### 1. What is an OS?
 하드웨어(CPU, Memory, IO) 위에서 곧바로 동작하면서 Application들을 위한 System call을 노출하면 뭐든지 OS다.
 
@@ -432,6 +434,8 @@ CPU 아키텍처의 도움이 있으면 OS를 훨씬 간단하고 효율적으�
 
 setpgid 호출하는 프로그램 유틸리티로 만들어져있으니 그걸로 테스트하면 된다.
 
+&nbsp;
+
 ### 3. Process
 여러분들 다 아시죠? 후루룩 빠르게 넘어갑시다
 
@@ -614,6 +618,8 @@ OS 분야에서 Policy와 메커니즘이라는 용어가 쓰이는데, 의미�
 
 OS 디자인의 핵심철학이 "Separating Policy from Mechanism"이다. Policy는 해결하고싶은 문제나 workload에 따라 변할 수 있다. 메커니즘은 최대한 General하게 만들어서 Policy가 변한다고 OS 코드가 바뀌지 않게 만들면, 모듈러한 OS를 만들 수 있다.
 
+&nbsp;
+
 ### 4. CPU Scheduling
 스케줄링: 컨텍스트 스위치가 일어나서 프로세스 하나가 일시중지되었다. 이제 뭘 켤까? 에 대한 정책
 
@@ -696,6 +702,10 @@ Preemptive하고, 공평하게 실행하므로 Starvation이 없다.
 
 RR은 SJF보다 Turnaround Time이 높지만, Response Time이 훨씬 좋기 때문에 Time-sharing 시스템에 좋다.
 
+&nbsp;
+
+Week 4, Tue
+========
 #### Static/Dynamic Priority Scheduling
 Job들마다 static/Dynamic priority를 갖고있다.
 
@@ -831,4 +841,114 @@ Time Slice는 가변적임. Task가 많으면 Time Slice가 작아지고, Task�
 
 vruntime이 작으면, 이 태스크가 실제 실제 실행되어야하는것보다 덜 실행되었다 이렇게 이해하면 됨.
 
+CFS는 비교할때에 64bit 정수 오버플로우가 나더라도 정상적으로 동작하도록 설계해놓았다. 64bit 2의 보수가 길이 2**64 짜리 Cyclic Group이라는 성질을 사용했음. https://github.com/torvalds/linux/blob/5d30bcacd91af6874481129797af364a53cd9b46/include/linux/jiffies.h#L103 참고
+
 과제: https://github.com/snu-csl/os-pa3
+
+&nbsp;
+
+Week 4, Thu
+========
+CFS를 하면 프로세스별로는 CPU share가 잘 맞지만, 유저별로, Session groups, cgroups 들끼리 비교해도 fair 하지는 않다. 그래서 이걸 맞춰주는 기능이 후에 추가됨.
+
+여러 CPU에 고르게 퍼트리는 기능도 필요함. Loziet al., The Linux Scheduler: a Decade of Wasted Cores, EuroSys, 2016.
+
+여러 CPU에 고르게 스케줄링을 할 때 가장 무식한 방법은, CPU 각각마다 Queue를 갖게하는것이다. 근데 특정 CPU에만 job이 쏠리고, 특정 CPU에는 job이 모자라고 이러면 노는 코어가 생김. 그래서 리눅스에는 각 CPU의 로드를 측정한 뒤, CPU들 사이에서 task를 옮기는 기능이 있음. 근데 이 기능이 완벽하지 않다.
+
+&nbsp;
+
+### 5. Virtual Memory
+가상메모리의 목표
+
+추상화
+
+- 프로그래머들을 위해 메모리 공간을 abstract 해주자!
+- 메모리 조각이 여기저기 흩어져있더라도, 프로그래머가 보기에는 하나로 붙어있는것처럼 쓸 수 있게 해주자!
+
+ㄸㄹ랴챠두쵸
+
+- Variable-sized request로 인한 파편화를 최소화하자. 특히 external fragmentation을 막자
+- 하드웨어 서포트도 좀 받자
+
+Protection (하드웨어 서포트가 필요함)
+
+- 프로세스가 다른 프로세스나 OS를 망치는것을 막자
+- Isolation: a process can fail without affecting other processes
+- 두 프로세스가 원하면 메모리의 일부를 공유할 수 있게 만들자
+
+#### Linux Virtual Address Space의 구조
+0부터 양수 방향으로 차례대로
+
+- Read-only segment (.init, .text, .rodata)
+- Read/write segment (.data, .bss)
+- Run-time heap (malloc 호출해서 받은것), 힙의 경계선이 brk
+
+메모리 맨 끝부터 음수 방향으로 차례대로
+
+- Kernel virtual memory (코드, 데이터, 힙, 스택) 유저코드에선 볼 수 없다
+- 유저 스택, 런타임에 생성됨
+
+Meltdown attack이 있고나서, 대부분의 운영체제들이 kernel virtual memory를 단순히 못보는게 아니라 별도의 위치에 따로 잡아서 아예 유저모드에선 없어지게 만들었다.
+
+xv6는 리눅스와 다르니 유의
+
+각 프로세스는 모두 자기만의 가상메모리를 가짐. 가상메모리는 만드는 비용도 상당하고, Address translation 비용을 런타임에 계속 지불해야하기때문에 꽤 비싸지만, 가져다주는 이득이 너무 많아서 대부분의 컴퓨터가 쓰고있다.
+
+가상메모리를 쓰면 Lazy Allocation이 가능함. 유저가 큰 메모리를 요구한 즉시 바로 큰 메모리를 할당해서 주는게 아니라, 일단 메모리 할당을 했다고 치고 유저가 메모리를 사용할 때 Page Fault를 일으킨 뒤 그제서야 메모리를 할당하기.
+
+#### Static Relocation
+OS가 매 프로그램을 로딩하기 전에 프로그램 안에있는 모든 메모리 주소를 바꿔쓰기
+
+- 장점: 하드웨어 서포트 필요 없음
+- 단점: Protection 수단 부재, 소프트웨어가 일단 메모리에 올라가면 address space를 바꿀 수 없음
+
+단점이 많아 Static Relocation은 거의 안씀
+
+#### Fixed partition
+Physical Memory를 여러개의 fixed partition으로 나눈다. 그리고 각 partition마다 프로세스를 한개씩 배정한다.
+
+파티션의 시작주소를 base register에 저장해놓아서, 프로세스가 메모리에 접근할때마다 파티션의 시작주소를 더하게 만드는 방식으로 virtual memory를 구현한다. 남의 파티션에 접근하려고 시도하면 실패하게 만든다.
+
+파티션의 수 만큼 프로세스를 띄울 수 있다.
+
+- 하드웨어 요구조건: base register만 있으면 됨
+- 장점: 구현하기 쉬움, 빠른 context switch
+- 단점: Internal fragmentation, 파티션 하나 안에 프로세스가 다 들어가지 않을 수 있음
+
+두 종류의 Fragmentation
+
+- External fragmentation: 프로세스 바깥의 메모리공간이 파편화되는 경우. 여러 프로세스들의 메모리 조각이 흩어져있음
+- Internal fragmentation: 프로세스 안의 메모리공간이 파편화되는 경우. OS로부터 할당받은 메모리를 너무 비효율적으로 써서, 낭비되는 공간이 너무 많아짐
+
+#### 여러 크기의 Fixed partition
+60~70년대 OS인 IBM OS/MFT에서 쓰인 방식. 다양한 크기의 고정 파티션을 준비해놓고, 각자 맞는 크기의 파티션을 써요.
+
+#### Variable Partition
+IBM OS/MVT에서 쓰임. 프로세스가 원하는 크기의 파티션을 동적으로 할당해주자.
+
+Limit Register를 두어 메모리 상한을 체크하고, Base Register를 두어 파티션을 찾아가게 만든다.
+
+- 하드웨어 요구조건: base register, limit register
+- 장점: 구현하기 쉬움, Internal Fragmentation 없음
+- 단점: External Fragmentation 존재, 프로세스간 메모리 공유 불가
+
+External Fragmentation을 해소하기위해 프로세스들을 메모리상에서 한 위치로 모아주는 compaction을 수행해야함.
+
+#### Segmentation
+애초에 프로세스에게 메모리를 보여줄 때, 연속된 한 덩어리의 메모리를 주는게 아니라 여러개의 독립된 segment를 쓰는 방식으로 보여주자.
+
+세그먼트들은 다양한 크기를 가질 수 있고, 세그먼트들 사이의 순서는 없음. "Segment Number + Offset"이 Virtual Address가 됨
+
+Intel CPU가 이 Segementation을 가정하고 만들어진 CPU여서, CPU에 세그먼트 관련 레지스터들이 있음. 이제는 세그멘테이션을 안쓰기때문에 노는 레지스터들이 됨
+
+Segment table이 있어서 세그먼트별로 Base, Limit, Direction(위/아래 방향), Protection(RO/RW/실행가능 등), Valid bit 등의 정보들이 있음. Virtual Address 맨 위의 몇 비트를 Segment table을 가리키는 index로 쓰자.
+
+- 장점
+  - Sparse allocation 가능. 스택과 힙이 독립적으로 자란다!
+  - Valid bit과 같은 정보로 세그먼트를 보호하기 쉬움
+  - 특정 세그먼트를 공유하기 좋음
+  - 각 세그먼트를 dynamic relocate할 수 있음
+- 단점
+  - 하나의 세그먼트는 연속적으로 붙어있어야함
+  - 세그먼트 테이블이 크고 RAM에 있어야해서 느림. 캐싱을 활용해서 최적화할수도 있다
+  - Cross-segment address가 어려움. 세그먼트 번호가 변한다면 어떻게 될 까?
