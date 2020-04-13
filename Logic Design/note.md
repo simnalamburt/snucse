@@ -384,12 +384,76 @@ Two-level logic을 NAND나 NOR 만으로 표현해보자.
 드 모르간 법칙 `A' + B' = (AB)'`을 사용해 AND와 OR의 중첩으로 표현된 SoP Two-level logic을 쉽게 NAND + NAND 회로로 바꿀 수 있다. 마찬가지로 PoS도 쉽게 NOR + NOR 회로로 표현할 수 있다.
 
 ### Multilevel Logic
-입력에서 출력까지 거치는 게이트가 두개 이상으로 여러개 있을 수 있다면 Multilevel Logic이다. Multilevel Logic의 장점은?
+입력에서 출력까지 거치는 게이트가 두개 이상으로 여러개 있을 수 있다면 Multilevel Logic이다. 
 
-- 더 직관적인 모양을 만들 수 있다
-- 칩을 덜써서 더 쌀 수 있다
+장점
+
+- 회로가 작아질 수 있다
+- Gates have smaller [fan-in]. [Fan-in]은 게이트 입력 갯수, 항의 숫자를 말함.
+
+단점
+
+- 회로가 느려질 수 있다
+- 디자인 하기 더 어려워진다
+- 최적화도구가 two-level만큼 좋지 못하다
+- 분석이 더 복잡해진다
 
 Multilevel Logic도 SoP, PoS와 마찬가지로 NAND/NOR로 편리하게 변환이 가능함.
 
+[Fan-in]: https://en.wikipedia.org/wiki/Fan-in
+
 #### AND-OR-Invert (AOI) Gate
 AND, OR, NOT 게이트 세개를 하나로 합쳐놓은것. 얘를 트랜지스터로 바로 구현하면 NAND, NOR 여러개를 쓰거나 AND, OR, NOT을 여러개 쓰는것보다 훨씬 컴팩트하다. 이런걸로 회로를 최적화할수도 있음.
+
+&nbsp;
+
+Week 5, Mon
+========
+#### Time behavior of combinational networks
+Waveform: 시간의 변화에 따라 wire의 출력을 그린것. 실습시간에 Vivado나 ISE로 그리는 그거.
+
+- Gate delay: 게이트 입력변화가 출력변화에 영향주기까지의 시간
+  - Min delay, Typical/Nominal delay, Max delay
+  - 회로를 설계하는 사람은 Max delay를 고려해 만들어야한다
+- Rise time: 출력전압이 낮았다가 높아지는데에 걸리는 시간
+- Fall time: 출력전압이 높았다가 낮아지는데에 걸리는 시간
+- Pulse width: 출력전압이 낮은채로/높은채로 유지되는 시간
+
+게이트 딜레이로 인해 게이트의 결과가 이상해질 수 있다. Delays matter!
+
+Oscillatory behavior: 논리회로 배치에 따라, 딜레이때문에 회로가 출력하는 값이 하나로 수렴하지 못하고 계속 진동할 수 있다.
+
+&nbsp;
+
+Combinational Logic Technologies
+--------
+조합논리 기술들에 대해 알아보자
+
+- Standard gates: Gate packages, cell libraries
+- Regular logic: Multiplexers, decoders
+- Two-level programmable logic: PALs, PLAs, ROMs
+
+Random logic, Regular logic 구분이 그렇게 중요한건 아님
+
+### Random (fixed) logic
+Pritimive한 게이트들을 조립해서 만드는 단순한 로직을 Random Logic이라고 한다. 할 수 있는 일이 하나로 정해져있는 로직을 Random logic, Fixed logic이라고 한다.
+
+1960년대에 트랜지스터 기술이 논리회로 만드는데에 보급되기 시작함. 논리게이트 역할을 하는 트랜지스터들이 만들어졌다.
+
+오늘날에는 이런 게이트 역할만 하는 트랜지스터는 거의 안쓰인다. 그러나    이 때에 만들어졌던 디자인들은 여전히 라이브러리처럼 쓰이고있다.
+
+### Regular logic
+Logic의 내용을 자유롭게 바꿀 수 있으면 Regular Logic이라고 한다. 디자인을 빠르게 하고싶고, 엔지니어링 수정을 쉽게 해야하고싶어서 Regular Logic을 쓴다.
+
+Regular Logic을 만드는 방법은 다양한데 MUX와 DEMUX를 많이 써서 쉽게 구현할 수 있다.
+
+MUX와 DEMUX를 왜 많이쓰지? MUX와 DEMUX를 함께 사용하면, 임의 개수의 입력을 임의 개수의 출력에 연결할 수 있음. 하나의 계산 모듈을 여럿이 공유하기위해서도 MUX-DEMUX를 쓸 수 있음. Mux-demux 콤보는 유용하다!
+
+Cascading multiplexers: 작은 mux 여러개를 조립해 큰 mux를 만들 수 있다.
+
+### Multiplexers as general-purpose logic
+2**n : 1 multiplexer를 사용해 변수가 n개인 모든 함수를 구현할 수 있다! Truth table을 그대로 mux의 입력에 꽂아놓으면, n개의 스위치만 조작해서 모든 임의의 함수를 구현할 수 있다. 와!
+
+변수 하나를 줄여서, 2**(n-1) : 1 mux로도 변수가 n개인 모든 함수를 구현할 수 있다!
+
+일단 n-1개의 변수를 control input으로 쓴다. 그리고 Truth table을 보면 출력이 마지막 변수인 X, 혹은 그 변수의 complement인 X'에 tie된 경우가 있는데, 이걸 활용해 Truth table의 행 갯수를 반으로 줄일 수 있다. 0과 1만 출력으로 뱉는 Truth table이 아니라 0, 1, X, X' 를 뱉는 Truth table로 바꾸는거다. 이런 테크닉을 써서 2**(n-1) :1 mux로 변수가 n개인 함수를 구현할 수 있음.
