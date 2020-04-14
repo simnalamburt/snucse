@@ -876,6 +876,8 @@ Protection (하드웨어 서포트가 필요함)
 - Isolation: a process can fail without affecting other processes
 - 두 프로세스가 원하면 메모리의 일부를 공유할 수 있게 만들자
 
+커널이 쓰는 메모리도 Virtual Memory이다. 컴퓨터가 켜진 직후에는 Virtual Memory가 꺼진 상태로 시작하다가, Paging을 켜는 순간 커널이 쓰는 메모리든 유저가 쓰는 메모리든 모든 Virtual Memory가 된다. 다만 커널은 원하면 Page Table이 순서대로 기입되어있는 식으로, Physical memory를 접근할 수 있게 만들어져있다.
+
 #### Linux Virtual Address Space의 구조
 0부터 양수 방향으로 차례대로
 
@@ -952,3 +954,98 @@ Segment table이 있어서 세그먼트별로 Base, Limit, Direction(위/아래 
   - 하나의 세그먼트는 연속적으로 붙어있어야함
   - 세그먼트 테이블이 크고 RAM에 있어야해서 느림. 캐싱을 활용해서 최적화할수도 있다
   - Cross-segment address가 어려움. 세그먼트 번호가 변한다면 어떻게 될 까?
+
+&nbsp;
+
+Week 5, Mon
+========
+요즘의 ARM에도 세그먼트 하드웨어 지원이 있음.
+
+ARM에 크게 Cortex-A, Cortex-R, Cortex-M, 이렇게 ARM 세개가 있다. Cortex-A가 제일 High performance이고 스마트폰에 들어감. Cortex-R은 중간, Cortex-M은 제일 Low performance.
+
+Cortex-A에는 모든 Virtual Memory 기능이 있고, Cortex-M에는 Virtual Memory 기능이 없음. Cortex-R에는 Memory Protection Unit이라는게 있어서 이것이 segmentation과 비슷한 기능을 함. Physical Memory를 몇개의 파티션으로 설정한 뒤, 파티션별로 권한을 설정시킴. Full virtual memory 기능을 탑해자면 너무 비싸서 그런 기능을 담지는 못하지만, 간단한 보호 기능을 갖고싶을때 이런걸 함.
+
+&nbsp;
+
+### Paging
+Paging이 특히 CPU의 하드웨어 서포트가 필요하다. Paging은 특히 OS와 CPU 하드웨어의 협업이 중요하므로, 어디부터 어디까지가 OS가 하는거고 어디까지가 하드웨어가 하는건지 잘 구분해서 공부해야한다.
+
+이제부터 당분간은 하드웨어가 하는 일만 공부한다.
+
+Virtual memory를 고정된 크기의 페이지들로 나누고, Physical memory를 같은 고정된 크기의 블록들로 나누고, 페이지와 프레임들을 1:1로 매핑한다. 크기는 보통 512B ~ 8KB로 power of 2이고, 리눅스에선 기본으로 4KB임.
+
+가상메모리 상에선 연속된 메모리여도, Physical memory여도 연속되지 않게된다. External Fragmentation이 없어짐. 작지만 한 Page 안의 internal fragmentation은 생길 수 있는데, 페이지 크기를 줄이면 internal fragmentation은 작아진다.
+
+OS는 모든 놀고있는 frame을 관리해야하고, 어떤 페이지가 어떤 frame에 대응되는지 page table을 관리해야함.
+
+#### Page translation
+한 페이지가 어느 프레임에 해당되는지 찾는 과정이 Page translation임.
+
+페이지 크기가 4KB라고 치면 4KB = 2**12B이다. 메모리주소가 하나 있다고 치면, 하위 12비트는 고칠 필요가 없다. Page 주소만 바꾸면 되는거지 Page 안에서의 offset은 변하지 않으니까. 나머지 비트만 고치면 됨.
+
+- Virtual Address = (Virtual Page Number, Offset)
+- Physical Address = (Physical Frame Number, Offset)
+
+Usually, |VPN| >= |PFN|. 하지만 i686에서 PAE 켜고 이런 상황에선 |VPN| < |PFN| 일 수 있다.
+
+VPN을 PFN으로 매핑하는것이 Page Table이다. Page Table의 한 행은 PTE, Page Table Entry라고 부른다. OS가 관리한다.
+
+레지스터중 하나가 Page Table의 시작주소를 가리키고있어야 한다. x86에선 `CR3` RISC-V에선 `satp` 레지스터.
+
+virtual address 길이, physical address 길이, page size 등이 주어졌을 때 가능한 최대 physical memory 크기, Page Table의 최대 크기 등을 예제로 계산해보자.
+
+#### Protection
+각 프로세스별로 별도의 page table을 갖고있다. 컨텍스트 스위치 때에 `CR3` 혹은 `satp`를 잘 바꿔주기만 하면 겹칠 일이 없다.
+
+Segment와 비슷하게, Page table entry에 valid bit, 권한 비트를 넣어놓고 page translation 할때 권한 체크도 같이 하도록 한다. 어차피 페이지를 읽으려면 page table을 반드시 봐야하니까 이렇게 구현해도 됨.
+
+#### Page Table Entry
+PTE에는 이런 Valid bit, protection 정보, PFN 말고도 이 PTE가 얼마나 최근에 access 되었는지 정보를 담기도 함.
+
+- Reference, R: 얼마나 최근에 접근되었는가
+- Modify, M: 얼마나 최근에 수정되었는가
+
+OS는 주기적으로 R비트와 M비트를 클리어시킴. 더 많은 정보는 줘봤자 쓰지도 못해서 보통은 저렇게 1비트정도만 준다. 저런 R, M 비트가 없는 경우도 있다. 이런것은 CPU 아키텍처에 달려있음.
+
+#### Demand Paging
+모든 Page를 만들어달라고 해서 즉시 준비하는게 아니라, 프로세스가 실제로 이 페이지를 읽거나 쓰려 할 때 lazy하게 로드하는것. 그리고 잘 안 쓰이는 페이지는 evict시켜서 스왑영역으로 보내버리기도 한다. 프로세스 입장는 이런 일이 일어나고있다는걸 몰라도 됨.
+
+xv6는 fork할 때 모든 메모리를 실제로 카피하고, exec을 할 때 모든 메모리를 다 로드한다. 근데 리눅스를 포함한 대부분의 OS들은 demand paging이라는걸 함.
+
+#### Page Fault
+Invalid PTE에 접근했을 때 CPU에 의해 발생하는 exception
+
+- Mage page faults: 유효하지만 메모리에 로드 안된 페이지에 접근함
+  - OS가 이런 페이지들을 어디서 불러와야하는지 정보를 관리하고있음
+  - Disk IO 필요함
+- Minor page faults: 디스크 IO 없이 해결될 수 있는 Page Fault
+  - Lazy Allocation이 이런 경우
+  - Accesses to prefetched pages (파일 IO할때 유저가 요청 안했어도 먼저 읽은 것들). etc
+- Invalid page faults: 정말로 없는 페이지에 접근함
+
+core dumped라는게 무슨 뜻일까? 그냥 메모리를 덤프했다는 뜻이다. 옛날에는 [Core Memory]라는게 있었음
+
+[Core Memory]: https://en.wikipedia.org/wiki/Magnetic-core_memory
+
+#### 장점
+- No external fragmentation
+- 할당/해제 빠름
+  - A list or bitmap for free page frames
+  - 할당: 연속된 메모리 영역을 찾을 필요가 없음
+  - 해제: 인접한 free space와 Coalescing을 안해도 됨
+- 메모리의 일부분을 Disk로 "page out"하기 쉬움
+  - Page size는 disk block size의 배수로 정해짐
+  - "paged out" 여부를 valid bit로 표시함
+  - 일부 페이지가 디스크로 내려가있어도 프로세스는 정상동작함
+- 페이지를 보호하거나 공유하기 쉬움
+
+#### 단점
+- Internal fragmentation은 못막음
+  - 페이지 크기가 커지면 internal fragmentation이 더 커짐
+- Memory reference에 기본 overhead가 생김
+  - virtual memory reference 1회마다 physical memory reference가 2회 발생함
+  - Solution: TLB로 해소 가능
+- Page Table을 저장하기 위한 저장소가 필요함
+  - Address space가 커지면 Page Table 크기가 몹시 커짐
+  - 32bit address, 4KB page size, 4byte per PTE = 2**20 * 4B = 4MB
+  - Solution: Valid PTE만 저장하거나, Page Table을 Paging한다
