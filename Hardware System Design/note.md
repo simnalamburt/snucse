@@ -289,3 +289,69 @@ Week 4, Tue, Lab
 Practice 5는 PE implementation & BRAM Modeling다.
 
 Practice 4에서는 FMA, Fused Multiply-Add를 했지만, 이제부턴 MAC,Multiply-Accumulate 을 한다.
+
+&nbsp;
+
+Week 5, Tue
+========
+ZedBoard를 구매했다.
+
+ZedBoard가 언제 도착할지 불투명해 강의순서를 변경해 Week 6에는 컨벌루전 로워링을 먼저 한다.
+
+### PE controller overview
+지난주에 했듯이 PE 계산이 2 step으로 이뤄져있는데, 이걸 PE 혼자서 못한다. 스텝을 조절해주는 녀석이 필요한데 그게 PE controller다.
+
+PE controller = PE + FSM + Global BRAM
+
+PE controller FSM의 네 상태가 있음
+
+- Idle: start == 0 이면 idle. start가 1이 되면 Load 로 넘어감
+- Load: 데이터를 읽어서 matrix를 PE에, 벡터를 Global BRAM에 로드시키는 단계
+- Calc: peram에 있는 matrix와 Global BRAM에 있는 vector를 곱하는 단계
+- Done: dot product가 끝나고 결과를 dout으로 출력하는 단계
+
+### Synthesizable Verilog code
+한 state를 고정횟수만큼 반복할 필요가 있는데, Verilog에선 Counter를 만들어서 이걸 구현하게된다.
+
+Synthesizer에게 필요한건 Verilog 코드뿐만 아니다. RTL code 외에도, Design environment, Design constraints, Technology library 를 요구함
+
+Synthesis 과정
+
+- Frontent
+  - Parsing
+  - Elaboration
+    - **Unroll loops, expand generate loops**
+    - Connect the internal components
+    - Set up parameters passing for tasks and functions
+- Backend
+  - Analysis/translation
+  - Logic synthesis
+  - Netlist generation
+
+Synthesizable code를 짜려면, synthesizable operators만을 사용해야한다.
+
+We should avoid using any latches in a design. Assign outputs for all input conditions to avoid inferred latches. 조합논리를 짜려고 했는데, 의도치 않게 latch로 infer되는, 순차논리를 짜게되는 버그도 있다.
+
+Latch 피하는법
+
+1.  항상 모든 변수를 initial value와 함께 초기화시키기
+2.  모든 조건문에 else문이나 default문을 잘 달아서 대입을 exhaustive하게 시켜주기
+
+posedge/negedge와 plain level signal reference를 섞어 사용하는것도 문제임.
+
+루프문도 유한한 횟수만 반복해야 synthesizable하고, forever 문은 timing control과 반드시 함께 쓰여야 synthesizable함.
+
+Loop문 안에서 non-blocking assignment 문을 쓰면 의도치 않은 결과가 나올 수 있음.
+
+### Logic optimization review
+간단한 조합논리는 카르노맵으로 항의 수를 줄일 수 있음. 이런 최적화는 컴파일러가 자동으로 해줌.
+
+그러나 순차논리의 경우, state의 갯수를 줄이는건 손으로 해줘야함.
+
+FSM: 모든 입력 조합에 대해, Output과 state transition이 동일할 경우 같은 state이다.
+
+&nbsp;
+
+Week 5, Tue, Lab
+========
+Practice 6, PE Controller를 구현한다.
