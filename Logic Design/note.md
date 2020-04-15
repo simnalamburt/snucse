@@ -451,9 +451,43 @@ MUX와 DEMUX를 왜 많이쓰지? MUX와 DEMUX를 함께 사용하면, 임의 �
 
 Cascading multiplexers: 작은 mux 여러개를 조립해 큰 mux를 만들 수 있다.
 
-### Multiplexers as general-purpose logic
+### Loop-Up Tables (LUTs), MUX as general-purpose logic
 2**n : 1 multiplexer를 사용해 변수가 n개인 모든 함수를 구현할 수 있다! Truth table을 그대로 mux의 입력에 꽂아놓으면, n개의 스위치만 조작해서 모든 임의의 함수를 구현할 수 있다. 와!
 
 변수 하나를 줄여서, 2**(n-1) : 1 mux로도 변수가 n개인 모든 함수를 구현할 수 있다!
 
 일단 n-1개의 변수를 control input으로 쓴다. 그리고 Truth table을 보면 출력이 마지막 변수인 X, 혹은 그 변수의 complement인 X'에 tie된 경우가 있는데, 이걸 활용해 Truth table의 행 갯수를 반으로 줄일 수 있다. 0과 1만 출력으로 뱉는 Truth table이 아니라 0, 1, X, X' 를 뱉는 Truth table로 바꾸는거다. 이런 테크닉을 써서 2**(n-1) :1 mux로 변수가 n개인 함수를 구현할 수 있음.
+
+&nbsp;
+
+Week 5, Wed
+========
+### Template-based Logic, DEMUX as general-purpose logic
+DEMUX. Decoder는 Input이 1로 고정되어있는 demux의 특수한 경우라고 생각할 수 있다. demux는 NOT과 AND, 혹은 NOT과 NAND만 써서 쉽게 만들 수 있음.
+
+n : 2**n decoder를 사용해 변수가 n개인 모든 함수를 구현할 수 있다! decoder가 Minterm generator처럼 동작하기때문에, decoder의 출력에 AND, OR, NOT 몇개를 연결하기만 해도 모든 minterm을 표현할 수 있음.
+
+작은 mux로 큰 mux를 만드는 것 처럼, decoder도 작은 decoder 여러개를 조합해 만들 수 있다.
+
+### Programmable Logic Arrays (PLAs)
+AND plane(AND array)과 OR plane(OR array)두개의 큰 평면으로 나뉘어져있음. 실제로는 NAND와 NOR로 구현함
+
+(PPT 그림 참고)
+
+안쓰는 커넥션을 임의로 없애는 방식으로 회로를 재프로그램한다. fuse (평상시엔 연결됨, 원할때 날림) 혹은 anti-fuse (평상시엔 끊어짐, 원할때 연결) 을 씀.
+
+PLA를 그림에 그릴때엔, 회선이 너무 많아서 더 간략화된 형태로 그린다. 그림은 PPT 참고. "x표"가 연결되었다는 뜻임.
+
+### PAL vs PLA
+- PLA: Programming Logic Array
+  - Unconstrained, fully general AND/OR arrays
+- PAL: Programming Array Logic
+  - PLA중에서, AND plane은 커스텀이 가능하고, OR plane은 고정되어있으면 PAL
+  - 기능이 제약되어있으나, 더 싸고 더 빠름
+
+PAL의 유즈케이스: BCD to Gray code converter. PLA로 해보면, OR Plane에 "reuse"가 단 한개도 없다. 이런 경우는 PAL로 하면 더 빠름
+
+PAL이 더 빠른 이유
+
+1.  PAL은 OR gate의 입력 (fan-in)이 작음
+2.  PAL은 Wiring overhead가 적음 칩 면적을 절약할 수 있다.
