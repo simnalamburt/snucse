@@ -72,9 +72,321 @@ Optimal Substructure: 큰 문제의 최적해가 자신보다 작은 문제의 �
 
 ```
 T(n) = 2*T(n/2) + cn
-     = 2^2*T(n/2^2) + 2cn
-     = 2^3*T(n/2^3) + 3cn
+     = 2^1 * T(n/2^1) + 1*cn
+     = 2^2 * T(n/2^2) + 2*cn
+     = 2^3 * T(n/2^3) + 3*cn
      ...
-     = 2^k*T(1) + kcn   (k = log_2 n)
+     = 2^k * T(n/2^k) + k*cn     (k = log_2 n)
+     = 2^k * T(1)     + k*cn     (2^k = n)
      = a*n + b*nlogn
 ```
+
+### 다양한 알고리즘의 적용 주제들
+문교수님이 박사과정할때만 해도, 배고프고 비실용적이라는 인식이 많았는데 이제 많이 변했음. 수학과 통계도 옛날엔 많이 이론위주였는데 많이 Application이 되었듯이 알고리즘도 같음.
+
+- 카 네비게이션: 최단경로 알고리즘
+- 스케줄링: TSP, 차량 라우팅, 작업공정, etc
+- Human Genome Project: 매칭, 계통도, Functional analysis, etc
+- 검색: DB, 웹페이지, etc
+- 자원의 배치
+- 반도체 설계: Partitioning, placement, routing, etc
+- 등
+
+TSP는 NP-hard 문제임. NP-hard, 그리고 NP-hard에 약간의 조건이 추가된 NP-complete에 대해서도 배움. NP-complete 군에 속하는 모든 문제는 바꾸어 풀 수 있음. NP-complete 군에 속하는 문제중 하나의 솔루션으로 다른 문제들도 같이 풀 수 있음. NP-complete 문제중 아직 단 한개도 현실적인 시간 안에 풀 수 있는 알고리즘이 발견되지 않았음. NP-complete 문제를 현실적인 시간 안에 풀지 못할거다라는 추측을 다들 강하게 하고있는데, 증명되진 않고있음.
+
+차량 라우팅 문제는 두개의 NP-hard 문제가 중첩된 문제이다.
+
+10년 전에 반도체 라인을 최적화하는 문제를 풀었었는데, 풀다보니 두개의 NP-hard 문제를 발견했음. 그 전까진 그 NP-hard 문제를 풀지 못하고 숙련공들의 감에 의존해서 풀고있었음.
+
+Human Genome Project에서 알고리즘 엔지니어들이 기여를 많이 했음. String matching이 많이 쓰였다. DNA 시퀀스를 여러개로 잘게 잘라 각각의 작은 조각을 분석한 뒤, 전체를 추정하는 방식으로 분석했음.
+
+계통도. 동물세포의 핵 DNA와 미토콘드리아 DNA를 분석해, 인류와 생물이 어떻게 분화했는지 추적할 수 있게 됨. 이 때 정확한 계통도는 알 수 없고 가장 확률이 높은 계통도를 사용하게되는데, 어려운 최적화 문제이고 NP-hard이다. 90년대에 에이즈 유전자 분석을 해서 한국에 에이즈가 어떻게 유입되었는지 분석한적 있었다. 분석결과 두명의 사람이 해외에서 독자적으로 에이즈에 감염되어왔다는 결론이 났는데, 이것도 알고리즘으로 푼것이다.
+
+아마존에선 물류창고의 물건들을 자동으로 배치하고 관리하는데, 이런것도 최적화 문제이다.
+
+80년대에 알고리즘 전공자들이 제대로된 대우를 받지 못하던 시절, VLSI CAD 분야에서 최적화 전문가들을 많이 고용했었다. 사람이 디자인하기엔 너무 크기때문에 대부분 알고리즘이 디자인한다. 삼성전자 한 회사에서 한해에 지불하는 VLSI CAD 이용료가 1000억이 넘음.
+
+### 알고리즘을 왜 분석하는가
+- 무결성을 확인하기위해
+- 자원을 얼마나 효율적으로 쓰고있는지 파악하기위해
+
+자원은 시간, 메모리, IO 대역폭 등 다양하다.
+
+크기가 작다면? 알고리즘의 효율성이 그다지 중요하지 않다. 비효율적인 알고리즘도 별 상관 없음. 크기가 충분히 큰 문제여야 알고리즘의 효율성이 중요해진다. 비효율적인 알고리즘이 치명적인 결과를 냄
+
+입력의 크기가 충분히 큰 경우에 대한 분석을 점근적 분석, Asymptotic analysis라고 한다. 이 수업에서 점근적인 분석이라는 말이 앞으로 아주 많이 나온다
+
+### Asymptotic Analysis
+입력의 크기가 충분히 큰 경우에 대한 분석. 이미 알고있는 점근적 개념의 예: lim n→∞ f(n)
+
+알고리즘의 복잡도를 표현하기 위한 점근적 notation에선, 계수를 중요하게 사용하지 않는다. 최고차항을 제외한 차수가 낮은 항도 모두 무시한다. 왜냐면 n이 충분히 크면 최고차항만이 큰 차이를 내서.
+
+Big O, Big Omega, Big Theta, little omega, little o 다섯가지 표기법이 있음.
+
+Big O, Little O 두개가 관련이 있고, Big Omega, Little Omega 두개가 관련이 있음.
+
+Big O, Big Omega는 대칭관계, Little O, Little Omega는 대칭관계. Big Theta는 Big O와 Big Omega의 교집합
+
+### Asymptotic Notations
+#### Big O
+Big O: O(g(n)), 기껏해야 g(n)의 비율로 증가하는 함수.
+
+ex: 3n^2 + 2n, 7n^2 - 100n, n^2 모두 O(n^2). 원래는 "n^2 ∈ O(n^2)" 이렇게 써야하는데, 관행적으로 "n^2 = O(n^2)" 이렇게 표기하기도 함. 같은 뜻임. "O(n^2) = n^2" 이렇게 쓰지는 않은다. 주의
+
+Formal definition: O(g(n)) = {f(n) | ∃c > 0, n₀ ≥ 0 s.t. ∀n ≥ n₀, f(n) ≤ cg(n) }
+
+"∃c > 0, n₀ ≥ 0 s.t. ∀n ≥ n₀"는 "충분히 큰 n에 대해서"를 수학적으로 쓴것임.
+
+직관적 의미: f(n) = O(g(n)) ⇒ f가 g보다 빠르게 증가하지는 않는다 이런 뜻임
+
+Big O notation을 쓰면 가능한한 타이트하게 써야한다. nlogn + 5nㅇ = O(nlogn) 인데 O(n^2)라고 써도 틀리진 않는다. 하지만 엄밀하지 않은 만큼 정보의 손실이 일어난다.
+
+#### Big Omega
+Formal definition: Ω(g(n)) = {f(n) | ∃c > 0, n₀ ≥ 0 s.t. ∀n ≥ n₀, f(n) ≥ cg(n) }
+
+직관적 의미: f(n) = Ω(g(n)) ⇒ f는 g보다 느리게 증가하지는 않는다. O(g(n)) 과 대칭적
+
+#### Big Theta
+Formal definition: Θ(g(n)) = O(g(n)) ⋂ Ω(g(n))
+
+직관적 의미: f(n) = Θ(g(n)) ⇒ f는 g와 같은 정도로 증가한다.
+
+Big Theta로 이야기할 수 있으면 Big Theta로 이야기해야한다. 제일 Tight한 표기법이기 때문. 그러나 Big Theta로 이야기할 수 없는 경우가 많다.
+
+#### Little O
+Formal definition: o(g(n)) = {f(n) | lim n→∞ f(n)/g(n) = 0 }
+
+직관적 의미: f(n) = o(g(n)) ⇒ f는 g보다 느리게 증가한다. (같은 경우가 빠졌음)
+
+o(n^2) = { 9n + 4, nlogn, n^1.99, ... }
+
+#### Little Omega
+Formal definition: o(g(n)) = {f(n) | lim n→∞ f(n)/g(n) = inf }
+
+직관적 의미: f(n) = ω(g(n)) ⇒ f는 g보다 빠르게 증가한다. (같은 경우가 빠졌음)
+
+ω(n^2) = { 3n^3, n^2.01, 2^n, ... }
+
+#### 예시
+- Selection sort: Θ(n^2)
+- Heap sort: O(nlogn)
+- Quick sort: O(n^2), 평균 Θ(nlogn), At worst-case: Θ(n^2)
+
+"Comparison sort는 최악의 경우 Ω(nlogn)이다"라는 정리가 있음.
+
+### 시간 복잡도 분석의 종류
+- Worst case: 알고리즘이 가장 느려지게 만드는 입력에 대한 분석
+- Average case: 모든 경우에 대한 분석, 제일 분석하기 어려움
+- Best case: 알고리즘이 가장 빨라지게 만드는 입력에 대한 분석, 그다지 유용하지 않음
+
+보통은 worst case, average cast 분석을 함. Best case가 드물게 유용한데, insertion sort가 worst, average에 Θ(n^) 이지만, best case에는 Θ(n)임.
+
+#### 저장/검색의 복잡도
+1.  배열: O(n), 삽입, 삭제, 검색 중 적어도 하나는 Θ(n)
+2.  Binary search tree: 최악의 경우 Θ(n), 평균 Θ(logn)
+3.  Balanced binary search tree: 최악의 경우 Θ(logn)
+4.  B-tree: 최악의 경우 Θ(logn)
+5.  Hash table: 평균 Θ(1), 최악의 경우 Θ(n)
+
+#### 크기가 n인 배열에서 원소 찾기
+- Sequential search: Worst Θ(n), Average Θ(n), Best Θ(1)
+- Binary search: Worst Θ(logn), Average Θ(logn), Best Θ(1)
+
+&nbsp;
+
+Week 2, Mon
+========
+Recurrence and Asymptotic Complexity Analysis, 점화식과 알고리즘의 복잡도
+
+### 점화식, recurrence
+어떤 함수를 자신보다 더 작은 변수에 대한 함수와의 관계로 표현한 것.
+
+예시:
+
+- f(n) = f(n-1) + 2
+- f(n) = n * f(n-1)
+- f(n) = f(n-1) + f(n - 2)
+- f(n) = f(⌊n/2⌋) + n (보통 f(n/2) + n 라고 줄여 씀)
+- ...
+
+merge sort 수행시간을 점화식으로 표현하면 T(n) = 2*T(n/2) + 오버헤드.
+
+### 점화식의 점근적 분석 방법
+1.  반복대치, Iteration
+    - 함수를 계속 더 작은 형태로 대치해나가기
+2.  추정 후 증명, Guess & Verification
+    - 결론을 추정하고, 수학적 귀납법으로 증명
+3.  마스터 정리, Master Theoram
+    - 형식에 맞는 점화식의 복잡도를 바로 알 수 있다
+
+마스터 정리는 굉장히 유용함
+
+### 소요시간 함수 T(n) 에 깔려있는 가정
+1.  n은 양의 정수
+2.  T는 단조증가
+3.  If we need, Without loss of generality (WLOG), n = a^k 라고 가정할 수 있다.
+
+3번이 왜 성립하냐면, a^k, a^k+1 들에 대해 증명이 성공한다면 a^k와 a^k+1 사이에 있는 숫자들에 대해서도 모두 성립하기때문.
+
+### 반복대치, Iteration
+#### Selection sort
+T(n) = T(n-1) + n, T(1) 일때 반복대치로 T(n)을 구해보자.
+
+```
+T(n) = T(n-1) + n
+     = T(n-2) + (n-1) + n
+     = T(n-3) + (n-2) + (n-1) + n
+     ...
+     = T(1) + 2 + 3 + ... + n
+     = 1 + 2 + ... + n
+     = n(n+1)/2
+     = Θ(n^2)
+```
+
+Selection sort같은 정렬 알고리즘들이 이런식으로 overhead가 Θ(n)인 점화식을 가져서, 죄다 Θ(n^2) 임.
+
+#### Merge sort
+1주차에서 한 머지소트 증명도 반복대치임
+
+#### 네개로 나누기
+T(n) = n + 3*T(n/4) 도 반복대치로 풀어서, `T(n) = 4n + (T(1) - 4)*n^k, k = log4/log3 = 0.7924...`로, T(n) = Θ(n) 인 것을 알 수 있다.
+
+### 추정 후 증명, Guess & Verification
+#### Merge sort
+T(n) = 2T(n/2) + n 의 시간복잡도를 추정 후 증명으로 구해보자.
+
+T(n) = O(nlogn) 이라고 가정해보자. 즉, T(n) ≤ cnlogn.
+
+```
+n보다 작은 모든 k에 대해 T(k) ≤ cklogk 가 성립한다고 할 때
+
+T(n) = 2T(n/2) + n
+     ≤ 2c(n/2)log(n/2) + n     (귀납적 대치, inductive substitution)
+     = cnlogn + (1 - clog2)n
+     ≤ cnlogn
+```
+
+수학적 귀납법에 의해 모든 충분히 큰 c와 n0에 대해 T(n) ≤ cnlogn 이 성립함. c와 n0는 적당히 크게 고르면 된다. 이 경우 c = 2, n0 = 4.
+
+#### Merge sort 변형
+T(n) = 2T(n/2 + 17) + n
+
+답이 O(nlogn) 이라고 가정해보자.
+
+```
+n보다 작은 모든 k에 대해 T(k) ≤ cklogk 가 성립한다고 할 때,
+n/2 + 17 < n 을 만족하는 n에 대해 (34 < n)
+n/2 + 17 ≤ 3n/4 를 만족하는 n에 대해 (68 ≤ n)
+
+T(n) = 2T(n/2 + 17) + n
+     ≤ 2cT(n/2 + 17)log(n/2 + 17) + n
+     ≤ 2cT(n/2 + 17)log(3n/4) + n
+     = c*nlogn + (clog3/4 + 1)*n + 34clog(3n/4)
+     ≤ cnlogn    for big enough n
+```
+
+역시 c와 n0 모두 충분히 크게 잡아주면 됨. c = 5
+
+#### 직관과 배치되는 예
+T(n) = 2T(n/2) + 1.
+
+답이 O(n)라고 가정해보자. T(n) ≤ cn
+
+```
+T(n) = 2T(n/2) + 1
+     ≤ 2c(n/2) + 1
+     = cn + 1         ... 더이상 진행 불가
+```
+
+이런 경우 T(n) ≤ cn - 2 라고 가정해야함.
+
+```
+T(n) = 2T(n/2) + 1
+     ≤ 2c(n/2) - 3
+     ≤ cn - 2
+```
+
+수학적 귀납법으로 증명할때 보통 base case 증명을 해야한다. 그러나 알고리즘 증명할때엔 base case들은 다들 trivial하게 성립해서 생략하는경우가 많다. c를 자기 원하는대로 설정할 수 있기 때문이다.
+
+### 마스터 정리
+점화식이 아래와 같은 형태이면, 마스터 정리에 의해 바로 결과를 알 수 있다.
+
+T(n) = aT(n/b) + f(n)
+
+점화식이 위의 꼴일때 이를 계속 iterate하면
+
+T(n) = Σ aⁱf(n/bⁱ) + n^(loga/logb)
+
+앞 항을 Particular solution이라고 함. Overhead의 총합임.
+
+뒤 항을 Homogeneous solution이라고 함. 크기가 1인 문제를 푸는 횟수. Boundary case를 푸는데에 드는 코스트. 아주 중요한 항. 분석의 잣대가 됨
+
+Topmost overhead의 크기와, homogeneous term의 합을 비교해 시간복잡도를 알아낼 수 있음
+
+#### 마스터 정리의 직관적 의미
+T(n) = aT(n/b) + f(n) = Σ aⁱf(n/bⁱ) + n^(loga/logb)
+
+위 식에서 Homogeneous term을 h(n)=n^(loga/logb) 과 같이 정의했을 때
+
+1. h(n)이 더 무거우면 h(n)이 수행시간을 결정함
+2. f(n)이 더 무거우면 f(n)이 수행시간을 결정함
+3. h(n)과 f(n)이 같은 무게이면 logn*h(n) 이 수행시간이 됨
+
+#### 마스터 정리
+어떤 양의 상수 ε에 대해...
+
+1. f(n)/h(n) = O(1/n^ε) 이면, T(n) = Θ(h(n))
+2. f(n)/h(n) = Ω(n^ε) 이고, 충분히 큰 모든 n에 대해 a*f(n/b) < f(n) 이면, T(n) = Θ(f(n))
+3. f(n)/h(n) = Θ(1) 이면, T(n) = Θ(h(n)logn)
+
+"충분히 큰 모든 n에 대해 a*f(n/b) < f(n) 이면" 이 말은 iteration을 할수록 오버헤드가 작아져야한다는 뜻임. 대부분의 알고리즘들은 이 조건을 만족해줌.
+
+사실 Master theorem의 full 버전은 여기에 하나 더해
+
+- f(n)/h(n) = Θ((logn)^k) 이면, T(n) = Θ(h(n)*(logn)^(k+1))
+
+#### 마스터 정리 예시
+- T(n) = 2T(n/3) + c
+
+  f(n) = c, h(n) = n^(log2/log3) = n ^ 0.63..
+
+  1번 케이스에 해당, T(n) = Θ(n^(log2/log3)) = Θ(n ^ 0.63..)
+
+- T(n) = 2T(n/4) + n
+
+  f(n) = n, h(n) = n^0.5
+
+  f(n)/h(n) = n^0.5 이고, 2*f(n/4) < f(n)
+
+  2번 케이스에 해당, T(n) = Θ(n)
+
+- T(n) = 2T(n/2) + n
+
+  f(n) = n, h(n) = n
+
+  f(n)/h(n) = 1
+
+  3번 케이스에 해당, T(n) = Θ(nlogn)
+
+스트라센 알고리즘 시간복잡도 증명도 마스터 정리로 할 수 있음
+
+&nbsp;
+
+Week 2, Wed
+========
+Strassen Algorithm 시간복잡도 증명
+
+#### Naive 행렬곱
+행렬을 네개의 조각으로 분할하여 각각을 곱한 뒤 더할 수 있다. (PPT 참고) 하나의 큰 행렬곱을 여덟개의 작은 행렬곱으로 분할할 수 있음.
+
+- r = ae + bf
+- s = ag + bh
+- t = ce + df
+- u = cg + dh
+
+이 경우 T(n) = 8T(n/2) + Θ(n^2) 이다. 마스터 정리에 의해 T(n) = Θ(n^(log8/log2)) = Θ(n^3) 임.
+
+#### Strassen's algorithm
+스트라센 알고리즘은 수식을 잘 조작해서, 하나의 큰 행렬곱을 여덟개가 아니라 일곱개로 줄였다.  
+
+T(n) = 7T(n/2) + Θ(n^2) 가 되어, 마스터 정리에 의해 T(n) = Θ(n^(log7/log2)) 이 됨.
