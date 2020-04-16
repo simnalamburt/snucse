@@ -957,7 +957,7 @@ Segment table이 있어서 세그먼트별로 Base, Limit, Direction(위/아래 
 
 &nbsp;
 
-Week 5, Mon
+Week 5, Tue
 ========
 요즘의 ARM에도 세그먼트 하드웨어 지원이 있음.
 
@@ -1049,3 +1049,100 @@ core dumped라는게 무슨 뜻일까? 그냥 메모리를 덤프했다는 뜻�
   - Address space가 커지면 Page Table 크기가 몹시 커짐
   - 32bit address, 4KB page size, 4byte per PTE = 2**20 * 4B = 4MB
   - Solution: Valid PTE만 저장하거나, Page Table을 Paging한다
+
+&nbsp;
+
+Week 5, Thu
+========
+## Page Tables
+페이지 테이블의 공간 오버헤드가 너무 크다. 대부분의 PTE는 invalid하니까, valid한것만 모아두자.
+
+### Paging with Segmentation
+각 가상 주소 공간을 segment로 먼저 나누고, 각 segment 안을 page들로 나누자.
+
+Multics OS가 이렇게 되어있음.
+
+장점
+
+- 페이지테이블 크기 줄어듦
+- Reshuffling 없이 세그먼트가 커질 수 있음
+- 일부 페이지를 디스크로 스왑한채로 실행 가능
+- Sharing의 flexibility가 커짐. 일부 페이지만 공유하거나, 세그먼트 전체를 공유할 수 있음
+
+단점
+
+- 페이지 테이블이 커질 수 있음. 예를들어 유저가 힙을 많이 할당해놓고 sparse하게 쓰면 페이지테이블 낭비가 큼
+- page tables로 인한 external fragmentation. 각 페이지테이블은 연속적으로 할당되어야함.
+
+### Multi-level Page Table
+대부분의 PTE은 invalid이다. Multi-level Page Table을 쓰면, 연속된 invalid PTE들을 없애버릴 수 있다.
+
+Multi-level Page Table을 쓰면, 여러 페이지테이블이 연속적으로 할당될 필요가 없어진다.
+
+#### Multi-level Page Table: IA-32
+32-bit address space, 4KB pages, 4bytes/PTE.
+
+Page directory, Page table 이렇게 2-level로 구성되어있다.
+
+Virtual Address = <10bit: Page directory number, 10bit: Page table number, 12bit: Page offset>
+
+Page directory에 10bit를 쓴다. Page directory에는 1024개의 원소가 있음. Page directory의 Physical Address는 `CR3` 레지스터로 기록함. 크기가 4KB라서 한 페이지 안에 들어감.
+
+Page table에도 10bit를 쓴다. 각 Page table에도 1024개의 원소가 있음. 크기가 4KB여서 한 페이지 안에 들어감.
+
+남은 12bit는 Page offset임.
+
+Page directory나, Page table 하나의 크기가 한 페이지 크기를 넘어가게될 수 있다. 32bit ARM이나 PAE가 켜진 IA-32. 이러면 어떻게 할까? 페이지 테이블이 여러 페이지로 쪼개지더라도 Physical memory 상에서 연속하게 위치하도록 OS가 잘 배치하면 된다.
+
+`CR3`에는 Physical Address(PA)를 저장해야하는데, OS는 특정 Virtual Address(VA)의 Physical Address를 알아낼 수 있는 방법이 없다. 무슨 수로 PA를 알아낼까?
+
+한 VA가 어느 PA로 매핑되는지는 알 수 없지만, Virtual Address Mapping을 하는 주체는 OS다. 특정 VA를 PA와 동일하게 매핑하면 된다. 예를들어 메모리영역 0부터 128MB까지는 VA i == PA i 라고 약속하기.
+
+컴퓨터는 맨 처음 켜질때엔 Virtual Memory가 꺼진 채로 부팅되다가 특정 시점 이후에 켜지게된다. Virtual Memory가 켜지기 전에 저자한 메모리를 그대로 Virtual Memory를 켠 뒤에 사용할 수 있게 전달해야만 한다. xv6는 저 메모리 영역의 VA가 모두 PA와 동일해지도록 세팅한다. 리눅스는 아예 동일하지는 않고 특정 offset만큼 shift되게 해놨다.
+
+#### Multi-level Page Table: AMD64
+AMD64에서의 address translation: 48bit virtual address -> 52bit physical address. 4KB page
+
+Virtual Address = <\
+  9bit: Page Map Level 4 (PML4), \
+  9bit: Page Directory Ptr (PML3), \
+  9bit: Page Directory (PML2), \
+  9bit: Page Table (PML1), \
+  12bit: Page Offset>
+
+64bit CPU가 되어서, 이제 PTE 하나의 크기는 4바이트가 아니라 8바이트이다. PTE 갯수가 512개여야만 페이지 테이블 전체가 4KB가 된다.
+
+Intel CPU는 맨 처음에 세그먼트를 기준으로 만들어졌다. 세그먼트 레지스터같이 그때의 잔재가 남아있음. 386때 페이징이 추가되었다. 그래서 기능을 쓰고자 하면 segmentation과 page를 둘 다 쓸 수 있음. segment들을 virtual address spage (linear address spage) 상에서 겹치지 않게 둔 뒤, 그 세그먼트들을 나눈다.
+
+요즘 OS들은 segmentation이 귀찮기만 하니까 그냥 하나의 단일 segment가 아주 큰것처럼 만들어놨다.
+
+#### Multi-level Page Table: RISC-V
+Virtual Address 모드가 여러개 있음. xv6는 Sv39를 쓴다
+
+- Sv32: 32bit virtual address → 32bit physical address
+- Sv39: 39bit virtual address → 56bit physical address
+- Sv48: 48bit virtual address → 56bit physical address
+
+### Multi-level Page Table 장단점
+장점
+
+- Sparse address space도 작게 표현 가능
+- Physical memory 관리 편리함
+- 하드웨어가 page table walk하기 쉬움
+- No external fragmentation
+
+단점
+
+- TLB miss시 memory access가 너무 많아짐. AMD64는 다섯번이나 액세스해야함
+- 복잡함
+
+Q: 페이지테이블이 페이지 하나보다 커지면 어케한다고?
+
+### Inverted Page Table
+보통은 Virtual Address에서 Physical Address로 가는 forward mapping을 저장한다.
+
+근데 virtual address는 크지만, 실제 매핑 수는 physical memory 위의 frame 갯수로 제한되어있다. 그러니, 이 physical address가 어느 virtual address와 연결되어있는지 backward mapping을 저장하는것이 inverted page table.
+
+문제는 Address translation이 어려움.
+
+Backward mapping이 언제 필요할까? Swap out 할 때 알아야함.
