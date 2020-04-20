@@ -491,3 +491,92 @@ PAL이 더 빠른 이유
 
 1.  PAL은 OR gate의 입력 (fan-in)이 작음
 2.  PAL은 Wiring overhead가 적음 칩 면적을 절약할 수 있다.
+
+&nbsp;
+
+Week 5, Mon
+========
+PAL, PLA 실제로 써보자!
+
+- W = AB + A'C' + BC'
+- X = ABC + AB' + A'B
+- Y = ABC' + BC + B'C'
+
+수식에 9개의 항이 있는데, PLA에는 7개의 term밖에 없다. 어떻게하면 될까?
+
+1.  concensus theorem을 적용시켜 W에서 항 하나를 날린다
+
+    W = AB + A'C'
+
+2.  다른 수식에 ABC와 ABC'가 이미 쓰이는데, AB를 ABC와 ABC'의 조합으로 표현할 수 있다.
+
+    W = ABC + ABC' + A'C'
+
+이제 7줄짜리 PLA로도 표현이 가능해진다. 이렇게 제한된 리소스로 논리회로를 구현하기위해 수식을 변형하는 행위를 Technology mapping이라고 함.
+
+### ROM: Read-Only Memory
+ROM은 입력으로 "메모리 주소"를 넣으면 "그 메모리에 저장된 데이터"가 나오는 거대한 논리회로라고 볼 수 있다.
+
+거대한 decoder와, 고정된 output들을 program하고있는 bit lines, word lines들의 행렬로 이뤄져있다.
+
+ROM은 거대한 Truth table을 그대로 회로로 옮겨놓은것으로 볼 수 있다. ROM으로도 임의의 회로를 구현할 수 있음.
+
+ROM은 AND array가 fully decoded되어있는 PLA라고 볼 수 있다. PAL과는 다르게 OR array가 completely flexible하다.
+
+### ROM vs PLA/PAL
+ROM 장점
+
+- 빠르게 디자인할 수 있음: output function을 minimize할 필요 없음
+- 모든 input combination에 대해 별도의 구현을 다 해야할 떄
+- Output functions들 사이에 Product term 공유가 적을때
+
+ROM 단점
+
+- input이 하나 늘때마다 크기가 두배
+- Don't Care term을 활용할 수 없음
+
+PLA 장점
+
+- Multi-output minimization을 해주는 Design tool을 쓸 수 있을때
+- There are relatively few unique minterm combination
+- Many minterms are shared among the output functions
+
+PAL 단점
+
+- OR plane의 입력(fan-in)이 제한되어있음
+
+### ROM, PAL, PLA
+ROM: Full AND plane, general OR plane
+
+- 제일 쌈, High-volume component
+- 입력이 n개인 모든 함수 구현 가능
+- Medium speed
+
+PAL: Programmable AND plane, fixed OR plane
+
+- 적당한 가격
+- Can implement functions limited by number of terms
+- High speed (only one programmable plane that is much smaller than ROM's decoder)
+
+PLA: Programmable AND, OR plane
+
+- 셋중에 제일 비쌈 (디자인이 제일 복잡함)
+- Product term 제한 아래에는 모든 함수 구현 가능
+- 느림 (Programmable plane이 두개여서)
+
+경우에 따라 비용효율적인 Programmable Logic을 골라서 쓰자. 최근 PLA, PAL는 FPGA로 대체되었다. Fixed Logic보다 덜 효율적이지만 여전히 소프트웨어보다 훨씬 나아서 여기저기에 쓰임.
+
+**5월 첫째주에 중간고사 본다. 시험범위: 챕터 1 ~ 챕터 5, 조합논리에 대한 모든것.**
+
+&nbsp
+
+Case Studie in Combinational Logic Design
+--------
+조합논리를 설계하는 일반적인 과정
+
+1. 문제 이해
+2. 적절한 design representation으로 문제 표현
+3. Implementation target 고르기
+4. Implement하기
+
+
