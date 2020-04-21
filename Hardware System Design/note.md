@@ -380,9 +380,7 @@ TPU의 핵심은 Matrix-Matrix multiplication unit이다.
 
 cuDNN에서는 Convolution operation을 소프트웨어로 구현했는데, 여기에선 하드웨어로 하게된다.
 
-TPU systolic execution: MAC Unit이 격자 모양으로 깔려있고, 데이터는 가로세로로 움직이면서 행렬곱 계산에 필요한 연산을 자동으로 함.
-
-행렬곱과 동시에 Systolic Array 맨 밑에선 Partial sum을 계속 계산한다
+TPU systolic execution: MAC Unit이 격자 모양으로 깔려있고, 데이터는 가로세로로 움직이면서 행렬곱 계산에 필요한 연산을 자동으로 함. 행렬곱과 동시에 Systolic Array 맨 밑에선 Partial sum 결과를 계속 읽어, 계산 결과를 저장한다.
 
 Accelerator area and power is dominated by memory buffer. 메모리가 클수록 외부와의 인터랙션을 덜 해도 되니까
 
