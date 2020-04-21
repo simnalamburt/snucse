@@ -355,3 +355,62 @@ FSM: 모든 입력 조합에 대해, Output과 state transition이 동일할 경
 Week 5, Tue, Lab
 ========
 Practice 6, PE Controller를 구현한다.
+
+&nbsp;
+
+Week 6, Tue
+========
+Convolution Lowering
+
+### Convolution lowering on GPU
+cuBLAS: BLAS(Basic Linear Algebra Subprograms) in CUDA
+
+- GEMM: Matrix-Matrix multiplication, Problem in data duplication of input
+- GEMV: Matrix-Vector multiplication
+
+cuBLAS는 Input Matrix 데이터에 중복이 존재한다. 이거때문에 입력 행렬 크기가 GPU Cache 크기보다 커질 수 있는데, 이렇게되면 cache miss가 잦아져서 느려진다.
+
+cuDNN
+
+- V4: Focuses on avoiding duplication of input data in main memory
+- V5: 3x3 컨벌루전을 위해 위노그라드 convolution이 추가됨
+
+### Convolution lowering on TPU
+TPU의 핵심은 Matrix-Matrix multiplication unit이다.
+
+cuDNN에서는 Convolution operation을 소프트웨어로 구현했는데, 여기에선 하드웨어로 하게된다.
+
+TPU systolic execution: MAC Unit이 격자 모양으로 깔려있고, 데이터는 가로세로로 움직이면서 행렬곱 계산에 필요한 연산을 자동으로 함.
+
+행렬곱과 동시에 Systolic Array 맨 밑에선 Partial sum을 계속 계산한다
+
+Accelerator area and power is dominated by memory buffer. 메모리가 클수록 외부와의 인터랙션을 덜 해도 되니까
+
+### Tesla
+Tesla HydraNet: One of the world-largest CNN models. 테슬라도 자체 칩을 만들어서 하드웨어로 HydraNet을 평가한다.
+
+(PPT 참고)
+
+### HW 가속기 스타트업
+- Graphcore: $200M series D, Microsoft Azure Cloud에 납품
+- Habana: $75M series B, 인텔에 $2B로 인수됨
+- Groq: $62M, 1 Peta-Ops chip
+- Nuvia: $53M, series A
+- Cerebras: $112M, Aragonne National Lab
+
+### nVidia TensorCore
+Tensor Core: 64개의 half-precision 부동소수점(FP16) 곱셈을 1 clock cycle에 할 수 있다.
+
+Tensor Core는 FP16을 원소로 갖는 4x4 행렬의 FMA를 1 clock cycle에 할 수 있는데, Tensor Core가 여러개 있기때문에 하나의 GPU 스레드는 여러 Tensor Core 연산을 병렬로 수행한다.
+
+타일링을 여러 레벨로 하게된다
+
+- Warp block
+- Thread block
+- Tensor Core block
+
+&nbsp;
+
+Week 6, Tue, Lab
+========
+Lab 2의 부활. 멀티레벨 퍼셉트론 대신 CNN 쓰는게 다에요.

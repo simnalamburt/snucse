@@ -967,7 +967,7 @@ Cortex-A에는 모든 Virtual Memory 기능이 있고, Cortex-M에는 Virtual Me
 
 &nbsp;
 
-### Paging
+### 7. Paging
 Paging이 특히 CPU의 하드웨어 서포트가 필요하다. Paging은 특히 OS와 CPU 하드웨어의 협업이 중요하므로, 어디부터 어디까지가 OS가 하는거고 어디까지가 하드웨어가 하는건지 잘 구분해서 공부해야한다.
 
 이제부터 당분간은 하드웨어가 하는 일만 공부한다.
@@ -1146,3 +1146,99 @@ Q: 페이지테이블이 페이지 하나보다 커지면 어케한다고?
 문제는 Address translation이 어려움.
 
 Backward mapping이 언제 필요할까? Swap out 할 때 알아야함.
+
+&nbsp;
+
+Week 6, Tue
+========
+
+### Paging Page Tables
+Multi-level page table 구조에서, Page Table을 가리키는것 조차 Physical Address가 아니라 Virtual Address를 쓰게 하면 가능하다.
+
+근데 이러면 Nested Page Fault같은것도 처리해야하고 복잡해져서, 대부분의 OS들은 Page Table은 그냥 항상 메모리에 상주하게 만든다.
+
+Kernel code와 data도 paging할 수 있다. Paging Page Tables보다 더 쉽게 가능함. 근데 얘도 역시 항상 메모리에 상주하게 한다. 커널에 쓰이는 코드와 데이터의 크기가 별로 크지 않아서.
+
+&nbsp;
+
+### 8. TLB: Translation Lookaside Buffer
+Multi-level Page Table같은걸 쓰면 공간적인 오버헤드는 줄지만 시간적인 오버헤드는 더 커진다. 메모리 액세스를 너무 많이 해야해서 너무 느려짐.
+
+캐싱을 해서 시간적인 오버헤드를 줄이는것이 TLB다.
+
+- Temporal Locality
+- Spatial Locality
+
+코드의 로컬리티가 데이터의 로컬리티보다 높다. 코드는 순차적으로 접근하고 루프도 돌고 그러므로. 데이터의 로컬리티는 경우에 따라 다르다.
+
+TLB는 하드웨어로 구현함. 엔트리 수가 크지 않아도 굉장히 효율적임. 왜냐면 TLB 한 엔트리가 커버하는 Memory 영역이 Page Size만큼 넓기 때문이다. 보통 엔트리가 16~256개 있다.
+
+보통 Fully Associative하다. Write-back 캐시임
+
+- All entries looked up in parallel
+- 레이턴시를 줄이기 위해 set associative하게 만들기도 한다
+
+Cache의 코스트가 아깝다고 Cache가 없는 CPU가 있다. Paging을 아예 안하는 CPU는 있어도, Paging을 하면서 TLB가 없는 CPU가 없다. 아주 조금만 있어도 극도로 효율적이여서.
+
+Pseudo-LRU(Least Recently Used)로 오래된것부터 밀어냄. 보통 PFN만 캐싱하는게 아니라 PTE 전체를 캐싱하고있음. Valid bit, protection 정보들도 항상 다같이 읽어야 하니까.
+
+### Handling TLB Misses
+Software-managed TLB
+
+- TLB miss때에 CPU trap이 발생함
+- OS가 직접 Page table을 walk하고 TLB를 채워야함
+- TLB 조작을 위한 privileged instruction이 제공됨
+- OS가 원하는 아무 형식으로 페이지 테이블을 만들 수 있음
+
+Hardware-managed TLB
+
+- CPU가 페이지 테이블이 어디에 있는지 알고있음
+- TLB miss때에, CPU가 자동으로 page table을 walk하고 TLB를 채워줌
+- Page table이 CPU가 정한 포맷으로 만들어져있어야함
+
+요즘 우리가 쓰는 대부분의 CPU는 Hardware-managed TLB이다.
+
+### TLB opn Context Switches
+Context Switch를 할 때마다, TLB를 비워야한다. Virtual Address space가 바뀌기 때문이다. CR3 레지스터를 쓸 때마다 TLB가 비워진다. 심지어 같은 값을 또 써도 TLB가 비워진다.
+
+예전에는 Process의 Virtual Address space중 일부를 커널이 쓰기위한 region으로 예약해놨었다. 모든 프로세스들이 저 커널 메모리 영역은 공유하도록. 이러면 컨텍스트 스위칭을 하더라도 TLB에서 커널부분은 날리고싶지 않을 수 있다. 그래서 MIPS, Intel같은 일부 아키텍처들은 TLB에서 일부 Entry는 flush 안되게 막을 수 있다. 다만 요즘은 커널이랑 프로세스랑 다른 Address space를 쓰게해놔서 의미는 없음.
+
+TLB가 날아가면 TLB miss가 속출해서, 굉장히 느려진다. 컨텍스트스위칭을 하더라도 TLB를 flush하지 않을수는 없을까? TLB에 프로세스들을 구분해줄 수 있는 정보롤 같이 담으면 되겠다. PID는 32bit 이상이여서 오버헤드가 너무 크니, 8bit 짜리 Address Space ID (ASID)를 작게 담는다.
+
+켜져있는 프로세스가 256개보다 더 많아지면 어떻게 할까? 대부분의 CPU는 idle 할것이므로, Active한 프로세스에게만 ASID를 주고, 만약 그러고도 모자르면 TLB 일부를 flush하면서 넘치는 갯수만큼 없애야함.
+
+리눅스가 예전엔 PID가 16bit였는데, IBM에서 CPU가 엄청 많이 달린 NUMA 머신을 만든적이 있었다. 이 때 부팅할 때 코어 수에 정비례해서 스레드가 켜져야만 했었는데, 부팅하기만 해도 16bit PID가 모조리 동나서 32bit로 키웠었다.
+
+### TLB on Multi-core
+TLB는 CPU 코어들마다 따로 있다. 일반 캐시는 하드웨어들이 캐시가 항상 최신상태를 유지하도록 하드웨어가 coherence protocol로 관리해주는데, TLB에 대해선 그짓을 안한다. OS가 TLB coherence를 복구시켜줘야한다.
+
+TLB Shootdown
+
+- 어떤 코어에서 Page Table이 변화되면, 고친 코어가 다른 코어들에게 Inter-Processor Interrupt(IPI)를 쏴서 페이지 테이블이 변화했다는 사실을 알린다
+- 그 메세지를 받은 CPU는 적절하게 TLB를 invalidate시킨다
+- IPI는 수백사이클정도 걸릴 수 있다.
+
+Cache는 Physical Address만 보면 되는데, TLB는 Process의 context가 있어야해서 CPU가 자동으로 해줄 수 없음.
+
+### TLB Performance
+TLB 퍼포먼스가 프로그램 전체 퍼포먼스의 병목인 경우가 있다. 메모리 액세스 헤비한 프로그램들이 보통 그러함. 보통 Hit rate, Lookup latency를 TLB 퍼포먼스 메트릭으로 씀.
+
+TLB 퍼포먼스를 어떻게 올릴까
+
+1.  Increase TLB coverage, Increase TLB reach
+
+    Superpages를 써서 페이지 크기를 늘리면 TLB 크기가 올라간다. Intel 64는 2MiB Page, 1GiB Page를 지원한다.
+
+    다만 Superpages를 쓰면 internal fragmentation, external fragmentation이 심해지고, Swap-out 해야하는 크기도 너무 커짐. Swap-out 오버헤드를 줄이기 위해 superpage 전체를 swap-out하는게 아니라 demotion, promotion 이라는 동작을 도입해 페이지 일부를 swap-out 하기도 한다.
+
+2.  Use multi-level TLB
+
+    Intel Haswell은 아래의 멀티레벨 TLB를 지원한다
+
+    - L1 ITLB, 128 entries, 4-way
+    - L1 DTLB, 64 entries, 4-way
+    - L2 STLB, 1024 entries, 8-way
+
+3.  알고리즘과 자료구조를 TLB-friendly하게 바꾸기
+
+과제 나왔음!
