@@ -1625,7 +1625,7 @@ int (*f)();           // 함수포인터
 ```
 
 ```c
-int (*(*f90)[10])();
+int (*(*f())[10])();
 ```
 f is a function returning ptr to an array[13] of
 pointers to functions returning int
