@@ -1161,7 +1161,7 @@ Kernel code와 data도 paging할 수 있다. Paging Page Tables보다 더 쉽게
 
 &nbsp;
 
-### 8. TLB: Translation Lookaside Buffer
+## 8. TLB: Translation Lookaside Buffer
 Multi-level Page Table같은걸 쓰면 공간적인 오버헤드는 줄지만 시간적인 오버헤드는 더 커진다. 메모리 액세스를 너무 많이 해야해서 너무 느려짐.
 
 캐싱을 해서 시간적인 오버헤드를 줄이는것이 TLB다.
@@ -1242,3 +1242,59 @@ TLB 퍼포먼스를 어떻게 올릴까
 3.  알고리즘과 자료구조를 TLB-friendly하게 바꾸기
 
 과제 나왔음!
+
+&nbsp;
+
+Week 6, Thu
+========
+### From CPU to Memory
+1. TLB hit/miss
+2. Page hit/fault
+
+### VM + Cache
+Physically addressed cache
+
+- TLB 뒤에 Cache가 있어야함
+- Address translation is on the critical path
+
+Virtually addressed, virtually tagged cache
+
+- Homonym problem: 동명이인 문제. 여러 프로세스에, 다른 Physical Address인데 Virtual address가 같은 경우가 존재 가능
+- Address synonym or aliases problem: 같은 Physical Address인데 Virtual Address가 다른 경우 존재 가능
+
+Virtually addressed, physically tagged cace
+
+- Page Size (~4KiB) > Cache block size (32~64B) 이므로, TLB lookup과 Cache lookup을 동시에 할 수 있음. Cache lookup을 한 뒤 TLB lookup의 결과로 PFN이 날아오면 그것과 Cache의 PFN이 같은지 비교한다.
+- 'Physically addressed cache'와 비교하면 레이턴시가 약간 줄어듦
+
+&nbsp;
+
+## 9. Memory Mapping
+Virtual Address space is a resource. 64bit CPU에선 별 문제 안되지만, 32bit CPU에선 문제가 되기도 했음. Virtual Address space 4기가중 1기가는 커널로 예약하던 시대이다보니, 쓸 수 있는게 3기가밖에 없었음.
+
+Virtual Address 0번 주소 근처는 일부러 비워둔다. 0번지에 유의미한 데이터를 넣으면, 실수로 Null pointer access를 한건지 의도적으로 접근한건지 구분이 안 가기 때문이다.
+
+`brk()`, `sbrk()` 시스템 콜로 Heap의 크기를 조정할 수 있었다.
+
+### `mmap()`
+Backing store의 일부를 메모리에 map 하는 기능. Backing store의 예시로는 아래가 있다
+
+- File: load/store 명령어로 파일을 읽고 쓸 수 있음
+- Device memory
+- Shared memory
+- None. Anonymous mapping
+
+Anonymous mapping엔 Zero-page mapping 기능이 있음. 처음 읽으면 걍 0만 가득차있는 페이지를 return하고, 쓰기 시작하면 그제서야 새 메모리를 할당하는 기술
+
+### Shared vs Private mapping
+Shared mapping: 여러 프로세스가 하나의 자원을 공유해 mapping할 수 있음. 이 경우 한 프로세스의 수정이 다른 프로세스에 전파됨
+
+Private mapping: 한 프로세스의 수정이 다른 프로세스에 알려지지 않음. Copy-on-write
+
+### `mmap()` syscall 사용법
+PPT, `man 2 mmap` 참고
+
+### Memory-mapped file
+처음엔 모든 영역이 invalid로 mark되어있음. Invalid한 page가 액세스되었을 때 파일 IO를 시작함. Virtual Address는 파일 데이터의 주소로 매핑되어있음.
+
+프로그램 실행할 때 executable에 들어있는 code와 data를 읽어 메모리로 올리는데, 이게 사실 mmap으로 구현되어있음.
