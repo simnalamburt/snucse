@@ -494,7 +494,7 @@ PAL이 더 빠른 이유
 
 &nbsp;
 
-Week 5, Mon
+Week 6, Mon
 ========
 PAL, PLA 실제로 써보자!
 
@@ -579,4 +579,48 @@ Case Studie in Combinational Logic Design
 3. Implementation target 고르기
 4. Implement하기
 
+&nbsp;
 
+Week 7, Mon
+========
+### Case 1: BCD to 7-segment
+문제 이해: 논설 실습시간에 만든 그 회로. BCD 입력을 4bit로 받아, 7 세그먼트 출력인 7bit를 뱉는 회로다.
+
+문제 표현: Truth table을 만들어보자.
+
+Implementation target:
+
+- ROM으로 구현한다면 이 시점에 이미 끝났음
+- Don't care가 많으므로, PAL/PLA도 유용할 수 있다
+
+PAL/PLA로 만들기 위해, K map을 그려보자. 그러면 15 unique product term이 나오는데, PAL/PLA로 만들려면 unique product term이 작을수록 좋다. 다른 product term의 조합으로 표현할 수 있는 product term은 모두 없애, 9개의 unique product term으로 줄였다.
+
+이렇게 표현한 뒤에 보면, 한 output에 최대 5개의 product term이 들어가서, PAL로 표현하기 부적절할 수 있다. PLA로 쉽게 표현 가능.
+
+반드시 PAL로 표현하고싶은데 product term 갯수가 PAL의 product term 갯수 제한보다 더 커지면 어떻게 할까? multi-level logic로 바꿔야한다.
+
+CAD tool의 도움을 받아 함수들간의 common sub-expression을 찾아 이걸 PAL의 입력으로 넣어주면 된다. PAL은 shared term이 많아도 활용이 불가능한데, 저렇게 공통된 부분을 sub-expression으로 미리 처리한 뒤 PAL의 입력으로 넣어주면, PAL로 처리하지 못하는 회로도 PAL로 처리할 수 있게된다.
+
+### Case 2: Logical function unit
+(PPT 참고) 두 입력을 주고, 두 입력 사이에서 어떤 연산을 할지 스위치로 선택이 가능한 유닛
+
+8:1 MUX로 편리하게 구현이 가능하다.
+
+### Case 3: Production line control
+(PPT 참고) 컨베이어 벨트 위에 Rod가 실려 움직이는데, Rod가 원하는 길이에 딱 맞는지 검사하는 논리회로를 만들어보자.
+
+몹시 간단하니 걍 gate 몇개 조합해서 만들면 됨
+
+### Case 4: Calendar subsystem
+(PPT 참고) N월의 마지막날이 28, 29, 30, 31일중 어느것인지 판별해주는 회로. 윤년 여부와 N을 입력으로 받는다.
+
+윤년 규칙이 좀 복잡하다
+
+- For years after 1582 (Gregorian calendar reformation)
+- All years divisible by 4 except years divisible by 100 are leap years
+- Yet, years divisible by 400 are leap years
+
+이걸 논리회로로 구현해보자
+
+### Activity: divisible-by-4 circuit
+회로 `f(N) = (N % 4) == 0` 를 만들어보자. 이때 N은 네자리 10진수가 BCD로 인코딩되어 입력된다.
