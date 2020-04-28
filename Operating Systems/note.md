@@ -1298,3 +1298,96 @@ PPT, `man 2 mmap` 참고
 처음엔 모든 영역이 invalid로 mark되어있음. Invalid한 page가 액세스되었을 때 파일 IO를 시작함. Virtual Address는 파일 데이터의 주소로 매핑되어있음.
 
 프로그램 실행할 때 executable에 들어있는 code와 data를 읽어 메모리로 올리는데, 이게 사실 mmap으로 구현되어있음.
+
+&nbsp;
+
+Week 7, Tue
+========
+중간고사는 아마 안 보아야 할 것 같고, 기말고사 하나로 정해야할 것 같다. 중간30 기말30 프로젝트40 이렇게 정해져있는데, 배점을 기말40~50 프로젝트50~60 이런식으로 조정해야할 듯 하다.
+
+시험공부는 교재로 미리미리 해보세요.
+
+memory-mapped file과 memory-mapped I/O는 다르다. memory-mapped I/O는 메모리 load store 명령어만으로 주변장치에 입력으로 들어가는 레지스터/pin 입력을 바꾸는것임.
+
+### File I/O vs Memory-mapped File
+`mmap()`으로 하면 memcpy 횟수가 줄어든다!
+
+File I/O와 비교했을 때, mmap 장점
+
+- 파일, 메모리 가리지 않고 포인터로 uniform 하게 접근 가능
+- 복사를 덜 할 수 있다
+- 여러 프로세스가 같은 map을 공유할 수 있다
+
+File I/O와 비교했을 때, mmap 단점
+
+- 프로세스가 데이터 이동을 control할 수 있는 범위가 준다
+- Streamed I/O (pipes, sockets, etc) 로 일반화가 불가능하다
+
+그냥 File I/O를 하더라도 파일의 특정영역이 커널의 페이지에 올라오게된다. 이런 페이지들을 unmapped page라고 부른다.
+
+### Shared Memory with `mmap()`
+두 프로세스의 page table에, 같은 physical address를 가리키는 PTE가 양쪽에 있으면 된다. 같은 Physical frame을 가리킬것만이 요구되고, protection value는 달라도 된다. 단 Page가 invalid해질경우 두 PTE를 모두 업데이트시켜야 한다.
+
+Shared 메모리를 쓰면 두 메모리가 같은 physical address를 쓰겠지만, 같은 virtual address를 쓰지는 못할 수 있다. Virtual address가 충돌한다던가 등의 이유로. Virtual address가 같으면 shared pointer가 유효하지만, virtual address가 다르면 shared pointer가 유효하지 못하다.
+
+### CoW: Copy-on-Write
+메모리 카피를 최대한 늦추는 테크닉. `fork()`가 제일 대표적인 사용 예시다.
+
+&nbsp;
+
+## 10. Swap
+Consider physical memory as a cache for disks. 어떻게 스왑을 구현하는지 알아보자.
+
+### Memory Hierarchy
+메모리 크기와 코스트는 서로 트레이드오프 관계에 있다.
+
+### How to Swap
+옛날 방식: Overlay
+
+- Programmers manually move pieces of code or data in and out of memory as they were needed
+- OS 지원 없이 프로그램이 지혼자 알아서 함
+
+Process-level swapping
+
+- 잘 안쓰이는 프로세스를 통째로 빼버리는 방식 (swap-out, swap-in)
+
+Page-level swapping
+
+- 잘 안쓰이는 페이지 단위로 빼내는 방식 (swap-out, swap-in)
+- Page-level swapping을 특별히 page-out, page-in이라고 부르기도 한다.
+
+### Where to Swap
+윈도우에선 스왑 파일 방식을 쓴다. 디스크 드라이브 안에 `pagefile.sys` 라는 파일이 생김
+
+리눅스에선 스왑 파일 외에도 스왑 파티션 방식도 쓸 수 있다. 스왑 파티션 방식은 특정 파티션을 통째로 스왑으로 쓰는건데 살짝 더 빠름
+
+Swap space에서 메모리로 swap-in 할때에, 바로 해당 영역을 없애진 않는다. 그 영역을 또 swap-out 할 일이 생기게된다면 공짜로 할 수 있으니까.
+
+### When to Swap
+메모리가 꽉차버릴때까지 스왑아웃을 안하고 기다리면, 디스크 IO 성능으로 컴퓨터 메모리 액세스 성능이 병목에 걸려버린다. 그래서 보통은 꽉차버리기 전에 미리 스왑아웃을 시킨다.
+
+Proactively based on two thresholds values: High watermark (HW), Low watermark (LW)
+
+Free memory 비율이 LW에 도달하면, HW에 도달할떄까지 swap out 시킴.
+
+Allocation speed가 reclamation speed보다 빠르다면 어떻게할것인가?
+
+#### Swapping in Linux
+low_wmark_pages에 kswapd(swapping daemon)이 깨어나서 스와핑을 하기시작했는데도, allocation이 너무 빨라서 메모리가 모자르다고 쳐보자. 어떻게 할 까?
+
+리눅스는 low, high watermark 말고 더 낮은곳에 min_wmark_page가 하나 더있음. 그래서 low_wmark_pages에 kswapd가 깨어난 뒤에 free pages 수가 min_wmark_page에 도달하는 순간, synchronous하게 free page를 allocate하기 시작해 min_wmark_page 밑으로는 더 못내려가게 막는다. 다만 커널이 급하게 할당하는 GFP_ATOMIC allocation은 min_wmark_page 밑으로 내려갈 수 있다. 그러다가 high_wmark_pages에 도달하면 kswapd가 꺼진다.
+
+### What to Swap
+Physical memory에 있는 녀석들 유형별로 스왑 가능여부가 다르다
+
+- Kernel code: Not swapped
+- Kernel data
+- Page tables for user processes: Not swapped
+- Kernel stack for user processes
+- User code pages: Dropped
+- User data pages
+- User heap/stack pages: Swapped
+- User mmap-ed pages
+- Page cache (I/O의 캐시): Dropped or go to file system
+
+Page replacement policy가 어떤 page를 evict할지 결정한다.
