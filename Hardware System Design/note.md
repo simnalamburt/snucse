@@ -412,3 +412,68 @@ Tensor Core는 FP16을 원소로 갖는 4x4 행렬의 FMA를 1 clock cycle에 �
 Week 6, Tue, Lab
 ========
 Lab 2의 부활. 멀티레벨 퍼셉트론 대신 CNN 쓰는게 다에요.
+
+&nbsp;
+
+Week 7, Tue
+========
+Zynq FPGA에 대해 배워보자
+
+### Why Hardware?
+소프트웨어 대신 하드웨어로 만들면 성능도 좋고 전기도 덜쓴다. 하드웨어 가속기는 점점 흔해지고있음. 하이엔드 스마트폰에는 Neural Processing Unit도 흔하게 탑재되고있음
+
+- Apple: A12, A13
+- 화웨이: Cambricon-X, Hi-Silicon solutions
+- 구글: Pixel 3, 4, on-device AI를 제공하는 Visual core가 있음
+- 삼성: 갤럭시 S10부터 새 NPU가 들어감, zero skipping function 관련해 자세히 배울 예정
+
+### Two Ways in Hardware Design
+Chip vs FPGA
+
+- Chip 장점: 대량생산 비용 몹시 저렴함, 저전력, 고성능
+- Chip 단점: 소량생산이 매우 비쌈, Design time이 긺 (1.5년 이상), 7nm의 평범한 칩 하나 디자인하는데에 10M$ 이상이 필요함
+
+그래서 대신 FPGA를 쓴다
+
+- FPGA 장점: 소량생산에 유리함, 빠른 디자인 시간 (몇시간 단위)
+- FPGA 단점: 칩에 비해 성능이 안좋고 전기를 많이 쓴다.
+
+### Zynq FPGA
+소프트웨어 부분과 FPGA부분이 AXI 인터페이스로 소통하게된다. Zynq FPGA에는 다양한 페리퍼럴들이 있는데, 얘네들이 인터커넥트로 연결되어있다.
+
+- Zyng Processig System (Zynq PS) = APU + DRAM + peripherals + ...
+- Zynq Programmable Logic (Zynq PL)
+
+### Zync Programmable Logic
+Logic fabric Configurable Logic Block(CLB), switch matrix, interconnect의 집합이다. CLB를 고쳐서 로직을 구현할 수 있다. CLB 안에는 Look Up Table (LUT)이 있어서, 임의의 조합논리를 구현할 수 있게 만들어놨다.
+
+- 1 LUT have 6 inputs
+- 1 Slice = 4 LUTs + 8 F/Fs
+
+Switch matrix는 slice-to-slice, CLB-to-CLB/IOB 연결을 관리한다. LUT 입력뿐만 아니라 Carry Signal도 CLB로 들어오고 나감.
+
+그 외에 특별한 블럭들이 있다
+
+- Input/Output Block (IOB)
+- DSP48E1
+- BRAM
+
+### Zynq PS-PL Interface
+AXI 표준을 쓴다.
+
+Software->Hardware communication에선 memory-mapped IO (pointer to device register)와 memory-mapped on-chip memory를 쓴다.
+
+### MV Accelerator
+이번주부터 MV 가속기를 짜기 시작할것이다.
+
+(PPT 참고)
+
+여러 BRAM 모듈을 다루는것이 까다롭다.
+
+&nbsp;
+
+Week 7, Tue, Lab
+========
+Zync 보드를 조심히 다루세요. 부서져있다면 미리 말하세요.
+
+(PPT 참고)
