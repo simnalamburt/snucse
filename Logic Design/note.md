@@ -624,3 +624,30 @@ CAD tool의 도움을 받아 함수들간의 common sub-expression을 찾아 이
 
 ### Activity: divisible-by-4 circuit
 회로 `f(N) = (N % 4) == 0` 를 만들어보자. 이때 N은 네자리 10진수가 BCD로 인코딩되어 입력된다.
+
+&nbsp;
+
+Week 7, Wed
+========
+윤년 계산기 계속 만드는중.
+
+- All years divisible by 4 except years divisible by 100 are leap years
+- Yet, years divisible by 400 are leap years
+
+위의 규칙을 `leap_year_flag = D4 * (D100)' + D400` 로 구현했다.
+
+### Arithmetic circuits
+지원하는 자리수가 커질수록 느려지므로, Time vs space trade off 가 존재함.
+
+정수를 표현하는 세 방법으로 아래의 세개가 있는데, 각각이 무엇인지, 다른 방법들의 단점과 2의 보수가 좋은 이유를 잘 이해해야함.
+
+- Sign and magnitude
+- 1's complement
+- 2's complement
+
+2's complement에서 Carry를 무시할 수 있는 이유는? N비트 2의 보수가 원소가 2^N개인 유한체여서, 덧셈에 대해서 순환군을 형성하므로.
+
+Integer overflow가 발생했는지 판별하는 방법:
+
+- 양수끼리 더했는데 결과가 음수
+- 음수끼리 더헀는데 결과가 양수
