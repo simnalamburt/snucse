@@ -568,7 +568,7 @@ PLA: Programmable AND, OR plane
 
 **5월 첫째주에 중간고사 본다. 시험범위: 챕터 1 ~ 챕터 5, 조합논리에 대한 모든것.**
 
-&nbsp
+&nbsp;
 
 Case Studie in Combinational Logic Design
 --------
@@ -651,3 +651,58 @@ Integer overflow가 발생했는지 판별하는 방법:
 
 - 양수끼리 더했는데 결과가 음수
 - 음수끼리 더헀는데 결과가 양수
+
+&nbsp;
+
+Week 7, Fri
+========
+**TODO**
+
+&nbsp;
+
+Week 8, Mon
+========
+**TODO**
+
+&nbsp;
+
+Sequential Logic
+--------
+이제 Stateful한 시퀀셜 로직 디자인에 대해 배워보자. 순차논리란: circuits with feedback. outputs = f(inputs, past inputs, past outputs)
+
+유명한 시퀀셜 로직으로는 이런게 있다.
+
+- Simple circuits with feedback
+- Latches
+- Edge-triggered Flip-flops
+
+그리고 레지스터에 대해서도 배워보자
+
+- Shift Registers
+- Simple Counters
+
+### Simple circuits with feedback: Inverter Pair
+(생김새는 PPT 참고) 피드백이 존재하는 간단한 논리회로로 회로에 state를 저장할 수 있다.
+
+### Memory with cross-coupled gates
+- Cross-coupled NOR gates (R-S Latch)
+
+  Inverter Pair와 유사한데, 두 입력인 R(reset), S(set)의 값에 따라 출력을 0으로 고정하거나 (R=1, S=0) 1로 고정시킬 수 있다 (R=0, S=1)
+
+- Cross-coupled NAND gates
+
+  얘도 Inverter Pair와 유사하다. 입력 R', S'에 따라 출력을 0으로 고정하거나 (R'=0) 1로 고정시킬 수 있다. (S'=0)
+
+R-S Latch는 입력을 R=S=1로 주면 안된다.
+
+### R-S Latch analysis
+R-S Latch는 입력으로 R, S을 받고 출력으로 Q(그리고 Q')를 뱉는데 이것이 바로 입력으로 들어온다. 순차논리를 어떻게 분석할까?
+
+먼저 Feedback path를 끊어서, R-S Latch를 R, S, Q(t) 입력으로 받아 Q(t+dt)를 출력으로 뱉는 조합논리로 탈바꿈시킨다.
+
+R-S Latch using NAND도 같은 패턴으로 분석할 수 있다.
+
+### Gated R-S Latch
+R-S Latch는 R과 S 둘 중 하나라도 1이 되어버리면 값이 즉시 변경된다. 이걸 원치 않으므로 enable이라는 입력을 하나 추가로 만들어서, enable이 1일 때에만 R, S 입력이 효과를 발휘하도록 만든다.
+
+### Clocks
