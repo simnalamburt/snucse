@@ -706,3 +706,55 @@ R-S Latch using NAND도 같은 패턴으로 분석할 수 있다.
 R-S Latch는 R과 S 둘 중 하나라도 1이 되어버리면 값이 즉시 변경된다. 이걸 원치 않으므로 enable이라는 입력을 하나 추가로 만들어서, enable이 1일 때에만 R, S 입력이 효과를 발휘하도록 만든다.
 
 ### Clocks
+
+Week 8, Wed
+========
+**TODO**
+
+Week 9, Mon
+========
+기말고사는 두번 볼것같다. 지금 안은 아래와 같다
+
+- 기말1: 2020-06-01 월 수업시간, Chapter 5 조합논리까지
+- 기말2: 2020-06-17 수 랩시간, 2020-06-19 금 오후, 2020-06-22 월 수업시간, 2020-06-24 수 수업 혹은 랩시간, Chapter 6 순차논리부터
+
+(수업에서 투표를 열심히 함)
+
+이렇게 될 것 같다
+
+- 기말1: 2020-06-01 월 수업시간, Chapter 5 조합논리까지
+- 기말2: 2020-06-17 수 랩시간에 기말을 본다. 2020-06-17 수 수업시간에는 수업을 안한다. 대신 보강수업을 한다.
+
+### Comparison of latches and flip-flops (FFs)
+**TODO**
+
+### Typical timing specifications
+- setup and hold times
+- minimum clock width (Tw)
+- propagation delays (Tpd): low to high, high to low, max and typical
+
+low to high Tpd랑 high to low Tpd랑 다를 수 있다
+
+### Verilog behavioral model of an edge-triggered D flip-flop
+여러 조건 주고 베릴로그로 Flip flop 짜라는거 하드웨어 회사 취직할때 아주 많이 나오는 문제다.
+
+`always @ (podedge CLK)` 문을 써서 쉽게 짤 수 있다. Output에 레지스터를 연결하고싶은 경우, `output reg`로 쉽게 짤 수 있다.
+
+### 74x74-like D flip-flop with preset and clear
+NOTE: ~X 핀을 입력일때엔 X_L라고 쓰지만, 출력일때엔 보통 XN라고 씀. X_L가 Active
+Low 이런 뜻인데, Active low는 입력에 대해서만 쓰는 말이니까
+
+CLR과 PR 핀이 asynchronous하다고 쓰여져있는데, 이거는 rising CLK edge가 오지
+않아도 CLR과 PR 핀이 변하는 순간 바로 값이 반응한다는 뜻임.
+
+**TODO**
+
+### Registers
+Flip-flops와 유사한 controls & logic 들의 집합. 연관되어있는 여러 값을 저장한다. 클락과 reset/set lines를 공유한다.
+
+Register file: 여러 레지스터들의 집합. CPU와 GPU의 key component다. mux/demux로 레지스터들을 관리한다
+
+### Shift register
+레지스터의 일종. 매 사이클마다 값이 1씩 시프트된다.
+
+Universal shift register: 매 사이클마다 값이 어느 방향으로 시프트될지 설정할 수 있는 shift register
