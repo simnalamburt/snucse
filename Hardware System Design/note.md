@@ -542,3 +542,9 @@ IOMMU는 하드웨어 컴포넌트를 위한 VA -> PA 변환기임.
 
 ### Interconnect
 이번 랩에선 CPU와 하드웨어가 Bus로 통신하는걸 하고, 다음주 랩에선 하드웨어 컴포넌트끼리 Bus로 통신하는걸 하게됨.
+
+&nbsp;
+
+Week 9, Tue, Lab
+========
+Vivado에서 AXI Interconnect를 어떻게 쓰는지 등의 설명이 있었음
