@@ -1,4 +1,4 @@
-Week 1, Tue
+GWeek 1, Tue
 ========
 
 강의하는 기분을 내기위해 교수님께서 강의실에서 원격수업을 하시기로함. ETL에 목소리가 녹음된 PPT를 업로드했다. 강의시간에는 기본적으로 PPT를 재생하고, 학생들이 질문을 하면 바로 교수님이 답변하는 플립러닝 형태로 진행하기로 함.
@@ -477,3 +477,68 @@ Week 7, Tue, Lab
 Zync 보드를 조심히 다루세요. 부서져있다면 미리 말하세요.
 
 (PPT 참고)
+
+&nbsp;
+
+Week 8, Tue
+========
+휴강
+
+&nbsp;
+
+Week 9, Tue
+========
+소프트웨어-하드웨어 통신에 대해 배워보자. DRAM은 그냥 램처럼 쓰면 되는데 BRAM은 그렇게 간단하지 않다. Memory-mapped I/O를 사용해 BRAM에 접근하는 방법에 대해 알아보자.
+
+임베디드 시스템은 아래와 같이 이뤄져있다.
+
+- 프로세서
+- 메모리 컨트롤러
+- 페리퍼럴
+- 시스템 버스
+- 페리퍼럴 버스
+
+CPU와 BRAM을 연결해보자.
+
+- CPU in PS, AXI interconnect
+- BRAM in PL, BRAM controller
+
+소프트웨어가 하드웨어와 통신하는 방법
+
+1. Memory-mapped I/O
+2. Consider it as a device (requires driver)
+
+### mmap() BRAM
+Xilinx address editor에서 BRAM의 메모리 offset을 지정할 수 있다. mmap()에 성공하면 그냥 그 메모리 영역을 읽고 쓰기만 해도 알아서 디바이스에 읽고쓰기를 할 수 있다.
+
+(PPT 참고)
+
+### Memory/Storage Address Space
+Virtual address space, physical address space, logical block address space, physical block address space 등 다양한 주소공간이 존재함.
+
+### Page Table
+페이지 테이블은 VA -> PA 매핑을 저장하는 맵. 맵이 너무 커지는걸 막기 위해 Hierarchical page table도 만듦. 48비트 주소공간은 9*4 + 12 이렇게 4 level page table로 만듦
+
+### Cache & TLB
+L1 Cache, L2 Cache, L3 Cache 등 다양한 캐시가 존재함. Page Table 액세스가 느려서 TLB도 만듦. TLB miss가 나더라도, 최근에 액세스한 페이지 테이블은 MMU cache가 도와줄 수 있음.
+
+### Decompositing Load Instruction Execution
+memory mapped IO로 BRAM을 읽는다고 쳐보자. CPU가 L1 캐시 접근하는것조차 복잡하다.
+
+1.  Load unit accesses L1-data $
+    - TLB access for virtual address to physical address translation
+    - Non-cacheable access for hardware components other than main memory
+
+캐시 미스가 날경우 CPU가 Bus를 통해 BRAM에 요청을 보내는데 이건 다음수업에서 하자
+
+### IOMMU: Input Output Memory Management Unit
+하드웨어 컴포넌트가 메인 메모리에 접근하기 위해선, CPU뿐만 아니라 하드웨어 컴포넌트도 Virtual Address를 쓸 수 있어야한다. 여기서 IOMMU가 등장한다.
+
+IOMMU는 하드웨어 컴포넌트를 위한 VA -> PA 변환기임.
+
+하드웨어가 Physical Address를 그냥 곧바로 쓰면, 주소 공간이 낭비된다. 예를들어 하드웨어를 안쓰는동안에는 그 Physical Address를 못 쓰게됨. 그래서 몇년 전부터 하드웨어 컴포넌트에도 virtual address 개념을 쓰기 시작했음.
+
+하드웨어마다 페이지테이블이 생기고, IOMMU가 노는 메모리 공간을 잘 재사용해줌.
+
+### Interconnect
+이번 랩에선 CPU와 하드웨어가 Bus로 통신하는걸 하고, 다음주 랩에선 하드웨어 컴포넌트끼리 Bus로 통신하는걸 하게됨.
