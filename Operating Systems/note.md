@@ -1391,3 +1391,110 @@ Physical memory에 있는 녀석들 유형별로 스왑 가능여부가 다르�
 - Page cache (I/O의 캐시): Dropped or go to file system
 
 Page replacement policy가 어떤 page를 evict할지 결정한다.
+
+&nbsp;
+
+Week 8, Thu
+========
+**TODO**
+
+Page Replacement부터 쓰래싱, 등 PPT 10 끝까지 했음.
+
+&nbsp;
+
+Week 9, Tue
+========
+오늘 과제 나감. fork()에서의 CoW 구현임. Reference Count를 꼼꼼하게 잘 해서 릭이 나지 않도록 잘 짜보세용.
+
+기말고사는 종강하는 주의 목요일에 볼것같은데, 학교방침은 그것보다 일찍하라고함. 6월 18일 (6월 3주차 목요일) 로 예정되어있으나 정확히는 모름
+
+## 11. Virtual Memory Implementations
+
+### Linux Virtual Memory System
+리눅스의 Virtual Memory System에 대해 알아보자
+
+#### VMA: Virtual Memory Area
+`cat /proc/self/maps`를 하면 `cat` 프로세스가 가상메모리를 어떻게 쓰는지 알 수 있음. `vm_area_struct` 하나가 Virtual address space 안에있는 연속된, page-aligned된 세그먼트 하나를 의미함.
+
+Page Fault가 일어나면 OS는 어느 페이지를 액세스했다가 page fault가 났는지 알아내야함. 없는 세그먼트에 액세스한거면 SIGSEGV를 일으켜야하고, 있는 세그먼트에 액세스했다면 스택을 할당하던가 스왑을 하던가 등등. 그래서 OS는 특정 주소가 어느 VMA에 해당하는지 알아내야해서, VMA들은 red-black tree로 관리가되고있음.
+
+PPT 4번 슬라이드에 구조가 나와있다. `task_struct`은 xv6의 `struct proc` 같은거임. `vm_area_struct` 안에 `vm_rb`라는 필드가 있는데 이게 RBtree임.
+
+#### Paging in Linux
+x86_64 머신은 대부분 48-bit virtual address를 쓴다. 최근에 인텔 Ice Lake 아키텍처가 나왔는데 얘는 57-bit virtual address를 지원해서 5-level paging을 지원한다.
+
+- 32bit VA: 10*2 + 12
+- 48bit VA: 9*4 + 12
+- 57bit VA: 9*5 + 12
+
+리눅스 실제 구현은 매크로를 아주 잘 써놓아서, 5-level paging 구현을 다 만들어놓고 32bit VA에선 2 level만, 48bit VA에선 4 level만 쓰게 해놨음.
+
+#### Managing Physical Memory (32-bit)
+4GB virtual address중 유저한테는 0x00000000 ~ 0xC0000000(PAGE_OFFSET) 3기가만 주고, 나머지 1기가는 커널과 공유하게 되어있음.
+
+유저모드에서의 커널메모리인 0xC0000000 ~ 0xffffffff 영역은 커널모드에선 0x00000000 ~ 0x3fffffff로 매핑되게 해놨음.
+
+High memory 영역을 액세스하고싶으면 페이지테이블을 먼저 매핑한다음에 접근해야만 함. 커널이 사용할때엔 Low Memory를 먼저 쓰고, mmap처럼 어차피 페이지테이블을 고쳐야하는 메모리 할당을 할때엔 High memory를 씀.
+
+근데 64bit CPU가 쓰이면서 이런 High memory 구분같은게 다 필요 없어짐
+
+#### KPTI: Kernel Page-Table Isolation
+멜트다운 취약점때문에 리눅스 4.15부터는 `CONFIG_PAGE_TABLE_ISOLATION=y`라는게 생겨서 더이상 유저모드일때와 커널모드일때에 같은 페이지를 불필요하게 많이 공유하지 않게되었음.
+
+ASID (Address Space Identifier) becomes critical to the performance.
+
+#### Page Cache
+리눅스에 파일을 캐시할때, inode들로 잘라서 캐시한다. 그리고 같은 inode를 공유하는 캐시는 group한다.
+
+inode들의 Radix tree로 관리하고있음. 한 노드당 최대 자식수 (fanout)은 64개인데, 작은 시스템에선 16개일수도 있음.
+
+#### Linux Page Replacement (v5.x)
+클락알고리즘 이런건 naive한 알고리즘이고, 실제로는 훨씬 복잡한 알고리즘을 씀.
+
+map된 페이지들은 load, store 명령어로 접근하는거라 어떤 순서대로 접근이 발생했는지 알기 힘들다. 이 경우 reference bit을 사용해 근사함.
+
+저거 말고 그냥 read(2), write(2) 시스템콜로 접근하는 경우는 IO를 OS가 하는거니까 OS가 접근 순서를 정확하게 알 수 있다. 이렇게 순서를 아는 경우엔 LRU list 만드는게 그리 어려운 일이 아님.
+
+mmap으로 읽는 경우보다 read/file로 읽는게 더 흔하기때문에 페이지캐시중 상당수는 OS가 순서를 정확하게 알 수 있다.
+
+anonymous page를 위한 LRU 리스트와, file-backed page를 위한 LRU 리스트 두개를 따로 관리한다. 그리고 한 리스트 안에서도 Active list와 Inactive list를 각각 따로 관리한다. Inactive list에 들어있다가 reference가 도면 active list로 돌아가고, inactive list에서도 접근되지 않고 밀려나버리면 스왑해버린다. anonymous page는 swap으로 스왑하고, file-backed page는 파일시스템으로 스왑하고.
+
+File-backed page가 양이 훨씬 많아서 file-backed page를 훨씬 자주 참조함.
+
+스마트폰같은 경우 메모리가 모자라면 스왑을 안하고 걍 앱을 죽여버린다.
+
+LRU는 "특정 메모리를 한번만 쓰고 버리기" 이런 상황에 취약하다. 특히 파일 읽기, 동영상 재생 이런거 할때 저렇게 한번 읽고 버리는게 많다. 그래서 File-backed page는 레퍼런스가 2번 이상인것만 active list로 올림.
+
+file-backed page중에서 code의 경우 특수처리함.
+
+### xv6 Virtual Memory System
+#### RISC-V paging hardware
+Sv39: page-based 39-bit virtual addressing
+
+- VA 39bit = 9*3 + 12
+- => PA 56bit = 44 + 12
+
+multilevel paging하면서 더 많은 PPN을 표현하는 방식으로 superpage support가 있긴 한데, xv6는 저걸 안쓴다.
+
+#### Process Address Space
+xv6는 39bit VA중 38bit만 쓴다.
+
+(VA 레이아웃은 PPT 참고)
+
+- Guard page: 스택오버플로 감지
+- Trampoline page: 트랩 핸들러 코드
+- Trapframe page: 유저 레지스터 저장
+
+커널모드로 바꾼 순간, 모드는 바뀌더라도 페이지테이블은 여전히 유저의 페이지테이블을 쓰고있고, 레지스터도 여전히 유저의 레지스터를 쓰고있는 상태로 남아있기때문에 이걸 보존해줘야한다. 그래서 트램폴린과 트랩프레임이 필요하다.
+
+커널은 유저 레지스터를 모두 백업해줘야하는데, xv6 스펙상 커널모드로 바뀐 직후에 커널이 자유롭게 쓸 수 있는 레지스터가 `sscratch` 하나밖에 없음. 그래서 `sscratch`에 트랩프레임 주소를 저장한다음, 트랩프레임에 유저 레지스터를 모조리 백업하는거임.
+
+#### Kernel Address Space
+xv6 uses KPTI.
+
+(PPT 참고)
+
+#### Physical Address Space
+xv6는 physical memory 사용이 128MB로 제한되어있음. 0x80000000 부터 PHYSTOP은 kernel address space에 리니어하게 매핑해놨음.
+
+(PPT 참고)
