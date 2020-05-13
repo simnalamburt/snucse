@@ -707,9 +707,13 @@ R-S Latch는 R과 S 둘 중 하나라도 1이 되어버리면 값이 즉시 변�
 
 ### Clocks
 
+&nbsp;
+
 Week 8, Wed
 ========
 **TODO**
+
+&nbsp;
 
 Week 9, Mon
 ========
@@ -722,8 +726,8 @@ Week 9, Mon
 
 이렇게 될 것 같다
 
-- 기말1: 2020-06-01 월 수업시간, Chapter 5 조합논리까지
-- 기말2: 2020-06-17 수 랩시간에 기말을 본다. 2020-06-17 수 수업시간에는 수업을 안한다. 대신 보강수업을 한다.
+- 기말1: 2020-06-01 월 수업시간, Chapter 5 조합논리까지, 90분 시험
+- 기말2: 2020-06-17 수 랩시간에 기말을 본다. 2020-06-17 수 수업시간에는 수업을 안한다. 대신 보강수업을 한다. 시험시간은 미정이지만 아마도 2시간
 
 ### Comparison of latches and flip-flops (FFs)
 **TODO**
@@ -758,3 +762,72 @@ Register file: 여러 레지스터들의 집합. CPU와 GPU의 key component다.
 레지스터의 일종. 매 사이클마다 값이 1씩 시프트된다.
 
 Universal shift register: 매 사이클마다 값이 어느 방향으로 시프트될지 설정할 수 있는 shift register
+
+&nbsp;
+
+Week 9, Wed
+========
+시험 기출 미리 올려드리겠습니다. 그리고 시험 답은 한국어 혹은 영어로 쓸 수 있습니다.
+
+### Shift register application
+1.  시프트 연산 구현하는 ALU에 사용할 수 있다. PRNG(의사난수생성기)의 일부로 많이 쓰임
+2.  Parallel-to-serial conversion for serial transmission
+3.  Pattern recognizer
+4.  Straight ring counter (1000 0100 0010 0001)
+5.  Mobious counter, Johnson counter (1000 1100 1110 1111 0111 0011 0001 0000)
+6.  Binary counter
+7.  Offset counter
+
+먼 지역에 8비트 정수를 보내고싶은데, 1비트씩밖에 보내지 못하는 상황이라고 해보자. 이 경우 양쪽에 Shift register를 사용하면 쉽게 1비트씩 정보를 보내고 받을 수 있다. PCIe같은애들이 1 LANE당 1 cycle에 1 bit만 보낼 수 있는데, 얘네도 이런식으로 양쪽에서 정보를 보내고 받는다.
+
+Shift register를 사용해, 입력 스트림에서 원하는 연속된 패턴이 발생했는지 검사하는 장치를 쉽게 짤 수 있다.
+
+Mobious counter는 가능한 경우의 수가 0000, 0100 무조건 이 둘중 하나다.
+
+- 0000 1000 1100 1110 1111 0111 0011 0001
+- 0100 1010 1101 0110 1011 0101 0010 1001
+
+Binary counter 구조는 PPT 참고. XOR이 어느 비트가 뒤집혀야하는지를 결정한다. 특정 비트의 하위 비트가 모두 1이면, 다음 클락에 그 하위 비트들은 모두 0이 되어야하고, 특정 비트는 1이 되도록 하면 된다.
+
+실제로 쓰는 카운터는 단순히 클락과 1 세는 기능 말고도 이런 기능들이 붙어있다
+
+- Enable 기능(EN)
+- 1111이 되었는지 감지하는 기능 (RCO, Ripple carry out). 이게 있어야 counter 여러개를 조합해 큰 counter를 만들 수 있다.
+- 0으로 초기화하는 기능 (CLR, Clear)
+- 원하는 숫자로 set 하는 기능 (A, B, C, D, Load)
+
+Starting offset counter: 0이 아니라 특정 숫자부터 시작하는 카운터. Preset을 지정하고, RCO를 Load에 연결하면 된다. (PPT 참고)
+
+Ending offset counter: 1111이 아니라 특정 숫자에 끝나는 카운터. QA, QB, QC, QD가 특정 값일때 CLR가 1이 되도록 하면 된다. (PPT 참고)
+
+Starting-Ending offset counter: 위의 두개를 조합하면 된다.
+
+### 결론
+1.  Latch와 Flip-flop은 모던 디지털 시스템의 근본 빌딩블럭이다.
+    - "memory"를 구현하는데에 쓰인다
+    - 레지스터와 카운터를 만드는데에 쓴다
+    - Digital system = memory + combinational logic
+2.  Timing constraints are real-world design issues in digital logic design
+    - Setup time and hold time constraints must be satisfied
+3.  HDLs are heavily used to describe sequential logic, too
+
+&nbsp;
+
+## 7. FInite State Machines: FSMs
+Sequential Logic은 Combinational Logic + FSM 으로 나눌 수 있다.
+
+- Asynchronous sequential logic: Wire is storage element. No clock
+- Synchronous sequential logic: There is explicit storage element. There is clock (periodic waveform). State changes occur in lock step across all storage elements using the clock.
+
+Asynchronous sequential logic은 state 관리가 몹시 어려워 잘 쓰지 않는다.
+
+### FSM
+유향그래프로 FSM을 나타낼 수 있다
+
+States: 유향그래프의 node
+Transitions: 유향그래프의 edge
+
+수업 끝 후 Q&A
+
+- Q: 교수님 혹시 김진수 교수님 OS 수업시간에 들어오셨었나요?
+- A: 제 TA가 잘못들어갔어요. 김진수 교수님 OS 수업은 워낙 명강이라 저도 듣고싶은데, 제가 들어가면 안좋아하실까봐.. 오해 없으시길
