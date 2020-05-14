@@ -1498,3 +1498,138 @@ xv6 uses KPTI.
 xv6는 physical memory 사용이 128MB로 제한되어있음. 0x80000000 부터 PHYSTOP은 kernel address space에 리니어하게 매핑해놨음.
 
 (PPT 참고)
+
+&nbsp;
+
+Week 9, Thu
+========
+기말고사: 6월 18일 목 11시~1시
+보강: 5월 18일 7시
+
+## 12. Threads
+Concurrency: 유저프로그램도 멀티스레드로 실행되고, 커널도 그러하다.
+
+과거에는 멀티스레드가 없었다. 그러다가 하나의 프로세스가 여러개의 CPU를 활용할 수 있게할 필요가 생겼다.
+
+과거에도 멀티프로세싱은 가능했으나, 여러 프로세스가 서로 협력하면서 실행하게 만드는것은 매우 번거로웠고, 프로세스 생성비용, 프로세스간 통신 비용, 프로세스간 컨텍스트 스위치 비용은 매우 비쌌다. 그래서 프로세스 안에서 실행 흐름을 여러개 만들 필요가 생겼다.
+
+80년대 초반에 SunOS(후에 Solaris로 이름 바뀜)에서 처음 스레드가 생김. UNIX는 맨 처음 만들어진 이후 추가된것들이 많지 않은데, 스레드는 그 이후 추가된것중 가장 중요한것중 하나다.
+
+원래 "Thread of control", "실행의 흐름" 라는 말을 썼었고 이를 줄여서 스레드라고 부르게 되었다.
+
+스레드는 빠르게 새로 만들 수 있도록 설계되었다. Share할 수 있는건 다 share하고, 새로운 실행흐름을 만들 때 필수적으로 따로 있어야 하는것만 갖고있다.
+
+- Thread ID
+- Set of registers (PC, SP 포함)
+- Stack
+
+과거 스레드가 없던 시절은, 프로세스 하나당 스레드가 하나로 강제되는것으로 볼 수 있음.
+
+Protection의 단위는 여전히 프로세스이지만, 이제 스케줄링/실행의 단위는 스레드임.
+
+#### Address space with threads
+이제 스택이 여러개가 되었음. 스택메모리들 사이의 위치와 스택이 자라는 방향때문에 스택마다 최대의 크기가 존재해야만 하게 되었고, 리눅스는 2MB임
+
+#### Processes vs Threads
+- 스레드:프로세스 = n:1
+- 스레드간 데이터 공유는 저렴함, 같은 프로세스 내 스레드는 같은 address space를 보고있음
+- 스레드는 스케줄링의 단위, 프로세스는 프로텍션의 단위
+  - PID, address space, uid, gid, open fd, cwd 등은 모두 프로세스 자원
+- 프로세스는 정적 entities, 스레드는 동적 entities
+
+#### Benefits of Multi-threading
+- 저렴하게 컨커런시 달성 가능
+- 프로그램 구조가 좋아짐: 하나의 큰 task를 여러개의 작은 스레드에 분산시켜줄 수 있음
+- 프로세스 스루풋이 좋아짐: I/O와 computation을 동시에!
+- 프로세스 응답성이 좋아짐: 여러 concurrent event를 동시에 처리 가능
+- Resource sharing
+- 멀티코어 활용 가능: 병렬 프로그램 작성 가능
+
+#### Thread interface
+pthread: POSIX (IEEE 1003.1c) 표준에 정의된 스레드 및 스레드 동기화 API 및 동작 스펙. Linux, macOS, Solaris, FreeBSD, NetBSD, OpenBSD 등 UNIX-like OS들에 모두 pthread 구현체가 있다.
+
+Win32/Win64 Threads: 윈도우는 자체 스레드 API를 가짐
+
+#### pthread
+POSIX 스레드 API 표준. `pthread_create`, `pthread_exit`, `pthread_join` 등의 명령으로 스레드를 생성하고 관리한다. `pthread_mutex_*`, `pthread_cond_*` 등의 동기화 객체가 제공된다.
+
+### Threading Issue: fork(), exec()
+멀티스레드로 동작중이던 프로세스에서 fork() 호출이 발생하면... 어떻게 해야할까?
+
+1. fork() 호출을 한 스레드 하나만 분기한다
+2. 모든 스레드를 분기한다
+
+구현체마다 동작이 다르다
+
+- pthreads에선 fork()를 호출한 스레드만 분기한다 (1)
+- Unix international standard에선 fork()는 모든 스레드를 분기하고 (2), fork1()는 호출한 스레드마 분기한다 (1)
+
+exec() 호출은 보통 모든 프로세스를 교체해버린다.
+
+### Threading Issue: Thread Cancellation
+스레드가 작업을 마치기 전에 스레드를 없애는 문제. 그냥 끄면 되는거 아닌가 라고 생각할 수 있지만, 스레드가 락을 잡고있었다던가 할 수 있기 떄문에, 마구 끄면 위험하다.
+
+1. Asynchronous cancellation: 즉시 끄기. 리소스를 락 하고 있었다던가, 공유 자원을 업데이트하던중이면 어떻게될까?
+2. Deferred cancellation: cancellation points에 종료됨. target thread는 자신이 종료되어야 하는지 주기적으로 체크
+
+pthread는 1 2 둘다 지원함
+
+### Threading Issue: Signal Handling
+프로세스에 시그널이 오면, 어느 스레드가 처리해야하는가?
+
+1.  To the thread to which the signal applies
+    - Synchronous signal 일때에만 쓸 수 있음
+2.  프로세스 안의 모든 스레드에게 전달
+3.  시그널 처리를 전담하는 특정 스레드 하나에 모두 전달
+    - Solaris 2: 한 스레드가 모든 시그널을 맡았다
+4.  일정 규칙으로 특정 스레드들에 모두 전달
+    - 스레드별로 시그널 마스크를 설정해서, 이 스레드가 이 시그널을 받을 수 있는지 없는지 명시하는 방식도 쓰고, 여러 방법을 사용
+    - 보통은 프로세스 안에 시그널을 막지 않는 스레드가 하나만 있어서, 그 스레드가 받게 해놓음
+    - pthread: per-process pending signals, per-thread blocked signal mask
+
+이 멀티스레드 프로그램이 시그널 처리하는 방법이 OS마다 달라서, portability issue가 존재한다.
+
+#### Threading Issue: Global variable
+전역변수, 전역 state를 쓰는 함수들에 문제가 생겼음
+
+- Global `errno` variable → `errno` variable in thread-local storage
+- `strtok(3)` → `strtok_r(3)`
+
+C library argument들의 format을 조금 바꿔서, strtok_r과 같이 multithread-safe (MT-safe) 버전 라이브러리들이 생겨났다.
+
+### Implementing Thread
+유저스레드/커널스레드: 스레드를 유저가 필요해서 만들었는지 or 커널에서 이벤트에 의해 만들어졌는지
+ 
+유저레벨스레드/커널레벨스레드: 스레드 구현이 유저레벨에서 이뤄졌는지 or 커널레벨에서 이뤄졌는지
+
+### Kernel-level Threads
+OS-managed threads: OS에 의해 만들어지고 관리되는 스레드
+
+- 생성/관리에 시스템콜 필요함
+- OS가 스케줄링함
+- 프로세스 생성보다 쌈
+- Windows, Linux, macOS, AIX, HP-UX, ...
+
+단점:
+- 프로세스보다는 싸지만 여전히 비쌈
+- 시스템콜을 매번 해야함
+- 커널이 스레드를 관리해야함, OS 전체에 스레드 전체 갯수 제한이 걸릴 수 있음
+- OS 구현체가 스레드 수에 비례해 스케일링이 잘 되어야 한다.
+- 커널레벨 스레드가 프로그래머, 언어, 런타임의 니즈를 모두 충족할 수 있을 정도로 충분히 general 해야한다.
+
+### User-level Threads
+커널의 도움 없이 유저가 유저레벨에서 지 힘으로 만든 스레드. 두 목적이 있다
+
+1. 스레드 지원 없는 OS에서 스레드를 쓰고싶을때가 있었음
+2. 커널 스레드도 비싸서 일부러 쓰기 싫음
+
+유저레벨 스레드는 유저가 알아서 관리해야한다. User-level threads에 대한 정보는 OS가 알아낼 수 없다.
+
+시스템콜 없이 함수호출만으로 스레드 오퍼레이션이 이뤄지기 때문에, 커널스레드보다 작고 빠르다. 커널레벨스레드보다 10~100배 빠름. 포터블하고, 어플리케이션 요구사항에 맞춰 자유롭게 튜닝할 수 있다.
+
+그린스레드, goroutine, ...
+
+단점:
+- 유저스레드중 하나가 시스템콜을 하면, 하나의 커널 스레드를 공유하는 모든 유저스레드들이 단체로 멈춤, nonblocking IO, async IO 사용이 강제됨
+- 유저스레드로는 preemptive scheduling을 구현하기 어렵기 때문에, 보통은 non-preemptive scheduling으로 구현해야함
+- 여러 CPU를 사용한 컨커런시 구현은 불가능
