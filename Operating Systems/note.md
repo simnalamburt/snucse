@@ -1577,8 +1577,8 @@ pthread는 1 2 둘다 지원함
 ### Threading Issue: Signal Handling
 프로세스에 시그널이 오면, 어느 스레드가 처리해야하는가?
 
-1.  To the thread to which the signal applies
-    - Synchronous signal 일때에만 쓸 수 있음
+1.  Synchronous signal 한정: signal을 유발한 스레드가 정해져있으므로, 해당
+    스레드가 signal handler를 수행하도록 함
 2.  프로세스 안의 모든 스레드에게 전달
 3.  시그널 처리를 전담하는 특정 스레드 하나에 모두 전달
     - Solaris 2: 한 스레드가 모든 시그널을 맡았다
