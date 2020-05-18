@@ -1631,5 +1631,163 @@ OS-managed threads: OS에 의해 만들어지고 관리되는 스레드
 
 단점:
 - 유저스레드중 하나가 시스템콜을 하면, 하나의 커널 스레드를 공유하는 모든 유저스레드들이 단체로 멈춤, nonblocking IO, async IO 사용이 강제됨
+- OS가 유저 스레드에 대해 아는게 없어서, OS가 poor decision을 내려버릴 수 있음
+  - Scheduling a process with only idle threads
+  - Unscheduling a process with a thread holding a lock
 - 유저스레드로는 preemptive scheduling을 구현하기 어렵기 때문에, 보통은 non-preemptive scheduling으로 구현해야함
 - 여러 CPU를 사용한 컨커런시 구현은 불가능
+
+&nbsp;
+
+Week 10, Mon (보강)
+========
+user-level thread에서 mutex가 필요하면 어떻게 하나요: 커널 도움이 필요함. 커널 도움 없이 mutex 만들으려고 하면 비효율적으로 구현해야함.
+
+user-level thread를 
+
+### Threading Model: One-to-One
+1개의 커널레벨 스레드는 1개의 유저레벨 스레드에 대응됨. 제일 흔한 스레딩 모델
+
+Windows XP/7/8/10, OS/2, Linux, Solaris 9+, ...
+
+### Threading Model: Many-to-One (N:1)
+여러 유저 스레드가 1개의 커널레벨 스레드로 구현된 경우. 커널 스레드 지원이 없는 경우에 사용됨
+
+Solaris Green Threads, GNU Portable Threads, ...
+
+### Threading Model: Many-to-Many (M:N)
+M개의 유저 스레드가 N개의 커널레벨 스레드로 구현되는 경우
+
+Solaris prior to v9, IRIX, HP-UX, Tru64
+
+요즘에 사용되는 예시: Goroutine, Erlang greenthread 등의 그린스레드
+
+Solaris같은경우는 v9 이전까진 이 방식을 쓰다가, 코어 수가 많아지니까 구현이 너무 복잡해져서 걍 1:1 모델로 바뀌었음.
+
+UNIX 만든 켄 톰슨이 구글에 가서 Golang 만들고있다.
+
+### Linux Thread implementation
+리눅스에서는 기본적인 실행 단위가 "task"이다. In a program that only calls fork() and/or exec(), a task is identical to a process.
+
+리눅스 스레드 모델: One-to-One model. clone() 시스템콜로 task를 만들면, 스레드가 생긴다.
+
+리눅스는 스레드 구현이 특이하다.
+
+일반적인 OS들은 PCB(Process Control Block) 안에 TCB를 여러개 둬서, 여러 스레드들이 share 해야하는 정보는 모두 PCB에 놓고 스레드별로 달라지는 정보만 TCB에 두는 방식으로 구현을 한다. Windows가 이렇게 되어있다.
+
+근데 리눅스는 프로세스와 스레드를 전혀 구분하지 않고, fork()를 하든 clone()을 하든 무조건 새 `struct task`가 만들어지게 해놨다. 단 fork()를 하면 메모리를 비롯한 각종 자원들이 CoW로 복사되지만, 스레드에선 그런것들이 모두 share가 됨. clone() 시스템콜을 할 때 어디부터 어디까지 share할지를 유저가 직접 지정할 수 있다.
+
+리눅스 구현이 영리해보이지만, 만들어진 직후엔 문제가 심각했다. 예를들어 과거에는 Task ID를 PID로 썼었는데, clone()을 하면 새 스레드의 PID가 원래 스레드의 PID와 달랐음. 이 외에도 스레드들끼리 share해야하는 정보들이 share되지 않는것들이 많았음.
+
+일반적인 OS의 구현이 기본적으로 모두 share하고, share하지 않을것만 별도로 지정해주는 blacklisting 방식이라면, 리눅스의 구현은 기본적으로 다 share 안하고, 별도로 지정하는것만 share하는 whitelisting 방식임.
+
+반면 POSIX 스레드는 스레드들끼리 CPU 레지스터, 유저 스택, blocked 시그널 마스크 등의 정보를 share해야 한다고 명확하게 요구하고있음. 이때문에 리눅스 스레드와 POSIX thread 사이의 호환성 문제가 발생했음. signal handling, exit(), exec() 등의 operation들이 리눅스에선 기존에 Task() 단위로 이뤄지고있었기때문에 exit해도 스레드 하나만 죽는다던가, exec 해도 스레드 하나만 exec 된다던가 이런일이 발생했다. 이때문에 나중에 스레드 그룹, 스레드 그룹 같은 개념이 리눅스에 도입되는 등 호환레이어가 리눅스 코드에 씌여졌음. 그러나 내부에서는 여전히 과거와 같은 방식으로 동작한다.
+
+### Summary: OS Classification
+프로세스 abstraction이 있어야하는 이유
+
+1. 우리가 여러 프로그램을 만들어놓았을 떄, 원하는 프로그램들을 로딩해서 실행하기위해 프로세스가 필요하다.
+2. 돌아가는 프로세스들 사이의 메모리 보호가 필요해서
+
+만약
+
+1. 내가 실행할 프로그램이 이미 정해져있고
+2. 돌아가는 프로세스들 사이의 메모리 보호가 필요 없으면
+
+프로세스가 필요 없다.
+
+여러 실행흐름을 동시에 돌리는것만이 목적이라면, 프로세스 없이 스레드만 있어도 된다. 그래서 임베디드 시스템이나, Real-time system같은곳에선 스레드만 지원하고 프로세스를 지원하지 않는 경우가 많다. 심지어 이런 환경에선 Virtual memory가 없는경우도 많음
+
+프로세스를 지원하지 않는다는것은, Address space가 한개라는 뜻. 프로세스를 지원한다는것은 Address space가 여러개라는 뜻.
+
+스레스수 per address space \ address space 수 | One | Many
+---------------------------------------------|-----|------
+One | 원시적인 OS (MS DOS, 초기 매킨토시) | Traditional UNIX, xv6
+Many | 대부분의 embedded OS (VxWorks, uClinux) | Mach, OS/2, Linux, Windows, macOS, Solaris, HP-UX
+
+이런 측면에서 보면 OS에서 가장 기본적인 기능은 프로세스가 아니라 스레드와 스케줄링이라고 볼 수 있다. 그 다음 메모리, 동기화 이런것들이 들어가는것임
+
+&nbsp;
+
+## 13. Locks
+스레드 만들때엔 좋았지?! 이제 귀찮은 일이 발생하기 시작한다.
+
+### The Classic Example
+김젼이 김젼은행 ATM 출금을 아래와 같이 구현했다고 쳐보자.
+
+```java
+balance = get_balance(account);
+balance = balance - amount;
+set_balance(account, balance);
+```
+
+리락쿠마와 코리락쿠마가 김젼은행에서 모임통장을 만들었다. 리락쿠마와 코리락쿠마가 두 ATM에서 동시에 10만원을 출금한다고 해보자. 위의 코드가 atomic하게 실행되지 못하고 아래와 같이 interleave하게 실행되었다.
+
+```java
+// 리락쿠마
+balance = get_balance(account);
+balance = balance - amount;
+        // 코리락쿠마
+        balance = get_balance(account);
+        balance = balance - amount;
+        set_balance(account, balance);
+set_balance(account, balance);
+```
+
+교수님: 개이득 상황이 되는거져. 100만원 통장에서 10만원을 두번 뽑았는데 90만원이 남는거져.
+
+락이 필요한 예시입니다
+
+### The Real Example
+```c
+extern long g;
+void inc() { ++g; }
+```
+
+위 코드의 inc() 함수 본체가 아래와 같이 컴파일되었다.
+
+```asm
+ld    a0, 0(s1)
+addi  a0, a0, 1
+sd    a0, 0(s1)
+```
+
+위 어셈블리 코드를 아래의 두 스레드가 실행하는데, 실행도중 컨텍스트 스위치가 발생했다고 해보자.
+
+```asm
+// Thread T1
+ld    a0, 0(s1)
+addi  a0, a0, 1
+        // Thread T2
+        ld    a0, 0(s1)
+        addi  a0, a0, 1
+        sd    a0, 0(s1)
+sd    a0, 0(s1)
+```
+
+이것도 락이 필요한 예시. 언제 스케줄링이 일어나느냐에 따라가 값이 비결정적(non-deterministic)하게 변한다.
+
+Preemptive scheduling 특성상, 실행하는 코드가 어디에서 preemption 당할지 알 수 없다. 어쩌면 좋을까!
+
+### Sharing Resources
+지역변수는 스레드들 사이에 공유되진 않는다. 지역변수는 스택에 있고, 스레드마다 스택이 하나씩 따로 있으니.
+
+전역변수가, heap에 생성된 dynamic objects를 여러 스레드들이 공유하는 경우 문제가 된다. 그리고 꼭 스레드를 안쓰더라도 여러 프로세스가 메모리를 공유하는 경우에도 문제가 될 수 있다.
+
+이 문제를 Synchronization Problem이라고 한다.
+
+### Synchronization Problem
+Concurrency로 인해, 비결정적(non-deterministic)인 결과가 나온다.
+
+- 복수개의 concurrent thread가 공유된 자원에 접근할경우, race condition이 생긴다.
+- 결과가 비결정적이기 때문에, 입력이 같아도 타이밍에 따라 다른 결과가 나올 수 있다
+- 디버깅하기 힘들다 (Heisenbugs)
+
+공유자원에 대한 접근을 제어하기위해, 동기화 메커니즘이 필요하다
+
+- Synchronization restricts the concurrency
+- Scheduling is not under programmer's control
+
+컨커런시와 동기화 문제는 1950~1960년대에 이미 OS 분야에서 큰 문제였다. OS는 태생적으로 컨커런트한 소프트웨어여서 그렇다. 프로세스들끼리 아무 컨커런시가 없다 하더라도, 여러 프로세스들이 동시에 시스템콜을 쏘고, 동시에 하드웨어들도 시도떄도 없이 여러종류의 인터럽트를 발생시켜서, OS에선 아주 오래 전부터도 컨커런시와 동기화가 중요했다.
+
+### Concurrency in the Kernel
