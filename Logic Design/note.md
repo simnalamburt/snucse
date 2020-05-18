@@ -831,3 +831,106 @@ Transitions: 유향그래프의 edge
 
 - Q: 교수님 혹시 김진수 교수님 OS 수업시간에 들어오셨었나요?
 - A: 제 TA가 잘못들어갔어요. 김진수 교수님 OS 수업은 워낙 명강이라 저도 듣고싶은데, 제가 들어가면 안좋아하실까봐.. 오해 없으시길
+
+&nbsp;
+
+Week 10, Mon
+========
+우리가 지금까지 했던 전자 도어락, n-bit Shift register, 3-bit up counter 등등 모두 FSM으로 볼 수 있다.
+
+어떻게하면 FSM을 로직으로 바꿀 수 있을까?
+
+- Register, flip-flop으로 state를 저장하고
+- next state를 계산하는 조합논리를 만들고
+- 클락시그널마다 state가 next state로 넘어가게 하면 된다
+  - 클락 주기가 next state 계산하는데에 필요한 딜레이보다 커야한다
+  - 너무 오래 기다리면 성능이 떨어지니 주의
+
+FSM은 Mealy machine과 Moore machine으로 나뉜다
+
+- Mealy machine
+  - output = f(state, input), output이 transition에 연관됨
+  - 상대적으로 state 수 적음
+  - 입력이 async할경우 문제가 생길 수 있음
+  - 입력이 변하면 출력이 즉시 변함 (No cycle delay)
+- Moore machine
+  - output = f(state), output이 state에 연관됨
+  - 상대적으로 state 수 많음
+  - 입력이 async해도 별 문제 없음
+  - Mealy에 비해 1 cycle delay 존재
+
+Mealy는 입력이 output에 영향을 주기때문에, 입력이 변한 순간 바로 output이 변한다. 반면 Moore는 input이 next state에만 영향을 주기때문에, 현재 입력이 next state로 넘어가고 나서야 output에 영향을 주기때문에 mealy에 비해 1 사이클 딜레이가 있다.
+
+![A cow saying "Moo"](moo.jpg)
+
+둘중에 뭐가 Mealy이고 뭐가 Moore인지 헷갈리는데.. Moore가 1사이클 더 느리고 더 무식하게 생겼으니 Moore라고 외우자.
+
+Mea
+
+#### Basic FSM design approach
+9스텝으로 나뉜다
+
+- State/output diagram
+  - 1: State/output table or diagram
+  - 2: Minimize # of states if possible
+- State/output table
+  - 3: State variable assignment
+  - 4: Transition/output table
+  - 5: Choose a f/f type
+  - 6: Excitation table
+- Excitation/output equations
+  - 7: Excitation equations
+  - 8: Output equations
+  - 9: Draw a logic diagram
+
+예제 문제를 풀어보자.
+
+예제: 입력으로 CLK와 X를 받고, Z 하나를 출력 하는 synchronous FSM을 만들어보자. 입력으로 패턴 0011 혹은 1100이 들어오면 1를 출력하고, 그 이외의 경우 0을 출력하는 회로이다.
+
+##### 1: State/output table or diagram
+
+(PPT 참고)
+
+중복된 state도 잘 없애고, 예외 케이스가 발생하지 않게 state간 간선을 잘 그어주면 16페이지 슬라이드처럼 나옴
+
+다른 접근방법도 있음: 18페이지 슬라이드. Mealy에서 4비트 패턴을 찾는데엔, state가 3bit만 기억하고있으면 됨. 4비트 미만의 입력이 입력되었을때 잘못 1이 켜질 수 있긴 한데, 애초에 4bit 패턴을 찾는 회로여서, 입력이 4비트 미만일경우 출력이 undefined라고 치면 된다.
+
+State transition diagram 말고 PPT와 같이 표로도 나타낼 수 있는데, 이걸 Tabular form of state transition diagram이라고 함.
+
+##### 2: Minimize # of states if possible
+서로 다른 state인데 모든 input에 대해 output과 next state가 완전히 같다면 두 state는 같은 state이다.
+
+##### 3: State variable assignment
+N개의 state를 나타내기 위해선, `k = ceil(log_2 N)` bit 메모리가 필요하다. k개의 flip flop을 쓰면 됨.
+
+state assign을 어떻게 하느냐에 따라 서킷 성능에 미치는 영향이 큼. Practical guidelines로는 이런게 있음
+
+- 시작 state는 0
+- transition할떄 바뀌는 variable 수를 최소화하삼
+- 연관된 state들 사이에서 바뀌지 않는 variable 수를 최대화하삼
+- 대칭성을 활용하삼: 연관된 state들은 1비트만 다르고 나머지는 똑같게 한다던가
+- unused state를 risk 혹은 cost를 줄이는 용도로 잘 쓰세요
+- decompose: state의 각 비트가 특별한 의미를 갖도록 분해할 수 있음
+- 최소 필요한 비트 수 보다 더 쓰는게 성능에 도움이 될 수 있다
+  - One-hot encoding
+
+unused state가 몇이 되느냐에 따라 회로가 더 저렴해질 수 있음
+
+##### 4-6: Transition/Excitation/Output Table
+Transition Table: 위에서 한 그거
+
+Output Table: output이 드러난 그것
+
+Excitation Table: Flipflop에 어떤 입력을 줘야하는지도 같이 나타난 transition table
+
+Excitation Table에는 D_C, D_B, D_A 이런 핀이 새로 생겨서, flipflop을 어떻게 조작할지가 직접 나온다.
+
+##### 7-8: Excitation/Output Eqs.
+Flipflop과 output을 관장하는 D_C, D_B, D_A, Z 는 모두 state와 X를 입력으로 갖는 조합논리인데, D_C, D_B, D_A, Z를 어떻게 하면 최소한의 회로로 표시할 수 있는지 여기서 계산해야한다.
+
+##### 9: Logic Diagram
+이 예제는 결과적으로 14 NAND, 3개의 flipflop, 1개의 not 게이트로 구현이 가능하다.
+
+Unused states일때의 next state는 Don't Care로 두면 회로 만드는 비용을 줄일 수 있다.
+
+unused state로 잘못 빠지는 경우를 대비해, unused state의 next state가 used state가 되도록 해주면 리스크를 줄일 수 있다. 리스크를 감당할 수 없는 경우엔, don't care로 두지말고 명시적으로 unused state로 보내주면 좋다.
