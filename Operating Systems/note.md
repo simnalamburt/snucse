@@ -1788,6 +1788,239 @@ Concurrency로 인해, 비결정적(non-deterministic)인 결과가 나온다.
 - Synchronization restricts the concurrency
 - Scheduling is not under programmer's control
 
+### Concurrency in the Kernel
 컨커런시와 동기화 문제는 1950~1960년대에 이미 OS 분야에서 큰 문제였다. OS는 태생적으로 컨커런트한 소프트웨어여서 그렇다. 프로세스들끼리 아무 컨커런시가 없다 하더라도, 여러 프로세스들이 동시에 시스템콜을 쏘고, 동시에 하드웨어들도 시도떄도 없이 여러종류의 인터럽트를 발생시켜서, OS에선 아주 오래 전부터도 컨커런시와 동기화가 중요했다.
 
-### Concurrency in the Kernel
+OS에서 공유자원을 보호하기 위해 쓰는 방법을 알아보자
+
+&nbsp;
+
+Week 10, Tue
+========
+
+### Critical Section
+임계영역, 여러 스레드가 동시에 실행하면 안되는 코드영역. 한 자원을 읽거나 고치는 코드는 critical section일 가능성이 높다. 자원을 읽기만 하는 코드여도, 다른 코드가 그 자원을 업데이트한다면 critical section이 될 수 있음.
+
+Critical section에 대해서 mutual exclusion을 할 필요가 있다
+
+- Atomic하게 critical section을 실행할 필요가 있음 (all-or-nothing)
+- 한 스레드만 critical section를 실행해야
+- 다른 스레드는 critical section 시작점에서 대기해야
+- critical section을 실행중이던 스레드가 critical section을 나오면, 대기중이던 스레드중 하나가 진입
+
+### Locks
+Lock은 다음의 두 연산으로 mutex를 지원하는 메모리상의 객체다.
+
+- acquire(): Wait until lock is free, then grab it
+- release(): unlock and wake up any thread waiting in acquire()
+
+락 쓰는법
+
+- 락은 맨 처음에 열려있다
+- critical section에 진입하기전에 acquire()를 부르고, 나온 뒤 release()를 불러야한다
+- acquire()는 락을 잡을때까지 리턴하지 않는다
+  - 락을 잡을때까지 Busy wait 하는거: spinlock
+  - 락을 잡을때까지 block 하는거: mutex
+- 락을 잡고있는 스레드는 최대 한개
+
+락의 요구조건
+
+- Correctness
+  - Mutual exclusion: 임계영역에 스레드가 두개 이상 동시 진입하면 안됨
+  - Progress (deadlock-free): 기다리는 스레드가 있다면, 임계영역에 스레드가 최소한 하나는 진입해야함
+  - Bounded waiting (starvation-free): 모든 스레드가 언젠가 진입해야함
+- Fairness: 모든 스레드가 락 acquire 기회를 공평하게 받는다
+- Performance: contention이 많더라도 오버헤드가 적어야함
+
+### Implementing spinlocks: An initial attempt
+락 구현이 쉽지않다. 락 구현 자체도 critical section을 필요로 하기 때문이다. 아래는 잘못된 예제이다
+
+```c
+struct lock { int held = 0; }
+
+void acquire(struct lock *l) {
+  while (l->held);
+  l->held = 1;
+  // NOTE: 여기서 atomic 보장 안됨!!!!!
+}
+
+void release(struct lock *l) {
+  l->held = 0;
+}
+```
+
+### Lock 구현 사례들
+- Software-only
+  - 1962: Dekker's algorithm, 스레드가 두개일 때
+  - 1981: Peterson's algorithm, 스레드가 두개일 때
+  - 1974: Lamport's Bakery algorithm, 스레드가 복수개일 때, 들어가는 순서대로 번호표를 뽑는 방식이어서 bakery algorithm이다
+- Hardware atomic instructions
+  - Test-and-set, compare-and-swap, load-linked, store-conditional, fetch-and-add, ...
+- Controlling interrupts (CPU가 하나일때에만 사용 가능)
+
+Software-only는 너무 복잡하고 어려워, 보통은 hardware atomic instruction을 활용한다
+
+### Implementing spinlocks: the second attempt
+스레드가 두개뿐이라고 가정하고, Software-only Algorithm으로 구현해보자. 아래 코드는 위 예시를 강화한건데 여전히 문제가 있다.
+
+```c
+int interested[2];
+
+void acquire(int process) {
+  int other = 1 – process;
+  interested[process] = TRUE;
+  // NOTE: 여기서 스케줄링된다면?!
+  while (interested[other]);
+}
+
+void release(int process) {
+  interested[process] = FALSE;
+}
+```
+
+둘 다 들어가지는 현상은 막을 수 있다: mutex는 보장한다. 문제는 주석친곳에서 스케줄링되면, 스레드 두개가 서로 양보하려고만 하면서 데드락에 빠질 수 있다: progress 조건을 만족 못한다.
+
+### Implementing spinlocks: Peterson's Algorithm
+`turn` 변수를 만들면 된다.
+
+```c
+int turn, interested[2];
+
+void acquire(int process) {
+  int other = 1 – process;
+  interested[process] = TRUE;
+  turn = other;
+  while (interested[other] && turn == other);
+}
+
+void release(int process) {
+  interested[process] = FALSE;
+}
+```
+
+turn: 두 스레드 간 contention이 존재하는 상황에서, 어떤 스레드가 임계영역에 진입할지를 결정하는 변수.
+
+요즘은 메모리 리오더링을 많이해서, 이런 코드가 제대로 동작하지 않을 수 있다.
+
+### Atomic instructions
+메모리에 있는것을 read-modify-write 하는 과정이 atomic하게 실행되는것을 보장해주는 명령어. 여러 종류가 있는데, 제일 유명한건 test-and-set 이다.
+
+Test-And-Set: x86의 `xchg`, RISC-V의 `amoswap`, 메모리주소와 레지스터를 교환해주는 명령어
+
+### Implementing spinlocks: using test-and-set
+훨씬 쉽다. xv6 spinlock이 이렇게 구현되어있음. spinlock.c 참고.
+
+```c
+struct lock { int held; };
+
+void acquire(struct lock *l) {
+  while (TestAndSet(&l->held, 1));
+}
+
+void release(struct lock *l) {
+  l->held = 0;
+}
+```
+
+### Implementing spinlocks: using compare-and-swap
+x86의 `cmpxchg`. Sparc를 비롯해 여러 CPU에 널리 존재함
+
+swap(test-and-set)과 비슷한데, 항상 스왑하는게 아니라 메모리에 있는 값이 expected와 같을 떄에만 스왑함.
+
+```c
+struct lock { int held; };
+
+void acquire(struct lock *l) {
+  while (CompareAndSwap(&l->held, 0, 1));
+}
+
+void release(struct lock *l) {
+  l->held = 0;
+}
+```
+
+### Implementing spinlocks: using LL & SC
+MIPS, Alpha, PowerPC, ARM, RISC-V 등에서 지원됨
+
+- Load-Locked, LL: 메모리에서 값 읽어옴
+- Store-Conditional, SC
+  - 직전 LL과 SC 사이에 해당 메모리에 intervention이 없었다면 값을 잘 저장하고 1을 반환
+  - 직전 LL과 SC 사이에 intervention이 있었다면 값을 저장하지 않고 0을 반환
+
+```c
+struct lock { int held; };
+
+void acquire(struct lock *l) {
+  while (1) {
+    while (LL(&l->held));
+    if (SC(&l->held, 1)) { return; }
+  }
+}
+
+void release(struct lock *l) {
+  l->held = 0;
+}
+```
+
+TAS, CAS는 비관적(pessimistic)인 방법, intervention이 있을거라고 가정하고 모든 행동을 조심스럽게
+
+LL+SC는 낙관적(optimistic)인 방법, intervention이 없을거라고 가정하고 일단 진행한 뒤 intervention이 있었다면 다시 실행
+
+intervention이 있었는지 여부를 어떻게 체크하나? 보통은 Cache 수준에서 모니터링 한다. Cache 코히어런스 프로토콜이 어차피 돌고있기때문에.. 그걸 사용해 모니터링 할 수 있다.
+
+요즘은 하드웨어 트랜잭셔널 메모리라고 LL+SC보다 확장된게 있다. LL+SC는 메모리 위치 하나만 감시하는건데, `xbegin` `xend` 이렇게 트랜잭션을 펼쳐서 트랜잭션 사이에 조작된 모든 메모리를 감시하는 기능도 있음.
+
+### Implementing spinlocks: using fetch-and-add
+x86의 `xadd`, RISC-V 등에서도 지원됨.
+
+원자적으로 메모리에 값을 더하면서, 동시에 옛날 값을 리턴함. 이걸로 Bounded waiting을 구현할 수 있음.
+
+ticket lock: 들어가는 순서대로 티켓을 받고, 내 차례가 오면 크리티컬섹션에 진입한다.
+
+```c
+struct lock { int ticket, turn };
+
+void acquire(struct lock *l) {
+  int myturn = FetchAndAdd(&l->ticket, 1);
+  while (1->turn != myturn);
+}
+
+void release(struct lock *l) {
+  l->turn += 1;
+}
+```
+
+### Controlling interrupts
+커널 안일때, 그리고 싱글코어 CPU일때 쓸 수 있는 트릭
+
+```c
+void acquire(struct lock *l) {
+  cli(); // disable interrupts (clear interrupt flag)
+}
+
+void release(struct lock *l) {
+  sti(); // enable interrupts (set interrupt flag)
+}
+```
+
+싱글코어 CPU일 경우, 시스템콜을 실행하다가 인터럽트가 걸리거나, 인터럽트 핸들러가 실행되다가 인터럽트가 걸리거나, 이런 경우에만 동기화 문제가 생긴다.
+
+그래서 싱글코어 CPU일 경우, 그냥 인터럽트를 끄는것으로 lock을 구현할 수 있다. 락에 연관된 다른 state가 없다.
+
+멀티코어에서 못 쓰는 이유: 코어마다 인터럽트 플래그가 따로 있음.
+
+xv6의 `intr_off()` + `intr_on()` vs `push_off()`, `pop_off()`: push_off pop_off를 쓰면 인터럽트를 무조건 끄고 켜는것이 아니라, 인터럽트 켜고 끄기를 nesting하여 처리할 수 있다.
+
+- 장점
+  - 심플
+  - 싱글코어에서 유리
+- 단점
+  - 커널만 쓸 수 있음: 유저가 인터럽트를 마구 켜고 끄면 안되니까..
+  - 멀티코어에서 못 씀
+  - 크리티컬 섹션이 길어지면, 중요한 인터럽트를 놓칠 수 있음 (타이머 인터럽트, 디스크 인터럽트)
+  - 현대 CPU에선 아토믹 쓰는게 더 빠를 수 있음
+
+### 요약
+스핀락은 몹시 낭비가 심하다. 스핀락을 돌고있는동안은 아무 진행도 못하고, CPU 사이클도 낭비한다. busy waiting하고있는 스레드들이 CPU 사이클을 낭비하는 동안, 정작 실행되어야하는 락을 들고있는 스레드의 실행이 늦어질 수 있다.
+
+모든 락을 스핀락으로 구현하면 안된다. 스핀락은 잠깐잠깐 도는 작은 락에만 쓰는거다. 길게 실행되는 락이 필요하면, 제대로된 block 되는 버전의 락을 만들어야한다. 스핀락을 primitive synchronization mechanism으로 써서, 이런 higher-level 동기화 객체를 만들어야 한다.
