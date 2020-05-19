@@ -548,3 +548,105 @@ IOMMU는 하드웨어 컴포넌트를 위한 VA -> PA 변환기임.
 Week 9, Tue, Lab
 ========
 Vivado에서 AXI Interconnect를 어떻게 쓰는지 등의 설명이 있었음
+
+&nbsp;
+
+Week 10, Tue
+========
+IP core, IP block에서의 IP: intellectual property
+
+AXI interconnect를 활용해 HW block들끼리 서로 통신하는 방법을 알아보자.
+
+- Q: 기말일정은 어떻게 되나요?
+- A: 이번수업 끝날때에 조사해봅시다
+
+### AMBA3 Advanced eXtensable Interface (AXI) Protocol
+- Multiple channels
+- Narrow and wide transfer
+- Single credit-based flow control: valid and ready signals
+- Burst
+- Split transaction to overlap request and data transfer
+- Multiple outstanding requests
+- Implementation issue: connectivity and arbitration
+
+### Split Transacntion
+address, data, response는 모두 독립적으로 처리된다.
+
+(PPT 참고)
+
+write address/control 채널로는 쓰기 주소/제어에 관한 일만 한다. 읽기 작업을 동시에 안한다. 이렇게 타입별로 채널을 여러개를 둔 이유는 여러 통신을 동시에 하기 위해서.
+
+커뮤니케이션 채널이 늘면 속도는 빨라지지만, 트레이드오프가 있다. 일단 시그널이 너무 많아짐. (PPT 25장 참고)
+
+각 채널별로 valid, ready 시그널이 존재하는데, 이 시그널덕분에 성능이 좋아진다.
+
+### Narrow vs Wide transfer
+bus에도 비트가 전달되는 lane이 여러개 있다. lane이 여러개 있기도 하고 (ARSIZE) lane별로도 길이가 있음 (ARLEN) 각 레인은 1사이클당 1byte의 정보만 보낼 수 있고, 각 레인에는 길이만큼의 비트가 올려질 수 있음.
+
+WSTRB (write strobes) 핀을 사용해, 현재 레인의 어디가 유효한 입력인지를 같이 전송해준다.
+
+lane size를 잘 exploit하면 wide transfer, 잘 exploit 못하면 narrow transfer
+
+비효율적인 narrow transfer를 애초에 왜하나? 보낼 정보가 한방에 준비되지 않을 수 있으니까.
+
+### Flow control
+flow control 방식이 여러개다
+
+1.  Stop-and-Wait: 사이클이 흐를때마다 Req, Ack, Req, Ack, ... 이 반복됨
+
+2.  Single Credit-based Flow Control: Req 랑 같은 사이클에 Ack가 켜진다. Ack가 1사이클 일찍 켜진다고 해서 credit이라는 용어를 씀.
+
+    데이터를 받을 공간이 미리 확보가 되어있으면 Ack=1, 안되어있으면 Ack=0
+
+### Burst & Split transaction to overlap request and data transfer
+원래는 캐시미스가 일어나면 패널티가 크다. 캐시미스가 전체 실행흐름을 막을 수 있다.
+
+근데 요즘은 MSHR(miss state handling register)라는게 있어서 캐시 미스가 있더라도, 캐시 미스 일어난 데이터만 늦게 응답하게 하고, 캐시 히트한 데이터는 빠르게 빠르게 응답하도록 해준다. 캐시미스가 실행 전체를 막지 않는다. "hit under miss" 허용
+
+작은 데이터가 필요해 캐시블락 하나를 통째로 읽는걸 Burst라고 한다.
+
+One Address for Burst: Separation of address and data channel
+
+- Master provides the start address of burst
+- Slave needs to generate the remaining addresses based on burst type (FIXED, INCR, WRAP)
+
+캐시 미스 상황에서, CPU는 보통 캐시라인 데이터 전체가 필요하지 않다. Line fill buffer에 캐시 데이터가 조금씩 조금씩 채워질 때, CPU가 필요로 하는 부분이 채워지면 캐시는 이를 CPU에 즉시 알린다.
+
+### Multiple outstanding requests
+"hit under multiple miss", "miss under miss"를 허용하면 성능을 더 끌어올릴 수 있음. 캐시미스가 병렬로 나는것이 허용되면, 캐시미스로 기다리는 시간을 줄일 수 있음. 대신 Bus가 이걸 지원할 수 있도록 고쳐져야함.
+
+AXI는 이걸 지원한다. (PPT 55장 참고) 
+
+### Implementation issue: connectivity and arbitration
+Bus를 구현해보자. 여러 다양한 구현을 하나의 AXI 프로토콜로 통일시켜야하는데, 이게 쉽지 않다.
+
+모든 master와 slave 조합이 다 연결되어있는건 아니고 (not a full cross-bar) 필요한애들끼리만 연결되어있다. 이러면 회로 절약 가능
+
+decoder와 arbiter에 붙어있는 demux와 mux를 많이 써서 구현한다.
+
+Arbitration problem: "한 slave에 여러 마스터로부터 입력이 들어오는데, 이중에 뭘 slave한테 보내야하지?" 문제를 일컫는 말. 이를 푸는 arbitration scheme에 여러개가 존재한다
+
+Arbitration scheme - fixed priority: 여러 마스터에 고정된 우선순위들을 부여한다. 우선순위 높은 데이터를 우선한다. 단순하고 좋긴 하지만 starvation 문제가 가능하다. 높은 우선순위의 마스터가 데이터를 안끊고 계속 보내면 낮은 우선순위의 마스터는 데이터를 전혀 보낼수가 없음
+
+Arbitration scheme - round robin: 여러 master들에 fair하게 자원을 할당함. 일단 fixed priority를 주되, 현재 stage에서 어떤 master로부터 데이터를 받을지(active master)가 계속 변함. 한 stage에서 win 한 master는, 다음 stage에서 우선순위 높은애한테 active를 넘겨줌
+
+Arbitration scheme - hybrid: fixed priority랑 round robin 섞기
+
+Arbitration scheme - LRG(Least recently granted): 마스터를 여러 그룹으로 나눠, 각 그룹 내에서 grant 안된지 제일 오래된 애들이 가장 높은 우선순위를 가짐.
+
+AXI가 LRG를 쓴다. ARM 스마트폰을 비롯해 많은 애들이 LRG를 씀
+
+&nbsp;
+
+Week 10, Tue, Lab
+========
+지난 실습에선 Zync에 PS+BRAM만 했다면, 이번엔 PS+BRAM에 Custom IP를 올린다.
+
+### Term Project v0
+구현했던 V×V 곱셈기를, PE Array를 써서 M×V로 확장하세요.
+
+- Term Project v0 중간제출: 6월 2일
+- Term Project v0 최종제출: 6월 16일
+- Advanced Project 제출: 6월 23~30일
+
+Term Project v0 중간제출은 속도를 안보지만, 최종제출은 속도를 본다. Advanced Project도 혼자 하게될것이다.
