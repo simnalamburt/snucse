@@ -934,3 +934,35 @@ Flipflop과 output을 관장하는 D_C, D_B, D_A, Z 는 모두 state와 X를 입
 Unused states일때의 next state는 Don't Care로 두면 회로 만드는 비용을 줄일 수 있다.
 
 unused state로 잘못 빠지는 경우를 대비해, unused state의 next state가 used state가 되도록 해주면 리스크를 줄일 수 있다. 리스크를 감당할 수 없는 경우엔, don't care로 두지말고 명시적으로 unused state로 보내주면 좋다.
+
+### Basic sequential circuits revisited
+Shift registers와 Counters를 FSM 관점에서 다시 보자
+
+- Revisited: 3-bit binary counter
+- Revisited: Shift register
+- More complex counter example
+
+위 세개 예제를 풀면서, Unused state와 don't care를 exploit 하는 방법을 잘 알아보자.
+
+#### Selt-starting solution
+예시: Self-starting counters
+
+맨 처음 전원이 켜졌을 때 카운터가 unused state 내지는 invalid state에 있을 수 있다. 어떤 invalid state에 있더라도 언젠가 valid state로 들어간다는 사실을 보장하도록 만드는 것이 바로 self-starting solution이다.
+
+Self-starting solution은 state를 임의로 초기화할 필요가 없지만, 대신 Don't Care 최적화를 제한할 수 있다.
+
+(PPT 참고)
+
+카운터와 시프트 레지스터는, output = 현재 state이다. 그러나 이건 특수한 경우이고, 보통의 밀리 머신은 output = 조합논리(현재 state, 현재 input) 임
+
+### Moore vs Mealy machine
+- 밀리가 state가 더 적음
+  - 밀리는 transition이 output이지만 무어는 state가 output이기 떄문
+- 무어가 더 안전함
+  - 무어는 output이 clock edge에만 변함 (always one cycle later)
+  - mealy는 입력이 변하면 즉시 output이 변함. 두 장치가 연결되어있을 때 위험할 수 있다.
+- 밀리가 입력에 더 빠르게 반응함
+  - 무어는 무조건 한 클락 기다려야함
+
+#### Example: Vending machine
+(PPT 참고)
