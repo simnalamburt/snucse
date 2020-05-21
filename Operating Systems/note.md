@@ -2024,3 +2024,192 @@ xv6의 `intr_off()` + `intr_on()` vs `push_off()`, `pop_off()`: push_off pop_off
 스핀락은 몹시 낭비가 심하다. 스핀락을 돌고있는동안은 아무 진행도 못하고, CPU 사이클도 낭비한다. busy waiting하고있는 스레드들이 CPU 사이클을 낭비하는 동안, 정작 실행되어야하는 락을 들고있는 스레드의 실행이 늦어질 수 있다.
 
 모든 락을 스핀락으로 구현하면 안된다. 스핀락은 잠깐잠깐 도는 작은 락에만 쓰는거다. 길게 실행되는 락이 필요하면, 제대로된 block 되는 버전의 락을 만들어야한다. 스핀락을 primitive synchronization mechanism으로 써서, 이런 higher-level 동기화 객체를 만들어야 한다.
+
+&nbsp;
+
+Week 10, Thu
+========
+기말고사 일정 확정
+
+- 6월 18일 11:00 ~ 12:50
+- 302동 106호(짝수) 107호(홀수)
+- 범위
+  - Textbook Ch 2, 4~8, 13~16, 18~23, 26~28, 30~31, 36~37, 39~42, 44
+  - xv6 (디자인 문서, 구현체, 등)
+  - 강의 슬라이드
+- 치트시트 허용. A4용지 하나 양면, 손으로쓴것만 가능
+
+성적 정책
+
+- 시험: 50%
+- Projects: 50
+  - PA1 01%: hello, world!
+  - PA2 02%: syscall
+  - PA3 06%: ^C
+  - PA4 09%: Scheduler
+  - PA5 12%: Virtual memory
+  - PA6 20%: ???
+
+## 14. Semaphores
+busy-wait하는게 아니라, block 되는 버전의 동기화 객체가 필요하다.
+
+- Mutual exclusion: 임계영역 안에 하나의 스레드만 진입
+- Waiting for events: 한 스레드가 더 진행하기 전에 다른일이 완료되기를 대기함
+  - producer/consumer: MPMC가 존재할 수 있음
+  - pipeline: a series of producer and consumer
+  - defer work with background thread: non-critical work in the background when CPU is idle
+
+"자꾸 더러운 예시를 들어서 죄송한데... 상호배제는 집의 화장실이라고 할 수 있어요. 화장실은 혼자서 쓰는거니까요. 근데 화장실에 휴지가 없으면 어떻게 해요? 만약 mutex밖에 없다면, 화장실에 휴지가 생길때까지 계속 화장실에 무한히 들어갔다 나왔다를 반복해야해요. (busy wait) 화장실을 들어가지 않고 화장실 앞에서 기다리고있다가, 다른사람이 화장실에 휴지가 생겼을때 깨워주면 좋지 않을까? (waiting for events)"
+
+### Higher-level synchronization
+스핀락과 인터럽트 끄기로는 불충분하다. 아주 짧은 임계영역을 관리하는 용도로만 써야함. Higher-level 동기화 메커니즘이 필요하다
+
+- 세마포어
+  - 간단하지만 강력하다
+  - 프로그래밍하기 힘들다
+- 뮤텍스 + condition variables
+  - pthread에 쓰인다
+
+### Semaphore
+철도 교차로에 있는 신호기를 세마포어라고 한다. 교차로에 들어갈 수 있는지 없는지 알려주는 신호기.
+
+Dijkstra씨가 1968에 THE OS라는 OS도 개발하셨었는데, 거기에 들어갔음. Busy-wait가 아니라 block 하는 동기화 객체임. 세마포어 객체 안에 정수 state가 있고, 이 정수 state는 외부에서 직접 접근이 불가능하지만 세마포어의 동작을 결정해준다.
+
+두개의 연산을 지원함
+
+- Wait(), down(), sem_wait()
+  - state를 1 줄이고, state가 양수가 될때까지 대기
+  - 네덜란드어 Test의 앞글자를 따 P 라고도 부름
+- Signal(), up(), sem_post()
+  - state를 1 늘리고 기다리고있던 스레드 하나를 깨움
+  - 네덜란드어 increment의 앞글자를 따 V 라고도 부름
+
+PV 세마포라고도 부름.
+
+Initial state가 1인 세마포는 스핀락이랑 동치이나, busy-wait 하지 않아서 더 좋음. 그리고 spinlock과 다르게 initial state가 0, 2, 3, 4 등 다양한 숫자가 될 수 있음. 음수 state도 가능함.
+
+```c
+struct semaphore {
+  int value;
+  struct process *Q;
+  struct spinlock lock;
+};
+
+void wait(struct semaphore *S) {
+  acquire(S->lock);
+  S->value--;
+  if (S->value < 0) {
+    add this process to S->Q;
+    release(S->lock);
+    block();
+    return;
+  }
+  release(S->lock);
+}
+
+void signal(struct semaphore *S) {
+  acquire(S->lock);
+  S->value++;
+  if (S->value <= 0) {
+    remove a process P from S->Q;
+    release(S->lock);
+    wakeup(P);
+    return;
+  }
+  release(S->lock);
+}
+```
+
+위의 코드에서, wait()과 signal() 함수의 본문은 크리티컬 섹션이다. 왜냐하면 공통된 S->value, S->Q 에 접근하기 때문이다. 그래서 wait() signal() 함수 본체만 스핀락으로 보호해, wait() signal() 함수 호출할때에만 잠깐잠깐 스핀락이 돌도록 한다.
+
+- Binary semaphore (=mutex)
+  - 초기값이 1인 세마포어
+- Counting semaphore
+  - 초기값이 1이 아닌 세마포어
+  - 임계영역에 스레드가 최대 N개가 진입할 수 있음
+- 초기값이 0인 세마포어는 기본으로 아무도 진입 못하다가, 다른 스레드에서 시그널을 날릴떄에만 진입가능
+
+Lock은 acquire한애가 항상 release해야함. 근데 세마포어는 wait 한애가 나올떄 signal을 의도적으로 안하기도 함.
+
+### Bounded Buffer Problem
+환형큐가 하나 있고, 걔에 데이터를 넣는 producer와 걔에서 데이터를 뽑는 consumer가 있다고 하자.프로듀서와 컨슈머가 여럿 있는 MPMC 상황이다. 얘네 동기화를 어케할까?
+
+네개의 세마포어를 아래와 같이 초기화하고
+
+- mutex_in = 1
+- mutex_out = 1
+- empty = N
+- full = 0
+
+그리고 아래와 같이 코딩하면 된다.
+
+```c
+void produce(data) {
+  wait(&empty); // 버퍼에 빈자리가 하나라도 있을경우 통과, 빈자리 없으면 진입 못함
+  wait(&mutex_in); // enqueue는 한번에 하나만
+  buffer[in] = data;
+  in = (in+1) % N;
+  signal(&mutex_in); // 다음 enqueue 시작
+  signal(&full); // 큐에 데이터 하나 새로 생겼음, full 세마포어에 시그널
+}
+
+void consume(data) {
+  wait(&full); // 버퍼에 데이터가 하나라도 있을경우 통과, 데이터 없으면 진입 못함
+  wait(&mutex_out); // dequeue는 한번에 하나만
+  data = buffer[out];
+  out = (out+1) % N;
+  signal(&mutex_out); // 다음 dequeue 시작
+  signal(&empty); // 큐에서 하나 빠져서 버퍼에 빈자리가 하나 생겼음, empty 세마포어에 시그널
+}
+```
+
+세마포어 문제가 이거임. 남이 쓴거 이해하는거는 괜찮은데, 나보고 이걸 창작하라고 하면 너무 어려움.
+
+### Readers-writers problem
+공유 자원이 있고, 어떤 스레드는 이걸 읽기만 하고 어떤 스레드는 이걸 쓰기만 함.
+
+- 읽기는 중첩 실행 허용됨
+- 쓰기는 한번에 하나만 가능
+
+```c
+// number of readers
+int readcount= 0;
+
+// mutex for readcount
+Semaphore mutex = 1;
+
+// mutex for reading/writing
+Semaphore rw= 1;
+
+void Writer() {
+  wait(&rw);
+  ...
+  // Write
+  ...
+  signal(&rw);
+}
+
+void Reader() {
+  wait(&mutex);
+  readcount++;
+  if (readcount == 1) {
+    // 쓰기가 진행되고있었을 수 있음, 대기 시작
+    wait(&rw);
+  }
+  signal(&mutex);
+  ...
+  // Read
+  ...
+  wait(&mutex);
+  readcount--;
+  if (readcount == 0) {
+    // 모든 읽기가 끝났음, rw 에 시그널
+    signal(&rw);
+  }
+  signal(&mutex);
+}
+```
+
+이 구현은 Reader가 끊이지 않으면 Writer에 starvation이 일어나지 않음. Reader에 flavor가 있는 구현임.
+
+Writer에 starvation 안일어나게 하는 구현은 조금 더 복잡함
