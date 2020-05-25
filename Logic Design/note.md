@@ -729,6 +729,8 @@ Week 9, Mon
 - 기말1: 2020-06-01 월 수업시간, Chapter 5 조합논리까지, 90분 시험
 - 기말2: 2020-06-17 수 랩시간에 기말을 본다. 2020-06-17 수 수업시간에는 수업을 안한다. 대신 보강수업을 한다. 시험시간은 미정이지만 아마도 2시간
 
+기말고사 Open Book은 아니다. A4 한면 cheat sheet 허용.
+
 ### Comparison of latches and flip-flops (FFs)
 **TODO**
 
@@ -971,7 +973,56 @@ Week 10, Mon
 #### Example: Vending machine
 (PPT 참고)
 
-자판기를 무어와 밀리머신으로 각각 만들어보자.
+자판기를 무어와 밀리머신을 둘 다 써가며 다양하게 구현해보자.
 
-- 무어 머신: 동전 넣는거에 따라 state가 변하고, state에 따라 출력이 나오게 하면 됨
-- 밀리 머신:
+1.  무어 머신: 동전 넣는거에 따라 state가 변하고, state에 따라 출력이 나오게 하면 됨
+2.  무어 머신 + one-hot encoding: one-hot을 쓰면, product term의 곱셈 갯수가 준다!
+3.  밀리 머신
+
+#### Verilog Description of FSM
+베릴로그로 FSM 짜는 템플릿이 있다
+
+(PPT 참고, 기본적으로 case 문을 많이 썼다)
+
+`parameter`는 상수 정의하는 문법입니다. 모든 프로그래밍 언어는 상수를 정의하는 메커니즘을 갖고있죠
+
+(파이썬: ._.)
+
+#### FSM summary
+우리가 아는 대부분의 시스템은 FSM이다. 컴퓨터도 state가 아주 거대한 FSM이라고 볼 수 있음.
+
+state가 있는 회로를 어떻게 FSM으로 변환하는지, FSM을 어떻게 회로로 표현하는지, FSM을 어떻게 HDL로 표현하는지 알아봤다.
+
+- Q: Verilog로 Don't Care를 명시해서 자동으로 회로를 최적화시킬수는 없나요?
+- A: 걍 specify를 안하면 Don't Care라고 인식해서 알아서 최적화해줘유
+
+&nbsp;
+
+## 8. Working with FSM (Sequential Logic Optimization)
+FSM 표현을 더 적은 리소스로 하는법을 알아보자.
+
+1.  State minimization
+    - state 수가 적으면 state bit 수도 적어짐
+    - state bit 수가 적으면 구현해야할 수식 숫자도 줄음
+2.  Encodings: State, Inputs, Outputs
+    - Dense한 인코딩을 쓰면 구현해야할 수식 숫자는 줄지만, 식이 더 복잡해질 수 있다
+    - Sparse한 인코딩을 쓰면 더 단순한 수식이 나옴
+    - Input/Output 인코딩은 보통은 선택의 여지가 없음
+
+### State Minimization/Reduction
+크게 두 방법이 있음
+
+- Row Matching Method
+- Implication Chart Method
+
+#### Row matching method
+equivalent states를 모두 찾아, 중복을 제거하자. equivalent state 찾는법은 아래와 같다.
+
+1. 모든 state를 나열함
+2. output behavior가 같은것들로 모두 group함
+3. 한 group 내에서 next state transitions가 같은것들끼리 모두 group함
+4. 2와 3을 거쳤는데도 한 group 안에있는것은, next state transitions와 output behavior가 모두 같은 state임 (equivalent state)
+
+Example: `010`, `110` sequence detector (PPT 참고)
+
+
