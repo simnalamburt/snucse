@@ -964,5 +964,14 @@ Self-starting solution은 state를 임의로 초기화할 필요가 없지만, �
 - 밀리가 입력에 더 빠르게 반응함
   - 무어는 무조건 한 클락 기다려야함
 
+&nbsp;
+
+Week 10, Mon
+========
 #### Example: Vending machine
 (PPT 참고)
+
+자판기를 무어와 밀리머신으로 각각 만들어보자.
+
+- 무어 머신: 동전 넣는거에 따라 state가 변하고, state에 따라 출력이 나오게 하면 됨
+- 밀리 머신:
