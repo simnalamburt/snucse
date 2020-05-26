@@ -2213,3 +2213,130 @@ void Reader() {
 이 구현은 Reader가 끊이지 않으면 Writer에 starvation이 일어나지 않음. Reader에 flavor가 있는 구현임.
 
 Writer에 starvation 안일어나게 하는 구현은 조금 더 복잡함
+
+&nbsp;
+
+Week 10, Tue
+========
+드디어 Virtualization과 Concurrency를 마치고, Persistence 에 들어간다. Three pieces 중 마지막이다.
+
+## 13. Hard Disk Drives
+주변장치를 다룰때엔, 하드웨어의 특성을 잘 신경써서, 어떻게하면 효율적이고 reliable하게 다룰 수 있는지를 고민해야함.
+
+컴퓨터에 주변장치는 이것저것 많다. 네트워크와 같은 대부분의 주변장치는 나중에 OS에 붙은 반면, HDD는 아주 초창기부터도 쓰였다. 스토리지가 없으면 컴퓨터 재부팅할때마다 모든게 사라지니까.
+
+스토리지는 너무 느렸기 때문에 OS에서 아주 신경써서 다뤄야했다. 특히 스토리지에는 에러도 많이 나고, 쓰다가 갑자기 뽑는다던가 쓰다가 갑자기 power가 나간다던가 이런 상황이 다양하게 발생한다. OS가 이런 문제에 잘 대처해야, USB를 쓰다가 뽑았더니 인식이 안되거나, 정전때문에 컴퓨터가 다시 켜졌더니 file system이 마운트되지 않는다던가 이런 문제들로부터 해방될 수 있다.
+
+### Modern System Architecture
+요즘 컴퓨터는 이렇게 생겼다.
+
+(PPT 참고)
+
+여러 코어의 CPU들과, CPU에 직결되어있는, DDR4 RAM, PCIe 3.0 lanes 들이 있다. 직접 붙어있는 CPU와 통신할때 가장 빠르고, 다른 CPU에 붙어있는 장치에 액세스할때엔 약간 느려짐.
+
+그리고 PCH(Platform Controller Hub, 옛 south bridge)에 연결된 USB 3.0/2.0 포트들, SATA, PCIe 2.0 포트들, 이더넷 컨트롤러
+
+노스브리지는 사라졌다.
+
+### A typical I/O device
+- Control
+  - Special instructions (x86의 `in`, `out`): I/O 전용 특수 명령어 만들기, 최근에는 잘 안쓰임
+  - Memory-mapped I/O (load & store): 보통 이 방법이 쓰임
+- Data transfer
+  - Programmed I/O (PIO): CPU가 하나하나 복사해주는거, 느림
+  - DMA: Memory bus를 통해 자동으로 복사되는 모델, 훨씬 빠름
+- Status check
+  - Polling
+  - Interrupts
+
+주변장치도 작은 컴퓨터다. 애플 스마트 키보드에도 72MHz 32-bit ARM Cortex-M CPU가 박혀있음. HDD에도 CPU가 들어가있고, 요즘 SSD에도 CPU가 3~4개씩 들어있음
+
+- Device interface
+  - Registers (Status, Command, Data)
+- Hidden internals
+  - Micro-controller (CPU)
+  - Memory (SRAM, DRAM, 혹은 둘 다)
+  - Firmware
+  - Other device specific mechanical/electronic components
+
+CPU와 코드 없이 모조리 하드웨어로 할수도 있지만, 요즘은 하드웨어로 와어링하는 대신 로직을 firmware 코드로 넣은 뒤 CPU가 컨트롤하게 하는 방식을 많이 쓴다. 고치기 쉬우니까. Firmware는 하드웨어와 소프트웨어의 중간을 지칭하는 말.
+
+### Classifying I/O Devices
+- Block device
+  - Fixed size block들에 정보를 저장, 자체 block address space를 갖는다
+  - 보통 블럭 하나는 512B ~ 4KiB
+  - 블럭 단위로 읽고 쓸 수 있다
+  - HDD, SSD, CD, DVD, tapes, 등
+- Character device
+  - Byte stream으로 주고받는 디바이스
+  - Addressable하지 않음, seek 지원하지 않음
+  - 프린터, 네트워크, 마우스, 키보드
+
+여러분들은 테이프디스크 안써보셨죠? 플로피디스크도 안써보셨죠? 플로피디스크 많이들 아시네요. 생각보다 그렇게 신세대는 아니네요. 저랑 좀 더 가까운것같군요. 5.25 플로피디스크도 아세요? 이것도 알면 정말 가까운건데.
+
+자기테이프(테이프드라이브)는 죽을거라고 사람들이 생각했는데, 안죽고 아직도 많이 쓰이고있어요. 저렴하게 높은 집적도로 데이터를 백업하는 용도로 쓰고있어요. 그리고 수 페타바이트의 엄청난 용량의 데이터를 데이터센터 사이에서 옮길때에도 자기테이프에 담아서 써요.
+
+### I/O Stack
+(PPT 참고)
+
+I/O Device는 종류가 몹시 많다. 커널 코드의 대부분은 수많은 I/O 장치에 대응하는데에 사용된다.
+
+리눅스에선 장치도 file descriptor로 만든다. 유저 프로세스가 디바이스 FD에 read/write 하면 장치에 I/O 할 수 있음.
+
+여러 장치들에 대해 공통적으로 수행될 수 있는 코드가 있는데, 이것이 device-independent softwares
+
+Device driver와 interrupt handle는 각 I/O 장치에 특화된 코드. 종류가 매우 많다.
+
+### Device drivers
+각 I/O 장치를 컨트롤하기 위한 Device-specific code.
+
+드라이버 로딩하는법
+
+- Static link
+  - 드라이버 바꾸려면 커널 재빌드해야함
+- Selectively loaded during boot time
+  - 이러면 컴퓨터 켜지고나서 장치를 바꿔끼기 곤란함
+- Dynamically loaded during run time
+  - Hot pluggable device를 관리하기에 편리함
+
+최대한 많은 장치에 대해 구현을 해줘야하는데, 이것이 몹시 어렵다.
+
+많은 드라이버들은 각 드라이버에 대한 대응팀이 있다. 그렇게 대응 팀을 따로 보고, 커널문제인지 하드웨어문제인지 디바이스문제인지 찾아, 빠르게 처리한다.
+
+여전히 OS의 크래시가 대부분 드라이버 코드에서 발생한다. Windows XP 크래시의 85%는 드라이버였음. 리눅스에선 드라이버 코드가 커널의 7배임.
+
+5%의 윈도우는 매일 크래시된다. 민감한곳에선 이런 크래시의 결과가 심각해짐.
+
+OS extensions are increasingly prevalent. 리눅스 코드의 70%가 확장임. less experience programmer에 의해 작성됨.
+
+### Secondary storage
+Primary memory 이외의 모든 스토리지는 모두 보조기억장치.
+
+Sector의 배열로 추상화되어있음. 호환성을 위해 512B 섹터도 지원하나, 보통은 4KiB 단위로 읽고씀.
+
+HDD의 특징
+
+- 큼: 100GiB 이상
+- 저렴함: 2020년 5월 기준으로 8TiB SATA3 HDD가 27만원
+- 퍼시스턴트: 전원이 날아가도 데이터가 보존됨
+- 느림: 액세스에 수 밀리초 소요됨
+
+### HDD Architecture
+Platter의 앞면/뒷면 surface에 데이터를 기록함. 플래터는 여러개일 수 있음. Arm assembly에 붙어있는 read-write head가 동시에 움직임.
+
+여러 Platter에 걸쳐있는, 여러 같은 동심원상의 트랙 데이터들의 묶음은 cylinder라고 부름. 한 실린더에 있는 데이터들은 동시 접근이 용이함.
+
+바깥쪽 원으로 갈수록 동심원당 track 길이가 커져서 bandwidth가 달라짐. 바깥쪽 동심원에 있는 데이터를 더 빨리 읽을 수 있음.
+
+### 모던 HDD
+(PPT 참고)
+
+- 8개의 헤드, 4개의 디스크
+- 트랙당 64섹터, 16383개의 실린더
+- etc (PPT 참고)
+
+섹터 크기랑 블럭 크기랑 다름. 섹터크기는 디스크가 지원하는 I/O의 단위, 블록은 소프트웨어가 보는 컴퓨터와 디스크가 통신하는 크기의 단위. 섹터크기와 블럭크기가 같을 수 있으나, 블록 크기가 섹터 크기의 정수배일수도 있다. 블럭이라는 용어가 여기저기에서 많이 쓰여서 맥락을 잘 확인하고 쓰자. 예를들어 파일시스템에서도 블럭이라는 용어를 쓴다.
+
+SSD는 HDD보다 훨씬 레이턴시가 빠르지만 DRAM같은것들보단 훨씬 느림. 그리고 SSD는 Block device여서 DRAM을 대체할수는 없다.
+
+질문을 항상 하는사람들만 하는데, 닉네임을 바꾸셔도 되니까 주저하지 말고 질문을 해주세요.
