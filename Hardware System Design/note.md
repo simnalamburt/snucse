@@ -1,4 +1,4 @@
-GWeek 1, Tue
+Week 1, Tue
 ========
 
 강의하는 기분을 내기위해 교수님께서 강의실에서 원격수업을 하시기로함. ETL에 목소리가 녹음된 PPT를 업로드했다. 강의시간에는 기본적으로 PPT를 재생하고, 학생들이 질문을 하면 바로 교수님이 답변하는 플립러닝 형태로 진행하기로 함.
@@ -650,3 +650,112 @@ Week 10, Tue, Lab
 - Advanced Project 제출: 6월 23~30일
 
 Term Project v0 중간제출은 속도를 안보지만, 최종제출은 속도를 본다. Advanced Project도 혼자 하게될것이다.
+
+&nbsp;
+
+Week 11, Tue
+========
+- 기말고사: 2020-06-09
+- eTL에 2017년과 2019년의 중간고사, 기말고사 기출문제가 올라간다.
+
+6월 16일에 이론수업은 없으나 실습은 한다.
+
+## Low Precision Computation on Neural Networks
+소수점 정밀도를 낮춰, 더 빠르게 계산할 수 있다.
+
+소수점 정밀도를 낮추면, 같은 비용으로 계산을 몇회 더 할 수 있기때문에, 실리콘 면적을 더 유틸라이즈 할 수 있다.
+
+### Floating point representations
+- float32
+- float16
+- bfloat16: Brain floating point format
+  - Mantissa가 적어 정밀도는 떨어지지만, 표현가능한 범위는 더 넓다. bloat16과 float32 둘다 8bit exponent를 씀
+- int8
+  - 극단적으로 낮은 정밀도와 표현범위
+  - 그런데.. 최근에 int8로도 추론에 충분하다는게 밝혀지고있음.
+
+### Quantization
+- No saturation: |max| 이상을 127로 매핑한다면, Rounding error로 인해 Significant accuracy loss가 발생해 뉴럴넷 퀄리티가 망한다
+- Saturation: 하지만 |threshold| 이상을 모두 127로 saturate시키면 정확도를 올릴 수 있다.
+
+그럼 이제 어느 |threshold|가 적당하냐? 이것이 이슈가 됨.
+
+### SIMD or Vector (Addition)
+int8 유행이 커지고있음. NVIDIA P40, P4 모두 INT8 을 지원함.
+
+Nvidia V100의 다음버전인 A100 에선, FP32 FP16 말고도 TF32, BF16, INT8, INT4, BINARY 등 다양한 형식의 SIMD를 지원한다.
+
+## How to Quantization
+### Google's INT8 quantization
+(Quantization and Training of Neural Networks for Efficient Integer-Arithmetic-Only Inference, CVPR 2018)
+
+목표: INT8 SIMD 연산만 써서 뉴럴넷을 만들어보자.
+
+(PPT 참고) 뉴럴넷에 쓰이는 숫자 범위가 있을텐데, 중간값을 새로운 0으로 잡고, 적당히 위 아래 max를 찾으면 된다. 근데 어느 중간값과 어느 스레숄드가 제일 적절한지 어떻게 알까? 퀀타이제이션을 적용한것과 안한것을 비교한다.
+
+레이어별로 각각 다른 Z, S 값을 써야한다. 보통은 [-128, 128) 혹은 [0, 256) 둘 중 하나로 퀀타이제이션 한다. 그 이외의 더 나은 Z S 값을 찾을수도 있지만, 여러 뉴럴넷에 제너럴하게 적용하기 힘들기 때문에 안한다.
+
+### NVIDIA's INT8 quantization
+8-bit Inference with TensorRT
+
+특정 스레숄드 값 이상을 saturate해버리면 되는데, saturate 시킬 스레숄드를 어떻게 찾으면 될까?
+
+(PPT의 Migacz, 2017 참고)
+
+NVIDIA TensorRT에선, Truncate하면서 읽어버리는 정보에 집중을 했다. 정보를 얼마나 잃어버렸는지를 측정하는 메트릭으로 KL divergence을 사용했다.
+
+KL divergence는 원래 분포 대신 새 분포를 썼을때 얼마만큼의 정보가 손실되는지를 알려주는 척도이다. (수식은 PPT 참고) 분포가 유사할수록 KL divergence값이 작다.
+
+KL divergence 값이 충분히 작아지도록 잘 잘랐더니, FP32로 계산하던걸 INT8로 계산해도 아주 작은 성능손실만이 존재했다.
+
+KL divergence는 적분을 실제로 하진 않고 근사한다. 그리고 해보기도 전에 모든 데이터를 넣어볼 수는 없으니, 갖고있는 테스트 데이터를 넣어서 학습시킨뒤 거기에 KL divergence를 적용시켜 계산한다.
+
+### Logarithm-based quantization
+Convolutional Neural Networks using Logarithmic Data Representation, CVPR 2017
+
+0에 가까운 값일수록 값들이 더 촘촘하게 모여있고, 0에서 먼 값일수록 값들이 멀리 떨어져있다. 0에 근접할수록 더 촘촘해지는 방식의 quantization이 필요하다.
+
+그리고 *2, /2 연산은 시프트연산으로 구현이 가능하다는 성질을 활용할 수도 있다.
+
+로그베이스 퀀타이제이션을 하면, 0에서 먼 값에 대해선 라운딩 에러가 몹시 커진다. 그러나 로그베이스 퀀타이제이션을 적용한채로 트레이닝을 다시 시켜서 라운딩 에러를 극복할수도 있다. 극복 못한다면 비트를 더 많이 써야함.
+
+이거로 하는거랑 리니어하게 int8로 바꾸는거랑 결과가 비슷할 수 있는데, 이거는 곱셈을 시프트연산으로 바꾼다는 장점이 있다.
+
+### Binary-weight neural network
+XNOR-Net: ImageNet Classification Using Binary Convolutional Neural Networks
+
+Quantization의 아주 극한 형태. 각 데이터에 1bit만 존재함.
+
+Binary weight: 웨이트가 무조건 1 아니면 -1 임. AlexNet에선, 정말 충격적이게도 binary weight를 써도 정확도가 그렇게 나빠지지 않는다.
+
+얘도 다른 퀀타이제이션이랑 마찬가지로, 퀀타이제이션을 적용시킨 뒤 라운딩 에러를 극복하기 위한 학습을 다시 시켜줘야한다.
+
+Binary-weight가 아니라 XNOR-network(All binary solution)은 정확도 로스가 좀 더 있다.
+
+&nbsp;
+
+Week 11, Tue, Lab
+========
+IP on Board & Quantization
+
+- V0: 2020-06-16 까지
+- V1: 2020-06-23 까지
+
+### V0: 우리가 만든 IP를 어떻게 Board에서 실행하는지
+시뮬레이션에선 잘 되는데, 하드웨어에 올렸더니 실패할 수 있다. 이걸 검증하는 방법을 알아보자.
+
+(PPT 참고)
+
+CPU와 FPGA의 연산결과를 비교하면 된다. 약간의 계산오차가 발생할 수 있는데, 둘의 값이 미세하게 다를 수 있다. 이는 수용 가능함.
+
+값이 많이 다르다면? IP에 문제가 있다는 뜻임.
+
+### V0: 컨벌루전 로워링을 FPGA에서 하는방법
+(PPT 참고)
+
+### V1: 퀀타이제이션 하는법
+32bit 있던걸 타일링해서 8bit로 나눠 계산하면 된다. FP32 모듈도 모두 없애버리고 INT8 모듈로 바꿔야한다.
+
+V1은 optional 프로젝트다.
+
+V2가 예정되어있음.
