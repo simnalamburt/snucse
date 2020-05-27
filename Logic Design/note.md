@@ -1025,4 +1025,67 @@ equivalent states를 모두 찾아, 중복을 제거하자. equivalent state 찾
 
 Example: `010`, `110` sequence detector (PPT 참고)
 
+&nbsp;
 
+Week 10, Wed
+========
+#### Implication chart method
+두개의 state가 equivalent한지 체크하는 다른 방법.
+
+가로축에는 S(0)부터 S(n-1)까지, 세로축에는 S(1)부터 S(n)까지 나열한다. 그리고 가운데에 있는 표에 체크해서 총 nC2 가지의 모든 경우의 수를 나열했다. 두 state의 output이 다른 경우는 같은 state일 가능성이 없으니 X표 쳐버리고, output이 같은 경우만 비교하면 된다.
+
+이미 알고있는 equivalent한 칸들과 equivalent하지 않은 칸들을 사용해, equivalent 여부를 알 수 없는 칸들을 transitive하게 동치인지 아닌지 체크를 해주면 된다.
+
+Problem Set으로 이거 연습을 꼭 해보세요.
+
+- Q: 이거 1-pass로 모든게 풀리는 알고리즘인가요?
+- A: 아니다. 2-pass 이상이 필요할 수 있음.
+- Q: 안 지워진 박스는 quivalent하다는게 어떻게 증명되나?
+- A: 동치가 아닌 여러 state들을 다 검사했는데도 disprove가 안되었다는것은, equivalent하다고 간주해도 문제가 없다는 뜻이다.
+
+### State Assignment
+각 symbolic State를 어느 비트로 배정할까? 어떻게 배정하냐에 따라 회로의 비용과 성능이 달라진다.
+
+n bit로 m개의 state를 표현하려 할 때, `(2**n)!/(2**n - m)!` 개의 경우의 수가 존재한다. n, m 숫자가 작아도 수많은 경우의 수가 존재함. 다 해보고 최적을 찾는것은 불가능하니, 휴리스틱으로 결정해야한다. 조합논리 최적화할때 쓰는 아래의 세 메트릭으로 성능을 비교하면 된다.
+
+- Size: 로직 숫자와 플립플랍 수
+- Speed: 로직의 depth와 fanout
+- Dependencies: decomposition
+
+대충 아래와 같은 전략이 존재함
+
+1.  Sequential: 000, 001, 010, 011, ...
+2.  Random
+3.  One-hot: 0001, 0010, 0100, 1000
+4.  Output
+5.  Heuristic
+
+위 전략 모두 최적해라는 보장이 없다. 회로 최적화와 비슷한 Intractable problem임
+
+#### One-hot State Assignment
+- Simple: 인코딩하기 쉽고 디버깅도 편리함
+- Small Logic Functions: 논리회로 생김새도 간단해짐
+- Good for Programmable Devices
+  - 많은 flipflop이 이미 준비되어있음
+  - Simple functions with small support (signals its dependent upon)
+- Impractical for large machines: 큰 머신에서 one-hot을 쓰면 flip-flop 소모량이 너무 커짐
+
+보통 머신을 통쨰로 one-hot으로 만들기보단, FSM을 여러 작은 부분 FSM으로 만들어서 작은 FSM을 one-hot으로 만든다.
+
+one-hot에 살짝 변형을 넣은 인코딩 방식을 많이 쓴다. one-hot + all-0 같은것들
+
+#### Bit change heuristic
+bit switch가 최소화되는 방향으로 state를 배정해보자. bit switch를 최소화하는게 왜 좋은가? bit change가 적을수록 전력을 적게쓴다.
+
+State map: 각 state가 몇비트인지를 카르노맵처럼 그린것이다. state map상에서 상하좌우로 1칸씩 움직이면 1bit만 변하는것이다. state가 statemap상에서 이동을 적게할수록 좋다.
+
+#### Adjacency Heuristics for State Assignment
+(PPT 그림 참고)
+
+이 세가지 조건을 만족하게 state를 assign하면, 하드웨어 코스트를 줄일 수 있다. 그리고 겸사겸사 bit change도 함께 줄어들음. 우선순위 순서(Successor/Predecessor 휴리스틱)대로 아래와 같다.
+
+1.  next state를 공유하는 경우: `c = i*a + i*b`
+2.  조상을 공유하는 경우: `b = i*a`, `c = k*a`
+3.  output behavior가 같은 경우: `j = i*a + i*c`, `b = i*a`, `d = i*c`
+
+우선순위대로, 위 조건을 만족하는 state들은 group하여 statemap 상에서 가까이 놓아야한다.
