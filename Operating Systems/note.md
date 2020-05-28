@@ -2328,15 +2328,126 @@ Platter의 앞면/뒷면 surface에 데이터를 기록함. 플래터는 여러�
 
 바깥쪽 원으로 갈수록 동심원당 track 길이가 커져서 bandwidth가 달라짐. 바깥쪽 동심원에 있는 데이터를 더 빨리 읽을 수 있음.
 
-### 모던 HDD
-(PPT 참고)
-
-- 8개의 헤드, 4개의 디스크
-- 트랙당 64섹터, 16383개의 실린더
-- etc (PPT 참고)
-
 섹터 크기랑 블럭 크기랑 다름. 섹터크기는 디스크가 지원하는 I/O의 단위, 블록은 소프트웨어가 보는 컴퓨터와 디스크가 통신하는 크기의 단위. 섹터크기와 블럭크기가 같을 수 있으나, 블록 크기가 섹터 크기의 정수배일수도 있다. 블럭이라는 용어가 여기저기에서 많이 쓰여서 맥락을 잘 확인하고 쓰자. 예를들어 파일시스템에서도 블럭이라는 용어를 쓴다.
 
 SSD는 HDD보다 훨씬 레이턴시가 빠르지만 DRAM같은것들보단 훨씬 느림. 그리고 SSD는 Block device여서 DRAM을 대체할수는 없다.
 
 질문을 항상 하는사람들만 하는데, 닉네임을 바꾸셔도 되니까 주저하지 말고 질문을 해주세요.
+
+&nbsp;
+
+Week 10, Thu
+========
+하드디스크가 50년대 말부터 2000년도까지 항상 보조기억장치로 쓰였었음. 거의 60년 가까이 보조기억장치 = 하드디스크 였음. 지금은 SSD도 같이 쓰이고있지만, 용량 대비 가격때문에 여전히 하드디스크는 중요하게 쓰이고있음.
+
+문제는 수 ms 단위의 느린 접근시간, 레이턴시였음. 불량도 많이 났고. 그럼에도 불구하고 계속 쓸 수밖에 없어서, OS 입장에선 매우 귀찮은 존재였음. 그래서 OS들은 어떻게하면 하드디스크를 더 빠르게 쓸 수 있을까 이런 고민을 많이 했음.
+
+최근엔 OS가 "어차피 하드디스크는 느리니까.."하면서 방만하게 만들었던 것들이, SSD로 바뀌면서 문제가 되기 시작했음.
+
+### 모던 HDD
+(PPT 참고)
+
+- 8개의 헤드(=플래터의 한쪽 면, 서페이스), 4개의 디스크
+- 트랙당 64섹터, 16383개의 실린더
+- 평균 Track density (반지름 상에서 단위길이당 트랙 밀도): 540K TPI (tracks/inch)
+- 평균 Areal density (단위면적당 정보 밀도): 1203 Gbits/sq.inch
+- Spindle speed: 5400 RPM (11.1ms/rotation)
+- Internal cache buffer: 256MiB
+- Average Latency: 6.0ms (옛날엔 평균 15.0ms였음)
+- Max I/O data transfer rate: 600 MiB/s (SATA3)
+- Max data transfer rate: 190 MiB/s
+- Power-on to ready: under 15 seconds
+
+이걸 보면 HDD도 엄청난 하이테크 기술임을 알 수 있다.
+
+Barracuda 시리즈가 원래 7200RPM이었는데, 5400RPM으로 낮췄어요. 제 대학 동기중에 저런 하드디스크 펌웨어만 수십년 만든 하드디스크 장인이 있다. 하드디스크 뜯으면 나오는 녹색 기판에 시리얼 연결하고 하드디스크를 켜면, 하드디스크 부팅할때에 나오는 디버그 메시지를 볼수있다고.
+
+HDD에 DRAM cache가 있다. 근데 얘가 write cache 역할을 해서, HDD가 썼다고 응답까지 했는데도 실제로는 DRAM에 상주해있다가, 미처 디스크에 쓰기 전에 HDD가 꺼지는 경우가 있다. 근데 OS 입장에서 "이 데이터는 반드시 써야 퍼시스턴시가 보장됨" 이런경우가 있다. 그 경우 flush cache 커맨드를 하드디스크한테 따로 날린다.
+
+원래는 Average seek time이라는 메트릭을 썼는데, 이게 슬그머니 사라지고 average latency라는 뭔지 잘 모르겠는 메트릭으로 바뀌었다. average seek time이 full stroke 시간의 반일것 같지만 full stroke의 1/3이라는걸 적분기호까지 써가며 증명한게 있다. 근데 여기에다가 디스크 도는 주기까지 추가해야 실제 레이턴시가 나온다.
+
+power-on to ready 시간이 긴데, 물리적으로 디스크가 켜져서 가속하는데에 시간이 필요해서 이 시간이 길 수 있다.
+
+하드디스크 헤드가 하드디스크에 붙었다 떨어졌다를 반복해야하는데, 이게 얼마나 정말하게 움직이냐면, 과거 비유로 지구를 25초에 한바퀴씩 도는 비행기가 지면에서 1mm 높이로 붙었다 떨어졌다를 반복하는 정도라고 한다.
+
+### Interfacing with HDD
+굉장히 수동적인 device임. OS가 읽으라고 시켜야 읽고 쓰라고 시켜야 쓴다. 심지어 과거에는 한번에 하나의 command만 처리할 수 있었음. 쓰는건 buffer에만 쓰면 되니까 좀 빠를 수 있지만, read는 buffer에 있을 확률이 적어 좀 느렸음.
+
+- Cylinder-Head-Sector (CHS) scheme
+
+  OS가 어디에 쓰라고 모조리 지정해주는 방식. OS가 디스크의 실린더가 몇개, 헤드가 몇개, 섹터가 몇개 이런식으로 디스크의 물리적인 정보를 다 알아야만 했음.
+
+- Logical block addressing (LBA) scheme
+
+  SCSI에서 도입됨. 하드디스크가 [0, 1, 2, ..., N-1] 이렇게 블록의 배열로 추상화되어있고, 이걸 LBA라고 부름. 디스크가 LBA를 물리적으로 어떻게 mapping할지 결정함. 디스크의 물리적인 정보는 OS로부터 숨겨짐.
+
+CHS시절에는 디스크의 물리적인 정보가 미리 컴퓨터 BIOS에 입력되어있어야만 했음. BIOS에 해당 하드디스크 정보가 미리 입력되어있지 않으면, 손으로 쳐줘야만 했음.
+
+CHS시절에는 OS가 하드디스크의 물리적인 정보를 다 알 수 있으니까, 인접한 데이터는 한 실린더 상에 밀집시킨다던가 이런 테크닉도 쓸 수 있었음.
+
+SCSI는 엔터프라이즈용 인터페이스. 일반 사용자는 ATA(PATA) 썼음. SCSI, PATA 둘다 parallel 인터페이스였음. 요즘은 다 SCSI랑 ATA 둘다 serial interface 버전인 SAS(Serial attached SCSI), SATA로 바꿨음.
+
+왜 parallel 인터페이스보다 serial interface가 빠른가? clock rate를 아주 많이 올렸더니, parallel 하게 보내도 lane간의 딜레이 차이가 발생해서 빠른 clock rate를 활용하지 못하는 문제도 있고, lane들끼리 전기적으로 간섭해서 데이터가 깨지는 문제도 발생한다. 케이블도 커지고. 그래서 단순한 serial interface가 clock rate를 올리는데에 오히려 더 유리했다.
+
+SAS를 지원하는 HDD는 SATA보다 훨씬 비싸용. 그리고 SAS는 용량이 아니라 속도와 신뢰성으로 승부하는애라, 용량이 적은대신 10000RPM 이상의 높은 속도를 갖는다.
+
+### HDD Performance factors
+- Seek time (T<sub>seek</sub>)
+
+  Disk arm이 맞는 실린더에 가기까지의 시간. 실린더 거리에 달려있고, linear한 cost가 아니다. 적분 해서 계산해보면 Full seek time (맨 안쪽 실린더에서 제일 바깥 실린더까지의 시간)의 1/3 이다.
+
+- Rotational delay (T<sub>rotation</sub>)
+
+  head가 맞는 sector에 도달할때까지 기다리는 시간. RPM에 의존한다.
+
+- Transfer time (T<sub>transferk</sub>)
+
+위 세개의 지표로 Random Read/Write, Sequential Read/Write 딜레이를 계산할 수 있다.
+
+### HDD Performance comparison
+(PPT 참고)
+
+SAS 하드디스크가 용량을 많이 키우지 않는 이유가 이거다. Seek time을 줄이려고.
+
+Unwritten Contract: 문서화되어있지는 않지만, 디스크 만드는 사람도 보장하고, OS 만드는 사람도 사용하는 약속.
+
+HDD에서의 unwritten contract: LBA 상에서 데이터를 연속하게 배치할 경우, 실제 물리적으로도 sequential하게 access할 수 있게 보장해줌.
+
+하드디스크를 위해 OS가 하는 최적화: 가급적이면 같이 쓰는 데이터는 sequential하게 인접하게 두자.
+
+요즘 LevelDB, RocksDB 이런애들이 HDD를 위해 하는 일이 있는데 걍 그게 다 디스크 상에 모두 시퀀셜하게 저장하는거임.
+
+### Disk Scheduling
+요즘은 큰 의미는 없지만, 과거에는 중요했음. 디스크가 `seek()`가 너무 많아지면 arm 움직이느라 발생하는 OS의 시간 낭비가 커서, seek를 어디부터 할 지 스케줄링을 시켰음
+
+얘도 CPU처럼 이렇게 나뉨
+
+1.  Work conserving scheduler: 항상 무슨 일을 하려고 시도
+2.  Non-work conserving scheduler: 잠깐 쉬는게 더 빠를수도 있다. 특히 IO는 CPU와는 다르게 preemption이 불가능해서 더 그러함.
+
+아래와 같은 종류가 있음
+
+- FCFS: First-Come First-Served
+  - No scheduling
+- SSTF: Shortest Seek Time First
+  - 가운데의 block을 불공평하게 선호함
+  - 하드디스크 지오메트리가 OS에 available하지 않을경우, NBF(Nearest-Block-First)
+- SCAN
+  - 엘리베이터 알고리즘. 일단 한 방향으로 가면 쭉 그 방향으로 가기
+  - 가운데 친구들에게 유리함
+- F-SCAN
+  - sweep을 하는 동안은 queue를 freeze함, far-away requests가 starvation되는것을 막을 수 있음
+- Circular SCAN
+  - 한쪽 방향으로 가는 SCAN 알고리즘
+  - Uniform wait times
+
+### Modern disk scheduling
+이제 OS는 디스크의 지오메트리 정보를 알 수 없음. 시퀀셜하게 액세스하는것이 빠르다는것밖에 알 수 없다.
+
+- 디스크 스루풋 증가
+  - HDD에 요청을 보낼 때, request들을 merge할 수 있으면 merge함
+  - Disk seek time을 줄이기 위해 request를 정렬해서 보냄
+- 스타베이션 방지
+- Fairness
+  - CFQ: Completely Fair Queue, CFS의 HDD 버전
+  - 각 프로세스마다 Disk I/O Queue를 따로 제공하고, round robin 순서대로 돌면서 정해진 time slice 내에서 각 프로세스의 I/O를 처리함
