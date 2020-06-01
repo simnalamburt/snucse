@@ -658,6 +658,25 @@ Week 7, Fri
 ========
 **TODO**
 
+### Circuits for binary addition
+- 1-bit Half adder
+  - Sum = A ^ B
+  - C_out = AB
+- 1-bit Full adder
+  - Sum = (A ^ B) ^ C_in
+  - C_out = AB + (A ^ B)C_in = AB + (A + B)C_in
+  - C_out 에서 xor을 쓰나 or를 쓰나 같다는거에 주목
+- Adder/Subtractor
+  - B 에 not 취한다음 C_in에 1 넣으면 그게 A-B임
+- Ripple-carry adder
+  - 딜레이가 심함
+- Carry-lookahead logic
+  - G_i, P_i 만 미리 빠르게 계산하기
+- Carry-select adder
+  - 하드웨어를 훨씬 많이 먹지만 계산이 더 빠르게 끝남
+
+### ALU
+
 &nbsp;
 
 Week 8, Mon
