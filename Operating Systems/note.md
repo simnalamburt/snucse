@@ -2451,3 +2451,18 @@ HDD에서의 unwritten contract: LBA 상에서 데이터를 연속하게 배치�
 - Fairness
   - CFQ: Completely Fair Queue, CFS의 HDD 버전
   - 각 프로세스마다 Disk I/O Queue를 따로 제공하고, round robin 순서대로 돌면서 정해진 time slice 내에서 각 프로세스의 I/O를 처리함
+
+&nbsp;
+
+Week 10, Tue
+========
+**TODO**
+
+- Q: 오늘 SSD 펌웨어가 배경에서 하는 다양한 일들을 잔뜩 배웠는데, 이게 SSD 성능에 어느정도로 영향을 주나요?
+- A: 성능에 엄청난 옇양을 줍니다. 4TB면 4GB의 DRAM이 필요하고 아까 했는데, 이거 다 FTL이 페이지매핑 유지하느라 필요한거임. 페이지매핑 테이블은 멀티레벨 안하고 리니어하게 들고있는데, 멀티레벨 테이블로 하면 성능을 너무 많이 깎아서 그럼. FTL이 성능에도 영향을 주지만 신뢰도에도 영향을 많이 줍니다.
+
+NVMe에선 커맨드들을 받아들이는 Doorbell Register가 존재함. SATA 시절에는
+복수개의 커맨드 레지스터 하나하나에 커맨드를 써야했는데, 지금은 커맨드를 큐로
+만든 뒤 큐의 시작주소를 doorbell register에 등록하면 알아서 커맨드를 읽어간다.
+
+FPGA로 SSD 펌웨어 가속하고 이런것도 해볼 수 있을까
