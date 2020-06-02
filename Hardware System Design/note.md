@@ -759,3 +759,39 @@ CPU와 FPGA의 연산결과를 비교하면 된다. 약간의 계산오차가 �
 V1은 optional 프로젝트다.
 
 V2가 예정되어있음.
+
+&nbsp;
+
+Week 12, Tue
+========
+01:45 질문:
+re-training을 무한정 계속하면 pruning하기 전의 상태로 돌아가나요? 그러면
+re-training을 정확히 어느 시점에 끝낼지는 경험적으로 정하는 건가요?
+
+02:00 질문:
+현재 슬라이드를 보면 8개에서 4개만 선택해서 계산을하는데 8개 모두 0에서 멀어서
+의미있는 weight면 정확도에서 손실이 크지 않나요?
+
+02:06 질문:
+교수님 삼성이 16개의 MAC을 쓴다고 하셨는데 그러면 layer output의 size가 항상 4*4
+여야 하는건가요?
+
+&nbsp;
+
+Week 12, Tue, Lab
+========
+https://github.com/tahsd/hsd20_lab12_quantization
+
+- Q: 교수님께서 말씀하신, 기말고사 중 project에서 3문제 나온다는 것에는 v1, v2는 포함되지 않는 건가요?
+- A: 당연히 포함 됩니다.
+
+- Q: 조교님, v0를 구현했는데 cpu로 구동하는 것보다 fpga에서 하는 게 더 느린 것이 정상인가요?
+- A: 네, 아까 말씀드렸듯이 cpu는 여러 memory optimization 테크닉, calculation 테크닉들이 적용이 되어있는데 우리 fpga는 간단하게 구현한 형태여서 더 느린것이 맞습니다.
+
+- Q: lab10이 revised됐는데, revised 된 부분중 clk generator에 대한 부분이 있는데 그 페이지에 적혀있는 clk generator는 lab10의 shifter에서 사용된 generator와 동일한가요?
+- A: 본인이 ip editor로 해당 부분 직접 확인 부탁합니다.
+
+- Q: 랩10을 기본 설정으로 빌드해도 잘 작동하는데 그렇다면 ip custom 단계에서 별도의 포트 매핑은 해줄 필요가 없는 것이 맞나요?
+- A: 동작하는 것이 확인되면 잘되는 것이 맞습니다. 다만 간혹 전부 리셋되는 경우가 있어서 해줄 필요가 있는 경우도 있습니다.(vivado 상의 이슈라서 정확한 이유는 모르겠네요)
+
+lab 12는 과제 없음
