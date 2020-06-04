@@ -2454,7 +2454,7 @@ HDD에서의 unwritten contract: LBA 상에서 데이터를 연속하게 배치�
 
 &nbsp;
 
-Week 10, Tue
+Week 11, Tue
 ========
 **TODO**
 
@@ -2466,3 +2466,104 @@ NVMe에선 커맨드들을 받아들이는 Doorbell Register가 존재함. SATA 
 만든 뒤 큐의 시작주소를 doorbell register에 등록하면 알아서 커맨드를 읽어간다.
 
 FPGA로 SSD 펌웨어 가속하고 이런것도 해볼 수 있을까
+
+&nbsp;
+
+Week 11, Thu
+========
+> 2020-06-04
+
+NAND flash. 절연된 방에 전자가 몇개 있는지로 0, 1 여부를 판단.
+
+- Seek time 없음
+- Read/write access time이 비대칭
+  - read: ~50µs
+  - write: 수백 µs ~ 0.5ms
+  - erase: ~3ms
+  - Cell이 손상될수록 write 속도가 빨라진다. 그래서 write 시간을 재서 cell의 손상 정도를 알수도 있다.
+- No in-place update, FTL이 필요함
+- sequential read/write, random read 좋음, random write 나쁨
+- SSD에 writable한 블록 수가 줄수록 GC로 인해 random write 성능이 급락한다
+- Wear-leveling
+
+전통적인 OS들은 HDD에 최적화되어있다. SSD를 지원하기위해선 OS들이 변해야한다.
+
+Physical Block size와 Logical Block size에 차이가 있을 수 있는데, 이경우 보통 Physical Block size를 기준으로 매핑함. Logical Block size 크기가 더 큰데 logical block size 기준으로 매핑하면, write할때 오버헤드가 커져서.
+
+### SSD Support in OS
+SSD를 잘 쓰려는 노력이 다방면으로 존재한다.
+
+- SSD 대상으로는 defragmentation 비활성화
+  - SSD는 파일이 한곳에 있으나 멀리 떨어져있으나 성능에 큰 영향이 없음. 괜히 조각모음 하면 write 수가 더 늘어남.
+- New "TRIM" or "discard" command: Remove-on-delete
+  - 삼성과 MS가 열심히 일해서 만듦
+  - HDD시절에는 파일 삭제가 필요하면 그 파일 메타데이터만 지웠지 파일이 들어있는 영역을 하나하나 지우지는 않았음
+  - 그러나 SSD에서는 그 파일 블락이 삭제되었다고 SSD에 알려주지 않으면, SSD가 해당 영역을 GC하지 못하고 계속 들고있어야함
+  - 그래서 새 커맨드가 추가되었음
+- Simpler I/O scheduler
+  - NVMe SSD를 쓰면 I/O scheduler를 거의 bypass하고, NVMe queue에 바로 집어넣게된다.
+  - 요즘 심지어 read() 시스템콜에서 sleep 하는게 NVMe SSD에서 불필요하게 느려서 read()에서 busy wait하도록 구현하는 경우도 있음
+- Align file system partition with SSD layout
+  - SSD 블록의 시작점 (4KiB의 배수)가 아니라 SSD 블록 중간에서 파티셔닝을 해서 SSD 블록과 logical block address가 align이 안맞으면, 문제가 너무 많아짐. Write도 너무 많아질 수 있고.
+  - Align을 항상 맞춰줘야함.
+  - 김진수 교수님 연구소 대학원에서 불과 몇주 전에 겪은 문제
+- Flash-aware file system (ex: F2FS in Linux)
+  - 삼성에서 F2FS 를 개발함. 안드로이드 최근 기본 파일시스템으로 F2FS가 됨. 개발한 사람은 최근 구글갔음
+  - 기존 파일시스템은 overwrite기반인데, f2fs는 append 기반(log structured file system)임. File system 수준에서도 GC를 함.
+- Larger block size (4KiB)
+- New "multi-stream" interface
+  - 삼성에서 제안하여 NVMe SSD에 표준화됨
+  - SSD 성능에 영향을 제일 많이 주는건 GC의 존재다. 그리고 GC할 때 copy해줘야하는 live data가 적을수록 GC 성능이 좋아진다. 그래서 SSD를 쓸때에 항상 같이 죽을 데이터를 한 블럭 안에 놓으려고 노력한다. live data copy 없이 block을 한번에 erase하고싶어서. 근데 SSD는 어느 데이터들이 한 파일 안에 묶인 데이터인지 이런 메타데이터 정보를 하나도 알 수 없음
+  - SSD에 write를 할 때 stream id라는 추가적인 정보를 제공하여, stream id가 같은 데이터는 한 physical한 block에 모으도록 함
+  - 현재 stream id의 갯수가 16개정도밖에 지원 안함. 스펙상으로는 수만개도 지원하는데, stream id가 너무 많아지면 또 FTL이 할 일이 너무 많아짐. 그래서 파일시스템이 하기는 무리고 유저가 해야함.
+
+### Beauty and the Beast: SSD의 양면
+- 좋은점: 작음, 가벼움, robust, 저렴, 저전력, non-volatile
+- 나쁜점: in place update 없음, program/erase 훨씬 느림, erase unit 크기가 read/write unit보다 큼, bit error, limited lifetime
+
+성능과 안정성을 위해 소프트웨어 서포트가 필요하다. 삼성에 SSD 펌웨어 만드는 직원 1000명짜리 실이 하나 있는데, 거기에 상무로 우리과 선배가 세명정도 있다.
+
+김진수 교수님 연구실이 이 SSD만 10년 넘게 하고있는데 아직도 할게 많다.
+
+&nbsp;
+
+File System
+--------
+SATA는 SCSI의 subset. SATA, SCSI, NVMe와 같은 block interface를 감싸 Generic Block Layer를 노출하고, Generic Block Interface 위에 File system이 올려진다.HDD나 SSD가 아니라 RAM이나 네트워크여도, block layer만 노출하면 다 file system을 올릴 수 있다.
+
+open, read, write, close 이런게 다 File system API다. File system을 쓰면, 유저가 어느 블록을 읽고쓸지를 신경쓰지 않아도, 파일들에 이름만 붙여줘도 스토리지를 사용할 수 있다.
+
+### Storage: A Logical View
+스토리지는 Block의 배열이다. 아래의 세 연산을 지원함
+
+- Identify(): 스토리지 정보 반환
+- Read(start sector #, # of sectors, buffer addresses)
+- Write(start sector #, # of sectors, buffer addresses)
+
+### Abstraction for storage
+파일: 이름이 붙어있는 바이트의 집합. 모든 file에는 고유한 ID인 inode number가 붙는다. inode는 파일시스템 내에서 유니크함
+
+디렉토리: Special한 file. 내용에 "file name, inode number" tuple의 배열이 들어있음.
+
+### File System Components
+- File contents (data)
+  - 바이트열
+- File attributes (metadata or inode)
+  - File size
+  - block locations: 파일이 여러 블락으로 흝어져있을거라 배열 형태임. 파일 용량이 커지면 block locations 용량도 커짐.
+  - owner, group, ACL, atime, mtime, ...
+- File name
+
+### File System: A Mapping Problem
+(filename, data, metadata) -> (a set of blocks)
+
+위 매핑 관리만 해주면 그게 파일시스템이 되는건데, 위 문제를 푸는 방법이 정말 다양함. 파일시스템이 거의 AFS부터 ZFS까지 다있음 (AFS, BFS, CFS, DFS, ..., XFS, ZFS)
+
+### File System Design Issue
+컴퓨터를 쓰다가 갑자기 정전이 나도, 하드디스크가 망가지지 않았으면 좋겠다.
+
+- 목표: (가장 우선순위가 높음) Reliability, (2) Performance, (3) Scalability, ...
+
+보통 파일시스템은 reliability가 제일 중요해서, 보수적인 결정을 많이 함. 안드로이드 기본 fs를 ext4를 f2fs로 바꾸는것도 큰 일이었음. 그래서 파일시스템 개발자들은 보통 자기가 만든 fs를 항상 쓰면서 "내가 몇달동안 썼는데 문제가 없었다" 이렇게 데모를 한다.
+
+Scalability: CPU 코어 수에 따른 성능이 리니어하게 증가하는지? 충분히 많은 파일에 대해서도 잘 scale하는지? 충분히 큰 파일에 대해서도 잘 scale하는지? 충분히 큰 디스크에서도 잘 쓸 수 있는지? FAT32 같은 파일시스템은 4GiB 이상의 파일을 저장 못함.
