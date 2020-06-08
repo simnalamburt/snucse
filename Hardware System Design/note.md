@@ -764,6 +764,123 @@ V2가 예정되어있음.
 
 Week 12, Tue
 ========
+> 2020-06-02
+
+Optimizing Neural Networks: Software/Hardware Co-Design for Zero Skipping
+
+머신러닝 엔지니어들은 Weight pruning이라는걸 한다. 대부분의 가중치들이 0에 가까운 값이 되어버리기 때문이다. 우리는 이런 0 weight들에 대해 계산을 생략하는 테크닉에 대해 배울것이다.
+
+소프트웨어와 하드웨어 양쪽의 협력이 필요하다. 소프트웨어 단에서는 weight pruning을 해서 일정 weight들을 0으로 만들어야하고, 하드웨어 단에선 그런 0들에 대해 계산을 생략해야한다.
+
+### Zero Skipping in production
+Zero Skipping은 Sparse matrix 곱을 효율적으로 줄여주는 아주 강력한 테크닉이다. 갤럭시 S10에는 이미 zero skipping을 지원하는 하드웨어 가속기가 탑재되어있다. NVIDIA A100에도 zero skipping이 들어갔다. 
+
+### Weight pruning: Why
+실제 사람 뇌도 시간이 지나면 자원 효율성을 위해 잘 안쓰는 시냅스는 prune된다. 뉴럴넷에도 적용 가능하다.
+
+Pruning CNN: NIPS 2015. Weight가 아주 작은 간선은 prune해버려서, 더 나은 효율성을 얻을 수 있다. 안쓰는 간선과 뉴런을 prune해버리고 나면 sparse network가 결과로 나온다. 0 weight에 대해선 결과가 0이라는걸 이미 알고있으므로, 계산을 아예 할 필요가 없다. 이렇게 계산하면 성능면에서 이득을 볼 수 있음
+
+CPU가 하는 연산중 제일 자원을 많이 소모하는 연산은 DRAM Access이다. (수업 PPT 참고) 32-bit DRAM Memory Access에는 640pJ 소모, 32-bit int ADD에는 0.1pJ 소모. 6400배 차이난다. 에너지 소모는 행렬곱이 아니라 메모리 액세스에서 일어난다는것을 기억해야한다.
+
+메모리 액세스를 줄이려면 메모리에 애초에 데이터를 적게 담아야한다. 이 때, sparse 행렬곱의 경우, 0을 일일이 메모리에 담지 말고, 0이 메모리 상 어느 위치에 있었는지 인덱스만 기록해주면 메모리 액세스를 훨씬 줄일 수 있다.
+
+Weight pruning이 파워풀한 솔루션인것은 계산을 줄일 뿐 아니라, DRAM 액세스를 줄여주기 때문이다!
+
+### Weight pruning: How
+얼마나 작은 weight를 prune 할까?
+
+(PPT 참고) prune한다는것은, weight들의 분포를 이렇게 그렸을때, 0에 가까운 이 값들을 모두 0으로 간주하겠다는 것이다. 이 값을 0으로 바꾼 뒤, 추가적인 트레이닝을 해줘야한다.
+
+우리가 아주 작은 값들을 prune하긴 했지만, 아무튼 0이 아니었으니 output에 기여를 하고있었을 것이기 때문에, 정확도 손실이 발생했을 수 있다. 그래서 남아있는 non-zero weight를 가지고 추가적인 훈련을 시켜야 한다.
+
+weight pruning을 적용시킨채로 트레이닝을 다시 하면 봉우리가 두개 있는 분포가 나오고, 이건 정상이다. 추가 트레이닝으로 원래의 정확도를 다시 얻었다고 가정해보자. 이경우, pruning process를 멈추지 않고, pruning iteration을 한번 더 돌린다. 정확도 손실이 발생하지 않는 한, prune과 재훈련을 반복해도 된다.
+
+이것이 기본적인 pruning 테크닉이고, 매우 직관적이고 잘 동작한다. 여기에 추가적인 메모리 최적화를 적용시킬 수 있다.
+
+### Weight Clustering
+비슷한 값의 weight를 갖는 간선들을 모두 cluster시켜버린다. 이러면 행렬에 weight를 일일이 쓰는 대신 cluster의 index만 기록하고, 각 cluster의 centroid를 따로 저장하면 되기때문에 메모리 사용량이 훨씬 줄어들음. 저장은 이렇게 하고, 계산하기 직전에만 각 index에 맞는 value를 써서 계산하면 된다.
+
+그리고 특정 cluster에 값이 많이 들어있다면, 자주 등장하는 문자열을 짧은 압축문으로 바꿔주는 허프만 인코딩 기술을 사용해, cluster index를 더더욱 압축시킬 수 있다.
+
+### Pruning + Quantization + Compression: ICLR 2016
+- Pruning을 통해 정확도를 유지하며 9~13배 크기 감소
+- Quantization을 통해 정확도 유지하며 27~31배 크기 감소
+- Huffman Coding을 통해 정확도 유지하며 35~49배 크기 감소
+
+AlexNet같은애들에도 Huffman Coding 적용시켰더니 크기가 35배 이렇게 줄더라. 레이어별로 따로 압축을 적용시켜본 결과, CONV 레이어는 웨이트당 ~2.5bit, FC(fully connected) 레이어는 웨이트당 ~3.5bit으로 줄었다.
+
+### Per-Layer Sensitivity
+Pruning 하는 양에 따라 accuracy loss가 얼마나 생기는지 비교 (PPT 참고)
+
+CONV1(입력 근처)가 제일 sensitive했고, FC(출력 근처)가 제일 less sensitive 헀다. General하게, 입력에서 멀어질수록 sensitivity가 감소하는 현상이 관찰된다.
+
+또한, CONV 레이어보다 FC 레이어가 최적화에 따른 정확도 감소가 적은데, 이 역시 general하게 관찰되는 현상이다. 이유는 단순한데, FC 레이어가 갖는 웨이트 수가 CONV 레이어보다 훨씬 많기때문이다.
+
+### Parallel Computing of convolution
+지금까지는 소프트웨어 단에서 트레이닝할 때 적용시키는 최적화에 대해 알아봤는데, 이제 하드웨어단에서 적용하는 최적화에 대해 알아보자.
+
+2D 컨벌루전 계산을 하는 상황이라고 가정해보자. MAC Unit은 8개뿐인데, 커널이 3*3 크기다. 어떻게 하면 좋을까?
+
+1 clock cycle: 커널 좌상단의 맨 처음 kernel weight를 읽어서, 8개의 MAC Unit에 broadcast한다. 각 MAC Unit에겐 weight와 input activation이 필요한데, 각 MAC Unit은 feature map으로부터 자기 자신의 input activation을 읽는다.
+
+각 MAC Unit은 그에 맞는 Output 뉴론과 컨벌루전 윈도우를 갖고있다. 다음 MAC Unit은 다음번 Output 뉴론과 다음 컨벌루전 윈도우를 담당. 그 다음 MAC이 각자 자신의 input activation과 broadcast weight를 곱한다. 이러면 맨 첫 곱셈 한거임.
+
+2 clock cycle: 커널의 다음 weight를 broadcast한다음에 같은 계산을 반복함. MAC이므로 이전 사이클에서 했던 결과에 더해져서 나옴
+
+이걸 커널의 모든 weight에 대해 반복하면 convolution이 나온다.
+
+그러니까 걍 convolution이랑 계산 하는 횟수가 같은데, 순서만 다르게 한것임. 이렇게 하면 kernel의 weight 수보다 적은 MAC을 갖고있어도, 다양한 크기의 입력에 대응되는 convolution 계산기를 만들 수 있음.
+
+8개의 MAC Unit을 써서 8개의 곱셈과 덧셈을 병렬로 수행했다. 근데 MAC Unit이 더 많을때엔 더 많은 MAC Unit을 어떻게 활용할 수 있을까? 3D Convolution일 경우, 훨씬 많은 MAC을 계산에 쓸 수 있다. 이걸 하는 이유는 삼성의 Zero-skipping convolution 계산기 원리를 이해하기 위해서다.
+
+### Zero-Skipping in SAMSUNG
+ISSCC 2019, An 11.5 TOPS/W 1024-MAC Butterfly-Structure Dual-Core Sparsity-Aware Neural Processing Unit in 8nm Flagship Mobile SoC
+
+https://doi.org/10.1109/ISSCC.2019.8662476
+
+일단 3D Convolution 연산을 2D Convolution 연산으로 나눴다.
+
+만약 커널의 특정 weight가 0이라는걸 안다면, 그 커널의 weight를 MAC에 broadcast할 필요도 없고, MAC이 feature map으로부터 데이터를 읽어 곱셈을 할 필요도 없다. MAC 유닛이어서, 그냥 그 weight를 스킵해버려도 맞는 답이 나온다. 그렇게 skip해서 확보한 시간을 그냥 놀지말고, 다음 non-zero weight 계산을 빠르게 시작하는데 써야한다.
+
+(PPT 34페이지) weight의 일부가 0이라는것을 미리 알 경우, 더 작은 clock cycle로 계산이 끝난것을 볼 수 있다. zero를 skip한것임.
+
+이걸 실제로 구현하려고 해보면 훨씬 복잡하다. 그러나 동작원리 자체는 이해하기 쉽다.
+
+Zero-skipping의 효과를 측정해봤는데, Zero-Weight의 비율이 높을수록 성능 향상이 컸고, kernel의 크기가 클수록 성능 향상이 컸다.
+
+### Network Traversal: Feature-Map Forwarding
+삼성 논문에선 이거 말고도 추가적인 최적화 아이디어를 제시했다. 보통 이런 특수한 연산 가속기는 제한된 양의 메모리를 갖고있기때문에, 더 큰 데이터를 사용하려면 반드시 메인 메모리 액세스가 필요하다. 하지만 앞서 보았듯이 메인메모리 액세스는 성능면에서도 나쁘고 에너지면에서도 나쁘다. 심성은 이 메모리 액세스양을 줄이는 방법을 제시했다. FC 레이어에선 이 아이디어를 쓸 수 없으나, CNN에선 가능하다.
+
+Convolution 연산을 할 때, 모든 입력 데이터를 한번에 읽을 필요가 없다. 입력 데이터의 일부만으로 충분함. 그리고 한 레이어에서의 평가가 끝났을 때, 계산 결과를 DRAM에 저장하지 말고 바로 다음 레이어로 넘겨주면 DRAM 액세스 수를 줄일 수 있다.
+
+### Zero Skipping in NVIDIA A100
+A100의 경우, Weight pruning이 "2:4 rule" 규칙에 따라 이뤄졌다고 가정한다. (PPT 참고) 행렬이 네칸씩 나뉘어서, 각 네칸마다 두개의 셀은 prune되고, 나머지 두 셀은 prune 안된것을 볼 수 있다. Prune을 이렇게 하면 NVIDIA A100의 Zero-Skipping 기능을 쓸 수 있다. 
+
+0이 포함되어있던 큰 Weight 행렬을 non-zero 값만 모아 들어있는 non-zero data와 non-zero 값이 어느 index에 위치했었는지 알려주는 non-zero-indices로 변환한다. 이렇게 만들면 행렬곱 하기 곤란할 것 같지만, non-zero indices를 select로 갖는 mux를 적절히 활용해 행렬곱의 `x*0` 항을 계산하지 않도록 조작해주면 된다.
+
+이제 문제는 "2:4 rule"을 어떻게 지키는지이다. Pruning을 막 하는게 아니라 규칙에 맞춰서 해야하는데, 어떻게 할까? 작은 값을 가진것을 prune 한다는 아이디어는 같은데, 이것을 행렬의 칼럼 전체와 같이 좀더 큰 범위에 대해 수행하면 된다. nvidia에서도 pruning하는데에 적합한 알고리즘을 패키지로 제공할것이다.
+
+### HW Accelerator 요약
+현재 마켓에 있는 상업용 액셀러레이터는 이러하다
+
+1.  Systolic Array: Google TPU, Tesla
+    - Good data reuse
+    - Zero skipping 못함. zero-skipping systolic array 프로포절도 있는데 오버헤드가 있음
+2.  Direct convolution: Samsung
+    - Zero skipping 있음
+    - Wiring이 복잡함
+3.  Dot-product engine: NVIDIA, Microsoft
+    - Zero skipping 있음
+    - Wiring이 복잡함
+
+### Zero skipping 구현
+Matrix*Vector 곱셈기에서 Vector 부분을 보고 0이 있는지 검사하고, 0이 있으면 건너뛴다.
+
+Zero skipping 하는동안 데이터 트랜스퍼를 안할 수 있으므로 클럭이 아껴진다. 그러나 compression/decompression 구현을 해야해서 어려워진다. 쉬운 방법은 zero skipping을 compution 부분에서 구현하는것이다.
+
+vector가 0이면 그 vector는 broadcast 안해도 되어서, computation부분에서 zero-skipping을 구현해도 클락사이클 절약이 존재한다. 작년에는 이걸 구현하는 실습을 했는데 올해는 안했다. Layerwise acceleration 효과가 훨씬 커서.
+
+### Q&A
 01:45 질문:
 re-training을 무한정 계속하면 pruning하기 전의 상태로 돌아가나요? 그러면
 re-training을 정확히 어느 시점에 끝낼지는 경험적으로 정하는 건가요?
