@@ -2567,3 +2567,92 @@ open, read, write, close 이런게 다 File system API다. File system을 쓰면
 보통 파일시스템은 reliability가 제일 중요해서, 보수적인 결정을 많이 함. 안드로이드 기본 fs를 ext4를 f2fs로 바꾸는것도 큰 일이었음. 그래서 파일시스템 개발자들은 보통 자기가 만든 fs를 항상 쓰면서 "내가 몇달동안 썼는데 문제가 없었다" 이렇게 데모를 한다.
 
 Scalability: CPU 코어 수에 따른 성능이 리니어하게 증가하는지? 충분히 많은 파일에 대해서도 잘 scale하는지? 충분히 큰 파일에 대해서도 잘 scale하는지? 충분히 큰 디스크에서도 잘 쓸 수 있는지? FAT32 같은 파일시스템은 4GiB 이상의 파일을 저장 못함.
+
+&nbsp;
+
+Week 13, Tue
+========
+> 2020-06-09
+
+데이터의 IO 성능이 제일 중요하긴 하지만, 메타데이터의 IO 성능도 중요하긴 하다. 예를들어 폴더 안에 파일이 수백만개 있으면 파일 찾는 성능도 느려지기도 한다.
+
+어떤 파일시스템에는 최대 용량 제한이 있기도 하다. 예를 들어 FAT32는 최대 2TiB밖에 저장 못한다.
+
+아래 부분들을 결정해야한다.
+
+- 메타데이터로 뭘 넣을까?
+- pathname -> metadata: metadata를 어떻게 찾도록 구현할까?
+  - 보통은 디렉토리를 씀. 디렉토리를 어떻게 만들것인지가 이슈가 됨
+- (metadata, offset) -> data block: 데이터 블록을 어떻게 찾을것인가?
+- metadata와 data block을 어떻게 관리할것인가?
+  - Allocation, reclamation, free space management, ...
+- 크래시 이후 파일시스템을 어떻게 복구할것인가?
+
+### File Attributes
+POSIX Inode. POSIX에서 정한 파일 메타데이터 표준이 있다. Inode는 file metadata를 담는 자료구조를 뜻함.
+
+- 파일 타입: regular, directory, char/block dev, fifo, symlink, ...
+- Device ID containing the file
+- Inode number
+- Access permission: rwx 세자리 8진법으로 관리
+- Number of hard links
+- 소유자 UID, GID
+- File size
+- Number of 512B blocks allocated
+- atime: Last access time
+- mtime: Last modification time
+- ctime: Last status change time (마지막 메타데이터 수정)
+- 등
+
+디렉터리의 내부 구현은 파일시스템마다 모두 다르다. char/block device는 IO device에 filename을 부여한것이다.
+
+Inode table이 저장된 곳과 Inode number만 알면, Inode가 디스크상에서 어디에 있는지 빠르게 알 수 있다.
+
+chmod 같은걸 하면 ctime이 바뀐다. 파일 이름 수정은 ctime으로 안쳐줌.
+
+윈도우는 파일 생성시간도 저장하는데, POSIX Inode에는 그런건 딱히 없음.
+
+atime을 디스크에 저장하면 읽기만 해도 Disk 쓰기가 발생한다. 이게 부담스러워서 `noatime` 같은 옵션으로 마운트하기도 함. 그리고 스마트폰의 앱 파티션처럼, read-only 파티션이나 read-only filesystem에서도 atime이 업데이트되지 않기도 함.
+
+### File Operations
+파일 삭제를 `delete`라고 안하고 `unlink`라고 하는게 특이하다. 근데 `link`는 또 파일 만드는게 아니라 별도의 명령어다. 주의!
+
+- `lseek`: Reposition read/write file offset 
+- `fsync`: 특정 파일의 스토리지 디바이스와 in-core state 동기화, change가 모두 스토리지에 쓰여지도록 함.
+
+### Pathname Translation
+디렉토리 구조가 깊어질때마다, Disk IO가 많아짐.
+
+맨 처음 보는 디렉토리에서 `ls`를 치면 파일 목록이 살짝 느린것을 알 수 있다. 두번째부터는 빠른데, 그건 디렉토리의 내용물이 메모리에 캐시되기때문이다.
+
+### Ensuring Persistence
+파일시스템은 write를 무조건 디스크에 보내는게 아니라, page cache나 내부 버퍼에 캐싱할 수 있다. Write buffering덕분에 성능은 증가한다. Linux에선 page cache에서 최대 30초 존재할 수 있다.
+
+데이터와 메터데이터 수정 중 중요한게 있어서 page cache에서 디스크로 가고, 디스크에서도 미디어로 직접 기록되었으면 좋겠을 때 `fsync`를 쓴다. `sync`는 모든 파일에 대해 `fsync`를 호출하는것.
+
+`fdatasync`를 쓰면 메타데이터를 제외하고 데이터만 sync할 수 있다.
+
+### Hard vs Synbolic Link
+Hard Link: same inode number를 갖는 서로 다른 pathname. "둘중 하나가 진짜" 이런 개념이 아니다. 둘다 진짜임. Inode가 hard link reference count를 관리한다. Hard link reference count가 0이 되면 파일이 자동으로 삭제됨. 하드링크는 같은 파일시스템 안에서만 사용할 수 있다.
+
+Symbolic Link, Soft Link: 바로가기. 다른 파일시스템에 있는 파일도 가리킬 수 있음. 심링크의 내용물은 단순히 다른 파일 경로가 전부다. 심링크는 invalid reference를 가리킬 수 있다.
+
+하드링크는 거의 안쓰고, 심지어 같은 파일시스템이어도 심볼릭 링크를 더 많이 쓴다.
+
+### File System Mounting
+한 파일시스템의 디렉토리 내용물을 디렉토리 안에 매핑하는것. 모든 파일시스템은 사용되려면 반드시 마운트가 되어야한다.
+
+- Windows: `C:\`, `D:\` 이런 drive letter에 마운트함
+- Unix: mount point라고 불리는 빈 디렉토리에 마운트함
+
+### Consistency Semantics
+Unix semantics: 가장 최근에 write한것이 즉시 모두에게 보여야한다. Sequential Consistency. 굉장히 강력한 보장이여서, 보통 분산이 아닌 시스템에서 씀
+
+분산 파일시스템에선 약간 relax된 semantic을 쓴다.
+
+AFS session semantics: 구글 드라이브, DropBox같은 클라우드 스토리지가 보통 이만큼 보장됨. write를 하면 일단 로컬에만 업데이트가 되고, close하면 그때 서버에 업로드됨.
+
+Immutable-shared-files semantics: 모든 파일이 이뮤터블
+
+### Q&A
+DB가 OS를 싫어하는 경우가 많았어서, 과거에는 파일시스템조차도 싫다고 DB가 파일시스템 안거치고 바로 storage interface를 거치는 경우가 많았다. 근데 요즘은 걍 파일시스템을 쓰고있음. 파일시스템들에 DB에 필요한 API가 많이 뚫리기도 헀고.
