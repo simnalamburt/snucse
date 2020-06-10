@@ -1108,3 +1108,21 @@ State map: 각 state가 몇비트인지를 카르노맵처럼 그린것이다. s
 3.  output behavior가 같은 경우: `j = i*a + i*c`, `b = i*a`, `d = i*c`
 
 우선순위대로, 위 조건을 만족하는 state들은 group하여 statemap 상에서 가까이 놓아야한다.
+
+&nbsp;
+
+Week 11, Mon
+========
+> 2020-06-08
+
+알고리즘 기말고사때문에 수업 못들음
+
+**TODO**
+
+&nbsp;
+
+Week 11, Wed
+========
+> 2020-06-10
+
+**TODO**
