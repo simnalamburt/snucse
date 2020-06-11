@@ -2656,3 +2656,103 @@ Immutable-shared-files semantics: 모든 파일이 이뮤터블
 
 ### Q&A
 DB가 OS를 싫어하는 경우가 많았어서, 과거에는 파일시스템조차도 싫다고 DB가 파일시스템 안거치고 바로 storage interface를 거치는 경우가 많았다. 근데 요즘은 걍 파일시스템을 쓰고있음. 파일시스템들에 DB에 필요한 API가 많이 뚫리기도 헀고.
+
+&nbsp;
+
+Week 13, Thu
+========
+> 2020-06-11
+
+**TODO**
+
+### FAT: File Allocation Table
+FAT entry의 비트 폭에 따라 지원하는 블록 수의 상한이 결정되고, FAT entry의 비트 폭과 할당단위의 크기에 따라 디스크의 크기 상한이 결정됨.
+
+원래 하드디스크가 아니라 플로피디스크 용으로 개발됨
+
+### Indexed Allocation
+데이터블락이 어디어디에 있는지를 저장하는 인덱스 블록을 하나씩 같이 들고있기.
+
+작은 파일에 대해 불리함
+
+### Multi-level Indexing
+처음 10개 블락은 inode에서 데이터 블락들을 직접 가리키고있음. 4KiB를 넘어가면 single indirect block을 사용함. 4MiB를 넘어가면 double indirect block. 4GiB를 넘어가면 triple indirect block.
+
+작은 파일에서도 유리하고, 큰 파일에서도 스케일 잘됨.
+
+### Multi-level Indexing in VSFS
+12 direct pointer + 1 single indirect pointer 와 같이 구성할 수 있다.
+
+- Max file size = (12 + 1024)*4KiB
+
+Terminology
+
+- Max file size: 지원할 수 있는 제일 큰 파일 크기
+- Max file system size: 지원할 수 있는 제일 큰 파일시스템/디스크 크기
+
+### Extent-base allocation
+요즘 파일들 크기가 너무 많아져서 기존방식으로는 포인터가 너무 많아진다.
+
+대부분의 파일들은 logical address space 상에서 1열로 붙어있는것을 볼 수 있었다. 연속적으로 붙어있는 contiguous region을 하나의 extent로 간주한다.
+
+하나의 extent는 `(starting block, extent size)` 로 표현한다. extent들을 leaf로 갖는 B+ Tree를 만들어, "N번째 블록 찾기"를 O(log n)으로 지원한다.
+
+Ext4: Extent를 쓰고, 여러 블록들을 가급적이면 연속적으로 붙이기 위한 최적화도 함께 들어갔다.
+
+### Directory Organization
+`[(filename, inode number); N]` 또는 `Vec<(filename, inode number)>`가 가장 기본적인 구조인데, 이렇게만 만들면 문제가 있음.
+
+- filename들로 정렬이 되어있지 않으면, linear search하느라 느림
+- filename string match가 느림
+
+그래서 트리나 해시테이블로 만들기도 함. 트리로 만들면 탐색 오버헤드가 줄고, 정렬을 쉽게 할 수 있음. 해시테이블은 string match 오버헤드를 줄여줌.
+
+해시와 트리를 함께 쓰기도 함. `filename -> int` 이런 해시를 만들고, int 값으로 트리를 만듦. ext4에서 이렇게 함.
+
+### VSFS: Directory
+`Vec<(filename, inode number)>`임. Linux Ext2 와 유사하다.
+
+Variable-sized name을 지원함. 디렉토리 엔트리에 `.`, `..` 도 항상 있다는것에 유의. 자기 디렉토리와 부모 디렉토리의 inode number도 필요하다.
+
+### Reading a file
+파일 `/foo/bar`를 읽어 세개의 블락을 읽는다고 가정하자. 캐싱을 고려하지 않을 때, `open("/foo/bar")` 은 아래 과정을 거친다.
+
+1.  Read `/` inode. 루트 디렉토리의 inode의 번호는 항상 알 수 있다. 고정되어있기도 하다.
+2.  Read `/` data.
+3.  Read `/foo` inode.
+4.  Read `/foo` data.
+5.  Read `/foo/bar` inode.
+
+첫번째 블락에서 아래가 일어난다
+
+1.  Read `/foo/bar` inode.
+2.  Read `/foo/bar` first data block.
+3.  Write `/foo/bar` inode. `atime` 업데이트가 필요함.
+
+두번째 블락에서 아래가 일어난다
+
+1.  Read `/foo/bar` inode.
+2.  Read `/foo/bar` second data block.
+3.  Write `/foo/bar` inode. `atime` 업데이트가 필요함.
+
+### Writing a file
+**여기까지 시험범위**
+
+`/foo/bar`을 만들고 몇개의 블락을 쓰는 상황
+
+1.  Read `/` inode
+2.  Read `/` data, find `/foo` directory
+3.  Read `/foo` inode
+4.  Read `/foo` data, check if `/foo/bar` already exists, etc.
+5.  Read inode bitmap, find free inode
+6.  Write inode bitmap, allocate a new inode
+7.  Write `/foo` data, new file created in `/foo` directory
+8.  Read `/foo/bar` inode
+9.  Write `/foo/bar` inode, inode 블럭에서 필요한 부분만 고친다음 다시 쓴다.
+10. Write `/foo` inode. `/foo` 디렉토리에 액세스가 발생했으니 업데이트 필요.
+
+간단한 Read, write 한번 할때마다, 굉장히 많은 업데이트가 발생한다.
+
+시험문제와 가장 비슷한 파일은, 스탠포드의 CS140으로 검색을 하시면 스탠포드의 OS 강좌가 나오는데, 거기 보시면 샘플 midterm exam, 샘플 final exam이 있잖아요? 이게 제일 비슷한거같아요. Archive도 있어서 옛날 시험문제와 solution도 다있어요. 문제의 스타일이 제일 비슷하다는 뜻이다.
+
+중요한 용어들에 대한 괄호넣기는 항상 나옵니다. 교재 반드시 읽어보세요. xv6 마지막 프로젝트인 pa6, priority donation 이것도 모두 시험범위입니다. 이런경우에 priority donation이 어떻게 일어나는가? 이런식으로 문제를 낼 수 있어요.
