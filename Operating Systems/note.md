@@ -1396,9 +1396,102 @@ Page replacement policy가 어떤 page를 evict할지 결정한다.
 
 Week 8, Thu
 ========
-**TODO**
+> 2020-05-07
 
-Page Replacement부터 쓰래싱, 등 PPT 10 끝까지 했음.
+### Page Replacement
+- 어떤 페이지가 victim이 될것인가?
+  - Victim의 dirty bit가 1인경우, disk로 써준다
+  - Victim page가 원본(파일시스템, 스왑스페이스, 등)과 다르지 않을경우, 버린다
+
+왜 CPU처럼 direct-mapped, set-associative design을 쓰지 않는가? Page fault(miss) rate를 최소화하기 위해.
+
+디스크 액세스가 느려서, 페이지 폴트 패널티가 너무 크다. 평소의 10만배 이상. 아주 작은 miss rate 증가로도 전체 AMAT(Average Memory Access Time)이 확 올라간다.
+
+### OPT (or MIN)
+- 미래에, 가장 오랫동안 쓰이지 않을 페이지를 스왑아웃 한다. Fault rate가 최소화되는, 최적해다.
+- 문제: 미래를 예측할 수 있을때에만 쓸 수 있다.
+- 그냥 다른 policy와의 성능비교용으로 쓰임
+
+### FIFO: First In First Out
+가장 먼저 메모리에 들어온 페이지가, 미래에 가장 오래 안 쓰일 페이지일것이다라는 가정. 이 가정이 사실이면 성능이 좋겠지만, 사실이 아닐 수 있다. 그리고 몇몇 페이지는 항상 메모리에서 써야할 수 있다.
+
+구현이 간단하고, Fair하다. 모든 페이지가 메모리에 동일하게 상주함.
+
+"Belady's anomaly" 문제를 겪는다. 메모리가 많아져서 페이지 프레임 수가 늘면, 페이지 fault rate가 늘어남.
+
+### LRU: Least Recently Used
+과거에 가장 오래 안쓰인게 미래에도 가장 오래 안 쓰일 페이지라는 가정.
+
+- With locality, LRU approximates OPT
+- "Stack" algorithm: Belady's anomaly에 걸리지 않는다
+- 각 페이지가 언제 액세스되었는지 알아야해서 구현이 까다로움
+- 페이지가 얼마나 자주 액세스되었는지는 track하지 않음, 이때문에 모든 워크로드를 잘 처리하지 못한다.
+
+스택 알고리즘이란? 메모리 사이즈의 증가가 page fault rate를 늘리지 않을것을 보장하는 폴리시. M개의 프레임으로 돌린 폴리시 결과랑, M+X개의 프레임으로 돌린 폴리시 결과랑, 앞의 M개는 결과가 같다.
+
+구현방법에 두 접근이 존재함
+
+- Software approach
+  - OS가 자료구조 써서 어프로치 타임 기록. memory reference에 오버헤드가 붙지만, replacement는 빠르게 가능.
+- Hardware approach
+  - 각 페이지프레임에 액세스할때마다 system clock 타임스탬프가 페이지프레임에 기록됨. victim이 필요하면 scan해서 제일 오래된거 찾기
+  - memory reference 오버헤드는 없으나, replacement 시간복잡도가 안좋음. 메모리 크기 커지면 더느려짐.
+
+### RANDOM
+구현 간단함. 성능은 운에 좌우됨. 근데 "Looping workload"와 같은 워크로드에선 FIFO, LRU보다 빠르다! Looping workload: 페이지 0 1 2 3 ... 48 49 0 1 2 .. 를 무한반복.
+
+### CLOCK
+근사 LRU. 각 PTE의 Reference bit을 사용
+
+1.  모든 피지컬 프레임을 원모양으로 배치
+2.  시계바늘을 원형으로 돌리면서, victim 고름
+    - 바늘이 가리킨 페이지가 R==1이면, R==0으로 만들고 다음페이지로 넘어감 (두번째 기회를 줌)
+    - 바늘이 가리킨 페이지가 R==0이면, evict
+    - Arm moves quickly when pages are needed
+
+메모리가 커지면 "정확도"가 낮아질 수 있다.
+
+### Clock Extensions
+Clustering: Replace multiple pages at once. replacement algorithm은 비싸니까 한번에 여러개 replace하자. Single large write가 many small write보다 싸니까.
+
+M(modify) bit가 켜진 페이지는 피함. Dirty pages는 replace가 더 비싸므로, R==0 && M==0인 페이지를 더 선호해서 replace하기.
+
+각 페이지프레임에 software counter 넣기도 가능함.
+
+- Better ability to differentiate across pages
+- Increment software counter if R == 0
+- 카운터가 작으면, 페이지가 최근에 액세스되었다는것을 뜻함
+- 카운터가 특정 리밋을 넘으면 evict.
+
+### Physical Memory Allocation Polices
+- Fixed-space allocation policy
+  - 각 프로세스가 사용가능한 페이지 프레임의 제한을 가지고, 이 제한을 넘으면 스왑되기 시작함
+  - Local replacement: 어떤 프로세스는 문제가 없어도, 어떤 프로세스는 스왑으로 고통받을 수 있음
+- Variable-space allocation policy
+  - Processes' set of pages grows and shrinks dynamically
+  - Global replacement: 하나의 프로세스가 전체에 문제를 일으킬 수 있음
+  - 리눅스에서 쓰임
+
+### Thrashing
+Working set: active하게 사용중인 페이지들의 집합
+
+Working set을 다 담지 못할정도로 메모리가 모자라면 어떻게될까? OS가 스왑인/스왑아웃에 거의 대부분의 시간을 쓰게됨.
+
+프로세스를 끄거나, 메모리를 더 붙이는거 외엔 노답. 안드로이드에는 LMK(Low Memory Killer)라는게 있어서 이 일을 자동으로 함.
+
+### 요약
+- VM 메커니즘
+  - PA, VA
+  - 파티셔닝, 세그멘테이션, 페이징
+  - 페이지테이블 관리, TLB, 등
+- VM policies
+  - page replacement policy, page allocation policy
+- VM Space 최적화
+  - Demand paging, CoW
+  - Multi-level page tables
+- VM Time 최적화
+  - TLB를 사용한 효율적인 address translation
+  - 더 효율적인 page replacement policy
 
 &nbsp;
 
@@ -2589,6 +2682,10 @@ HDD는 기계적인 부품이 들어가기때문에, 용량이 작아도 최저�
 
 당시에 2.5인치 하드/디스크 전체중에서 제일 용량이 컸다. IO 성능도 무시무시함.
 
+Week 11, Tue
+========
+> 2020-06-02
+
 ### NAND의 단점
 모두 소프트웨어로 커버할거다.
 
@@ -2602,20 +2699,31 @@ HDD는 기계적인 부품이 들어가기때문에, 용량이 작아도 최저�
   - Bad block을 피해 리매핑 해야함
 - Limited program/erase cycles
   - Program/erase 횟수제한
-  - 웨어 레벨링 해야함
+  - 웨어 레벨링 해야함. 한 블럭만 집중적으로 못쓰게 분산시키기.
 
-Week 11, Tue
-========
-> 2020-06-02
+흠결이 없는 완벽한 하드웨어로 만들 생각이 애초에 없었음. 소프트웨어로 위의 한계를 극복해야함.
 
-**TODO**
+### FTL: Flash Translation Layer
+Disk와 같은 Traditional Block Device의 동작을 에뮬레이트하는 레이어.
+
+### Garbage Collection
+결과적으로 FTL때문에 더이상 쓸 블럭이 없어짐. GC해서 free space를 만들어야함. GC를 하려면 At least one free block이 존재해야함. Free block이 필요하니까.
+
+1.  Victim block 선택
+2.  Victim block에서 valid pages를 모두 free block으로 옮김
+3.  Victim block erase
+
+### NVMe SSD
+전송속도가 빠른 PCIe 기반. PCIe Gen3는 레인당 1GB/s, 최대 32레인 지원.
+
+Deep queue: 큐당 최대 64K 커맨드 저장 가능, 최대 64K개의 큐 지원
+
+Streamlined command set: required commands가 13개뿐
+
+NVMe에선 커맨드들을 받아들이는 Doorbell Register가 존재함. SATA 시절에는 복수개의 커맨드 레지스터 하나하나에 커맨드를 써야했는데, 지금은 커맨드를 큐로 만든 뒤 큐의 시작주소를 doorbell register에 등록하면 알아서 커맨드를 읽어간다.
 
 - Q: 오늘 SSD 펌웨어가 배경에서 하는 다양한 일들을 잔뜩 배웠는데, 이게 SSD 성능에 어느정도로 영향을 주나요?
-- A: 성능에 엄청난 옇양을 줍니다. 4TB면 4GB의 DRAM이 필요하고 아까 했는데, 이거 다 FTL이 페이지매핑 유지하느라 필요한거임. 페이지매핑 테이블은 멀티레벨 안하고 리니어하게 들고있는데, 멀티레벨 테이블로 하면 성능을 너무 많이 깎아서 그럼. FTL이 성능에도 영향을 주지만 신뢰도에도 영향을 많이 줍니다.
-
-NVMe에선 커맨드들을 받아들이는 Doorbell Register가 존재함. SATA 시절에는
-복수개의 커맨드 레지스터 하나하나에 커맨드를 써야했는데, 지금은 커맨드를 큐로
-만든 뒤 큐의 시작주소를 doorbell register에 등록하면 알아서 커맨드를 읽어간다.
+- A: 성능에 엄청난 영향을 줍니다. 4TB면 4GB의 DRAM이 필요하고 아까 했는데, 이거 다 FTL이 페이지매핑 유지하느라 필요한거임. 페이지매핑 테이블은 멀티레벨 안하고 리니어하게 들고있는데, 멀티레벨 테이블로 하면 성능을 너무 많이 깎아서 그럼. FTL이 성능에도 영향을 주지만 신뢰도에도 영향을 많이 줍니다.
 
 FPGA로 SSD 펌웨어 가속하고 이런것도 해볼 수 있을까
 
@@ -2625,7 +2733,8 @@ Week 11, Thu
 ========
 > 2020-06-04
 
-NAND flash. 절연된 방에 전자가 몇개 있는지로 0, 1 여부를 판단.
+### OS Implications
+NAND flash. 절연된 방에 전자가 몇개 있는지로 0, 1 여부를 판단. Disk와 다른 성질들이 많다.
 
 - Seek time 없음
 - Read/write access time이 비대칭
@@ -2815,7 +2924,47 @@ Week 13, Thu
 ========
 > 2020-06-11
 
-**TODO**
+### Implementing a File System
+On-disk structures: 어떻게 FS로 파일과 디렉토리를 구현할것인가? 어떻게 다양한 FS 메타데이터를 관리할것인가?
+
+Access methods: open, read, write, close같은거 하려면 어떤 스텝들이 필요한가?
+
+### VSFS: Very Simple File System
+OSTEP에서 구현한 간단한 파일시스템.
+
+디스크를 4KiB의 블록들로 나눔. 블록 크기는 sector size의 정수배여야함. 대부분의 블록은 데이터저장에 쓰는데, 몇몇은 메타데이터 저장용으로 쓰임.
+
+- Inodes: Inode 크기는 개당 256B 이런식으로 고정되어있음. 한 블록 안에 16개의 inode를 넣을 수 있다.
+- Data bitmaps: 각 블록이 free(0)인지 사용중(1)인지 비트맵으로 저장. 4096개의 데이터블록 서포트
+- Inode bitmaps: 각 inode가 free(0)인지 사용중(1)인지 비트맵으로 저장. 4096개의 inode 서포트
+- Superblock: 파일시스템 전체 메타데이터 저장
+  - File system type, Block size, 총 Block 수, 총 inode 수, data/inode bitmap block 수, 등
+
+### Allocation Strategies
+파일을 어떻게 디스크 블록들에 매핑할것인가? variable sized address space를 physical memory에 매핑하는것과 유사한 문제. 같은 원칙을 적용한다.
+
+피해야하는 문제들
+
+- Fragmentation이 작아야함, 보통 external fragmentation
+- 파일 크기 grow 잘되어야함
+- Sequential access 성능
+- random acess에서 데이터블록 찾는 속도
+- Data blocks들을 기록하기위한 metadata overhead가 작아야함
+
+### Contiguous Allocation
+- Horrible external fragmentation. 주기적으로 compaction 해야함.
+- 파일 크기를 키우려면 데이터를 옮겨야할때가 많음
+- Sequential acess 성능 최상
+- Random acess도 단순한 계산으로 해결 가능
+- 메타데이터 오버헤드도 적음
+
+### Linked Allocation
+링크드리스트처럼, 각 블록이 다음 블록을 가리키는 포인터를 가짐
+
+- No external fragmentation, 파일 크기 늘리기 쉬움.
+- Data가 놓인 형태에 따라 시퀀셜 액세스 성능이 갈림
+- Poor random access performance. 랜덤액세스가 O(n)이니까.
+- 블록당 포인터가 하나씩 낭비되고, 그 포인터 값은 매우 fragile하다. 여러 포인터중 하나라도 값이 잘못되면 전체 파일을 못쓰게됨.
 
 ### FAT: File Allocation Table
 FAT entry의 비트 폭에 따라 지원하는 블록 수의 상한이 결정되고, FAT entry의 비트 폭과 할당단위의 크기에 따라 디스크의 크기 상한이 결정됨.
