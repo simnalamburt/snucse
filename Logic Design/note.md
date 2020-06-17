@@ -685,6 +685,7 @@ Week 8, Mon
 ========
 > 2020-05-04
 
+### ALU
 **TODO**
 
 &nbsp;
@@ -728,15 +729,56 @@ R-S Latch using NAND도 같은 패턴으로 분석할 수 있다.
 ### Gated R-S Latch
 R-S Latch는 R과 S 둘 중 하나라도 1이 되어버리면 값이 즉시 변경된다. 이걸 원치 않으므로 enable이라는 입력을 하나 추가로 만들어서, enable이 1일 때에만 R, S 입력이 효과를 발휘하도록 만든다.
 
-### Clocks
-
 &nbsp;
 
 Week 8, Wed
 ========
 > 2020-05-06
 
-**TODO**
+### Clocks
+- Period: 클락 주기
+- Duty-cycle: 주기 안에서 클락이 1인 시간의 비율. 50%가 아닐수도 있다.
+- Frequency: 주파수, 진동수, f = 1/T
+
+R과 S와 같이 입력이 settle될 수 있을정도로 충분히 대기해야한다.
+
+### Master-slave structure
+- Positive clock: input을 master latch에 저장
+- Negative clock: slave latch를 업데이트해서 output을 바꾼다.
+
+이 둘을 묶어 master-slave flip flop이라고 부른다. 근데 그냥 마스터슬레이브 R-S FF는 1s catching problem이 가능함.
+
+### D flip-flop
+1s catching problem 이 해결되었음. 어떻게 해결했는가?
+
+Hold 기능 제거. 항상 값을 넣어줘야함. D가 순간적으로 1로 튀더라도, 이후에 0으로 회복된다면 0 값이 쓰이게됨.
+
+- D = 0 => R = 1, S = 0
+- D = 1 => R = 0, S = 1
+
+### Negedge triggered D flip-flops, 6 gates version
+Clock이 low일 때 D와 D' 값을 hold하는 회로가 위아래에 있음.
+
+- Clock=1 일때엔, 가운데의 RS latch 입력이 무조건 R=0, S=0으로 고정됨.
+- Falling edge인 순간: R에 D'이 홀드되고, S에 D가 홀드됨. 
+- Clock=0 이 유지될 때: D가 변해도 새 D를 안읽음.
+
+두개
+
+- posedge triggered: posedge에 샘플링하고, rising edge 조금 뒤에 값이 변함
+- negedge triggered: 반대
+
+### Transparent (level-sensitive) Latch vs Edge triggered FF
+- Latch: enable이 1이면, 입력이 조금이라도 바뀌는 즉시 Q가 업데이트된다. Transparent latch라고 부른다.
+- Edge triggered flip-flops: 엣지에서만 값을 읽는다.
+
+### Timing constraints
+- T_su, T_s: Setup time. 클락 이전에 유지해줘야하는 시간
+- T_h: 클락 이후에도 유지해줘야하는 시간
+- T_w: Minimum clock width
+- T_pd: propagation delay
+
+보통 T_h < T_w < T_pd
 
 &nbsp;
 
@@ -758,9 +800,6 @@ Week 9, Mon
 
 기말고사 Open Book은 아니다. A4 한면 cheat sheet 허용.
 
-### Comparison of latches and flip-flops (FFs)
-**TODO**
-
 ### Typical timing specifications
 - setup and hold times
 - minimum clock width (Tw)
@@ -777,10 +816,15 @@ low to high Tpd랑 high to low Tpd랑 다를 수 있다
 NOTE: ~X 핀을 입력일때엔 X_L라고 쓰지만, 출력일때엔 보통 XN라고 씀. X_L가 Active
 Low 이런 뜻인데, Active low는 입력에 대해서만 쓰는 말이니까
 
+Clear/Preset: 기계 맨 처음 켰을때 초기화하는데에 씀.
+
+- CLR=1, PR=1: Undefined, Q와 QN을 모두 0으로 세팅한다
+- CLR=1, PR=0: 값을 0으로 세팅하라는 뜻
+- CLR=0, PR=1: 값을 1로 세팅하라는 뜻
+- CLR=0, PR=0: D를 읽음
+
 CLR과 PR 핀이 asynchronous하다고 쓰여져있는데, 이거는 rising CLK edge가 오지
 않아도 CLR과 PR 핀이 변하는 순간 바로 값이 반응한다는 뜻임.
-
-**TODO**
 
 ### Registers
 Flip-flops와 유사한 controls & logic 들의 집합. 연관되어있는 여러 값을 저장한다. 클락과 reset/set lines를 공유한다.
@@ -790,7 +834,7 @@ Register file: 여러 레지스터들의 집합. CPU와 GPU의 key component다.
 ### Shift register
 레지스터의 일종. 매 사이클마다 값이 1씩 시프트된다.
 
-Universal shift register: 매 사이클마다 값이 어느 방향으로 시프트될지 설정할 수 있는 shift register
+Universal shift register: 매 사이클마다 값이 어느 방향으로 시프트될지 설정할 수 있는 shift register. Universal shift register 여러개를 조합해 큰 레지스터를 만들 수 있음.
 
 &nbsp;
 
@@ -1158,11 +1202,23 @@ output을 state bit로 재사용하는 state assignment 방법. output이 state 
 &nbsp;
 
 ## 10. Case Studies in Sequential Logic Design, 1
-### Finite String Recognizer
-### Complex Counter
-### Digital Combination Lock
+- Problem -> FSM HW: Design
+- FSM HW -> Problem: Analysis
 
-**TODO**
+### Finite String Recognizer
+패턴 `010`이 보일때마다 1을 출력하는데, 패턴 `100`을 받는순간 패턴 감지를 멈춘다.
+
+(PPT 참고)
+
+### Complex Counter
+M이 0일때엔 binary counter, M이 1일때엔 gray code counter
+
+(PPT 참고)
+
+### Digital Combination Lock
+숫자 네개 입력받으면 문 열리는 도어락
+
+(PPT 참고)
 
 &nbsp;
 
