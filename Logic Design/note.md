@@ -1141,17 +1141,127 @@ Week 12, Wed
 ========
 > 2020-06-03
 
+(state assignment 계속)
+
+이렇게 하면 next state 계산하는 combinational logic이 매우 간단해진다. 위의 휴리스틱을 따라 배치하면, next state 카르노맵에서 1이 인접한 칸에 올 확률이 올라가기 때문이다.
+
+#### Output-oriented encoding
+자세히 설명하진 않겠다.
+
+output을 state bit로 재사용하는 state assignment 방법. output이 state 역할을 할 수 있을때에 state를 output과 동일하게 하면 회로를 절약할 수 있음. Synchronous mealy와 잘 동작한다.
+
+#### State assignment approaches
+- Tight encoding: Custom chip design에 주로 쓰임
+- One-hot encoding: FPGA나 programmable logic에 주로 쓰임
+- Output-oriented encoding: Ad hoc, 아주 가끔 쓰임. 사람이 디자인할때에 주로 쓰임. FSM에 쓰면 circuit 크기가 아주 작아짐.
+
+&nbsp;
+
+## 10. Case Studies in Sequential Logic Design, 1
+### Finite String Recognizer
+### Complex Counter
+### Digital Combination Lock
+
 **TODO**
 
 &nbsp;
 
 Week 13, Mon
 ========
-> 2020-06-08
+> 2020-06-08, 알고리즘 기말고사때문에 수업 못들음
 
-알고리즘 기말고사때문에 수업 못들음
+## 10. Case Studies in Sequential Logic Design, 2
+### Memory Controller
+SRAM이든 DRAM이든 words들의 행과, common bit line들의 열로 이뤄져있다. 그 안에 들은것만 다름. 특정 워드를 읽고싶으면, 특정 행을 enable 시키면 된다.
 
-**TODO**
+#### SRAM
+SRAM, 셀당 트랜지스터 여섯개. 두 not gate의 루프로 만들었음, 제일 빠른 RAM임. DRAM은 좀 더 느림.
+
+1024*4-bit SRAM의 입출력 생김새:
+
+- 입력: Chip Select (CS), Write Enable (WE), Address (A0-A9)
+- 출력: 입출력 포트 IO0 IO1 IO2 IO3
+
+내부적으로는 64x16 사이즈 행렬 storage matrix를 네개 겹쳐서 만든다. 10개의 address를 4bit 6bit으로 나눠, 4bit은 0~16 범위의 column로 쓰고, 6bit은 0~64범위의 row로 씀. Word들이 바로 옆에 딱딱 붙어있는게 아니라, 네개의 bank에 interleave되어 저장된다.
+
+네개의 bank에 row입력이 들어가면 거기에 해당하는 16개의 column데이터가 한번에 출력된다. 이 16개의 컬럼 데이터는 각각 sense amplifier를 통과하는데 이 떄, column입력이 16개중 하나만 골라 증폭시킨다.
+
+Chip Select은 이 블록을 쓸지말지를 결정함, Write Enable은 읽기연산을 할지 쓰기 연산을 할지 결정함.
+
+- Read cycle: nWE = 1, address를 세팅하고 nCS가 0이 되면 읽기를 시작한다.
+- Write cycle: nWE = 0하고, address와 data를 세팅한뒤 nCS가 0이 되면 쓰기를 시작한다.
+
+타이밍
+
+- Memory Access Time: Address 세팅 ~ output 까지의 시간, Latency
+- Memory Cycle Time: 한 오퍼레이션에서 다음 오퍼레이션까지의 시간, Bandwidth / Throughput
+- Access Time <= Memoy Cycle Time
+
+#### DRAM
+한국 역사상 가장 성공적인 상품. 메모리 하나당 트랜지스터 하나. 느리지만 더 dense함. 이거보다 더 dense한건 Flashmemory임.
+
+DRAM의 문제.
+
+1. Small signal, Destructive read: 값을 읽는것만으로도 값을 잃어버림. 읽은뒤에 값을 회복시켜야해서 시간이 더 걸림.
+2. DRAM은 캐퍼시터가 하나 들어있어서, 이게 충전되어있는지 방전되었는지 여부로 데이터를 저장함. 캐퍼시터는 시간이 지나면 decay되기때문에 리프레시가 필요함.
+
+DRAM 읽는 원리
+
+1. Cc에 값이 0, V_DD 중 하나로 들어있고 Cb에는 0.5V_DD가 있음
+2. Cc랑 Cb를 연결함. Cc와 Cb의 값이 0.5V_DD보다 낮아지거나 커질거임 (Destructive Read)
+3. Sense amplifier가 0.5V_DD이하의 값은 0으로 밀어버리고, 0.5V_DD이상의 값은 1V_DD로 밀어버림
+4. Restore 완료. Cc도 복구되었고, Cb에는 읽기 결과가 있음
+5. 다음에 또 쓰기 전에 값을 다시 0.5V_DD로 만들어야함
+
+전기 관련된건 전전회 수업에서 하자
+
+4096*1-bit DRAM Controller: A0~A11 12bit array. nRAS (row access strobe), nCAS (col access strobe), nWE 존재.
+
+64*64 크기의 single storage matrix 존재. row decoder로 row를 하나 고른 다음, column latch로 64bit중 1bit를 고른다.
+
+리프레시를 하기위해, 특정 row를 읽을 필요가 없더라도 그냥 매 행을 돌아가면서 계속 읽고 다시 써야한다.
+
+DRAM은 RAS와 CAS가 나뉘어져있다. DRAM에 빠르게 접근하기위한 핵심기능이다. 입력 핀수들 줄이기위함이다.
+
+읽기 과정:
+
+1. Address bus에 Row Address를 입력
+2. nRAS = 0을 하면 row addess가 latch된다
+3. 그 다음 col address를 입력시키고,
+4. nRAS=0를 유지하며 nCAS = 0을 하면 col address가 latch된다.
+5. 이 다음 nCAS=0인 채로 nRAS=1을 하면 D_out으로 데이터가 나온다.
+
+쓰기
+
+1. Row Address 입력
+2. nRAS = 0, row address latch됨
+3. D_in 입력
+4. nWE = 0
+5. col address 입력
+6. nCAS = 0, 쓰기 시작됨
+
+도 마찬가지임. Row Address 입력한뒤 nRAS = 0
+
+#### Designing memory controller
+- INC_ADR: 어드레스가 늘어날지 말지를 결정해줌
+- nLATCH_DATA: 읽기 결과 저장하는곳
+- nENAB_BUFFER: tri state buffer, write cycle에서 data bus에 input data를 연결시켜주기 위해 존재
+
+메모리 컨트롤러는 어케만들까?
+
+Idea: multi-phase overlapping clock을 사용해, CS, WE, LATCH_DATA, INC_ADR, ENAB_BUF 같은 핀들이 원하는 타이밍에 켜고 꺼지게 만들 수 있다.
+
+D-flipflop을 여러개 겹쳐서 multi-phase overlapping clock을 만들 수 있다.
+
+### Sequential Multiplier
+`multiplicand * multiplier = product`
+
+두 8bit 정수가 있다. 8cycle동안 곱셈이 되게 해보자. 매 클락마다 아래의 네 연산이 병렬로 일어난다.
+
+1. `tmp = product + multiplicand`
+2. `if multiplier[0]: product = tmp`
+3. `multiplier >>= 1`
+4. `multiplicand <<= 1`
 
 &nbsp;
 
@@ -1159,10 +1269,105 @@ Week 13, Wed
 ========
 > 2020-06-10
 
-**TODO**
+multiplier는 8bit짜리 shift register, Shift가 켜질때마다 오른쪽으로 1씩 움직인다. multiplicand는 16bit shift register, shift가 켜질때마다 왼쪽으로 1씩 움직인다. Product는 일반 레지스터, Load3 플래그가 켜지면 값을 로드하고 안켜지면 로드하지 않는다.
+
+곱셈 컨트롤러는:
+
+- clock, digit(multipler의 LSB), start를 받아
+- shift, load3, clear(product 레지스터 청소)를 출력함
+
+위의 일을 하는 FSM으로 볼 수 있다. digit을 8번 받으므로 8개의 state를 순회하게된다. clear는 곱셈이 맨 처음 시작될때에만 켜진다. shift는 곱셈중에는 항상 1이고, 곱셈이 끝나면 0. load3는 digit이 true일때에만 true로 켜진다.
+
+아래와 같이 더 간단하게 만들수도 있다.
+
+1. `tmp = multiplicand & multiplier[0]`
+2. `product += tmp`
+3. `multiplier >>= 1`
+4. `multiplicand <<= 1`
+
+이러면 conditional하게 load할 필요가 없다. conditional load가 필요 없으니, 곱셈 컨트롤러가 digit을 읽을 필요도 없어진다. 곱셈 컨트롤러가 아래와 같이 간단해진다.
+
+- clock, start를 받음
+- load3-shift, clear를 출력함
+
+clear는 역시 곱셈이 맨 처음 시작될떄만 켜짐. load3-shift는 곱셈이 진행중인 내내 1.
+
+### Serial Line Transmitter/Receiver
+ex: RS-232
+
+한번에 1비트 정보만 전달할 수 있는 전선이 있다. 이걸로 N비트 정보를 주고받고싶다. 근데 양쪽 기계의 클락레이트가 다르다.
+
+- Quiescent value (1): 통신 없을때의 전압. 보통 1
+- Start bit (0): 통신 개시를 알리는 비트. Quiescent value의 반대여야함.
+- Start bit이 들어오면 그 다음 고정된 수의 bit를 보냄 (ex: 8bit)
+- Stop bit(1)이 들어오면 통신 끝.
+
+Oversampling: bit time때마다 한번만 샘플하면 두 1 사이의 start bit을 놓칠 수 있다. bit time마다 훨씬 많이 샘플링해야한다. 이 예제에선 1bit time마다 4번 샘플링 한다.
+
+Sender part, Receiver part가 따로임.
+
+ClkS: 보내는쪽의 클락. ClkR = 4*ClkS
+
+키보드 키: 평소엔 1로 pulled up되다가, 키를 누르는 순간 0이 됨. 이걸 모두 not gate로 뒤집어놔야, 평소에 0이었다가 키를 누르면 1이 되는 회로가 됨. 전화기처럼 3*4 크기의 행렬이기때문에, Row를 뜻하는 R1, R2, R3, R4 핀이 있고, Col를 뜻하는 C1, C2, C3, C4 핀이 있음. keyboard decoder가 (row, col) 좌표를 ASCII로 바꿈.
+
+#### Keyboard Decoder
+키보드 디코더: ClkS, ResetS, R1, R2, R3, R4, C1, C2, C3, AckS를 받아, Send와 CharToSend를 뱉음. 키보드 디코더와 Sender 사이에 AckS가 있음. AckS가 1인지 여부를 검사해서, Sender가 키보드 디코더의 값을 읽어 제대로 send했는지 검사함.
+
+#### Sender
+Sender: 디코더로부터 Send, CharToSend를 받음. 디코더로 AckS를 내보냄. 시리얼 통신으로 TxD를 내보냄. Send가 1이 되면, 키보드 디코더로부터 CharToSend를 읽어오고 bitCounter를 0으로 초기화, AckS를 1로 세팅함.
+
+그 다음 Send가 0이 되어야 실제 통신을 시작함. bitCounter가 0 1 2 3 4 5 6 7 8 로 진행함. bitCounter가 0일때에 startBit를 전송, bitCounter가 1~8일때엔 CharToSend 전송. 9 이상에는 stopbit인 1를 전송하며 끝내며 이제 AckS를 0으로 바꿈.
+
+Send=0 & AckS=1는 내가 아직 데이터를 전송하느라 바쁘니 방해하지 말라는 뜻, Send=0 & AckS = 0은 다 보냈고 이제 ready하다는 뜻.
+
+#### Receiver
+- Start bit를 감지하면 bitCounter, cycleCounter를 0으로 초기화시키고 입력을 받기시작.
+- cycleCounter는 0 1 2 3 을 반복하고, cycleCounter가 0일때에만 비트를 읽고 bitCounter를 1 증가시킴.
+
+ClkR가 ClkS의 정확히 자연수배가 아닐경우 좀 어려워짐. 이 수업의 범위를 넘어감.
 
 Week 14, Mon
 ========
 > 2020-06-15
 
-**TODO**
+## 11. Sequential Circuit Analysis and Timing
+### Sequential Circuit Analysis
+시퀀셜 서킷이 주어졌을 때, 분석하는법.
+
+1.  Excitation, Output Equations을 먼저 그린다
+2.  State/Output Table를 만든다
+3.  State Diagram로 변환한다
+
+### Timing
+시퀀셜 서킷이 주어졌을 때, Timing specifications를 알아보자.
+
+Metasatability: 0과 1의 정확히 중간인 상태, 에너지준위의 정상 꼭대기점, 약간의 노이즈만으로도 0 혹은 1로 붕괴한다.
+
+Ex: Rising clock edge와 동시에 값이 바뀌면 어떻게될까? 이런 상황은 피해야한다!
+
+Rising Clock edge보다 조금 더 앞서서 값이 세팅되어야하고, Rising Clock Edge 이후에도 값이 조금 더 오래 유지되어야한다. 이걸 각각 "Setup Time", "Hold Time"이라고 부른다.
+
+1.  최대 Clock 프리퀀시를 얻는법: Worst component delay + Setuptime이 최소 시간이 된다.
+
+    T_clk - (T_ffpd + T_comb) > T_s
+
+2.  입력에 대한 Setup time 얻는법: 그 입력에 도달하기까지의 max delay + setuptime
+
+    T_s for X = T_maxdelay + T_s
+
+3.  입력에 대한 hold time 얻는법:
+
+    T_h for X + T_mindelay > T_h
+
+4.  Propagation delay 얻는법: 입력 변화가 output에 반영되기까지의 모든 경우의 수 가운데 제일 느린거
+
+## 12. 강의 마무리
+이 강의에서 조힙논리와 순차회로 딱 두개만 이해해가면 됩니다.
+
+- 6: 순차논리 기본
+- 7: FSM
+- 8: FSM 최적화, 인코딩, state assignment
+- 9, 10: 순차논리 케이스 스터디, 메모리, 컨트롤러, 스트링 매칭
+- 11: 서킷 분석
+
+HW와 SW를 분리하는건 옛날 사고방식이다. 요즘은 HW 디자인도 SW개발과 비슷함. 앞으로 배울 컴퓨터 시스템의 기초에 계속 쓰이기도 하고, 구글 TPU처럼 논리회로 기술을 직접적으로 쓰기도 함. MS에선 FPGA 기반 온라인 서비스도 제공하고있음. 구글 자율주행차 Waymo에도 자체 하드웨어 가속기인 DNN이 들어감.
