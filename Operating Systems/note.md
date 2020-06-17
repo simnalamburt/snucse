@@ -3058,6 +3058,17 @@ Variable-sized name을 지원함. 디렉토리 엔트리에 `.`, `..` 도 항상
 
 중요한 용어들에 대한 괄호넣기는 항상 나옵니다. 교재 반드시 읽어보세요. xv6 마지막 프로젝트인 pa6, priority donation 이것도 모두 시험범위입니다. 이런경우에 priority donation이 어떻게 일어나는가? 이런식으로 문제를 낼 수 있어요.
 
+### Priority inversion
+High priority task가 간접적으로 lower priority task에 의해 preempt당해서, 둘의 상대적인 priority가 바뀌는 상황을 의미한다.
+
+우선순위가 높은것에서 낮아지는 순으로, H M L가 있다고 쳐보자. L이 잡은 슬립락을 H도 잡으려고 시도중이라, L이 릴리즈할떄까지 H는 꺠어나지 못한다. 근데 M이 L보다 우선순위가 높아서 M이 L의 실행을 방해한다. 이러면 결과적으로 M에 의해 H가 실행을 방해받는거랑 동치다. 이게 Priority inversion임.
+
+해결책: L이 잡은 슬립락을 H가 잡으려고 시도해서 잠들때, priority를 donate해서, L의 우선순위가 잠깐 H만큼 올라가게하면 된다. L이 릴리즈하고 H가 락을 잡으면 H는 다시 자신의 priority를 되찾고, 잠깐 높아졌던 L의 priority도 다시 낮아진다.
+
+여러 스레드가 하나의 스레드에 priority를 donate할 수 있다. donate받은 priority중 가장 높은것을 쓰면 된다.
+
+Nested donation: H가 M이 잡은 락을 기다리고, M이 L이 잡은 락을 기다린다면, M L 둘다 H의 priority를 donate 받아야한다.
+
 &nbsp;
 
 Week 14, Tue
