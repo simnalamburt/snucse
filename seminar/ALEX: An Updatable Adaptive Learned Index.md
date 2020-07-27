@@ -91,4 +91,4 @@ Model B+ Tree: B Tree에서 트리부분에만 모델 적용, ART: Adaptive Radi
 프로덕트 팀의 리서치로 있으면, 연구주제에 제한은 좀 있지만 실 제품에 적용되는 연구를 하기 훨씬 쉬움, 프로덕트 팀보다 돈이 훨 많아서 사람 뽑기도 좋고. 반면 MSR에 있으면 연구주제는 보다 자유로움
 
 - 김젼 Q: 발표 너무 잘들었습니다. ALEX 이후에, 발표자분이나 발표자분의 팀에서 다음 연구주제로 관심갖는 주제가 있다면 소개를 듣고싶습니다.
-- LSM?(잘 못들음) 에 learned index를 적용할 수 있을거같다. compaction 하는 operation이 정말 비싸기때문에.. 이걸 하면 남는 CPU를 써서 IO를 최적화하는 트레이드오프가 됨. 분산디비같은데에서 데이터 어떻게 저장할지, 데이터 레이아웃에도 적용시킬 수 있을거같다. Range partitioning 말고, 다른 워크로드가 들어올때에 더 좋은 방법을 찾을 수 있을것같다.
+- [LSM](https://en.wikipedia.org/wiki/Log-structured_merge-tree)에 learned index를 적용할 수 있을거같다. compaction 하는 operation이 정말 비싸기때문에.. 이걸 하면 남는 CPU를 써서 IO를 최적화하는 트레이드오프가 됨. 분산디비같은데에서 데이터 어떻게 저장할지, 데이터 레이아웃에도 적용시킬 수 있을거같다. Range partitioning 말고, 다른 워크로드가 들어올때에 더 좋은 방법을 찾을 수 있을것같다.
