@@ -91,3 +91,54 @@ Q&A
 - A: 가능한 값이 하나뿐인 타입
 
 출석은 본인이 알아서 하세용. 온라인인 학생이 너무 적으면 할수도 있긴한데, 온라인 수업이라 어차피 접속해놓고 놀수도 있는거고.. 알아서 하세용
+
+&nbsp;
+
+Week 1, Thu
+========
+> 2020-09-03
+
+## Part 1. Functional Programming with Function Applications
+### Values, Expressions, Names
+- Value: 값
+- Type: 값의 집합
+- Expressions: Values, names, primitive operations 등 수식의 조합
+- Name Binding: Expression을 Name에 결합하는것
+
+```scala
+def a = 1 + (2 + 3)
+def b = 3 + a * 4
+
+// 모든 expression에 타입을 붙일 수 있음
+def a = 1 + ((2 + 3): Int)
+```
+
+### Evaluation
+실행은 아래의 순서로 이뤄짐
+
+1. 가장 바깥쪽부터 안쪽으로, 수식에 있는 연산자와 name들에 대해 아래를 적용시킴
+2. (name) name들을 모두 바인딩된 expression으로 바꿔줌
+3. (name) expression을 실행함
+4. (operator) operator들의 operand들을 evaluate함
+5. (operator) operands들을 operator에 적용시킴
+
+### Functions and Substitution
+```
+def f(x: Int): Int = x + a
+```
+
+- Function: 파라미터가 있는 expression, 함수도 name에 바인딩할 수 있음
+- Evaluation by substitution: operand들을 맨 왼쪽부터 차례대로 evaluate 한 뒤, 
+
+Polymorphic function이 나중에 나옴
+
+### Simple Recursion
+함수 X의 정의 안에서 X를 호출할 수 있음
+
+```
+def sum(n: Int): Int =
+  if (n <= 0)
+    0
+  else
+    n + sum(n-1)
+```
