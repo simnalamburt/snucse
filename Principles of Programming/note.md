@@ -135,10 +135,89 @@ Polymorphic function이 나중에 나옴
 ### Simple Recursion
 함수 X의 정의 안에서 X를 호출할 수 있음
 
-```
+```scala
 def sum(n: Int): Int =
   if (n <= 0)
     0
   else
     n + sum(n-1)
 ```
+
+&nbsp;
+
+Week 2, Tue
+========
+> 2020-09-08
+
+### Termination/Divergence
+끝나지 않는 연산
+
+- Termination: 하나의 값으로 reduce되는 expression
+- Divergence: 영원히 reduce하는 expression
+
+```scala
+def loop: Int = loop
+```
+
+### Evaluation strategy: Call-by-value, Call-by-name
+```scala
+def foo(value: Int, name: =>Int) = value
+
+foo(1+2, loop) // 계산이 끝남
+foo(loop, 1+2) // 무한루프에 들어감
+```
+
+### Name binding strategy
+```scala
+// Call-by-value
+val x = 1 + 2 + 3
+val foo = loop
+
+// Call-by-name
+// Bind to the name without evaluating it, mostly used to define functions
+def y = 1 + 2 + 3
+def bar = loop
+```
+
+### Conditional expressions
+```scala
+if (cond) exp1 else exp2
+
+// Rewrite rules:
+if (true) exp1 else exp2 //=> exp1
+if (false) exp1 else exp2 //=> exp1
+```
+
+### Boolean expression
+```scala
+true, false, !exp
+
+// e1은 call by value, e2는 call by name
+e1 && e2, e1 || e2
+
+e1 <= e2, ...
+```
+
+### Practice
+```scala
+def sqrt(x: Double) = {
+  def sqrtIter(guess: Double, x: Double): Double = {
+    if (isGoodEnough(guess, x)) guess
+    else sqrtIter(improve(guess, x), x)
+  }
+
+  def isGoodEnough(guess: Double, x: Double) = {
+    val ratio = guess * guess / x
+    0.999 < ratio && ratio < 1.001
+  }
+
+  def improve(guess: Double, x: Double) =
+    (guess + x/guess) / 2
+
+  sqrtIter(1, x)
+}
+
+sqrt(2)
+```
+
+스칼라는 재귀함수의 경우 반환형을 명시하도록 강제하고있다. 프로그래머가 알아보기 쉬우라고 강제하는것이다. ML이나 하스켈 등 반환형 안써도 타입추론 잘 되는 언어들은 많음.
