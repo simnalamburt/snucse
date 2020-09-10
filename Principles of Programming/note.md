@@ -221,3 +221,99 @@ sqrt(2)
 ```
 
 스칼라는 재귀함수의 경우 반환형을 명시하도록 강제하고있다. 프로그래머가 알아보기 쉬우라고 강제하는것이다. ML이나 하스켈 등 반환형 안써도 타입추론 잘 되는 언어들은 많음.
+
+&nbsp;
+
+Week 2, Thu
+========
+> 2020-09-10
+
+### Blocks
+```scala
+val bla = {
+  val x = 3
+  // ...
+}
+```
+
+블락도 하나의 expression
+
+```scala
+// OK
+{
+  def y = x*2
+  def x = 10
+}
+
+// FAIL
+{
+  val y = x*2
+  val x = 10
+}
+```
+
+val은 eager하게 evaluate하기때문에 정의 순서가 바뀌면 안되지만, def는 상관없다.
+
+```scala
+val x = 10
+def func(): Int = x * 2
+{
+  val x = 20
+  {
+    val x = 30
+    foo(x) // 가장 가까이 있는 x를 사용하는것
+  }
+}
+```
+
+변수명 섀도잉이 가능함. 함수는 정의될 당시의 제일 가까운 이름을 static하게 사용함.
+
+한줄 한줄 실행할때마다 환경에 symbol들이 추가되며 실행됨. 환경은 함수콜이 일어날때마다 스택처럼 쌓임.
+
+```scala
+// FAIL
+{
+  def x = 10
+  def x = 20
+  x
+}
+
+// FAIL
+{
+  val x = 20
+  val x = 10
+  x
+}
+```
+
+하나의 블럭 안에 이름이 두번 정의될 수 없음.
+
+```scala
+val t = 10
+def foo1 = t*3
+def foo2() = t + t;
+{
+  val t = 100
+
+  println(foo1)
+  println(foo2())
+}
+```
+
+인자가 없는 함수는 괄호가 없는 `def`와 매우 유사함. 정의된 스코프에 있는 변수를 가져다 씀.
+
+```scala
+// 에러가 나야하는데 일부 repl에서 에러가 안날때가 있음
+def x = v * 5
+println(x)
+val v = 20
+
+// 이러면 됨
+{
+  def x = v * 5
+  println(x)
+  val v = 20
+}
+```
+
+스칼라 repl이 중괄호를 안씌우면 결과가 이상한 경우가 있으니 조심하세용.
