@@ -138,3 +138,113 @@ Week 2, Mon
 > (정말 웃기고 슬픈 쇼여서 내용을 이렇게 요약하면 좀 미안한데, 내용을 까먹을것같아서 이렇게라도 적음)
 
 제가 수업에서 다루고싶은 대부분의 주제를 다뤘기때문에 보여드렸어요. 자료실에 PPT를 내일까지 올릴테니 한번씩 보고오세용.
+
+&nbsp;
+
+Week 2, Wed
+========
+> 2020-09-09
+
+스캔들 PPT 모두 보셨나요? 한번씩 다 보고 놓치지 않고 다음주까지 신청을 해주세용.
+
+### What is Feminist Aesthetics?
+> [프레지 자료](https://prezi.com/p/dwprncmabxyz/0-what-is-feminist-aesthetics/)
+
+그리스 철학자들은 여러 관념들을 아래와 같이 Active와 Passive로 나눴다.
+
+Active    | Passive
+----------|---------
+Form      | Matter
+Clear     | Ambiguous
+Solid     | Liquid
+Soul      | Body
+Reason    | Emotion
+Culture   | Nature
+Objective | Subjective
+
+행동하고 컨트롤하는 주체가 Active에 들어가고, 행동 당하고 컨트롤 당하는 객체가 Passive에 들어감.
+
+그리고 포스트모더니스트들과는 다르게 그리스 학자들은 active한것이 더 superior하고, passive한것이 inferior하다고 봤다.
+
+그리고 male은 active로, female은 passive로 분류함.
+
+- logic, clear, truth, absolute, infinite, philosophy => active
+- ethics는 양쪽에 속한다고 봤음. 철학이면서도 감정에 대해 다루기때문에
+
+Aesthetics는 art와 beauty가 아니라 sentation, sense, meaning에 관한 철학이다. 그러므로 passive로 들어갔음.
+
+Aesthetics엔 여성주의에 관련된 지점이 거의 없다. 그리고 우리는 수업 내내 이 점에 대해 다룰것이다.
+
+철학자들은 항상 미학에 대해 설명하고, 논쟁하고, 논의하고, reasoning하려고 한다. 근데 미학에 깊이 파고들수록 미학은 페미닌하다는걸 알 수 있다. 우리는 미학이 어떻게 gendered되었는지에 대해 배울것이다.
+
+### Body and soul, feminity and greek theories of knowledge and beauty
+> [Prezi](https://prezi.com/p/izgstyu5zjlm/1-body-and-soul-beauty-and-gender-in-ancient-greece/)
+
+플라토는 여성은 earth를 imitate한다고 했음. 그리스 신화에서 가이아는 지구에 대응되는, 모든 신비로운 힘을 가진 존재로 그려진다. 
+
+> Peter Paul Rubens - Apollo and the Pytho, 1636-1637
+
+어린 아폴로가 가이아를 정복하고 자연에 대한 컨트롤을 되찾는 모습. 신비롭고 영적인 female power를 reason/soul/mind로 정복하는것의 메타포라고 할 수 있다.
+
+> Reason leaves behind the forces associated with female power. What had to  be  shed  in  developing  culturally  prized  rationality  was,  from  the  start,  symbolically associated with femaleness.
+
+아래의 피타고라스가 만든 테이블을 보삼. 피타고르사는 이런 이분법으로 모든걸 설명할 수 있다고 생각했다.
+
+1 | 2
+----|----
+finite | infinite
+limit | unlimited
+odd | even
+one | many
+right | left
+male | female
+rest | motion
+straight | curved
+light | dark
+good | bad
+square | oblong
+
+그리고 이 이론은 플라토와 이후 그리스 철학자들에 의해 진화하였다
+
+active | passive
+----|----
+determinate form | indeterminate formlessness
+superior | inferior
+maleness | femaleness
+
+world of the ideas | sensible world
+----|----
+eternal | temporary
+unchanging | constantly changing
+soul | body
+
+플라톤은 영혼이 영원한것이고, body는 물질세계인 sensible world에 대한것으로 이데아로 승천해야한다고 생각했음.
+
+#### 플라톤의 파이드로스
+그러나 이후에 플라톤의 이후 작업에선 soul의 의미가 조금씩 바뀐다. 플라톤 파이드로스(Phaedrus)에선 아래와 같은 내용이 나옴.
+
+> 교보재: 유튜브 영상, ["Chariot's Allegory - Plato"](https://youtu.be/VcmQUJkubno)
+
+- 마부: Logical, Reason, Intellect or part of the soul
+- 날개달린 흰 말: Spirited, Rational or Moral impulse, or the positive parts of passionate nature
+- 날개달린 검은 말: Appetitive, Irrational passions, Appetites or Desire
+
+Logical이라는 마차는 날개달린 두 말로 이끌려야하고, 마부는 둘 사이를 조심스럽게 조율해야한다고 봤음.
+
+마부의 비유를 통해, body-mind 이분법에서 
+
+#### Beauty and Eros: Diotima's Lesson
+> 교보재: 유튜브 영상, ["Diotima’s Ladder: From Lust to Morality"](https://youtu.be/cYC74mJ-4po)
+
+플라톤은 beauty를 통해 우리가 idea의 세계로 돌아갈 수 있다고 생각했다.
+
+body-mind 이분법에서 몸은 불필요한것으로 여겨졌지만, 여기에선 몸은 idea의 세계로 갔다올 수 있는 사다리의 시작점으로 여겨졌음. 아름다운 몸에서 시작해, beauty of soul/mind/wisdom, 아름다움 그 자체, 이렇게 사다리를 오를수록 이데아에 가까워진다고 생각했음.
+
+여기서 몸은 소년의 몸이지 여성의 몸이 아니다. 여성의 몸은 오로지 성적(Lust)인것으로 여겨졌음. 플라토닉 러브가 여기서 나옴.
+
+플라토닉 러브란? Great spiritual love란 flesh desire에서 탈피해야한다고 봤다. 남성간의 사랑은 성적인 욕망이 제거된것이기 때문에 가장 순수한것이라고 봤고, 여성은 mind/reason이 없는 개념으로 여겨졌고 남성의 성욕을 자극하는것이기때문에 순수한 사랑을 할 수 없다고 봤음.
+
+### Conceptual foundation
+> In brief: in epistemology—the study ofthe nature ofperception and the formation of knowledge—the paradigmatic knower ismodeled on a concept ofmale nature which is capable ofexercising reason-ing abilities to their fullest extent, while to female nature is ascribed acontrasting emotional and intuitive temperament. Because emotions arestandardly regarded as unreliable and idiosyncratic,this description has boththeoretical and practical consequences not only for female educational andscientific achievement,but also for the idea of female moral reliability.Inethics and moral philosophy,the model ofthe person who exercises respon-sibility, possesses just principles, and executes free choice and cleardecision-making is the male agent.By comparison,the image offemininityis merciful and kind but also vacillating,swayed by particular circumstancesand practical exigencies,and apt therefore to be inconsistent and irresponsi-ble.This female moral sensibility may be seen in wicked or good lights.
+
+Conceptutal framework이 이미 고대 그리스 시절부터 gendered된것을 볼 수 있다. 우리가 일상적으로 사용하는 생각의 도구들이 고대 그리스 시절부터 gendered되어있음.
