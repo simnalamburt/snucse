@@ -188,7 +188,7 @@ Aesthetics엔 여성주의에 관련된 지점이 거의 없다. 그리고 우�
 
 > Reason leaves behind the forces associated with female power. What had to  be  shed  in  developing  culturally  prized  rationality  was,  from  the  start,  symbolically associated with femaleness.
 
-아래의 피타고라스가 만든 테이블을 보삼. 피타고르사는 이런 이분법으로 모든걸 설명할 수 있다고 생각했다.
+아래의 피타고라스가 만든 테이블을 보삼. 피타고라스는 이런 이분법으로 모든걸 설명할 수 있다고 생각했다.
 
 1 | 2
 ----|----
@@ -248,3 +248,124 @@ body-mind 이분법에서 몸은 불필요한것으로 여겨졌지만, 여기�
 > In brief: in epistemology—the study ofthe nature ofperception and the formation of knowledge—the paradigmatic knower ismodeled on a concept ofmale nature which is capable ofexercising reason-ing abilities to their fullest extent, while to female nature is ascribed acontrasting emotional and intuitive temperament. Because emotions arestandardly regarded as unreliable and idiosyncratic,this description has boththeoretical and practical consequences not only for female educational andscientific achievement,but also for the idea of female moral reliability.Inethics and moral philosophy,the model ofthe person who exercises respon-sibility, possesses just principles, and executes free choice and cleardecision-making is the male agent.By comparison,the image offemininityis merciful and kind but also vacillating,swayed by particular circumstancesand practical exigencies,and apt therefore to be inconsistent and irresponsi-ble.This female moral sensibility may be seen in wicked or good lights.
 
 Conceptutal framework이 이미 고대 그리스 시절부터 gendered된것을 볼 수 있다. 우리가 일상적으로 사용하는 생각의 도구들이 고대 그리스 시절부터 gendered되어있음.
+
+&nbsp;
+
+Week 3, Mon
+========
+> 2020-09-14
+
+스캔들 발표 고르세요!
+
+첫 에세이에 관한 안내가 이번주나 다음주에 나갈거에요.
+
+> [Prezi](https://prezi.com/view/TYtbhSQrTvaiHhqfftBo/)
+
+어떤 언어나 담론을 비판하려면, 그 언어나 담론에 깔려있는 conceptual framework를 인지해야한다. 그것이 우리가 지난주에 한것이다.
+
+생각하는 방식을 바꾸는것은 굉장히 힘들다. 우리 일상에서 자주 발생하지 않는다. 우리의 생각은 우리의 언어에 갇혀있기때문에.
+
+철학과 같은 비판적인 사고방식을 통해 우리가 쓰는 언어나 담론을 검토하고 확인해야 이런 사고 프레임웍에서 벗어날 수 있다.
+
+언제 sexual harassment라는 말이 생겼는지 아나? 1979, Sexual Harassment of Working Women 이 책에서 생겼다. 그 이전에는 Harassment가 sexual할수는 없다고 생각했음.
+
+### Conceptual framework
+얘네들이 이성을 사용한 방법
+
+1.  얘네 철학에서 이성은 사람과 짐승을 구분하는 수단.
+
+    데카르트까지도 동물은 느낌도 없고 영혼도 없으며, 미리 설계된 대로 동작하는 오토마타라고 생각했음. 기계와 같다고 생각함
+
+2.  사람과 사람을 구분하는데에 썼음
+
+    이성 수준의 차이가 사람간의 권력 차이, 교육 격차, 신분 격차를 만든다고 생각했음. 젠더롤, 노예제, 경제적 차이도 이걸로 설명했음
+
+    젠더롤: 여성도 이성을 가지나, 남성보다 덜 능숙하게 쓴다고 생각했고, 여성은 자기통제를 덜 잘한다고 생각했고, 이때문에 여성은 자연스럽게 가정에서부터 정치까지 모든 경우에 남성에 종속된다고 여김
+
+근데 특정 복잡한 상황에선, 남자가 페미닌한 무언가를 해도 괜찮다고 여겼음. 특히 예술적인 창의성이나 discerning taste의 경우 그랬음.
+
+Art가 무엇인가? 플라토는 art는 쓸데없다고 생각했음.
+
+이당시 그리스 사람들은 레토릭을 중시했음. 연설을 하거나 정치적인 스피치를 할 때, 문장을 잘 만들고 거짓말이나 과장을 하기도하고, 이런걸 중시했음.
+
+호메로스는 시를 열심히 썼는데, 플라토는 호메로스를 매우 싫어했음. 호메로스의 시는 이성이 아니라 inspiration의 결과라고 생각했다. 그리고 사람들이 호메로스의 시에 이성을 잃고 쉽게 흔들리고 감정적으로 변했기 때문이다.
+
+플라토는 레토릭도 별로 안좋아했고, 시는 아예 없어져야하는 물건으로 봤다. (도편추방제)
+
+플라토는 예술은 말이 안된다고 생각했음. 그냥 sensible world를 반복하는거라고 생각했음. 플라토의 철학에서 sensible world는 ideal world의 껍데기에 불과한데, 예술은 걍 sensible world를 재생산하는거니까 이게 뭐하는거냐 이렇게 생각했음. (예술 = imitaion of imitaion of ideal world)
+
+플라토는 예술을 극혐했음에도 불구하고, 미학 101은 항상 플라토에서 시작한다. 미학에서 주로 다루는 온톨로지, 등등 많은 개념들이 죄 플라토에서 시작한다.
+
+> https://youtu.be/gDL4Zf2yEa4
+
+플라토의 생각과는 다르게, art는 이성에 의해 창작되고 우리 실생활에 실용적인 도움을 준다. art라는 영어 단어만 봐도
+
+> techne(고대 그리스어, skill, craft) -> ars -> art
+
+이렇게 생겼음. 그리고 아리스토텔레스는 art는 sensible world를 이미테이트하는게 아니라, 머릿속에 있는 아이디어를 이미테이트하는거기때문에 좋다고 생각했음.
+
+플라톤과는 다르게 아리스토텔레스는 레토릭이나 문학도 techne의 일종이라고 봤음. 이야기를 만드는것도 techne(art)라고 봤음. 그리스 비극은같은거 할떄에도 그냥 책으로 쓰고 마는게 아니라 공연, 무대장치, 코러스 이런것도 중요하게 생각했음.
+
+아리스토렐레스는 techne네 도덕적으로 실용적으로 유용하다고 생각해서, techne를 찬양했다.
+
+근데 그렇다고 아리스토텔레스가 emotion을 긍정적으로 평가한건 아님. techne를 할떄에도 "art는 rational한것이다, emotion은 컨트롤해야하는것, 길들여야하는것이다" 이렇게 생각했음. emotion은 tragedy로 길들일 수 있다고 생각했음. 감정도 중요하게 생각하긴 했는데 부정적으로 여겼음.
+
+> 김지현: For me it sounded like he tried to reframe the art as "Art is rational thing", replacing the previous "Art is emotional something" frame, but not sure :)
+
+Yes, it is true (예이)
+
+아리스토텔레스는 왜 art를 이렇게 평가를 바꾸려했나? 일단 아리스토텔레스는 플라톤의 모든 철학체계를 비판했다. 이분법부터 시작해서 지속적으로 플라톤의 체계와 싸웠음.
+
+플라톤은 예술을 그냥 무시했는데, 아리스토텔레스는 예술은 다시 좋게 생각해볼만한 가치가 있는것이라고 여겼음. 그래서 예술을 설명하는데에 이성의 개념을 넣은것임. 아리스토텔레스는 예술 뿐만 아니라 도덕, 수학, 생물학 등 모든 개념을 다시 봤음.
+
+이제 예술의 몇몇 특정한 장르들로 들어가보자.
+
+그리스 철학에서 rationality는 divine과 연결되어있다. 근데 플라토와 아리스토텔레스를 거치고나서, rationality는 오로지 사람에 대한것이 되었다.
+
+근데 예술에서 그리는 여성의 몸은 항상 여신과 같이 nonhuman being이고, 실제 여성은 예술의 가장자리로 밀려갔다. 이 그리스 시대에는 실제 여성이 자리를 차지할 구석이 없었음.
+
+플라톤이 예술을 싫어했지만 아무튼 예술가들은 예술을 했고, 여성의 몸은 인간 여성이 아니라 여신이나, inspiration을 주기만 하는 뮤즈와 같이 사람이 아닌것만이 허용되었다.
+
+> Auguste Rodin, The Eternal Idol, 1905
+
+참고로.. 로댕의 조각은 많은 수가 camille claudel이라는 사람이 만든거다. 근데 드러나지 않고 로댕의 애인으로만 묘사되었음
+
+> And also a lot of Rodin’s sculpture were actually made by Camille Claudel but he never recognized it and she was only seen as her muse and lover
+
+#### creation vs procreation
+그리스 철학자들은 creation과 procreation을 구분하려했다.
+
+에로스의 사다리 를 다시 보자. 여사제 디오티마 Diotima로부터 배운 교훈.
+
+> https://www.youtube.com/watch?v=XVgvzEI4jig
+
+어떻게 고대 그리스부터 철학자들이 여성과 남성을 
+
+creation은 오로지 남자가 할 수 있음
+
+(내가 이거 이해못했다고 수업끝나고 질문)
+
+디오티마가 절대미라던가 이데아로 가는 과정에서 에로스가 되게 중요하잖아요? 디오티마가 쓰는 유비들이 있어요. 근데 이.. 세계를 창조하는 창조성의 의미가 남자한테만 귀속된다고 플라톤이 봐왔었잖아요? 실제세계를 창조하는 세계관이 항상 creation이랑 연결되어있잖아요?
+
+디오티마가 계속 여성에 의한 창조성을 procreation이라는 생식력과 긴밀하게 연결시키는데, 
+
+심지어 디오티마가 연회에 나타나지 않았음에도 불구하고, 디오티마가 실제로 나타나서 말한것처럼 소크라테스가 말하는게 심포지엄의 이야기인데
+
+소크라테스는 procreation보다 creation을 더 우월한것으로 설명하는 의도가 있었고, 이런 비유를 쓸때마다 계속 procreation은 여자의 것이라는 한계를 줘요.
+
+디오티마가 어떻게 이야기했는지 알 수 없어요. 소크라테스가 디오티마의 입을 빌려서 이야기한거에요. 근데 소크라테스가 디오티마의 입을 전유해서 이야기했듯이, 여성의 능력을 전유해서 자기가 하고싶은 말을 하면서
+
+플라톤도 시를 마냥 싫어한건 아니에요. divine한거라 높게 가치를 매기기도 했어요. 그것이 이성보다는 조심해야할것으로 여겨졌던건 사실이고, 여성은 거기서 뮤즈로써 inspiration을 주는 non-human being으로만 설명이 되어요.
+
+여성의것을 전유(appropriation)하면서, 남성의것으로 소환하는데에 실패하는 모순이 있다. 아리스토텔레스는 그렇게까지 모순적이지 않은데, 플라톤은 특히 모순적임. 여성의 것을 전유해서 폄하하는 문제.
+
+생식력의 문제를 예술창조와 다른것으로 여기려는 시도를 끊임없이 한다.
+
+(다른 학생 질문, 대충 요약해서 왜 creation을 자꾸 procreation과 연결짓는가?)
+
+불멸성을 갖고싶은데, 생식이 불가능한 남성은 불멸성을 가질 수 없음. 그래서 불멸을 크게 두가지 방법으로 다루는데
+
+1.  불멸성을 애초에 가질 수 없는 아주 먼곳에 둠
+2.  예술이나 기타로 불멸성을 추구함
+
+불멸성은 그리스철학에서 아주 중요한 개념
