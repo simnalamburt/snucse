@@ -317,3 +317,61 @@ val v = 20
 ```
 
 스칼라 repl이 중괄호를 안씌우면 결과가 이상한 경우가 있으니 조심하세용.
+
+&nbsp;
+
+Week 3, Tue
+========
+> 2020-09-15
+
+블락 안으로 함수를 숨기는 이유: 어린이들 키워보면 손에 보이는거 아무거나 다 눌러보잖아요? 이렇게 함수 내부에서 쓰는 함수도 노출하면 쓰게되니까, 안으로 숨겨놓는거에요.
+
+### Lazy Call-by-value
+- Call by value: eager하게 선언된 즉시 계산함
+- Call by name: lazy하게 사용될때마다 매번 계산함
+- Lazy call by value: lazy하게 맨 처음 사용될 때 딱 한번 사용됨
+
+```scala
+lazy val x = a*a + b*b + c*c
+
+x + x // x는 한번만 계산됨
+```
+
+### Tail Recursion
+```scala
+import scala.annotation.tailrec
+
+def sum(n: Int): Int = {
+  @tailrec def sumItr(res: Int, m: Int): Int =
+    if (m <= 0) res else sumItr(m + res, m - 1)
+  sumItr(0, n)
+}
+```
+
+`@tailrec`은 붙였음에도 불구하고 꼬리재귀 최적화가 발생하지 않을 경우, 컴파일러 경고가 발생함. 스칼라 2.8에 추가됨.
+
+Continuation은 데이터로 표현할수도 있다. Higher-order function이라는걸 써서 이 tail recursion을 일반화할 수 있다.
+
+C, Java 등 많은 컴파일러들이 tail call optimization을 지원하는데, 파이썬은 일부러 안한다.
+
+꼬리재귀로 피보나치 짜기
+
+```scala
+import scala.annotation.tailrec
+
+@tailrec
+def fib(nth: Int, a: Int = 0, b: Int = 1): Int = {
+  if (nth == 0) { return a }
+  fib(nth - 1, b, a+b)
+}
+
+fib(0)
+fib(1)
+fib(2)
+fib(3)
+fib(4)
+fib(5)
+fib(6)
+fib(7)
+fib(8)
+```
