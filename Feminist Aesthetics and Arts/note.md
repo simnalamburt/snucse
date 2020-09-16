@@ -381,3 +381,70 @@ creation은 오로지 남자가 할 수 있음
 (남성들이 왜 recreation을 여성의것으로 놨을까요? 여성은 몸만 제공하고 생식은 남자가 하는걸로 봤을수도 있는데)
 
 철학이 되게 논리적이라고 생각되지만 성 관련된 부분에선 모순이 많아요. 그런 시도가 없진 않아요. 정자안에 작은 사람이 다 들어있다고 보던때도 있었어요. 생물학이 발달하면서 그런 시도들은 모두 실패한것이고
+
+&nbsp;
+
+Week 3, Wed
+========
+> 2020-09-16
+
+과제 나갔다. 예술이나 대중문화를 페미니즘 크리틱 하면 됨.
+
+오늘 랜덤하게 출석을 부르심. 근데 내가 리스트에 없다. 교수님께서 확인해보신다고 함.
+
+고대 그리스 철학은, 예술을 "페미닌함"으로부터 "구해내는" 과정이다.
+
+남성이 여성의 발언을 전용하는 현상. 심포지엄은 디오티마의 말을 소크라테스가 전용하고, 이걸 다시 플라톤이 전용하는 과정.
+
+### Subject and Object
+> https://prezi.com/p/cogjwgynd_kt/
+
+Who is considered as artist? What is considered as art?
+
+창의성, 상상력, 표현, 노력이 아닌 재능 이런게 떠오른다. 그리고 예술가 하면 not following the social norm 이런게 떠오름. 근데.. Why we hardly conceive women as genius artist?
+
+- Edutation?
+- Social oppression?
+
+그러나 우리가 이번에 읽는 텍스트의 저자(누구?)는 뭐라고 주장하냐면, 그냥 우리가 사용하는 언어, 우리가 사용하는 제일 간단한 사고가 women artist를 찾기 힘들게 만드는 원인이라고 주장한다.
+
+1.  How modern philosophy keep elaborating the conceptual framework of aesthetics?
+2.  How were the concepts of 'fine art' and 'artist' coined?
+
+모던에 대해 알아보자! 학문에 따라 현대가 지칭하는 기간이 다른데, 철학사에선 현대는 17세기인 데카르트부터 시작한다. 철학사에서 현대시대의 특징:
+
+- Religion in decline
+- New way of life centered on the secular and the science
+- Rationality, the essential element of human kind distinct from animal
+
+현대철학에서 이성이 중요한 이유가 뭘까?
+
+> Knower? (subject)
+> Known? (object)
+
+Subject gives concept of the object, Object gives ? to the subject
+
+현대 철학, 특히 데카르트부터, object는 subject 없이 존재할 수 없다. subject가 있어야 object가 존재할 수 있음.
+
+고대 그리스 철학에선, 우리가 이것은 의자다 라는 말을 할 때, 이 말은 "Objective truth"다. subject가 있든 없든 아무튼 의자다.
+
+근데 고대 그리스 온톨로지와 다르게, 현대 철학에선 structure of knowledge를 분해하기 시작했다.
+
+옛날에는 object의 본질(컨셉)같은건 object 그 자체 안에 위치한다고 생각했는데, 현대철학에선 subject의 이성속에 존재한다고 본다.
+
+The knower는 주로 male nature의 개념으로 모델되었다. male nature가 순수하게 이성으로 리즈닝할 수 있는 능력을 가진 반면, female nature는 intuitive temperament와 contrasting emotional한 존재로 그려졌기 때문이다.
+
+femininity는 항상 자비롭고 친절하지만, inconsistent하고 무책임하고, morally week한것으로 여겨졌음. free choice와 principles, responsibility를 가진것은 항상 male로 여겨졌음.
+
+빅토리아 시대, "Angel in the house", 칭찬이 아니다.
+
+> https://youtu.be/0A6UKoMcE10
+
+### Epistemology
+인식론의 세계에서, 우리는 무엇을 할 수 있는지, 사람은 무엇을 알 수 있는지, 우리는 세계를 어떻게 아는지가 중요해짐.
+
+현대 철학의 인식론에서 젠더시스템은 더 심각해짐. 남성이 active subject, 여성이 passive object가 됨. 여성은 examine하고 탐사해야하는 대상이 되었다.
+
+학생 질문: 데카르트로 대표되는 현대철학에서, 생각하는 주체가 여러명이 있을떄에, 다른사람을 생각하는 주체로 인정하게되는 원리가 궁금하다.
+
+데카르트 철학에서 모든것은 판타지가 맞고, 생각할 수 있는 주체는 ego, 나뿐인것이 맞다. 그리고 다른 사람을 생각하는 주체로 인정하게된 원리는, 다른사람이 이성을 가졌기 때문이다. 데카르트는 독실한 크리스천이었고, 데카르트에게 있어 우리의 존재 최후의 보장은 신이었다.
