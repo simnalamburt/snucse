@@ -8,7 +8,44 @@ Week 1, Fri
 2. 울리히 벡. 홍성태 역. 2014. [위험사회]. 새물결.
 3. 존 C. 머터. 장상미 역. 2016. [재난 불평등]. 동녘.
 
-주 교재를 보고 공부하기보단, 매 주마다 읽을거리를 보고 공부하는 방식으로 공부하기로 변경함.
+주 교재를 보고 공부하기보단, 매 주마다 읽을거리를 보고 공부하는 방식으로 공부하기로 변경함. 아래는 읽기자료 목록:
+
+- 3주차(9.18): 위험과 재난의 정치 1
+  - (필독)-정지범. "광의와 협의의 위험, 위기, 재난관리의 범위." 한국방재학회논문집 9.4 (2009): 61-66.
+  - (필독)-이재열. “제1장 세월호 참사, 시스템 이론으로 본 원인과 대책”. 세월호가 묻고 사회과학이 답하다. 서울: 오름, 2017.
+  - (필독)-김성철 ( Sung Chull Kim ). "구조적 폭력의 매개체로서의 재난." 분쟁해결연구 11.3 (2013): 115-146.
+  - (필독)-Kathleen Tierney. 2012. Disaster Governance: Social, Political, and Economic Dimensions. Annual Review of Environment and Resources Vol. 37:341-363
+  - (필독)-정유선(Chung Yousun). "재난 거버넌스와 국가-사회 관계." 亞細亞硏究 57.2 (2014): 7-46.
+  - (참고)-Ortwin Renn, Andreas Klinke, Marjolein van Asselt. 2011. Coping with Complexity, Uncertainty and Ambiguity in Risk Governance: A Synthesis. AMBIO (2011) 40:231–246
+- 4주차(9.25): 위험과 재난의 정치 2
+  - (필독)-Pelling M ,Dill K . "Disaster politics: tipping points for change in the adaptation of sociopolitical regimes" Progress in human geography : 21-37.
+  - (필독)-Takeda, M.B. and Helms, M.M. (2006), "“Bureaucracy, meet catastrophe”: Analysis of Hurricane Katrina relief efforts and their implications for emergency response governance", International Journal of Public Sector Management, Vol. 19 No. 4, pp. 397-411.
+  - (필독)-강원택. “제4장 사회적 이슈와 정치 갈등 : 세월호 사건을 중심으로”. 세월호가 묻고 사회과학이 답하다. 서울: 오름, 2017.
+  - (미정)-4.16세월호참사 작가기록단. “지역정치와 비용절감이 밀어낸 안전: 대구지하철 화재참사” 재난을 묻다. 서해문집. 2017.
+  - (참고)-REICH, MICHAEL ROBIN. "Chapter 1: Introduction". TOXIC POLITICS: A COMPARATIVE STUDY OF PUBLIC AND PRIVATE RESPONSES TO CHEMICAL DISASTERS IN THE UNITED STATES, ITALY, AND JAPAN. Yale University, Dissertations, 1981. 
+  - (참고)-박종희. “제5장 왜 세월호 참사는 극단적으로 정치화되었는가?- 재난정치의 딜레마”. 세월호가 묻고 사회과학이 답하다. 서울: 오름, 2017.
+  - (참고)-전영평. "대구지하철 재난 대응의 실패 - 지방정치 위기의 관점 -." 지방정부연구 8.4 (2005): 149-166.
+- 6주차(10,9): 허베이 스피리트
+  - (필독)-김도균. “제2장 제1절 이론적 배경 & 제3장 제2절과 제3절 & 제5장” "환경재난과 지역사회의 변화." 국내박사학위논문 忠南大學校 大學院, 2010. 대전
+  - (필독)-유현정(Hyun Jung Yoo),and 이재은(Jae Eun Lee). "허베이 스피리트호 기름유출 사고 후 직업별 관점에서 본 태안지역사회의 삶의 질 문제." Crisisonomy 6.3 (2010): 63-85. 
+  - (필독)-홍덕화(Deok-Hwa Hong),and 구도완(Do-Wan Ku). "허베이 스피리트호 기름 유출 사고로 인한 사회갈등." 환경사회학연구 ECO 13.1 (2009): 7-47. 갈등의 제도화와 공동체의 해체. 
+  - (필독)-박동균. "허베이 스피리트호 기름유출사고에 대한 지역정치권의 위기대응." Crisisonomy 5.2 (2009): 1-14. 
+  - (참고)-윤순진(Sun-Jin Yun),박순애(Soonae Park),and 이희선(Hee-Sun Lee). "허베이 스피리트호 원유유출사고 방제 종료의 환경거버넌스 분석." 한국거버넌스학회보 17.3 (2010): 27-59. 
+- 7주차(10.16): 세월호 
+  - (필독)-4.16세월호참사 작가기록단. “숨쉬는 것조차 눈치를 봐야 했던 시절의 비극: 남영호 침몰 참사” 재난을 묻다. 서해문집. 2017.
+  - (필독)-세월호 기록팀. “1부 그날, 101분의 기록.” 세월호, 그날의 기록. 진실의 힘.
+  - (필독)-이병천 ( Byeong Cheon Lee ),and 박태현 ( Tae Hyun Park ). "일반논문 : 세월호 참사, 국가를 묻다 -불량국가의 정치경제." 기억과 전망 0.33 (2015): 347-379.
+  - (필독)-이현정(Hyeon Jung Lee). "세월호 참사와 사회적 고통:: 표상, 경험, 개입에 관하여." 보건과 사회과학 0.43 (2016): 63-83.
+  - (참고)-이재승 ( Jaeseung Lee ). "논문 : 세월호 참사와 피해자의 인권." 민주법학 0.60 (2016): 145-179.
+  - (참고)-이호영 ( Lee Ho Young ). "세월호 특조위 활동과 박근혜 정부의 방해." 민주법학 0.63 (2017): 205-245
+  - (참고)-지주형(Joo-Hyoung Ji). "세월호 참사의 정치사회학." 경제와 사회 -.104 (2014): 14-55.
+- 9주차(10.30): 메르스
+  - (필독)-김탁환. “프롤로그 & 제1부 감염 & 제3부 --+”. 살아야겠다. 북스피어. 2018.
+  - (필독)-메르스 사태 인터뷰 기획팀․지승호 지음. “첫 번째 인터뷰 & 두 번째 인터뷰” 바이러스가 지나간 자리. 시대의 창. 2016.
+  - (필독)-최병두(Byung-Doo Choi). "메르스 사태의 지리학과 생명권력의 정치." 공간과 사회 25.3 (2015): 173-192.
+  - (필독)-박치성 ( Chisung Park ),and 백두산 ( Doosan Paik ). "재난상황 초기 대응실패에 대한 정책행위자의 비난회피 행태 분석: 메르스 사태를 중심으로." 行政論叢 55.1 (2017): 41-76.
+  - (참고)-김은성. "메르스관련 정부 위험소통의 한계에 대한 사회적 원인 분석." Crisisonomy 11.10 (2015): 91-109.
+  - (참고)-김기흥(Kiheung Kim). "국제표준화의 불확실성과 메르스사태." 환경사회학연구 ECO 20.1 (2016): 317-351.
 
 평가 방식
 
