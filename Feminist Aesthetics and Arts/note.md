@@ -448,3 +448,109 @@ femininity는 항상 자비롭고 친절하지만, inconsistent하고 무책임�
 학생 질문: 데카르트로 대표되는 현대철학에서, 생각하는 주체가 여러명이 있을떄에, 다른사람을 생각하는 주체로 인정하게되는 원리가 궁금하다.
 
 데카르트 철학에서 모든것은 판타지가 맞고, 생각할 수 있는 주체는 ego, 나뿐인것이 맞다. 그리고 다른 사람을 생각하는 주체로 인정하게된 원리는, 다른사람이 이성을 가졌기 때문이다. 데카르트는 독실한 크리스천이었고, 데카르트에게 있어 우리의 존재 최후의 보장은 신이었다.
+
+&nbsp;
+
+Week 4, Mon
+========
+> 2020-09-21
+
+14~17세기 'Fine Art'의 배경에 대해 알아보자.
+
+> https://prezi.com/p/cogjwgynd_kt/
+
+이 시기 여성의 삶은 아이를 키우는데에 맞춰져있었다. 아이가 없는 여성들은 marginalized되었다. 아이를 키우는 지식들은 여성들 사이에서만 공유되었다.
+
+마녀사냥은 중세뿐만 아니라 현대시대(데카르트시대)의 시작에도 아주 흥했다.
+
+Art의 의미가 조금씩 변하고있다.
+
+1.  과학이 발달하면서, Optics가 발전함. 투시도같은게 생김.
+
+2.  Makers like craftmen or painters independent of churches: Painters needs new status as 'liberal intellectual'
+
+    그당시 화가들은 예술의 위상이 낮아 그림을 그려서 교회에 팔수도 없었다. 반면 뭔가 만드는 사람들은 이런 고통을 덜 겪었음.
+
+    화가들은 교회의 위상이 낮아지며 경제적으로, 사회적으로 어려움을 겪었다. 화가들의 사회적인 위상이 낮아지며, 새로운 사회적인 위치를 찾기 시작했다.
+
+3.  예술가를 인텔렉추얼의 지위로 올리려는 노력의 결과로 'Design'이 발달하기 시작했다.
+
+고대부터 조각이나 그림그리기는 시같이 영감을 주는 작업과는 다르게 physically-bound category로 분류되었다. 그러나 르네상스가 끝나갈 무렵, 화가와 조각가들은 'physical manipulation'보단느 'core idea of artifacts'를 뜻하는 디자인이라는 용어를 전파시키면서 liberal artists로 인식되기 시작한다.
+
+- 현대 이전: Immaterial Ideas vs Material artifacts
+- 현대 이후: Design vs Manual labors
+
+#### Fine Art?
+What is 'Fine Art'?
+
+1.  17~18세기에 fine art가 개념적으로/실용적으로 분리됨
+2.  노동자 예술가가 아니라, 사람들의 생각의 지평을 넓히는 liberal에 대한 기여자로써의 예술가로 위상을 높이려는 사람들이 나타남
+3.  Clear division: liberal/free arts vs vulgar arts
+
+- "Intellectual engineering and design of complex structures" vs "Actual physical building"
+- "Architect" vs "Carpenter or Masonry"
+- "The Geometry of perspective projection" vs "coloring"
+
+그 결과, liberal arts(나중에 Fine art로 바뀜) 는 실용예술, applied arts, crafts, 대중예술과 구분됨.
+
+원래 연극에서 배우나 연극에 참여하는 다른 사람들은 작가들만큼 수준높은 예술가로 여겨졌었는데, 이 시기를 거치면서 극작가가 배우보다 더 하이레벨한 예술가로 여겨짐.
+
+Find Art (beaux arts) | Utilitarian/Functional Art
+---|---
+Music | Needlework
+Painting | Handicraft
+Poetry | Ceramics
+Sculpture | Entertainment
+Architecture | .
+(Gardening, Prose, Dance, Theater) | .
+
+Fine Art에는 기능이 없다. Appreciation만 있음.
+
+르네상스 시기에는 fine art 개념이 완벽히 잡히진 않았찌만, 예술가들이 자신의 결과물을 reconceptualizing하면서 그들의 status of effort를 높이려는 시도가 생겨났다.
+
+
+예술작품에 신기한 해석과 의미를 부여하는 관행이, 르네상스 시기에 교회의 지위가 추락하며 주로 교회에서 그림/조각을 하던 예술가들의 사회적 지위가 추락하자, beaux arts라는 순수미술 분야를 새로 만들어서 자신들을 소설가나 시인같은 우월한 인문학의 범위에 편입하려는 시도에서 생긴거군여
+
+Craft는 결과물에 실용성이 있어서 자체로 가치를 갖는다. 근데 Fine art의 가치는 어떻게 부여되는가? 그것이 바로 Aesthetic Value
+
+여기서 페미니즘과의 관계
+
+- 여성들이 만들던 아트는 주로 크래프트를 통해 만들어야하는 장식품들, 꾸미기 용품들이었다
+- 근데 예술품의 가치는 점점 미학, sublimity와 같이 실용적 가치와 무관한 aesthetic virtues로 평가받기 시작함
+- 그래서 craft object들은 proper artwork로 평가받지 못하게됨
+
+> Victor Cousin: Utility has nothing to do with Beauty
+
+Points to note:
+
+1.  The notion of aesthetic value emerged from a new idea of taste.
+
+    Purely aesthetic pleasure was singled out for its contrast with other sources of pleasure such as practical use, economic value, social meaning, or the satisfaction of sexual desire.
+
+2.  그리고 이 개념이 현대 철학자와 미학자들에 의해 이론적으로 지지받음
+
+3.  이 새로운 철학적 담론을 기반으로, 예술에 대한 새로운 appreciation이 생겨났다.
+
+New form of appreciation(감상): 모던에이지 전에는 예술품을 만지고 artwork에 참여하는 방식으로 예술품을 감상했으나, fine art 이후에는 만지지 않고 감상했다. 예술가들이 자신의 사회적 지위를 높이기위해 피지컬한 영역에서 탈피했을 뿐 아니라, 감상하는 사람들도 만지거나 냄새맡거나 하는 피지컬한 방식의 감상이 아니라 추상적인 방식의 감상을 해야했다.
+
+모던에이지 전에는 갤러리, 박물관, 콘서트홀 이런게 아예 없었음. 갤러리, 박물관같은게 모던에이지에서 생겼음.
+
+### Why women can't be genius
+첫째
+
+- Superior reason이 아니라 superior mind
+- The model superior mind is a male mind: 강하고, 전통적이고 사회적인 norm으로부터 독립적, 일상생활로부터 독립적
+- Women - nature - quotidian concerns: Because of social rols and mind set that females played, it was impossible for them to be a genius.
+
+둘째
+
+- 르네상스가 있었다
+- 근데 여성들은 르네상스에 끼지 못했음
+- 생물학적으로 천재가 될 수 없다고 봤음 (수요일에 이야기하자)
+
+셋째
+
+- 천재에 대한 낭만주의적 시각: 천재에겐 반사회성이나 부도덕함도 영감임
+- 근데 여자가 이러면 히스테리아임
+
+수요일에 마저 이야기합시당
