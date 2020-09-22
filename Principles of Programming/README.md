@@ -7,9 +7,10 @@ Principles of Programming
 강의 번호 | 4190.210
 강의 시점 | 2020, Fall
 
-**[강의 홈페이지]** | [Scastie]
+**[강의 홈페이지]** | **[PDF]** | [Scastie]
 
 [강의 홈페이지]: https://github.com/snu-sf-class/pp202002
+[PDF]: https://raw.githubusercontent.com/snu-sf-class/pp202002/master/lecture.pdf
 [Scastie]: https://scastie.scala-lang.org/
 
 > Zoom으로 실시간 비대면 강의, 공지와 강의자료는 강의홈페이지
