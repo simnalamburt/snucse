@@ -554,3 +554,96 @@ New form of appreciation(감상): 모던에이지 전에는 예술품을 만지�
 - 근데 여자가 이러면 히스테리아임
 
 수요일에 마저 이야기합시당
+
+&nbsp;
+
+Week 4, Wed
+========
+> 2020-09-23
+
+Why women can't be genius에 대해 계속 배워보자.
+
+> https://prezi.com/p/cogjwgynd_kt/
+
+Madness of man은 genius이지만, madness of weman은 히스테리아로 취급되었다.
+
+> [The Strange (But True) History of Histeria](https://youtu.be/JefYnYIXY_8)
+
+무려 히포크라테스 시절부터 히스테리아라는 질병이 존재했다. 자궁때문에 겪게되는 여자만 겪는 질병으로 봤음.
+
+## Beauty & sublime, gender in modern aesthetics
+> https://prezi.com/p/smf1xdzmmk2t/
+
+지난주에 했던 질문을 다시 떠올려보자. What is aesthetic value?
+
+1.  Definitions of Beauty (the British Empiricists)
+2.  Beauty and Pleasure, Burke's claims
+3.  Beauty VS the Beautiful, taste in the Kantian terms
+4.  Whose taste?
+5.  Aesthetic attitude theories
+
+근데 이것이 성과 무슨 상관인가? 결말 스포:
+
+> Because modern philosophers colored the concepts of beauty, sublimity, pleasure and the aesthetics itself with gender, these aesthetic theories could reinforce the idea that both artists and the best critical judges of art are ideally **male**.
+
+### Beauty의 정의?
+미란 무엇인가? 아름다운 시, 아름다운 백조, 아름다운 노래, 아름다운 동작, 아른다운 사람, 아름다움은 다양하다.
+
+#### Objectivism in Aesthetics
+플라톤은 beauty는 quality possessed by all such objects로 봄. 잘 분석하면 아름다운 객관적인 이유를 다 분석할 수 있다고 봤다.
+
+근데 그 객관적인 기준이 뭘까? 대칭? 밸런스? 조화? perfection? 황금률을 가지면 다 아름다움? 이런저런 예시를 보면 알겠지만 황금률은 아름다움에 대한 객관적인 기준이 되지 못함.
+
+> 못생긴 얼굴은 대칭적으로 만들어도 여전히 못생겼습니다. 대칭적으로 못생긴 거죠
+
+이건 아닌거같다
+
+#### Subjectivism in Aesthetics
+> Beauty is caused by the perception of a compositional quality, which is called 'uniformity amidst variety'
+>
+> Francis Hutcheson (Theorist of Taste)
+
+Beauty는 subjective feeling이다. Beauty is connected to pleasure to a certain degree.
+
+empiricism: 경험주의, 데카르트(합리주의)와 동일한 17세기에 발생한 사조.
+
+철학이 object에서 subject로 관심이 옮겨가며, beauty에 대한 생각도 바뀌게됨.
+
+> The Line of Grace, by Hogarth
+
+아름다운것 자체보다, 아름다운을 느끼는 과정에 더 관심을 갖게됨. 아름다움을 느끼는 과정이 subjective하더라도, 아름다움을 느끼는 general한 judgement가 존재할까?
+
+What is mechanism of taste in subjective mind? 이제 중요한건 아름다움을 평가하는 과정이다.
+
+Aesthetics라는 단어 자체는 18세기에 나왔지만, 19세기에 드데어 Aesthetics가 독립적인 학문으로 갈라짐
+
+### Beauty and Pleasure
+Edmund Burke, 정치인이자 정치철학자. "a philosophical enquiry into the sublime and beautiful"라는 책에서, beauty와 sublime을 나눴다.
+
+우리가 느끼는 기쁨이 여러가지다. Physical pleasure, ethic pleasure, 등. 그래서 미도 여러개로 가를 수 있다.
+
+- Beauty: small, bounded, curved, soft, gentle in contour, delicately colored.
+- Beauty arouses not only pleasure but also love (Diotima's lesson과 다름)
+
+디오티마는 아름다운 몸은 우리가 clear mind를 갖게하는데에 방해되는 요소라고 했지만, 에드먼드 버크는 아름다운 몸 그 자체의 가치를 긍정함.
+
+Beauty는 흔하게 접하는 pleasure이기때문에 쉽게 이해할 수 있음.
+
+> The smoothness; the softness; the easy and insensible swell; the variety of the surface; the deceitful maze, through which the unsteady eye slides giddily ...
+
+Female body만에 이것과 연결될 수 있다.
+
+### Sublime
+Sublime은 심오한 고통, 자기 존재에 대한 위협, 긴장과 연관되어있다. 거대한것, 어두운것, 우울한것, 위협적인것, 그러면서도 동시에 힘이 느껴지고 exhilarating한것.
+
+위대한 자연 앞에서 느껴지는 웅장함, 시원함, 호연지기. 나이아가라 폭포 앞에 가면 기쁨을 느낄 수 있고 아름답지만, 나이아가라 폭포가 안전한 장소는 아니다. 암스트롱이 달에 처음 발을 디뎠을 때 자신이 아주아주 작은 존재가 된것같다고 느꼈다.
+
+버크에 의하면 이런것에서 느끼는 기쁨은 우리가 꽃이나 고양이를 보고 느끼는 기쁨과 다르다고 봤다. 그리고 버크에 의하면 sublime이 beauty보다 더 심오한것이었음.
+
+나: So the sublime is connected with male thing and more profound than beauty ~= female?
+
+Yes
+
+나: Looks like philosophers have repeated some kind of pattern over than 2000 years
+
+마자용.
