@@ -417,3 +417,17 @@ Higher-order function 계속 설명
 
 ### Currying
 커리잉 문법 설명
+
+&nbsp;
+
+Week 4, Thu
+========
+> 2020-09-24
+
+커리잉 계속 설명
+
+### Exception
+다른 언어 익셉션과 거의 같음, 짧게 설명하고 지나감
+
+### Datatypes
+튜플, 레코드 배움
