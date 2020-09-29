@@ -647,3 +647,172 @@ Yes
 나: Looks like philosophers have repeated some kind of pattern over than 2000 years
 
 마자용.
+
+&nbsp;
+
+Week 5, Mon
+========
+> 2020-09-28
+
+공지가 있다. 처음으로 발표가 있다.
+
+스케줄에 약간 수정이 있다. 날짜를 잘못써서 고쳤음.
+
+## 고수정, Nude vs Naked
+전통적 시각
+
+- Naked: inferior. Deprived of clothers, Huddled 
+- Nude: To be shown
+
+John Burger의 "Ways of Seeing"
+
+- Naked: To be oneself, without disguise, reveals itself: Active
+- Nude: Seen by others, Passive
+
+예시
+
+- 보통의 비너스 그림. Nude
+- Olympia, 마네, 1863: 불편한 표정으로, 똑바로 쳐다보고있다. Naked
+- Benefits Supervisor Sleeping, Lucian Freud, 1985. Naked
+
+마지막 그림의 모델이었던 Sue Tilley
+
+- I'm not the ideal women, 하지만 그 화가는 모든 디테일을 다 잡아내었다.
+
+다른사람을 judgement 없이 보는것은 얼마나 extraordinary 한것인가?
+
+한계: 다양한 몸을 그리는것 자체에도 가치가 있지만, 여전히 observing male - modeled female의 구도에서 벗어나지 못했음.
+
+왜 항상 남성의 시선에서 여성의 몸을 그리게 되는 것일까?
+
+여성 화가의 그림을 좀 가져와봤다.
+
+The triumph of Bacchus, Michaelina Wautier, 1650. 남성 누드를 그린 여성화가. 이 시대에는 여성이 남성 누드를 배운다는것 자체가 생각할수없었다. 이 화가는 남성 누드와 본인의 여성 누드를 함께 그리는것으로 여성 화가로서의 자신을 표현함.
+
+Femme aux seins nus, Suzanne Valadon, 1917. 여성을 as it is 로 그리는 자화상.
+
+The Blue Room, Suzanne Valadon, 1923. 마네 올림피아와 비교했을때 재밌는 차이점: 구성은 아주 유사하다. 그러나 마네 올림피아는 여전히 sexually available한 누드인 반면, 발라동의 그림은 self-assured.
+
+마네의 올림피아는 그당시에는 파격적이었을지 모르지만, 지금의 시각에서 보면 여전히 그당시 누드의 프레임워크에 갇혀있음. 반면 발라동의 그림에선 그녀가 입고싶은것, 그녀가 읽던 책, 그녀가 좋아하는 담배, 등 active한 여성의 그림이 그려져있음.
+
+The Turkish Bath, Sylvia Sleigh. 이는 "Jean Auguste Dominique Ingres의 The Turkish Bath"의 패러디. "우리가 어떻게 남성의 시각에서 그리는가", Prejudice of women body를 비꼬았음.
+
+"What is genuine Female Art?"
+
+Art와 사회의 lifetime 챌린지다.
+
+- 학생 Q: Genuine Female Art는 여성 작가에 의한것이라고 보는가?
+- A: 여성작가에 의한것이 더 가까울수는 있다고 생각한다.
+- 교수 Q: Genuine female art가 존재할수는 있을까요?
+- A: 존재할 수 있다고 생각하고, 그 방향으로 가려고 노력해야한다고 생각한다.
+- 교수: John Burger의 nude vs naked 토론의 포인트를 잘 지적하고, 그것의 한계까지 지적한것이 인상깊었다.
+
+## 박설아, Nude vs Naked
+발표구성
+
+1.  History of nude painting
+2.  Nude vs Naked
+3.  My conclusion
+4.  Q&A
+
+### 1. History
+누드페인팅의 히스토리: 그리스 art로 부터 시작함. "Human body is the principle of the universe", 올림픽도 하고, 많은 누드상도 세움. Grouppo del Laocoonte
+
+중세: Adam and Eve in icons(eikon)가 거의 유일한 누드 이미지. 중세가 끝나가며 초점이 신에서 인간으로 옮겨가며 다시 누드가 등장.
+
+르네상스: 많은 누드가 적대적이지 않게 받아들여짐. 누드 그림들이 다들 신화에 대한거여서 Pornography라고 생각하지 않았다. Botticelli, 미켈란젤로
+
+누드의 조건
+
+- Must be depersonalized: 실제 사람이면 안됨
+- Must be ideal: Don't have to draw warts on the hips. More like perfect propotion.
+- The nude in the artwork doesn't cover anything, but in fact it's like showing nothing
+
+그 이후
+
+- 16세기: Sleeping venus, giorgione, 이사람은 Tiziano를 가르침, 눈을 감은 여신
+- Venus of urbino, Vecellio Tiziano, Urbino의 와이프가 모델이었으나 venus와 비교됨
+- 19세기: 마네의 올림피아, 유명한 성매매여성이 모델, 똑바로 쳐다보고있음
+
+Nude (예시: Grande Odalisque)
+
+- Unrealistic body, distorted waist
+
+Naked (예시: Olympia)
+
+- Realistic body, frontal light
+
+또 다른 사례
+
+- 고야의 The nude Maja
+- The clothed Maja
+
+1839, 사진기가 발명됨
+
+- Nude photos became artistic (Edward Weston)
+
+빨라서 못따라잡음
+
+- Certein viewpoint를 모두 제거하려했던 한 여성 사진가의 이야기
+- 발표자: Viewpoint를 모두 제거하는것은 불가능하다
+- Naked라고 해서 perfect exclusion of sexuality를 이룰수는 없고
+- Nude라고 해서 only contains sexual object일수는 없다
+
+끝
+
+- 교수님: 꽤 중립적인 발표였죠 토론하기 좋아보이네요
+
+## 권혜민, Escape the corset movement
+교수님: 앞선 발표와 연결된 주제. 코르셋 개념은 2017년즈음부터 한국에 굉장히 널리 보급되었죠. 잘 들어보세용
+
+발표구성
+
+1. Bacgkround
+2. Purpose
+3. Refutation
+4. ?
+
+Patriarchal society. Women as objects, satisfying men, subjects' pleasure. Feminine Ideal: Beautiful
+
+Lookism 만연. Media, Plastic Surgery
+
+Uniform Ideal: white, skinny, big eyes ,glamorous, long hair, _weakness(Burke)
+
+Seoultech Times에서 시행한 설문에 의하면, 외모를 가꾸는것에 대한 압력을 여성들이 훨씬 많이 느낌
+
+Motif: Self satisfaction of Women < Power of men, Brainwashing by society
+
+여자에게만 강요되는 꾸밈노동, 남성에 의해 정의되는 ideal 따르기
+
+코르셋의 정의: 어떠함 (나무위키..)
+
+미투운동과 함께 탈코르셋 운동이 널리퍼짐. 미디어에서도 숏컷 여성의 모습이 많이 등장하게됨.
+
+- 탈코의 개인적 목적: 본인의 다양함을 표현할 자유와 권리, 경제적, 시간절약
+- 탈코의 사회적 목적: 꾸밈노동 압력에서 여성들을 해방
+
+안티테제 등장
+
+- 탈코를 원하지 않는 여성도 있음, 패션을 좋아할수있음
+- 남자처럼 입는것이 탈코인가?
+- 꾸밈노동이 사회에 의한 세뇌인가? 진짜 beauty란 무엇인가?
+
+과학적인 이유로 남녀의 individual taste가 다를 수 있을까?
+
+탈코
+
+- **Volunteer** for both individual and social reasons
+- 화장뿐만 아닌 옷차림, 행동양식, 목소리, 등
+- Follow neatness
+- 각각이 소중하다, Don't be emotional, Detached & Within
+
+끝
+
+- 나 Q: It might not related with the content of your presentation (sorry..), but I wanted to say that let's not use NamuWiki as reference.
+- A: 나도 나무위키를 쓰긴 싫었지만 탈코 정의가 있는곳을 잘 못찾았다
+- Q: 페미위키도 있어요, 저도 이해합니다 죄송
+
+다른질문
+
+- 다른학생 Q: 그루밍족은 어케생각하세요?
+- 교수님 A: 그루밍족의 경우 본인의 의사에 의해 "남자처럼"에서 벗어나 스스로 화장하고 이런걸로 아는데, 어떻게 보면 탈코와 같은 맥락으로 해석할 수 있다
