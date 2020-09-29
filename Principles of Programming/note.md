@@ -430,4 +430,148 @@ Week 4, Thu
 다른 언어 익셉션과 거의 같음, 짧게 설명하고 지나감
 
 ### Datatypes
-튜플, 레코드 배움
+튜플, 레코드, Type Alias 배움
+
+&nbsp;
+
+Week 5, Tue
+========
+> 2020-09-29
+
+Algebraic Datatypes 배움. ADT 좋아! Scala의 ADT는 자바 상속을 사용해 구현되어있다.
+
+```scala
+sealed abstract class Attr
+case class Name(name: String) extends Attr
+case class Age(age: Int) extends Attr
+case class Birth(year: Int, month: Int, date: Int) extends Attr
+case class Height(height: Double) extends Attr
+
+val a: Attr = Name("김지현")
+val b: Attr = Birth(2000, 3, 10)
+```
+
+Recursive ADT도 가능.
+
+```scala
+sealed abstract class MyList
+case class MyNil() extends MyList
+case class MyCons(head: Int, tail: MyList) extends MyList
+
+val x: MyList = MyCons(10, MyCons(20, MyNil()))
+```
+
+바이너리 트리도 만들어보아요
+
+```scala
+sealed abstract class BTree
+case class Leaf(value: Int) extends BTree
+case class Node(left: BTree, right: BTree) extends BTree
+
+val x: BTree = Node(Node(Leaf(10), Node(Leaf(20), Leaf(30))), Leaf(50))
+```
+
+패턴매칭을 해보아요
+
+```scala
+exp match {
+  case C1(...) => exp1
+  case C2(...) => exp2
+  // ...
+  case Cn(...) => expn
+}
+```
+
+MyList의 길이를 재는 함수를 패턴매칭으로 만들어보아요
+
+```scala
+sealed abstract class MyList
+case class MyNil() extends MyList
+case class MyCons(head: Int, tail: MyList) extends MyList
+
+def length(list: MyList): Int = {
+  list match {
+    case MyNil() => 0
+    case MyCons(_, tail) => 1 + length(tail)
+  }
+}
+
+val x: MyList = MyCons(10, MyCons(20, MyNil()))
+length(x)
+```
+
+겨스님: 사람들 사이의 컨벤션을 지키는것은 굉장히 중요합니다.
+
+case class는 오버로딩이 안돼용.
+
+```scala
+sealed abstract class Yolo
+case class Swag(value: Int) extends Yolo
+case class Swag(value: Double) extends Yolo
+// FAIL!
+```
+
+스칼라는 기본적으로 non-exhasutive match에 대해 워닝만 띄우고 에러를 안줌
+
+```scala
+sealed abstract class MyList
+case class MyNil() extends MyList
+case class MyCons(head: Int, tail: MyList) extends MyList
+
+def something(list: MyList): Int = {
+  list match {
+    case MyNil() => 0
+  }
+}
+```
+
+패턴매칭에서 특정 값으로 매칭할수도 있다.
+
+```scala
+sealed abstract class MyList
+case class MyNil() extends MyList
+case class MyCons(head: Int, tail: MyList) extends MyList
+
+def have_ten(list: MyList): Boolean = {
+  list match {
+    case MyNil() => false
+    case MyCons(10, tail) => true
+    case MyCons(_, tail) => have_ten(tail)
+  }
+}
+
+val with_ten: MyList = MyCons(1, MyCons(10, MyCons(20, MyNil())))
+val no_ten: MyList = MyCons(1, MyCons(11, MyCons(20, MyNil())))
+
+have_ten(with_ten)
+have_ten(no_ten)
+```
+
+```scala
+sealed abstract class BTree
+case class Leaf() extends BTree
+case class Node(value: Int, left: BTree, right: BTree) extends BTree
+
+def find(tree: BTree, query: Int): Boolean = {
+  tree match {
+    case Leaf() => false
+    case Node(value, left, right) if value == query => true
+    case Node(_, left, right) => find(left, query) || find(right, query)
+  }
+}
+
+val x: BTree = Node(5,
+  Node(4,
+    Node(2,
+      Leaf(),
+      Leaf()),
+    Leaf()),
+  Node(7,
+    Node(6,
+      Leaf(),
+      Leaf()),
+    Leaf()))
+
+find(x, 1)
+find(x, 10)
+```
