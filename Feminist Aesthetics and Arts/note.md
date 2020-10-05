@@ -816,3 +816,93 @@ Motif: Self satisfaction of Women < Power of men, Brainwashing by society
 
 - 다른학생 Q: 그루밍족은 어케생각하세요?
 - 교수님 A: 그루밍족의 경우 본인의 의사에 의해 "남자처럼"에서 벗어나 스스로 화장하고 이런걸로 아는데, 어떻게 보면 탈코와 같은 맥락으로 해석할 수 있다
+
+&nbsp;
+
+Week 6, Mon
+========
+> 2020-10-05
+
+## 신지윤 김수연, 탈코르셋 운동
+한국은 외모에 대한 압력이 심한편. 쌍꺼풀, 날씬한 몸, 하얀 피부 등, 성형운동, 등
+
+탈코운동이 중요한 이유: 방은정(유튜버), 차지원, 이나영 교수님 등 탈코에 대한 여러 말들
+
+Do we have to destroy the existing Beauty Industries?
+
+So what must change?
+
+- 한국 남성 마인드셋: 20대남성 76%와 30대 남성 66%는 여전히 페미니즘 반대 (리얼미터)
+- Breaking Traditions
+- More awareness must be made of such movement: 교보문고 통계, 이전해에 비해 페미니즘 서적 매출 증가, 탈코르셋 운동 이전에는 "이쁘다"는 말이 당연히 칭찬이었음
+- Women needs to change their daily choices
+
+How people perceive beautification and loving one self through the movement: 탈코운동을 통해, 외모가 아닌것을 통해 자기 자신을 사랑할 줄 알게된 사람들 존재
+
+What is the meaning of loving self?
+
+What is the bigger picture of this movement? 단순히 짧은머리와 화장 안하기 뿐 아니라, wage gap 좁히기, 불법촬영물 규탄시위, 성희롱에 대한 강한 법적 처벌 요구, 미투 운동, 여성에 대한 비현실적인 기대에 대한 투쟁, 가부장제 타파
+
+발표 끝
+
+- 필기체 폰트 머시따
+- "Women needs to change their daily choices" 으음
+
+교수님: Nude vs naked에서 봤던 body positive movement와 탈코운동에서 관통하는 정신을 볼 수 있었습니다.
+
+## 우지선, Body positive movement
+발표구성
+
+1. Variation of standards of physical beauty according to history
+2. What is body positive exercise and when did it start?
+3. 이 운동과 여성주의의 관계
+4. 현대에서의 전개
+5. 장점
+6. 단점
+7. 발표자의 생각
+
+역사적으로 문화권에 따라, 다양한 신체의 standard가 있었다. 통통한 몸을 좋아하는 문화권, 늘씬한 몸을 좋아하는 문화권, 전족, 등
+
+Body positive movement = All types body is perfect, Connie Sobczak and Elizabeth Scott, 1996
+
+[Fat feminism], body-positivity와 연관된 페미니즘의 한 갈래.
+
+Advantages
+
+- 거식증, 폭식증, 등 사회적인 시선으로 인한 질병을 앓던 사람들에게 도움이 됨
+- 큰 사회적 변화
+
+Disadvantages
+
+- People know what is really represented as beauty(외모지성주의적 관점에서의 미)
+- Some contribution to backlash (발표자는 백래시라고 표현했지만, 백래시라기보단 자본주의에 의해 운동의 의미가 퇴락된것이 맞는것같음) 틱톡에서 연예인들이 입었던 노출이 많은 옷을 다른 체형으로 입어서 영상을 찍는다던가 등
+
+발표자가 생각하는 이 운동의 향후 Direction: You don't have to care about your body is beautiful or not.
+
+[Fat feminism]: https://en.wikipedia.org/wiki/Fat_feminism
+
+발표 끝
+
+교수님: 좋은 면도 있었지만, 많은 비판도 받았다. 바지 포지티브가 추구하는 것이 '아름다움의 다양성 확장'에 있지만 탈코르셋은 '아름다울 필요의 거부'라는 차이가 있다.
+
+- 나 질문: I kind of lost in the middle of presentation, why was "People know what is really represented as beauty" under "disadvantages" section? Sorry for not being focused.- 다른 학생 대답: 이쁜것이 칭찬이 아니니까?
+
+남자의 외무가꾸기에 대해
+
+- 한 학생: K-pop 아이돌과 같이 돈과 관련되었을때에만 꾸미는것같다
+- 교수님: 원해서 자발적으로 꾸미는 남자들도 많지 않나요?
+- 다른 학생: 외모지상주의가 남자에게 적용되지 않는것은 아니다
+- 다른 학생: 여성의 외모지상주의는 얇고 연약할것을 요구하는 반면, 남성의 외모지상주의는 남성적이고 건강할것을 요구하는 차이가 있다.
+- 다른 학생: 남성에게 요구되는 외모지상주의에는 두 측면이 있다. 하나는 새로운 트렌드인, 화장하고 꾸미고 이런거고, 두번째는 운동하고 그런것인데, 전자는 새롭지만 후자는 오래 존재해오던것.
+- 교수님: 우리가 놓치지 말아야하는 지점은, 이런 외모지상주의가 사실 자본주의에 기반하고있다는 것입니다. 그리고 이 자본주의는 심지어 body-positive movement의 의의마저 비틀고있습니다.
+
+미래의 수업에서 칸트와 같은 철학자들이 어떻게 beauty에 대한 컨셉을 자유롭게 만들었는지 알아봅시다.
+
+수업끝, 이후 질문
+
+- 나: (PPT에서 잘못들은거 물어봄)
+- 발표자: (대답함)
+- 다른 학생: Then, 지선, Is it right to interpret your opinion "We don't have to be beautiful" as "We should not be valued by the standard of beauty established by society"? 
+- 발표자: Yes
+
+지현의 질문은 Universality of beauty에 의한것인데, 다음 수업에서 Universality of beauty라는것은 존재하지 않는다는 이야기를 할거에용.
