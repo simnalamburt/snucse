@@ -573,5 +573,113 @@ val x: BTree = Node(5,
     Leaf()))
 
 find(x, 1)
+find(x, 6)
+find(x, 7)
 find(x, 10)
 ```
+
+&nbsp;
+
+Week 6, Tue
+========
+> 2020-10-06
+
+테일콜 버전도 만들어보자
+
+```scala
+sealed abstract class BTree
+case class Leaf() extends BTree
+case class Node(value: Int, left: BTree, right: BTree) extends BTree
+
+sealed abstract class BTreeList
+case class Nil() extends BTreeList
+case class Con(node: BTree, tail: BTreeList) extends BTreeList
+
+def findList(list: BTreeList, query: Int): Boolean = {
+  list match {
+    case Nil() => false
+    case Con(Leaf(), tail) => findList(tail, query)
+    case Con(Node(value, _, _), _) if value == query => true
+    case Con(Node(_, left, right), tail) => findList(Con(left, Con(right, tail)), query)
+  }
+}
+
+def find(tree: BTree, query: Int): Boolean = {
+  findList(Con(tree, Nil()), query)
+}
+
+val x: BTree = Node(5,
+  Node(4,
+    Node(2,
+      Leaf(),
+      Leaf()),
+    Leaf()),
+  Node(7,
+    Node(6,
+      Leaf(),
+      Leaf()),
+    Leaf()))
+
+find(x, 1)
+find(x, 6)
+find(x, 7)
+find(x, 10)
+```
+
+아이조와
+
+### Type Checking & Inference
+타입: 값의 정의역. 정적타입 언어와 동적타입 언어가 있음
+
+타입체킹 방식
+
+- 스태틱 타입체킹: 타입에 맞는 값이 생성되는지 컴파일타임에 체크, 런타임에는 타입정보 안들고다녀도 됨
+- 다이나믹 타입체킹: 런타임 타입체킹, 값과 함께 타입체크를 들고다니고, 매 계산 전에 타입을 검사함
+- 타입체킹 안하기: 아예 안하기, 디버깅 어렵다
+
+러스트는 타입체커가 몹시 강력해요. 일반 타입체커들은 타입에러가 나지 않을것정도만 보장하는데, 러스트 타입체커는 매우 강력해서 타입에러뿐 아니라 데이터레이스, 소유권 에러가 발생하지 않는다 이런것까지 모두 보장해요.
+
+원래 개념적으로 잘 짜던 사람들은 러스트를 보면 되게 좋아해요. 코드를 잘 못짜는 사람들이 보면 정말 싫어하고. 그래서 C 프로그램 하던사람들 보면 극단적으로 갈려요. 아주 싫어하고 못하겠다고 하는사람과, 완전 사랑에 빠지는 사람.
+
+러스트의 핵심은 그겁니다. 효율적으로 짜는 코드는 효율적으로 짜면서도, 타입안전할 수 있다.
+
+- 나: 카이스트에선 시스템프로그래밍 수업이랑 동시성 프로그래밍 수업에서 Rust를 쓴대요
+- 그분이 강지훈 교수님이라고 저한테서 박사받은다음 카이스트 부임하신 분이에요
+- 나: 빨리 박사 한명 더 졸업시켜서 저희학교에도 Rust 수업 열어주세요 (??
+- 제가 그분에게서 강의자료를 받아 수업을 열던가 해야게쬬 저는 러스트를 그렇게 잘하지는 못하지만 강지훈 교수님은 러스트를 아주 잘하셔요
+
+타입추론: 타입을 일일이 명시 안해도 알아서 추론해주는거. 타입을 쓰는건 문서화의 기능도 하기때문에 일부러 쓰기도 함
+
+### Parametric Polymorphicsm
+```scala
+// 귀찮
+def idInt(x: Int): Int = x
+def idDouble(x: Double): Double = x
+
+// 조와
+def id[A](x: A): A = x
+```
+
+여기서 `id`의 타입은 `[A](val x: A) => A`, id는 parametric expression이다. `id[T] _`는 `T=>T` 타입.
+
+Note: 함수 타입은 폴리모피즘을 지원하지 않는다. Polymorphic한 function 값을 갖지는 못한다. 그러나 비슷한 기능을 수행하는 타입을 만들 수 있다.
+
+```scala
+def applyn[A](f: A=>A, n: Int, x: A): A = {
+  n match {
+    case 0 => x
+    case _ => f(apply(f, n-1, x))
+  }
+}
+
+// 이건 안됨
+val f: [A](A=>A, Int, A) => A = applyn _
+
+// 이건 됨, f가 함수인것처럼 f() 이렇게 쓰면 동작함
+type Applyn = { def apply[A](f: A=>A, n: Int, x: A): A }
+val f: Applyn = new { def apply[A](f: A=>A, n: Int, x: A): A = applyn(f, n, x) }
+```
+
+스칼라에선 `f.apply()`를 `f()` 이렇게 줄여 부를 수 있음. `apply`라는 함수 이름에 특별한 신태틱 슈거가 있음. 사실 스칼라에선 일반 함수도 클래스 오브젝트로 인코딩되어있다.
+
+파라메트릭 폴리모피즘 외에도 여러 유형의 폴리모피즘이 있다.
