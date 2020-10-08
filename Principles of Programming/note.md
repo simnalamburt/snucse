@@ -683,3 +683,129 @@ val f: Applyn = new { def apply[A](f: A=>A, n: Int, x: A): A = applyn(f, n, x) }
 스칼라에선 `f.apply()`를 `f()` 이렇게 줄여 부를 수 있음. `apply`라는 함수 이름에 특별한 신태틱 슈거가 있음. 사실 스칼라에선 일반 함수도 클래스 오브젝트로 인코딩되어있다.
 
 파라메트릭 폴리모피즘 외에도 여러 유형의 폴리모피즘이 있다.
+
+&nbsp;
+
+Week 6, Thu
+========
+> 2020-10-08
+
+데이터 타입에도 파라메트릭 폴리모피즘 쓸수있숴
+
+```scala
+sealed abstract class MyList[A]
+case class MyNil[A]() extends MyList[A]
+case class MyCons[A](head: A, tail: MyList[A]) extends MyList[A]
+```
+
+Type alias에도 파라메트릭 폴리모피즘 쓸수있숴
+
+```scala
+type BSTree[A] = BTree[(Int, A)]
+```
+
+표준라이브러리에 있는 폴리모픽 타입들
+
+- Option[T] = None | Some(x)
+- List[T] = Nil | x::L
+
+## Part 2. Object-Oriented Programming
+### Subtype Polymorphism (concept)
+```scala
+type Name = { val name: String }
+type NameHome = { val name: String; val home: String }
+type NameMobile = { val name: String; val mobile: String }
+```
+
+이럴때에, NameHome과 NameMobile을 Name의 서브타입이 되게하고싶다
+
+- T <: S
+- NameHome <: Name
+- NameMobile <: Name
+
+객체 attribute set의 proper subset, All elements of T can be used as that of S
+
+함수의 서브타입 관계
+
+- (Name => String) <: (NameHome => String)
+
+Name => String 함수는 모든 NameHome => String이 필요한 자리에 사용될 수 있음. 이 반대는 안된다.
+
+두 서브타입의 종류
+
+- Structural Subtype: 생긴게 서브타입이면 자동으로 그렇게 만들어줌, structural에선 recursive한 구조가 생길 수 없음
+- Nominal Subtype: 명확하게 상속관계를 지정한 타입들에 한해서 서브타입 관계가 생김, 이 경우 recursive한 사이클이 있을 수 있음
+
+스칼라에서 struct는 structural subtype, 클래스는 nominal subtype임.
+
+### Structural Subtype
+일반적으로 아래가 성립함
+
+- reflexivity, 반사관계: 모든 T에 대해 아래가 성립함
+
+  ```
+  T <: T
+  ```
+
+- Transitivity: 모든 T, S, R에 대해 아래가 성립함
+
+  ```
+  T <: R   R <: S
+  ===============
+       T<:S
+  ```
+
+
+특별한 서브타입들에 대해 아래가 성립함
+
+- Nothing: 공집합
+- Any: 모든 값의 집합, 전체집합
+- 임의의 타입 T에 대해 아래가 성립한다.
+
+  ```
+  Nothing <: T <: Any
+  ```
+
+레코드에 대해 아래가 성립함
+
+- Permutation
+
+  ```
+  ===============
+  {...; x: T1; y: T2; ...} <: {...; y: T2, x: T1; ...}
+  ```
+
+- Width
+
+  ```
+  ==============================
+  {...; x: T; ...} <: {...; ...}
+  ```
+
+- Depth
+
+  ```
+  T <: S
+  ====================================
+  {...; x: T; ...} <: {...; x: S; ...>
+  ```
+
+튜플에 대해 아래가 성립
+
+- Depth
+
+  ```
+  T <: S
+  ==============================
+  (..., T, ...) <: (..., S, ...)
+  ```
+
+함수에 대해 아래가 성립함
+
+- Covariance, Contravariance
+
+  ```
+  T <: T'        S <: S'
+  ======================
+  (T' => S) <: (T => S')
+  ```
