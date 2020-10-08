@@ -906,3 +906,101 @@ Disadvantages
 - 발표자: Yes
 
 지현의 질문은 Universality of beauty에 의한것인데, 다음 수업에서 Universality of beauty라는것은 존재하지 않는다는 이야기를 할거에용.
+
+&nbsp;
+
+Week 6, Wed
+========
+> 2020-10-07
+
+Beauty & sublime에 대해 마저 배워보자.
+
+> https://prezi.com/p/smf1xdzmmk2t/
+
+버크의 분석은 페미니즘이 어떻게 미학의 기존 패러다임과 대치되는지(adverse) 보여준다.
+
+### Kant's theory
+칸트의 저작은 주로 세개
+
+1. 순수 이성 비판: 어떻게 지식을 창출해내며 사물을 알 수 있는지
+2. 실천 이성 비판: 어떻게 윤리적으로 옳고 그름을 판단하며 그걸 신청할 수 있는지
+3. 판단력 비판: 어떻게 아름다움을 판단하며 그것을 직관할 수 있는지
+
+미학은 칸트에게 매우 중요한 학문이었다. 그리고 pleasure는 중요한 이슈였음.
+
+(나: Don't even know what it is but sounds more interesting and new than last 2000 years of man vs woman dichotomy)
+
+제 최애 철학자중 한명이 임마누엘 칸트에요. 철학의 구도를 크게 바꾼 아주 천재적인 철학자일뿐만 아니라, 기존의 바이어스된 사고방식에서 가장 크게 벗어나려했고, 후대 철학자들은 칸트의 질문에 대답하느라 바빴어요
+
+칸트는 "미학적 기쁨과 관련된 유니버셜한 원리가 있는가"를 찾고싶었음. 이와 관련해, 칸트의 중요한 질문 세개
+
+1.  Pleasure matters? Why?
+2.  When do we feel pleasure? in sensory(sensual)/moral/aesthetic satisfaction
+3.  What is aesthetic satisfaction? How aesthetic satisfaction is associated with "disinterestedness"?
+
+칸트에 의하면 미학적 기쁨은 interest와 관계가 없다. 예를들어 맛있는거 먹고 기쁜건 개인적 interest(이해관계)와 관계가 있고, 도덕적인 일을 하고 기쁜건 사회적 interest와 관계가 있음. 근데 석양이나 자연환경을 보는것도 그런가? 칸트에 의하면 아님
+
+칸트의 말이 무조건 맞다는건 아니에용. 칸트의 아규먼트를 비판하는중이에용
+
+> 내 질문: Let me put 제우 and 쿨란's question in little different way
+>
+> I listened to a music or watched something purposely  to calm my stressed mind and felt pleasure -> Might not a aesthetic satisfaction
+>
+> I listened to a music without concrete purpose and felt pleasure -> Maybe a aesthetic satisfaction even it's the same music
+>
+> Am I right?
+
+(그 외에도 비슷한 질문 많았음)
+
+사실 칸트의 정의에 의하면 둘다 미학적 기쁨이 맞을수도 있어요. 그리고 심지어 칸트에 따르면 미학적 기쁨이 무엇인지부터가 굉장히 모호할 수 있고 이것이 비판할 포인트에요.
+
+조아요 그럼 칸트의 "interestedness"가 무엇인지 이야기해봅시다
+
+꽃을 보거나, 석양을 보거나, 나무를 보고 저는 물리적으로 뭔가 얻는것은 없지만 기쁨을 느낍니다. 물질적인 보상은 없지만 감정적인 인터랙션을 받습니다.
+
+- Kant sought to discover the grounds for beauty and feeling of pleasure
+- Kant wanted to discover the grounds for genuine universality of aesthetic response
+
+- "Disinterested" does not mean that we care nothing for objects; it means that our pleasure is not rooted in personal advancement gratification and in the satisfaction of one of our desires. (apophasis, apophathic theology)
+
+근데 제가 기쁨을 느끼게해주는 예시를 주로 자연으로 들고있죠. 칸트에서 Real 미학적 기쁨은 주로 자연에서 왔고, 인공적인 보석 이런건 칸트의 관심사가 아니였어요.
+
+이걸 쉽게 일반화하면 리스키해용. 칸트의 문제의식을 좀 나누고싶었어용.
+
+음악과 예술은 우리가 주체적으로 감상하는것임에도 존재하고, 항상 비평과 비평가들이 존재하져. 그리고 코어 밸류가 있다고 믿죠. 이것은 미학에서의 유니버셜 룰을 찾기위한 칸트의 여정과 어떤면에선 비슷하기도 해요.
+
+김젼의 질문을 다시 revisit하면, "너무 스트레스 받아서 릴랙스하고싶어서 음악을 듣기" 그 음악에 대한 그러한 감상(appreciation)은 pure authentic genuin aesthetic appreciation이 아니라고 칸트는 할것같아요.
+
+Prerequisite to be universal:
+- No desire/interest
+- No direct relationship with objects
+- No purpose in seeing/hearing
+
+칸트의 state of mind in the aesthetic satisfaction: Free play between our imagination and understanding
+
+Purification of aesthetic pleasure and judgement of taste!
+
+Gendering in "pure Aesthetic Pleasure"
+
+- Denigration of body and matter
+- Implication that the ideal arbiter should have a higher mental power which is covertly referring to male's
+- Conceptual support for Fine Art
+
+Art for Art's sake (예술지상주의)의 근간임.
+
+(나: Now I see why there are so many arts trying to be useless)
+
+> Whose taste?
+>
+> (나눠준 읽기자료에 있는거 참고)
+
+여자도 Fine taste를 가진것으로 받아들여지고, 어떤 면에선 ideal한 존재로 여겨졌음에도 불구하고 Arbiter of taste는 주로 남자였다.
+
+> [Women of French Salons and English Coffeehouses of](https://youtu.be/SbRGIFIBcQk)
+
+계몽주의 시대동안 여자는 이성적인 존재일 수 없다는 시각을 여성이 극복하기 시작함.
+
+영국에서 사교의 장이었던 커피집. 남자들만의 공간이었다. 그러나 어떤 커피집은 여성에 의해 운영되었고, 이곳에서 여성들이 사회정치변화를 이끌었음. 비슷한것이 프랑스엔 살롱이 있다.
+
+- Q: 저 에세이 제출한거..
+- A: 괜찮아용!
