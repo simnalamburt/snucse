@@ -865,7 +865,7 @@ CFS를 하면 프로세스별로는 CPU share가 잘 맞지만, 유저별로, Se
 - 프로그래머들을 위해 메모리 공간을 abstract 해주자!
 - 메모리 조각이 여기저기 흩어져있더라도, 프로그래머가 보기에는 하나로 붙어있는것처럼 쓸 수 있게 해주자!
 
-ㄸㄹ랴챠두쵸
+Efficiency
 
 - Variable-sized request로 인한 파편화를 최소화하자. 특히 external fragmentation을 막자
 - 하드웨어 서포트도 좀 받자
