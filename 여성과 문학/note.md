@@ -1156,6 +1156,3 @@ PC의 기준으로 페미니즘적 작품을 가려내는것이 맞다고 생각
 > 여성문화이론연구소, <페미니즘의 개념들>, 동녘 2015, 388p
 
 이 둘을 감지할 수 있는 레이더를 둘다 켜두시면, 텍스트를 좀더 생명있게 읽을 수 있지 않나 싶습니다.
-
-2번 글 링크: http://www.leeinseong.pe.kr/5030
-3번 글 링크: http://view.sfac.or.kr/html/epi_view.asp?cover_type=VWCON00003&cover_idx=43&epi_idx=163
