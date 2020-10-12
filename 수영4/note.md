@@ -145,6 +145,8 @@ Week 3, Mon
 
 출석 대체과제: https://drive.google.com/file/d/1mLP3yO7PvVuc0i-_hM3P63V6bOyzgU-4/view?usp=sharing 보고 느낀점을 1페이지 분량으로 감상문 작성하여 제출
 
+수행 완료
+
 &nbsp;
 
 Week 4, Mon
@@ -153,6 +155,8 @@ Week 4, Mon
 
 원하는 학생 한정 대면수업
 
+출석 대체과제: https://drive.google.com/file/d/1Xv5d6f4bq4FN8egt5YrVPIy2p7sekG9k/view?usp=sharing 보고 느낀점을 1페이지 분량으로 감상문 작성하여 제출
+
 &nbsp;
 
 Week 5, Mon
@@ -160,3 +164,9 @@ Week 5, Mon
 > 2020-10-05
 
 휴강
+
+&nbsp;
+
+Week 6, Mon
+========
+> 2020-10-12
