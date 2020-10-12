@@ -411,26 +411,26 @@ Who is considered as artist? What is considered as art?
 1.  How modern philosophy keep elaborating the conceptual framework of aesthetics?
 2.  How were the concepts of 'fine art' and 'artist' coined?
 
-모던에 대해 알아보자! 학문에 따라 현대가 지칭하는 기간이 다른데, 철학사에선 현대는 17세기인 데카르트부터 시작한다. 철학사에서 현대시대의 특징:
+모던에 대해 알아보자! 학문에 따라 근대(modern)가 지칭하는 기간이 다른데, 철학사에선 근대는 17세기인 데카르트부터 시작한다. 철학사에서 근대시대의 특징:
 
 - Religion in decline
 - New way of life centered on the secular and the science
 - Rationality, the essential element of human kind distinct from animal
 
-현대철학에서 이성이 중요한 이유가 뭘까?
+근대철학에서 이성이 중요한 이유가 뭘까?
 
 > Knower? (subject)
 > Known? (object)
 
 Subject gives concept of the object, Object gives ? to the subject
 
-현대 철학, 특히 데카르트부터, object는 subject 없이 존재할 수 없다. subject가 있어야 object가 존재할 수 있음.
+근대 철학, 특히 데카르트부터, object는 subject 없이 존재할 수 없다. subject가 있어야 object가 존재할 수 있음.
 
 고대 그리스 철학에선, 우리가 이것은 의자다 라는 말을 할 때, 이 말은 "Objective truth"다. subject가 있든 없든 아무튼 의자다.
 
-근데 고대 그리스 온톨로지와 다르게, 현대 철학에선 structure of knowledge를 분해하기 시작했다.
+근데 고대 그리스 온톨로지와 다르게, 근대 철학에선 structure of knowledge를 분해하기 시작했다.
 
-옛날에는 object의 본질(컨셉)같은건 object 그 자체 안에 위치한다고 생각했는데, 현대철학에선 subject의 이성속에 존재한다고 본다.
+옛날에는 object의 본질(컨셉)같은건 object 그 자체 안에 위치한다고 생각했는데, 근대철학에선 subject의 이성속에 존재한다고 본다.
 
 The knower는 주로 male nature의 개념으로 모델되었다. male nature가 순수하게 이성으로 리즈닝할 수 있는 능력을 가진 반면, female nature는 intuitive temperament와 contrasting emotional한 존재로 그려졌기 때문이다.
 
@@ -443,9 +443,9 @@ femininity는 항상 자비롭고 친절하지만, inconsistent하고 무책임�
 ### Epistemology
 인식론의 세계에서, 우리는 무엇을 할 수 있는지, 사람은 무엇을 알 수 있는지, 우리는 세계를 어떻게 아는지가 중요해짐.
 
-현대 철학의 인식론에서 젠더시스템은 더 심각해짐. 남성이 active subject, 여성이 passive object가 됨. 여성은 examine하고 탐사해야하는 대상이 되었다.
+근대 철학의 인식론에서 젠더시스템은 더 심각해짐. 남성이 active subject, 여성이 passive object가 됨. 여성은 examine하고 탐사해야하는 대상이 되었다.
 
-학생 질문: 데카르트로 대표되는 현대철학에서, 생각하는 주체가 여러명이 있을떄에, 다른사람을 생각하는 주체로 인정하게되는 원리가 궁금하다.
+학생 질문: 데카르트로 대표되는 근대철학에서, 생각하는 주체가 여러명이 있을떄에, 다른사람을 생각하는 주체로 인정하게되는 원리가 궁금하다.
 
 데카르트 철학에서 모든것은 판타지가 맞고, 생각할 수 있는 주체는 ego, 나뿐인것이 맞다. 그리고 다른 사람을 생각하는 주체로 인정하게된 원리는, 다른사람이 이성을 가졌기 때문이다. 데카르트는 독실한 크리스천이었고, 데카르트에게 있어 우리의 존재 최후의 보장은 신이었다.
 
@@ -477,8 +477,8 @@ Art의 의미가 조금씩 변하고있다.
 
 고대부터 조각이나 그림그리기는 시같이 영감을 주는 작업과는 다르게 physically-bound category로 분류되었다. 그러나 르네상스가 끝나갈 무렵, 화가와 조각가들은 'physical manipulation'보단느 'core idea of artifacts'를 뜻하는 디자인이라는 용어를 전파시키면서 liberal artists로 인식되기 시작한다.
 
-- 현대 이전: Immaterial Ideas vs Material artifacts
-- 현대 이후: Design vs Manual labors
+- 근대 이전: Immaterial Ideas vs Material artifacts
+- 근대 이후: Design vs Manual labors
 
 #### Fine Art?
 What is 'Fine Art'?
@@ -527,7 +527,7 @@ Points to note:
 
     Purely aesthetic pleasure was singled out for its contrast with other sources of pleasure such as practical use, economic value, social meaning, or the satisfaction of sexual desire.
 
-2.  그리고 이 개념이 현대 철학자와 미학자들에 의해 이론적으로 지지받음
+2.  그리고 이 개념이 근대 철학자와 미학자들에 의해 이론적으로 지지받음
 
 3.  이 새로운 철학적 담론을 기반으로, 예술에 대한 새로운 appreciation이 생겨났다.
 
@@ -856,7 +856,7 @@ What is the bigger picture of this movement? 단순히 짧은머리와 화장 �
 1. Variation of standards of physical beauty according to history
 2. What is body positive exercise and when did it start?
 3. 이 운동과 여성주의의 관계
-4. 현대에서의 전개
+4. 근대에서의 전개
 5. 장점
 6. 단점
 7. 발표자의 생각
@@ -1004,3 +1004,115 @@ Art for Art's sake (예술지상주의)의 근간임.
 
 - Q: 저 에세이 제출한거..
 - A: 괜찮아용!
+
+&nbsp;
+
+Week 7, Mon
+========
+> 2020-10-12
+
+eTL에 아래 자료가 올라옴
+
+> [She's Beautiful When She's Angry](https://youtu.be/e-n829QzZ58)
+
+지난시간엔 칸트 미학에 대해 배웠어용. (칸트의 미적 무관심성에 대해 복습)
+
+> https://prezi.com/p/smf1xdzmmk2t/
+
+### Whose taste?
+프랑스의 커피살롱에 대해 배워봅시다.
+
+> [Women of French Salons and English Coffeehouses of](https://youtu.be/SbRGIFIBcQk)
+
+여성들도 fine taste를 개발할 수 있는걸로 여겨졌지만, 그 taste의 판정자(arbiter)는 항상 암시적으로 남상이었음. 남성의 mind가 여성에 비해 더 capable하다고 여겨졌기때문에.
+
+남성이 여성보다 높은 mental power를 지녔다는 social norm/철학적 스테레오타입이 근대시대에도 재생산됨.
+
+Feminine taste는 pretty charming한것이고, 남성적인 taste는 더 심오하고 어렵다는 식의 socially grounded assumption이 이 시기 문학에 흔히 드러남.
+
+살롱 주인이 여성이 됨에도 불구하고, 부르주아들이나 정치인들의 담론에 여성의 개입이 증가는 했으나 여전히 일정수준에서 제한됨. 이것이 역사에 등장하지도 않음.
+
+여성 작가, 여성 예술가가 항상 배제를 당했고 이들이 모이는곳이 커피살롱이었고 항상 역사책에서 숨겨졌음.
+
+### Aesthetic attitude theories
+Basic Argument of the theory:
+
+- Aesthetic attitude theories recommend that the best way to achieve aesthetic enjoyment is to take a disinterested, contemplative stance.
+- The prerequisite for appreciation is the distanced, quiescent, reflective stance.
+
+Remaining problem: In an aesthetic attitude(Stolnitz quote), "perception of a spectator is directed to the object in its own right and that the spectator is not concerned to analyze it or to ask questions about it." However, it is precisely the prohibition on asking questions that has prompted many feminist critics to reject this tradition in aesthetics
+
+Stolnitz는 미학적 태도와 관해 "관객에 대한 인식은 그 자체로 사물을 향하며, 관객이 사물을 분석하거나 그것에 대해 질문해선 안된다"고 말했다. 그러나 이런 질문의 금지가, 페미니스트 비평가들에게 이런 전통을 거부해야한다는 비판을 일으켰다.
+
+> [Robert Mapplethorpe: sex, portraits and flowers](https://youtu.be/sSpED6xtTuA)
+
+Here, it is precisely the prohibition on asking questions that has promoted many feminist critics to reject this tradition in aesthetics. This is the ignorace about the social power of art.
+
+> Jean Leon Gerome, A Roman Slave Market, 1884
+
+> Artemisia Gentileschi, Susanna and the Elders, 1610
+
+Gaze 👁️  👁️
+
+칸트덕에 pleasure라는것을 철학/미학적으로 다시 들여다볼 수 있게 됨. 그리고 "Gaze"가 무엇인지 이야기할 기회가 되었다.
+
+## Psychoanalysis and Feminism
+### Who has "Gaze"?
+👁️  👁️
+
+누드화는 좋든싫든 어떤식으로든 sexual pleasure와 연결되어있을 수밖에 없음. 누드화를 보고 성적인 기쁨을 느끼면 왜 안될까? 누드화를 보고 성적인 기쁨을 느낀다는것이 무슨 의미일까? 이 의미를 페미니즘적 관점에서 바라보자. 철학에서도 sex와 body는 그렇게 주된 주제로 다뤄지지 않는다. 그러나 페미니즘 철학가들에게 이는 뺄 수 없는 주제다. Sexual pleasure가 정말 중요한 주제임.
+
+그림들이 Female Gaze는 없고 Male Gaze만 있음.
+
+> Jean Leon Gerome, A Roman Slave Market, 1884
+
+여성이 자신의 팔로 Female gaze를 막고있음
+
+> Diego Velazquez, Rokeby Venus, 1599
+
+여성의 Gaze가 없다. 이 작품에서 여성은 거울로 자신의 몸을 보고 있을 뿐. 이당시 Female Gaze란 이런것이었음.
+
+> Giorgione, Sleeping Venus, 1510
+
+아예 눈을 감고있음
+
+> Artemisia Gentileschi, Susanna and the Elders, 1610
+
+화면 밖을 바라보고있다.
+
+그림에 Male Gaze만 있다. 예술 감상에서 Male Gaze가 sexual pleasure와 연결되어있다는건 어떻게든 인식할 수밖에 없음. Pleasure와 Gaze가 맞붙어있다.
+
+누드화를 보고 성적인 기쁨을 무조건 느끼면 안된다고 하는건, 감각, 감정, 성적인것을 동물적인것/하등한것으로 보고 배제해왔던 전통 철학의 시각을 걍 답습하는것이다. 누드화에 드러난 Male Gaze와 Sexual Pleasure를 제대로 인식하고, 왜 누드화를 보고 성적인 기쁨을 느끼는지 제대로 분석하는것이 필요하다. 그리고 이 작업에 굉장히 유용한 학문이 정신분석학임. 정신분석학이 Female Gaze를 제대로 설명해주진 못하지만, Male Gaze와 Sexual Pleasure에 대해선 정말 잘 설명해준다.
+
+### What is Psychoanalysis
+지그문트 프로이트가 만든 단어.
+
+프로이트는 요즘의 상담사라기보단, 정신과의사, 신경학자에 가까웠다. 이당시엔 정신병을 앓는 환자를 치료하려는 최면술사나 유사심리학자가 되게 많았았다. 근데 이들과는 다르게 정신분석학자들은 치료에 별로 중점을 두지 않았다. 정신분석학자들은 그냥 무의식을 파고 발굴하는 사람들에 가까웠음.
+
+> [What is Psychoanalysis? Part 1: Is it Weird?](https://youtu.be/pxaFeP9Ls5c)
+
+나: Wow the video is clearly weird. (in terms of visual and audio effect not the contents) They intensionally made it weird.
+
+자낙스같은 약이 아니라 대화하고 정신을 분석하는데에 초점을 맞추고있는걸 알 수 있죵.
+
+> Freud's Couch
+
+프로이트가 질문을 하는대신, 여기에 환자를 눕혀서 자신이 꾼 꿈이나 환상에 대한 이야기를 하도록 함.
+
+환자가 자신의 꿈이나 환상에 대해 이야기를 하거나, 심지어 사실이 아닌 이야기를 꾸며 이야기를 하기도 했다. 그걸로도 많은 환자의 증상이 완화되곤 했음.
+
+마치 우리가 힘들때에 일기를 쓰기만 해도 우울감이 덜어지는것과 비슷한 일이 일어났음.
+
+철학이야기를 하는데 왠 프로이트냐 싶을 수 있지만, 이야기를 안할 수 없어요.
+
+contemporary philosopy의 시작이 머게요? 니체 마르크스 프로이트입니다.
+
+- 맑스: 유물론과 자본주의 비판, 공산주의
+- 니체: 정신뿐만 아니라 몸에 대해 다룸
+- 프로이트: 중요한건 의식이 아니라 무의식이다
+
+프로이트는 공황발작을 고쳐야할 질병이 아니라, 무언가 더 심오한 문제가 드러나서 발생한 신호정도로 봤다.
+
+상담가들은 환자의 ego를 고쳐서 사회로 돌려보내는것이 목표였지만, 정신분석학자들에겐 정상/비정상 환자의 경계도 불분명했고 환자를 딱히 어디로 돌려보내려 하지도 않았음. 대신 이런 무의식을 분석해, 존재이유를 찾거나 우리 삶에 대해 더 잘 이해하거나 했음.
+
+다음시간에는 정신분석학자들이 여성의 신경증을 어떻게 히스테리아와 연결지었는지, 정신분석학과 페미니즘의 관계에 대해 배워봅시다.
