@@ -809,3 +809,64 @@ Name => String 함수는 모든 NameHome => String이 필요한 자리에 사용
   ======================
   (T' => S) <: (T => S')
   ```
+
+&nbsp;
+
+Week 7, Tue
+========
+> 2020-10-13
+
+### Class
+Class: Parameterized Record
+
+```scala
+class foo_type(_name: String, _age: Int) {
+  if (_age < 0 || 200 <= _age) { throw new Exception("Out of range") }
+
+  val name: String = _name
+  val age: Int = _age
+
+  def getPP(): String = name + " of age " + age.toString()
+}
+
+val foo: foo_type = new foo_type("Joe", 25)
+
+foo.name
+foo.age
+foo.getPP
+```
+
+Class는 nominal subtype이다. structural subtype 허용 안함. 생긴게 같다고 해도 `<:` 관계가 성립하지 않음.
+
+모든 Class는 Null이라는 base case를 가짐. 그래서 모든 클래스 타입에는 Null이 들어올 수 있음. Null 사용은 권장되지 않으나 딱히 타입체커가 있진 않음.
+
+ADT처럼 recursive하게 만들 수 있음
+
+```scala
+class MyList[A](value_: A, next_: Option[MyList[A]]) {
+  val value: A = value_
+  val next: Option[MyList[A]] = next_
+}
+
+val list = Some(new MyList(3, Some(new MyList(4, None))))
+```
+
+Argument Member를 사용해 생성자 선언을 단순화할 수 있음. argument 부분에 val이 있는것 주목
+
+```scala
+class MyList[A](val value: A, val next: Option[MyList[A]]) { }
+
+val list = Some(new MyList(3, Some(new MyList(4, None))))
+```
+
+빈 중괄호 생략 가능
+
+```scala
+class MyList[A](val value: A, val next: Option[MyList[A]])
+```
+
+Private class constructor가 있음
+
+```scala
+class Person private (name: String) { /* ... */ }
+```
