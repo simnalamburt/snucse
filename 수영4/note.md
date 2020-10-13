@@ -157,6 +157,8 @@ Week 4, Mon
 
 출석 대체과제: https://drive.google.com/file/d/1Xv5d6f4bq4FN8egt5YrVPIy2p7sekG9k/view?usp=sharing 보고 느낀점을 1페이지 분량으로 감상문 작성하여 제출
 
+수행 완료
+
 &nbsp;
 
 Week 5, Mon
@@ -170,3 +172,5 @@ Week 5, Mon
 Week 6, Mon
 ========
 > 2020-10-12
+
+측면 호흡, 사이드킥, 팔돌리기에 대해 공부한다.
