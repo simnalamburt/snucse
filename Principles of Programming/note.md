@@ -870,3 +870,134 @@ Private class constructor가 있음
 ```scala
 class Person private (name: String) { /* ... */ }
 ```
+
+Week 7, Thu
+========
+> 2020-10-15
+
+Companion Object로 이런거 하면 new 생략할 수 있음
+
+```scala
+class MyList[A](value_: A, next_: Option[MyList[A]]) {
+  val value: A = value_
+  val next: Option[MyList[A]] = next_
+}
+
+// val MyList = new { .. } 로 써도 됨
+object MyList {
+  def apply[A](value: A, next: Option[MyList[A]]) = {
+    new MyList(value, next)
+  }
+}
+
+val list = Some(new MyList(3, Some(new MyList(4, None))))
+val list = Some(MyList(3, Some(MyList(4, None))))
+```
+
+### Nominal Sub Typing for Classes = Inheritance
+```scala
+class FooType(x: Int, y: Int) {
+  val a: Int = x
+  def b: Int = a + y
+  def f(z: Int): Int = b + y + z
+}
+
+class GeeType(x: Int) extends FooType(x+1, x+2) {
+  val c: Int = f(x) + b
+}
+
+// GeeType <: FooType
+
+(new GeeType(30)).c
+def test(f: FooType) = { f.a + f.b }
+test(new FooType(10, 20))
+test(new GeeType(30))
+```
+
+Overriding
+
+```scala
+class GeeType(x: Int) extends FooType(x+1, x+2) {
+  override def f(z: Int) = super.b + super.f(z) * 2
+  val c: Int = f(x) + b // b 는 override되지 않아 super.b와 동치
+}
+```
+
+주의: 이건 오버라이딩이 아니라 오버로딩임. 함수 타입이 다름
+
+```scala
+class GeeType(x: Int) extends FooType(x+1, x+2) {
+  def f(z: String) = 77
+}
+```
+
+근데 함수 리턴타입을 subtype으로 지정하는 방식의 오버라이딩은 가능함
+
+```scala
+class GeeType(x: Int) extends FooType(x+1, x+2) {
+  override def f(z: String): Nothing = ???
+}
+```
+
+상속이 함수의 의미도 바꾸고, 가독성도 떨구고 여러가지 단점이 많아요. 그래서 최근에는 상속은 최대한 피하고 대신 인터페이스를 쓰세요.
+
+OOP는 아름답지 못하다. Sum type을 구현하기위해 온갖 흑마법과 사파를 동원해야함.
+
+`Option[MyList[A]]` 대신, 상속을 이용해 Sum type을 만들어봅시다.
+
+```scala
+class MyList[A]()
+class MyNil[A]() extends MyList[A]
+class MyCons[A](val hd: A, val tl: MyList[A]) extends MyList[A]
+
+val t: MyList[Int] = new MyCons(3, new MyCons(4, new MyNil()))
+// t를 사용하는것이 매우 힘듬. 자바 instanceof 같은걸 써야함
+```
+
+new 호출이 귀찮으니 companion object를 써보아요
+
+```scala
+class MyList[A]()
+class MyNil[A]() extends MyList[A]
+object MyNil { def apply[A]() = new MyNil[A]() }
+class MyCons[A](val hd: A, val tl: MyList[A]) extends MyList[A]
+object MyCons { def apply[A](hd: A, tl: MyList[A]) = new MyCons[A](hd, tl) }
+
+val t: MyList[Int] = MyCons(3, MyCons(4, MyNil()))
+// t를 사용하는것이 매우 힘듬. 자바 instanceof 같은걸 써야함
+```
+
+리스트를 만들긴 했지만 쓰는게 어렵네요. case class 문법을 쓰면 아래의 세가지가 변해요
+
+1.  val arguments가 기본임. 생성자 argument에 `val` 안써도 됨
+2.  companion object가 없어도 생성자 호출에서 `new` 생략가능
+3.  패턴매치에 넣을 수 있게됨
+
+OOP 언어에서 상속을 사용한 sumtype 구현은 사파의 무공인데, 이를 정파로 아름답게 만들어줄게 이게 바로 패턴매칭이에요.
+
+```scala
+class MyList[A]()
+case class MyNil[A]() extends MyList[A]
+case class MyCons[A](hd: A, tl: MyList[A]) extends MyList[A]
+
+val t: MyList[Int] = MyCons(3, MyCons(4, MyNil()))
+
+def length[A](x: MyList[A]): Int = {
+  x match {
+    case MyNil() => 0
+    case MyCons(_, tl) => 1 + length(tl)
+  }
+}
+
+length(t)
+
+length(MyList[Int]()) // Runtime error: 허용되는 문제가 있음
+```
+
+abstract 키워드를 써서 MyList 생성을 막을 수 있음. sealed 키워드를 쓰면 이 소스파일 이외의 장소에서 해당 클래스를 추가적으로 확장하는것이 불가능해짐
+
+```scala
+sealed abstract class MyList[A]()
+
+length(MyList[Int]()) // Compile error
+```
