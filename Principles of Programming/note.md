@@ -1001,3 +1001,125 @@ sealed abstract class MyList[A]()
 
 length(MyList[Int]()) // Compile error
 ```
+
+Week 8, Tue
+========
+> 2020-10-20
+
+중간고사는 파트 1까지. 인터넷이 끊겨있는 컴퓨터, 에디터, 강의 슬라이드가 준비되어있을것이다.
+
+### Abstract Classes for Specification
+Specification
+
+```scala
+abstract class Iter[A]() {
+  def next(): Option[(A, Iter[A])]
+}
+```
+
+기본 구현이 들어있을 수 있음
+
+```scala
+abstract class Iter[A]() {
+  def next(): Option[(A, Iter[A])] = None
+}
+```
+
+이미 배운 `extends`로 `abstract class` 확장 가능
+
+```scala
+abstract class Iter[A] {
+  def next(): Option[(A, Iter[A])]
+}
+
+sealed abstract class MyList[A] extends Iter[A]
+
+case class MyNil[A]() extends MyList[A] {
+  override def next() = None
+}
+
+case class MyCons[A](value: A, rest: MyList[A]) extends MyList[A] {
+  override def next() = Some(value, rest)
+}
+
+def forEach[A](iter: Iter[A], fn: A => ()): () = {
+  iter.next() match {
+    case None => ()
+    case Some((value, rest)) => {
+      fn(value)
+      forEach(rest, fn)
+    }
+  }
+}
+
+val list = MyCons(10, MyCons(20, MyCons(30, MyCons(40, MyNil()))))
+forEach(list, println)
+// 10
+// 20
+// 30
+// 40
+```
+
+필드가 함수가 아닐 경우, `val next`는 `def next`의 서브타입이어서 아래와 같은 식으로 abstract class를 구현할 수 있고, 이경우 매 호출마다 값이 다시 계산되지 않아 더 효율적이다.
+
+```scala
+abstract class Iter[A] {
+  def next: Option[(A, Iter[A])]
+}
+
+sealed abstract class MyList[A] extends Iter[A]
+
+case class MyNil[A]() extends MyList[A] {
+  override val next = None
+}
+
+case class MyCons[A](value: A, rest: MyList[A]) extends MyList[A] {
+  override val next = Some(value, rest)
+}
+```
+
+### More on Abstract Classes
+선형 타입이 아닌 MyTree에 in-order Iter를 구현해보자. 커서에 해당하는 데이터가 필요해져서 바로 구현하기는 어려워, Iterable이라는 추상클래스를 새로 만들면 간단하다.
+
+```scala
+// 이터레이터 추상클래스
+abstract class Iter[A] {
+  def next(): Option[(A, Iter[A])]
+}
+
+// 두 이터레이터 연결하기
+// TODO: 꼬리재귀 안됨
+case class Concat[A](earlier: Iter[A], later: Iter[A]) extends Iter[A] {
+  override def next() = {
+    earlier.next() match {
+      case None => later.next()
+      case Some((value, rest)) => Some(value, Concat(rest, later))
+    }
+  }
+}
+
+// MyList, 임의의 이터레이터를 만드는 용도로 응용할 수 있다
+sealed abstract class MyList[A] extends Iter[A]
+case class MyNil[A]() extends MyList[A] {
+  override def next() = None
+}
+case class MyCons[A](value: A, rest: MyList[A]) extends MyList[A] {
+  override def next() = Some(value, rest)
+}
+
+// 주어진 클래스로부터 Iterable한 객체를 뽑아낼 수 있는지
+abstract class Iterable[A] {
+  def iter(): Iter[A]
+}
+
+// MyTree, 이터러블한 객체를 반환할 수 있다
+sealed abstract class MyTree[A] extends Iterable[A]
+case class Empty[A]() extends MyTree[A] {
+  override def iter() = MyNil()
+}
+case class Node[A](value: A, left: MyTree[A], right: MyTree[A]) extends MyTree[A] {
+  override def iter() = Concat(Concat(MyCons(value, MyNil()), left.iter()), right.iter())
+}
+```
+
+TODO: 슬라이드 145까지 필기했음, 혹시 다음시간에 진도 더 뒤에서 출발하면 빠진 내용은 혼자서 보자
