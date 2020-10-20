@@ -1247,3 +1247,128 @@ Male spectators can feel pleasure in identifying with the protagonist, while fem
 
 - Q: 스캔들 발표 안하는사람에겐 대체과제가 있나요?
 - A: 없어용..
+
+&nbsp;
+
+Week 8, Mon
+========
+> 2020-10-19
+
+오늘은 발표가 있는 수업
+
+Pornography에 대해 이야기해보자
+
+## 발표 시작
+우리가 포르노 그래피에 대해 비판적인 시간을 가져야 하는 이유가 무엇인가?
+
+- 무엇이 나쁜가?
+- 무해한 판타지?
+- (못봄)
+- (못봄)
+
+포르노그래피: 글이나 그림으로 여성 순종을 나타낸것이라고 볼 수 있다
+
+Pornography의 Porne는 최하층 매춘부를 뜻하는 그리스어에서 유래함.
+
+오늘날 포르노그래피의 문제
+
+1.  Pain of women desired (or a figure that is supposed to represent the subordiante "female" role), Dehumanization
+2.  Violence, Discrimination against women in porn
+3.  Casual normalization of crime rape and prostitutions
+4.  Designed by men, designed for men - all the above "erotic"
+
+=> Easy accessibility (conservative societies-south korea)
+
+Pro-porn
+
+- Transform and change the current status quo
+- The third wave of feminism 1990s of sex-positivity
+- Focuses on the "does this cater to women's needs?" aspect
+- Acknowledged that there are women who want to make and see porn as well
+- Banning is not the answer
+
+Anti-porn
+
+- Symbol of patriarchy that cannot be disassociated from porn & violence is inherent in porn, by nature -> hence beyond salvage
+- 1978 New York City's Women Against Pornography
+- Supply and Demand of Pornography Commodity Goods
+- Banning is the only answer
+- But, Room for Erotica
+
+Censorship and Banning
+
+- From a practical standpoint
+  - An example close to home, South Korean "Censorship" of pornography
+- Censorship adds to the appeal of "having access" to something that should not be possessed
+  - A form of power for men
+  - Reinforces the hierarchy
+  - ex) N번방 사건: Appeal of possessing depicted at its extreme
+- Censorship is an "appeal" to validate hierarchy
+
+The rise of "feminist" porn
+
+- 레즈비언, 트랜스젠더 포르노에 뿌리를 둠
+  - 여성을 위해 여성이 디자인
+    - Previously even lesebian porn was mainly targeted towards heterosexual men
+  - Sex = "Real chemistry", autonomous decision making
+- Mainstream Porn Stars
+
+Guidlines for feminist porn
+
+- 여성이 프로덕션/디렉션에 개입되어있어야
+- Needs to depict real female pleasure and orgasms
+- Diverse representation of race, sexual orientation
+- Element that challenge the mainstream porn
+
+Mellow, Boring, Romantic, Feminist porn
+
+- A behind the scene "stage" for players to explore their sexuality in a safe environment without coercion
+- "Find out" what your true sexuality is and "We" will provide a media outlet to express it.
+
+Change and transformation
+
+- Current pornography is a reality of the hierarchy in our society
+- Sex free of male dominance will only be possible with an underlying "Change" in our society
+- Returning to my criticism of the dictionary definition
+  - Fusing "Aesthetics" and "erotics" together
+  - Not something to be ashamed of/representative of power/exclusively enjoyed but to be celebrated by all
+
+"Erotic" = "Aesthetic", "emotional"
+
+- 나: 잘 못들었는데, BDSM이 anti-feminism 하다고 생각하시는것인가?
+- 발표자: 페미니즘적 포르노여도 BDSM 요소를 포함할 수 있다는 뜻이었다.
+- 다른 학생: <Hot Girls Wanted> 다큐멘터리를 봤다. 여성이 포르노그래피 산업에서 이득을 보지 못하는 상황을 어케 보시는지
+- 발표자: 정확히 Feminist pro-porn 사람들의 근거라고 생각한다. 그 산업을 남성들만이 먹었기때문에 그렇게 되는것
+- 다른 학생: N번방 문제가 뭐라고 보는가?
+- 발표자: 센서십의 문제가 주라고 생각하지만 성교육도 큰 부분이라고 생각함.
+- 나: 나는 컴공 전공이고, 내 주 관심사는 정부에 의한 대량 시민 감시프로그램이다. 그리고 재밌게도 이런 기술은 포르노 검열기술과 정확히 동일하고, 프로그래머들은 이것에 맞서싸우고 있기때문에 미래에는 검열이 불가능해질것이라고 본다. 그런 사회에 어떻게 대비해야한다고 보는가?
+- 발표자: 나는 pro-porn 이여서 문제가 되지 않는다고 생각하긴 한다. 공정한 시장이 된다고 본다.
+- 교수: 검열은 별로 포르노 추방에 도움이 되지 않았다 이것이 이 슬라이드에서 발표자가 하고싶었던 말이라고 본다.
+- 나: 질문을 약간 다르게 해보겠다. 미래에는 N번방 사건 범인을 잡는게 아예 불가능해질수도 있고, 이런일이 일어나고있다는 사실을 아예 모를수도 있다. 이건 어케생각하는지
+- 교수: 그러게용.. 어렵네용 지현은 어케생각하세용
+- 나: 점점 내 질문이 원래 토픽과 멀어지는거같아서 좀 걱정이긴 하지만, 이야기를 해보겠다. FBI와는 다르게 한국은 포르노 제작자들을 추적해 잡는 능력이 전무하다. 소라넷같은것만 봐도 잡는데 7년이 걸렸음. 이런걸 키우는게 해결책같다.
+- 교수: 좋은 의견 고맙다. 하나 주의할점은, 매춘문제만 봐도 그렇지만 리갈 솔루션은 이런 문제를 잘 해결해주지 못했다. 밴하는것도 별로 도움이 안됐고. 이걸 신경써야함.
+- 다른 학생: 나는 N번방 디지털 성범죄 문제에 관심이 많다. 판결이 어케되고있는지?
+- 나: 대장 몇명만 판결이 나고, 대부분은 판결이 안난걸로 안다.
+
+- 나: 다른 성교육 잘되고있는 나라들의 포르노 산업은 포르노들로 인한 폐해가 좀 덜한지?
+- 발표자: 아이들이 덜 왜곡된 시선으로 포르노를 보니까 괜찮지 않을런지?
+- 다른 학생: But still, in countries with « good sex education » I feel like there is so much to talk about and actually, female sexuality is not talked at all which leads to so many misinterpretation by males. For instance, the clitoris is not even mentioned. 다른 나라도 여성의 성과 성적 기쁨에 대해 이야기하는것은 터부시된곳이 많고, 여성의 anatomy에 대해선 잘 배우지 않는다
+- 교수님: 김젼 어케생각하시는지
+- 나: 다른 나라들도 똑같이 안배운다니 공감이 되내요
+
+> https://prezi.com/p/gqotrqgy8hfk/sexuality-sexual-subject-and-politics/
+
+섹슈얼리티에 대해 하나 볼게있다.
+
+> https://youtu.be/MTtwrqtBI00
+
+(대충 지젝이 국가별로 제일 인기있는 포르노 카테고리를 보고 놀라는 내용) 그냥 스트레이트 AV가 제일 많이 소비되는 국가는 없었다.
+
+재윤이 이야기한대로 포르노에 대한 페미니즘 담론은 발전이 없었다. 보통 포르노 산업에서 발생하는 폭력을 지적하느라 바쁘고, 포르노를 미학적으로 분석하고 이런 학자들은 잘 없다. 사실 충분히 논의해야하는데 이야기되지 않았다고 봄.
+
+내가 포르노에서 놀라는 부분은 여성배우가 완전히 subjectivisation(?) 되는 부분입니다. 배우 조차도 자신의 표현인지 자신의 연기인지 모를 정도로, 기존의 성적 행위를 너무나 깊이 내면화한 부분이 있고, 이것이 문제다.
+
+교수님: 성매매나 포르노 배우가 돈을 쉽게 번다고 생각할 수 있겠지만 그렇지 않습니다. 쉽지도 않고 돈을 많이 벌지도 못함
+
+목요일엔 Male gaze를 다시 배우고, 히치콕 영화를 볼거에용. 그리고 담주에 섹슈얼리티에 대해 이야기해봐용.
