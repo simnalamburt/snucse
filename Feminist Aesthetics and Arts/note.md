@@ -1372,3 +1372,163 @@ Change and transformation
 교수님: 성매매나 포르노 배우가 돈을 쉽게 번다고 생각할 수 있겠지만 그렇지 않습니다. 쉽지도 않고 돈을 많이 벌지도 못함
 
 목요일엔 Male gaze를 다시 배우고, 히치콕 영화를 볼거에용. 그리고 담주에 섹슈얼리티에 대해 이야기해봐용.
+
+&nbsp;
+
+Week 8, Wed
+========
+> 2020-10-21
+
+영화에 대한 학생 발표
+
+## Hitchcock's Representation of Women - In *Psycho* (1960)
+### 1. 시놉시스
+결혼에 대해 논의하기도 하고. 캘리포니아에 가게된다. Bates Motel. Norman Bates가 운영. 정신적으로 불안한 인물.
+
+샤워를 하고있는데.. 남자가 나온다. 가장 유명하고 상징적인 장면. 칼로 무참히 살해하고 마리온은 살해당함.
+
+그리고 탐정이 나와서 이런저런 수사를 하고, 결말이 알려짐.
+
+> 하지만 실종되기 전 아보개스트가 '노만의 어머니가 무언가를 알고 있는 것 같다'고 한 말을 허투로 들을 수 없었던 라일라는 무작정 베이츠 모텔로 찾아간다. 그리고 충격이게도 베이츠가 지하실에서 백골이 된 베이츠 여사를 발견한다... 도대체 이게 어떻게 된 일일까.
+>
+> 정신과 의사의 진단을 통해 전말이 드러난다. 노만 베이츠는 10년 전 베이츠 여사를 살해한 뒤, 존속 살인의 죄책감을 덜기 위해 사건 자체를 머릿속에서 무마하려고 한다. 이를 위해 시체를 빼돌려 어머니가 살아있는 것처럼 행동하려고 한 것이다. 어머니의 인격은 노만 안에 함께 있게 되었고, 노만은 온전히 노만인 적이 없이 때때로는 어머니의 모습으로, 때때로는 어머니와 함께 공존하기도 한다. 심지어 둘은 대화를 나눌 수도 있다. (마리온이 베이츠 모텔을 방문한 첫 날 들은 다툼 또한 두 인격이 다투는 소리였다.)
+>
+> 한편 노만에 대한 집착이 심했던 어머니는 그의 인격 속에 남아서도 여전히 광기를 버리지 못했다. 노만이 호감이 가는 여자가 생길 때마다 어머니는 극도로 분노해서 그녀들을 살해한 것이다. 마리온 또한 노만이 그녀에게 호감을 가지게 되어 잔인하게 살인된 희생자 중 한 명이었다.
+>
+> 영화는 여전히 그 속에 남아있는 어머니 인격의 목소리와 함께 섬짓한 미소를 짓는 노만 베이츠의 표정, 이어 늪에 잠겨 있다 끌어올려지는 마리온의 차를 클로즈업 하며 끝이 난다.
+>
+> https://m.blog.naver.com/guswls01012/221584218114
+
+해당 장면 https://youtu.be/7zeU02KSYFc?t=2595
+
+2. Psycho and voyerism
+
+벽에 있던 그림
+
+노먼이 구멍을 통해 마리온을 지켜보는 장면.
+
+Camera = watching eyes
+
+샤워씬도 Female as a spectacle, object
+
+"Gaze" is an important key is *Psycho*. 죽은 마리온이 눈을 뜨고 시청자들을 보는 장면
+
+> Have you ever seen the inside of one of those places? The laughing and the tears and the creul eyhes studying you?
+
+눈에 찔려 죽은 애버게스트
+
+눈이 없던 시체
+
+Voyeurism. Voyeurism in film to escape castration anxiety: pleasure lies in ascertaining guilt, asserting control and subjecting the guilty person through punishment/forgiveness
+
+Why was marion murdered?
+
+1. Stole money
+2. Seduced Norman and made him -
+
+### 3. Who is Mrs. Bates?
+A: Mrs. Bates는 오이디푸스 컴플렉스의 상징. 어머니에 대한 성적 욕망, 아버지에 대한 적대감.
+
+> Norman's psychosis is a result of his Symbolic desire to identify with his mother acted out on the level of the Real (Lacan)
+
+Externalization of Superego
+
+B: Mrs. Bates는 노먼이 마리온에 대해 갖는 더러운 감정을 accuse함. 노먼이 여성들을 향해 성적인 감성을 가질때마다 Mrs. Bates가 튀어나옴
+
+C: Bisexual Threat
+
+### 4. About Mrs. Bates' Monologue
+> https://youtu.be/7zeU02KSYFc?t=2837
+
+노먼 베이츠는 Mrs. Bates 그 자체가 됨.
+
+Mrs. Bates = Ultimate winner/ survivor
+
+Norman Bates = Innocent son. or is it?
+
+Female trapped by male
+
+&nbsp;
+
+## Alfred Hitch cock and Feminism
+영화 Rear window를 중심으로
+
+### 1. 히치콕은 누구인가?
+영화 평론가, 영화 제작자. Master of Suspense. 60년간 50개 넘는 영화 감독함.
+
+### 2. Thoroughgoing ambivalence about femininity
+우리가 왜 그의 영화를 페미니즘 관점에서 봐야하는가?
+
+- Mulvey: 얘 영화에서의 여성은 passive object, 관음증의 대상 -> 여성은 마조히즘적인 기쁨만을 느끼는 존재로 그려짐
+- Teresa de Lauretis: Female spectators -> double desire to passive female object + active (usually) male subject
+- Robin Wood: Exposure of twistic logic of 가부장제
+
+요약: 여성을 대하는데에서 폭력을 볼 수 있지만, they remain resistant to 가부장적 착취
+
+### 3. Representation of Women in <Rear Window>
+휠체어생활을 하는 사진가, 이웃을 보기 시작한다.
+
+Voyeurism
+
+Male gaze in cinema
+
+1. 카메라의 시점
+2. 다 촬영된걸 보는 관객
+3. 캐릭터는 서로를 바라본다
+
+남자가 스토리를 이끈다. 여자는 수동적 역할
+
+관객의 역할도 제약되어있음.
+
+제일 중요한 캐릭터 Lisa (제프의 여자친구), an exemplary exhibitionist. Described as "too perfect". Obsessive interest in dress and style (Mulvey), being passive image of visual perfection. 이웃이 아니라 자신을 바라보도록 continually putting herself
+
+"Woman's concern with fashion", 여성의 가부장적 역할.
+
+그러나 또한 representative of female spectator이기도 함. Dual points of view in film.
+
+Miss Torso를 보고
+
+- Jeff: 여왕벌, 여러 남자를 즐겁게 함, "She sure picked the most prosperous looking one"
+- Lisa: "She's doing the hardest job - juggling with wolves", "She's not in love with him", discovery of women's victimization at the hand of man
+
+Miss Lonelyheart를 보고
+
+- date 에티켓 연습
+
+Both of the surviving women
+
+- 결혼을 통해 peak happiness에 도달
+- Seen in their male partner's apartment
+- Conforming to the man's life instead of self
+
+## 수업
+> https://prezi.com/p/fzcadrkmkuv5/5-visual-pleasure-and-narrative-cinema/
+
+할리우드 내러티브 필름을 분석하는데에 정신분석학이 중요한 역할
+
+### Scopophilia: 절시증
+(했던거 아닌감)
+
+Disinterestedness의 반대.
+
+### Female images in Narrative Films
+Woman, being looked at in artworks
+
+Mulvey's argument:
+
+1.  Pleasure in looking has been split between active/male and passive/female
+2.  In films, the woman displayed has function on two level
+    - 새디즘: 남성 캐릭터 in the narrative를 위한 에로틱 오브젝트
+      - The (mainly male) characters control, torture and investigates the erotic object (mainly female characters)
+      - https://youtu.be/NFzLHxvbYD0
+    - 페티시즘: 남성 관객 in cinema auditorium을 위한 에로틱 오브젝트
+      - 버티고에서 저 여성캐릭터는 걍 죽음
+      - https://youtu.be/7VhoLT95DCY
+      - 
+    - The female images are the "to-be-looked-at-ness", functioning as Castration Threat
+
+Mulvey: Active/Passive heterosexual division of labour has similarly worked within films.
+
+Male movie star는 에로틱 오브젝트가 아니다. ego임.
+
+Hitchcock skillfully combined those two aspects of the pleasure in looking (voyeurism + fetishism)
