@@ -1532,3 +1532,114 @@ Mulvey: Active/Passive heterosexual division of labour has similarly worked with
 Male movie star는 에로틱 오브젝트가 아니다. ego임.
 
 Hitchcock skillfully combined those two aspects of the pleasure in looking (voyeurism + fetishism)
+
+&nbsp;
+
+Week 9, Mon
+========
+> 2020-10-26
+
+👁️   👁️) . o O ( ambiguous gaze )
+
+> https://prezi.com/p/fzcadrkmkuv5/5-visual-pleasure-and-narrative-cinema/
+
+히치콕 이창. 맨 처음 시작하면 이게 관객의 시선인지, 주인공의 시선인지 모호함. 옆집을 쳐다보는 주인공의 시선에 관객이 이입하게됨.
+
+멀비의 글. 우리가 그냥 단순히 본다는게 중요한게 아니라, 어떤 이미지로 보느냐가 중요한것.
+
+아이돌 산업과 비슷하다.
+
+> Laura Mulvey, <Riddles of the Sphinx> (1977)
+
+멀비는 이른 기존 gaze를 dismantle한 아방가르드 영화를 감독했는데, 이걸 좀 보자.
+
+아무것도 볼만한게 안보인다. 초점을 맞출 무언가가 안보임. 계속 지나가기만 하고, 대화만 들림. 관음증적 기쁨, 페티시즘적 기쁨을 모두 배제했음.
+
+나: The video itself was boring but the experience itself was ironically very interesting.
+
+1. Where are female spectators in her argument?
+2. Do female spectators never identify themselves with male protagonists?
+3. If they also identify themselves with male protagonists, is the pleasrue of identification working in the same way for male spectator?
+4. Do female spectators also gaze at female characters as erotic object?
+
+> https://prezi.com/p/gqotrqgy8hfk/
+
+Sexuality를 생각하면 모가 생각나용
+
+- 나: Sexual orientation, preference
+- 다른 사람: Gender identification
+
+Sexuality를 유니콘과 비슷하다고 해요.
+
+Unicorn 🦄: 다들 유니콘이 뭔지 아주 잘 알지만, 유니콘은 실존하지 않죠.
+
+- 교수님: 아니 유니콘 에모지를 어케 그리 빨리 찾나요
+- 나: 전 컴공이니까요 하하
+
+Sexuality: 모두가 sexuality가 뭔진 아는데.. 이것의 에센스가 실존하는 개념이냐. 피너스를 여성기에 넣는것이 Sexuality의 본질인가요? 그렇진 않아요.
+
+Sexuality는 섹슈얼한 모든것을 포함하는 개념이에요. 성적 지향, 성적 취향, 성적 욕망, 등 모두 Sexuality에용.
+
+그리고 때떄로 Sexuality는 gender랑 관련이 없을 때도 있어요.
+
+sublime에서 웅장한것에서 느끼는 기쁨이 self preservation랑 연결이 되어있다고 했죠? self preservation도 리비도랑 연결되어있는 기쁨이라고 해요. 그래서 self preservation도 sexuality와 연결되어있어요.
+
+> 1.  Drive / impulse that orient us toward object. This is mostly discussed in terms of psychoanalysis
+> 2.  A series of sexual practices not only bodily pleasure but also a certain kinds of activities that are not for orgasm.
+> 3.  Understanding regarding identity like sex or gender.
+> 4.  Inclination or position or desire that imply a certain way in which the body of subject can seek its pleasure.
+>
+> Elisabeth Grosz, 1994. "Volatile bodies"
+
+미셸 푸코에 의하면, Sexuality는 파워가 작동하는곳에 다 존재함. Something sexual is devient of normality.
+
+예를들어 제가 여러분들이랑 악수를 하다가 갑자기 손을 세게 쥐어요. 권력구조가 동작하는거죠. 이것도 Sexuality라고 할 수 있음.
+
+- 나: So for example, Donald trump is famous as squizzing hand strongly when shaking hands with other big people. And Donald Trump is presedent of US. Can we interpret this as sexual thing too?
+- 교수: 그런거져 본인의 권력을 드러내고 그러는것
+
+> Brasssed Off (1996)
+
+유머러스한것과 섹슈얼한것은 아주 가깝습니다. 그리고 야한것도요. Sexuality as arbitrary, accidental, contingent.
+
+미셸 푸코에 의하면 sexuality is a knowledge.
+
+> 권력이 행사되는 곳에서 성에 대한 진술이 오히려 폭넓게 허용되고 관리되었다.
+
+푸코에 의하면 성은 사회적으로 구축됨. 권력에 의해 구축됨. Radical discourse, radical knowledge.
+
+Homosexual behavior는 보통 sexual temptation으로 간주되는데, homosexual은 천주교에 의해 흔히 비판됨. 번식이랑 상관 없으니까.
+
+Radical discouse에 의해 homosexuality는 점점 인정되는 성적 지향, 성 정체성이 되었다. 19세기부터 (Ontological)존재론적 기제가 됨. 의학적으로 "어떤 사람은 동성애자로 태어난다"는것이 밝혀졌기 때문.
+
+푸코에 의하면, Hetero sexuality 또한 biopolitical micropower, institutional education에 의해 구축되는것.
+
+페미니즘으로 돌아가보자. 섹슈얼리티가 순수하게 본능적인것이 아니라면, 우리가 female sexuality에 대해선 어떤걸 이야기할 수 있을까?
+
+마저 이야기해봐용
+
+담주에는 게스트 강연자가 나와요. 한국의 페미니즘에 대해 이야기할것이다.
+
+에세이 2 쓰세용
+
+- Q: So we should not enter in too many details then?
+- A: Yes
+- Q: could our essay solely be about a scandal issue and include contemporary art and pop culture? 
+can we also mix two scandal issues and make it one topic?
+- A: What could it be, otherwise?
+- Q: Could I write this Essay2 topic with my presentation`s scandal lssue? 
+- A: Yes
+- Q: So is the draft more like a proposal rather than an essay? I thought that we should have an intro, body, and the conclusion but you just said that we can just write the reasons we picked the topic, etc...so I am kind of confused.
+- A: Yes
+- Q: 영화, 드라마 이런것도 가능?
+- A: 넹. 근데 이론적인 논의를 해주세용
+- Q: 자유로운 형태로 드래프트를 만드시면 됩니다. 드래프트에 정해진 스타일은 없어요 근데 2-3페이지 제한은 지키세용
+
+이하는 내 질문
+
+- Q: 게임도 Pop culture에 들어가나요?
+- A: Yes
+- Q: 에세이 1 피드백.. 문학도 artwork인줄..
+- A: 페미니즘 자체가 아니라 예술현상, 문화현상을 다루는 수업이라, 그거랑 연결시키면 좋을듯용.
+- Q: 그럼 게임을 한다면, 게임이 어케 문화현상이나 사람의 행동에 영향을 줬는지 이렇게 쓰는건 괜찮을까요?
+- A: 좋다. 근데 뇌피셜로 분석하지말고, 페미니즘적 관점에서 이론을 많이 데려와서 분석을 잘 해주면 좋겠다!
