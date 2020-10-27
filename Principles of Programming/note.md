@@ -1128,9 +1128,9 @@ TODO: 슬라이드 145까지 필기했음, 혹시 다음시간에 진도 더 뒤
 
 &nbsp;
 
-Week 8, Tue
+Week 8, Thu
 ========
-> 2020-10-20
+> 2020-10-22
 
 지난주에 혼자 푼 내용을 수업에서 하고있음. 다만 수업에선 concat 함수를 두 Iter에 대해 구현하는 대신, 두 MyList에 대해 구현하고있다.
 
@@ -1247,3 +1247,111 @@ def append[A](left: List[A], right: List[A]): List[A] = {
 }
 append(1::2::3::4::5::Nil, 6::7::8::9::10::Nil)
 ```
+
+&nbsp;
+
+Week 9, Tue
+========
+> 2020-10-27
+
+## Lazy List
+Tree에 iter() 하는걸, lazy eval로 구현해보자.
+
+### 1. Using Lists of Tree
+마치 DFS에서 앞으로 할 task의 목록을 스택으로 관리하는것처럼, 얘도 앞으로 iter할 트리를 리스트나 스택으로 관리할 수 있음
+
+### 2. Using Lazy List
+PPT 코드
+
+```scala
+sealed abstract class LazyList[A] {
+  def head: Option[A]
+  def tail: LazyList[A]
+  def append(list: LazyList[A]): LazyList[A]
+}
+
+case class LazyNil[A]() extends LazyList[A] {
+  val head = None
+  val tail = this
+  def append(list: LazyList[A]) = list
+}
+
+class LazyCons[A](headtail: =>(A, LazyList[A])) extends LazyList[A] {
+  lazy val (hd, tl) = headtail
+  def head = Some(hd)
+  def tail = tl
+  def append(list: LazyList[A]) = LazyCons(hd, tl.append(list))
+}
+
+object LazyCons {
+  def apply[A](headtail: =>(A, LazyList[A])) = {
+    new LazyCons(headtail)
+  }
+}
+```
+
+스칼라는 아래와 같이 튜플이 유일한 인자일 경우 괄호를 생략할 수 있는 sugar가 있다.
+
+```scala
+def foo(tuple: (Int, Int)) = tuple._1 + tuple._2
+
+foo((1, 2))
+foo(1, 2)
+```
+
+Call-by-name과 `lazy val`을 적극 활용함. `append()`함수의 경우, lazy eval이기 때문에 recursion처럼 생겼지만 저건 recursive call이 아님.
+
+내가 만들었던 Iter에 맞추면 아래와 같은 구조가 된다.
+
+```scala
+sealed abstract class Iter[A] {
+  def next(): Option[(A, Iter[A])]
+}
+
+case class INil[A]() extends Iter[A] {
+  override def next() = None
+}
+
+class ICons[A](head: =>A, tail: =>Iter[A]) extends Iter[A] {
+  override def next() = Some((head, tail))
+}
+
+// Companions must be defined together
+object ICons {
+  def apply[A](head: =>A, tail: =>Iter[A]) = new ICons(head, tail)
+}
+```
+
+lazy한 Iter도 eager한 Iter랑 동일한 방법으로 사용할 수 있다.
+
+```scala
+ICons(0, ICons(1, ICons(2, ICons(3, INil[Int]()))))
+```
+
+이렇게 lazy하게 만들면 꼬리재귀를 안써도 된다.
+
+```scala
+def range(begin: Int, end: Int): Iter[Int] = {
+  if (begin >= end) {
+    INil()
+  } else {
+    ICons(begin, range(begin+1, end))
+  }
+}
+
+// 안터짐
+range(0, 100000000)
+
+def rangeList(begin: Int, end: Int): List[Int] = {
+  if (begin >= end) {
+    Nil
+  } else {
+    begin :: rangeList(begin+1, end)
+  }
+}
+
+// java.lang.StackOverflowError
+rangeList(0, 100000000)
+```
+
+("bernhard eager" 드립으로 교수님을 웃기는데에 성공함)
