@@ -262,3 +262,12 @@ Week 8, Wed
 
 LG CNS 김홍근 전무님께서, LG CNS의 주요 사업 분야에 대해 설명하고있음.
 
+&nbps;
+
+Week 9, Wed
+========
+> 2020-10-28
+
+[(주) 소테리아 김종만 대표님](http://www.soteria-sys.com/corporate/ceo)
+
+AI로 침해위협 분석하는법 발표
