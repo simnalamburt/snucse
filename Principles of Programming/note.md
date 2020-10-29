@@ -1254,13 +1254,13 @@ Week 9, Tue
 ========
 > 2020-10-27
 
-## Lazy List
+### Lazy List
 Tree에 iter() 하는걸, lazy eval로 구현해보자.
 
-### 1. Using Lists of Tree
+#### 1. Using Lists of Tree
 마치 DFS에서 앞으로 할 task의 목록을 스택으로 관리하는것처럼, 얘도 앞으로 iter할 트리를 리스트나 스택으로 관리할 수 있음
 
-### 2. Using Lazy List
+#### 2. Using Lazy List
 PPT 코드
 
 ```scala
@@ -1355,3 +1355,111 @@ rangeList(0, 100000000)
 ```
 
 ("bernhard eager" 드립으로 교수님을 웃기는데에 성공함)
+
+&nbsp;
+
+Week 9, Thu
+========
+> 2020-10-29
+
+- Program against interface
+- Composition over inheritance
+- Use inheritance when implementing an interface
+- Use composition when reusing functionalities
+
+### Wrapper for Inheritance
+`abstract class`를 인터페이스로 쓰고, 구체적인 구현은 추상 클래스를 상속받은 클래스로 하기.
+
+### Abstract class with abstract types
+대충 Associated type 비슷한거같음
+
+```scala
+abstract class Iterable[A] {
+  type iter_t
+  def iter: iter_t
+  def getValue(i: iter_t) : Option[A]
+  def getNext(i: iter_t) : iter_t
+}
+```
+
+이하는 사용법
+
+```scala
+// 함수에서 쓰는법
+def sumElements[A](f:A=>Int)(xs: Iterable[A]) : Int = {
+  def sumElementsIter(i: xs.iter_t) : Int =
+    xs.getValue(i) match{ 
+      case None=> 0
+      case Some(n) => f(n) + sumElementsIter(xs.getNext(i))
+    }
+  sumElementsIter(xs.iter)
+}
+
+// 상속받은 타입에서 쓰는법
+sealed abstract class MyTree[A] extends Iterable[A] {
+  type iter_t = List[A]
+  def getValue(i: List[A]): Option[A] = i.headOption
+  def getNext(i: List[A]): List[A] = i.tail
+}
+```
+
+### Abstract class with Arguments
+abstract class 생성자에 인자를 줄 수 있음. 그냥 부모클래스 생성자랑 사실 비슷함. Default implementation에 활용하는 등 다양한 용도로 사용 가능. 
+
+```scala
+abstract class IterableHE[A](eq: (A,A) => Boolean) extends Iterable[A] {
+  def hasElement(a: A) : Boolean = {
+    def hasElementIter(i: iter_t) : Boolean = {
+      getValue(i) match{
+        case None => false
+        case Some(n) => {
+          if (eq(a,n)) {
+            true
+          } else {
+            hasElementIter(getNext(i))
+          }
+        }
+      }
+    }
+    hasElementIter(iter)
+  }
+}
+```
+
+이하는 abstract class 생성자 호출하는 예시
+
+```scala
+sealed abstract class MyTree[A](eq:(A,A)=>Boolean)
+  extends IterableHE[A](eq)
+{
+  type iter_t = List[A]
+  def getValue(i: List[A]) : Option[A] = i.headOption
+  def getNext(i: List[A]) : List[A] = i.tail
+}
+
+case class Empty[A](eq: (A,A)=>Boolean) extends MyTree[A](eq) {
+  val iter: List[A] = Nil
+}
+
+case class Node[A](
+  eq: (A,A)=>Boolean,
+  value: A,
+  left: MyTree[A],
+  right: MyTree[A]
+) extends MyTree[A](eq) {
+  val iter: List[A] = value :: (left.iter ++ right.iter)
+}
+```
+
+근데 함수의 경우 pure virtual function으로 abstract class 생성자의 파라미터를 대체할 수 있음
+
+```scala
+abstract class IterableHE[A] extends Iterable[A] {
+  def eq(left: A, right: A): Boolean
+  def hasElement(a: A): Boolean = {
+    /* 생략 */
+  }
+}
+```
+
+> 173p 까지 함
