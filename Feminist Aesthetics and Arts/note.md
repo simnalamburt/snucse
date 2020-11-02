@@ -21,16 +21,16 @@ Week 1, Wed
 - 페미니즘이 마주한 모순적 상황 논의, 대안 논의
 
 ### Required Texts
-- Carolyn Korsmeyer, Gender and Aesthetics: an introduction, Routledge, 2004. 
+- Carolyn Korsmeyer, Gender and Aesthetics: an introduction, Routledge, 2004.
 - Laura Mulvey, "Visual Pleasure and Narrative Cinema", Film Theory and Criticism: Introductory Readings. Eds. Leo Braudy and Marshall Cohen. New York: Oxford UP, 1999, pp. 833-44.
 
 한국어 번역이 존재한다!
 
 ### Auxiliary Texts
-- John Burger, Ways of Seeing, Penguin Books, 1972. 
+- John Burger, Ways of Seeing, Penguin Books, 1972.
 - Tania Modleski, The Women Who Knew Too Much, Routledge, 2005.
 - Elisabeth Grosz, Sexual Subversions: Three French Feminists, Allen & Unwin, 1989.
-- Shohini Chaudhuri, Feminist Film Theorists, Routledge, 2006. 
+- Shohini Chaudhuri, Feminist Film Theorists, Routledge, 2006.
 - Barbara Creed, The Monstrous-Feminine, Routledge, 1993.
 - Judith Butler, Gender Trouble, Routledge, 1990.
 - Jack Halberstam, Gaga Feminism: Sex, Gender and the End of Normal, Beacon Press, 2013
@@ -180,7 +180,7 @@ Aesthetics엔 여성주의에 관련된 지점이 거의 없다. 그리고 우�
 ### Body and soul, feminity and greek theories of knowledge and beauty
 > [Prezi](https://prezi.com/p/izgstyu5zjlm/1-body-and-soul-beauty-and-gender-in-ancient-greece/)
 
-플라토는 여성은 earth를 imitate한다고 했음. 그리스 신화에서 가이아는 지구에 대응되는, 모든 신비로운 힘을 가진 존재로 그려진다. 
+플라토는 여성은 earth를 imitate한다고 했음. 그리스 신화에서 가이아는 지구에 대응되는, 모든 신비로운 힘을 가진 존재로 그려진다.
 
 > Peter Paul Rubens - Apollo and the Pytho, 1636-1637
 
@@ -231,7 +231,7 @@ soul | body
 
 Logical이라는 마차는 날개달린 두 말로 이끌려야하고, 마부는 둘 사이를 조심스럽게 조율해야한다고 봤음.
 
-마부의 비유를 통해, body-mind 이분법에서 
+마부의 비유를 통해, body-mind 이분법에서
 
 #### Beauty and Eros: Diotima's Lesson
 > 교보재: 유튜브 영상, ["Diotima’s Ladder: From Lust to Morality"](https://youtu.be/cYC74mJ-4po)
@@ -339,7 +339,7 @@ Yes, it is true (예이)
 
 > https://www.youtube.com/watch?v=XVgvzEI4jig
 
-어떻게 고대 그리스부터 철학자들이 여성과 남성을 
+어떻게 고대 그리스부터 철학자들이 여성과 남성을
 
 creation은 오로지 남자가 할 수 있음
 
@@ -347,7 +347,7 @@ creation은 오로지 남자가 할 수 있음
 
 디오티마가 절대미라던가 이데아로 가는 과정에서 에로스가 되게 중요하잖아요? 디오티마가 쓰는 유비들이 있어요. 근데 이.. 세계를 창조하는 창조성의 의미가 남자한테만 귀속된다고 플라톤이 봐왔었잖아요? 실제세계를 창조하는 세계관이 항상 creation이랑 연결되어있잖아요?
 
-디오티마가 계속 여성에 의한 창조성을 procreation이라는 생식력과 긴밀하게 연결시키는데, 
+디오티마가 계속 여성에 의한 창조성을 procreation이라는 생식력과 긴밀하게 연결시키는데,
 
 심지어 디오티마가 연회에 나타나지 않았음에도 불구하고, 디오티마가 실제로 나타나서 말한것처럼 소크라테스가 말하는게 심포지엄의 이야기인데
 
@@ -661,7 +661,7 @@ Week 5, Mon
 ## 고수정, Nude vs Naked
 전통적 시각
 
-- Naked: inferior. Deprived of clothers, Huddled 
+- Naked: inferior. Deprived of clothers, Huddled
 - Nude: To be shown
 
 John Burger의 "Ways of Seeing"
@@ -902,7 +902,7 @@ Disadvantages
 
 - 나: (PPT에서 잘못들은거 물어봄)
 - 발표자: (대답함)
-- 다른 학생: Then, 지선, Is it right to interpret your opinion "We don't have to be beautiful" as "We should not be valued by the standard of beauty established by society"? 
+- 다른 학생: Then, 지선, Is it right to interpret your opinion "We don't have to be beautiful" as "We should not be valued by the standard of beauty established by society"?
 - 발표자: Yes
 
 지현의 질문은 Universality of beauty에 의한것인데, 다음 수업에서 Universality of beauty라는것은 존재하지 않는다는 이야기를 할거에용.
@@ -1524,7 +1524,7 @@ Mulvey's argument:
     - 페티시즘: 남성 관객 in cinema auditorium을 위한 에로틱 오브젝트
       - 버티고에서 저 여성캐릭터는 걍 죽음
       - https://youtu.be/7VhoLT95DCY
-      - 
+      -
     - The female images are the "to-be-looked-at-ness", functioning as Castration Threat
 
 Mulvey: Active/Passive heterosexual division of labour has similarly worked within films.
@@ -1624,10 +1624,10 @@ Radical discouse에 의해 homosexuality는 점점 인정되는 성적 지향, �
 
 - Q: So we should not enter in too many details then?
 - A: Yes
-- Q: could our essay solely be about a scandal issue and include contemporary art and pop culture? 
+- Q: could our essay solely be about a scandal issue and include contemporary art and pop culture?
 can we also mix two scandal issues and make it one topic?
 - A: What could it be, otherwise?
-- Q: Could I write this Essay2 topic with my presentation`s scandal lssue? 
+- Q: Could I write this Essay2 topic with my presentation`s scandal lssue?
 - A: Yes
 - Q: So is the draft more like a proposal rather than an essay? I thought that we should have an intro, body, and the conclusion but you just said that we can just write the reasons we picked the topic, etc...so I am kind of confused.
 - A: Yes
