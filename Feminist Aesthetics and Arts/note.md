@@ -1643,3 +1643,139 @@ can we also mix two scandal issues and make it one topic?
 - A: 페미니즘 자체가 아니라 예술현상, 문화현상을 다루는 수업이라, 그거랑 연결시키면 좋을듯용.
 - Q: 그럼 게임을 한다면, 게임이 어케 문화현상이나 사람의 행동에 영향을 줬는지 이렇게 쓰는건 괜찮을까요?
 - A: 좋다. 근데 뇌피셜로 분석하지말고, 페미니즘적 관점에서 이론을 많이 데려와서 분석을 잘 해주면 좋겠다!
+
+&nbsp;
+
+Week 10, Mon
+========
+> 2020-11-02
+
+오늘은 게스트 강연자가 강의한다!
+
+정소영, 페미당당, 예술 전공. 제일기획에서 브랜드 마케팅 전략으로 일하신다. 아트와 정치가 어케 만나 서로 변화하는지, rethink해보좌
+
+## Knitting Herstory
+Activism and Solidarity Through Subversive Craft
+
+정소영
+
+- BFA in visual communication
+- design college of fine arts, SNU
+- 페미당당 (2016-)
+- Witch Knit Crew (2018-)
+- Body Electric (2018)
+
+페미당당 = 페미(femi) + 당당(proud), 활동가 연합
+
+친구들끼리 2016-05-02에 모인 페북 그룹으로 시작했다. 이렇게까지 큰 활동을 오래 하게 될줄은 몰랐다.
+
+페북 그룹을 만들자마자 2016-05-17 에 강남역 살인사건이 일어난다. 여성혐오 범죄로 큰 사회적 공분 일으킴, 젊은 여성들의 집단적인 여성운동 참여 일으킴
+
+강남역 포스트잇 추모 물결, 미소지니 "여성혐오"라는 개념이 사회에 크게 퍼짐. 범인은 아무나 죽인것이 아니라 남자들을 보내고 여성들만을 골라서 죽였음.
+
+2016-05-26, Mirror performance
+
+강남역 살인 10일 후 일어남. 페미당당의 처음 공식 시위. A funeral march for the victim, mirrors in hand.
+
+젠더폭력에 대한 세계적인 움직임이 일어남. 남아메리카의 #NiUnaMenos (Not One less) 운동.
+
+Anthem "A Rapist in Your Path", 2019년 11월에 처음 공연됨. 칠레에서 시작되어 튀니지, 터키, 인도에 퍼짐. 대규모 플래시몹, 시위, 진회, march에 쓰임
+
+In Korea: "Netfeminists(넷페미)" and a new wave of activists
+
+메갈리아의 등장
+
+2016-10-15, Black protest against anti-abortion laws
+
+보신각 낙태죄 철폐요구하는 "검은시위"
+
+남한의 낙태 현황
+
+- 1953: 모든 낙태 금지됨
+- 1973: 모자보건법 개정, 세 예외에 대해서 낙태 허용됨
+- 1980: 출산율을 낮추기 위한 이유로 낙태죄 단속 매우 낮아짐
+- 2000: 저출산사회, 낙태죄 단속 다시 커짐
+
+페미당당 세미나
+
+2016-2018동안 20개 개최.
+
+"Mifepristone Vending Machine for All" 세미나 3회 개최.
+
+Medical abortion: Oral mifepristone (미프진) + misoprostol (Cytotec)
+
+초기 임부를 대상으로 적은 부작용, 높은 성공률
+
+한국에선 미프진과 싸이토텍 모두 구할 수 없다.
+
+어른들 뿐만 아니라 아이들도 참여 (사탕땜에 온거같긴 하지만) 인근 대학생들도 참여
+
+2018-08-07, "My Body is Not Illegal: Abortion Performance by 125 Women"
+
+봄알람, [Women on Waves](https://femiwiki.com/w/Women_on_Waves), 임신중단권 요구 퍼포먼스
+
+박근혜 퇴진 촉구 시위와 페미니즘/퀴어 그룹
+
+2016-11-19 토요일 광화문 집회 (페미당당, 노동당 여성위원회, 등..)
+
+2017-2018, 'Feminist in Seoul'
+
+2017-2018, 'Femi-Parties'
+
+<cyberfeminismindex.com> Netfemi and Femidangdang in designer Mindy Seu's 'Cyberfeminism Index'
+
+<laboriacuboniks.net>
+
+Witch Knit Crew
+
+마구... 뜨개질한다. Redefining femininity through "subversive" craft
+
+2020 11월, 'Between the Lines' Group Exhibition @Hapjungjigu
+
+국회 앞에서 전복적 뜨개질, 등
+
+Body electric
+
+각종 전시 목록
+
+b is not a
+
+사이보그 허영심, Cyborg Vanity
+
+협력적 허영심의 실천, The Collective Vanity Initiative
+
+페미당당은 지금도 활동중. 2020-10-07, "추미애 장관 '낙태죄 폐지' 의지 강했는데, 청와대는 달랐다"
+
+와와
+
+### Q&A
+- Q: 제노페미니즘이 뭔지
+- A: 사이버페미니즘이나 인터넷 미디어와 깊이 관련된 페미니즘, http://www.yes24.com/Product/Goods/74219592
+
+내 질문:
+
+Thanks for the presentation!
+
+I personally have been participated in one small feminism organization for years. And this organization have suffered by internal conflict and external attack due to perspective difference between TERF(=GCF) vs Intersectional Feminist, sex work perspective vs anti-prostitution perspective, and etc. We're still active but many members are tired by such attacks. (Our twitter account is currently suspended due to attack of TERFs)
+
+How 페미당당 overcame such conflicts or attacks and stayed strong together?
+
+A: 이게 참 이슈져. 페미당당이 지속할 수 있었던 이유는, 개인들끼리 아주 친하기도 했고 (원래 다들 친구였으니까), 근데 모든 그룹이 다 이럴수는 없을것이다.
+
+나: I totally agree that social bonding between activists matters a lot. We're trying to associate frequently but it's getting really hard due to COVID-19 and each member's economic status
+
+발표자: 무슨 단체에서 활동하세여?
+
+교수님: 나도 궁금해써
+
+나: Oh...
+
+May I answer it privately?
+
+발표자: 말씀안하셔도대요 (?)
+
+교수님: 트위터로 멘션하새요
+
+나: OK(?)
+
+끝 와와와
