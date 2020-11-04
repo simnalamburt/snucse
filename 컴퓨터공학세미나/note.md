@@ -271,3 +271,11 @@ Week 9, Wed
 [(주) 소테리아 김종만 대표님](http://www.soteria-sys.com/corporate/ceo)
 
 AI로 침해위협 분석하는법 발표
+
+&nbps;
+
+Week 10, Wed
+========
+> 2020-11-04
+
+발달과 교육에 대한 발표
