@@ -1779,3 +1779,104 @@ May I answer it privately?
 나: OK(?)
 
 끝 와와와
+
+&nbsp;
+
+Week 10, Wed
+========
+> 2020-11-04
+
+오늘도 게스트 강연자 존재
+
+라시내 (Sinae Rha), Performance Director, Co-re. of Project Yi-In, studying Performance Art in doctoral program at SNU.Works: <Becoming-Dancer>, <Questions>, <Lovers Swimming in an abyss> etc.
+
+### Cross-gender performance
+젠더 프리 공연이란?
+
+> [8인의 여성 배우가 영화와 연극 속 남성 배우가 연기한 캐릭터를 연기하다_마리끌레르 젠더프리 2020(Eng Sub)](https://youtu.be/d18h4bM9a2Q)
+
+연극 <비평가>를 젠더프리 캐스팅으로 공연하기도 했다. https://www.themusical.co.kr/Magazine/Detail?num=4460
+
+### 1. Cross-casting
+크로스-젠더 캐스팅은 연극의 역사만큼이나 길다. 여성배우가 남자아이 역할을 하는 경우도 많았고, 남성배우가 크로스 젠더 연기를 위해 훈련하는것도 흔했음. 베이징 오페라, 일본의 연극, 고대 그리스 연극, 등..
+
+Cross-dressing: 반대 성별의 옷을 입고 연기하는것에 대한 umbrella term. As a literary element, cross-dressing refers to gender-disguise; in theatrical context, it often times refers to cross-gender acting.
+
+뮬란도 여성->남성 크로스드레싱의 전형적인 예시.
+
+Drag: Parody of femininity, masculinity. 내가 imitating한다는것을 숨기려는 의도가 없다는것이 포인트.
+
+Gender performativity: What *theatrical* acts do we perform to be passed as men or women?
+
+우리는 사회에서 다른 사람의 성을 판단하기 위해 다른사람의 성기를 보지 않아요. 대신 무엇을 보는가? 머리길이, 화장과 같은 외모? 목소리?
+
+여성이 자신의 여성성을 드러내기 위해 하는 행동과, 남성이 자신의 남성성을 드러내기 위해 하는 행동이 다르다. 대칭이 아님
+
+Contemporary practices: Effort to tackle the sexist condition inherent in dramatic arts. Iterpretation and/or modification of existing plays
+
+한국의 여성 국극: 모두 여성 배우. 여성 배우들이 연습하기 안전한 환경을 만들기 위해 여성들만 하는 연극이 되었었다.
+
+뮤지컬 <마틸다> 악역이 원래 여자인데, 연극에선 남성으로 라이센스되어 전세계에 공연됨. 오리지널 텍스트에선 마틸다가 사회적인 편견을 이겨내며 성장하는 이야기고, 악역도 못생기고 질투심한 여성인 안티페미니즘적인 여적여 스토리인데, 크로스 젠더 캐스팅을 하면서 전혀 변했음.
+
+<지저스 크라이스트 슈퍼스타>, 헤롯 왕이 여성으로 바뀜.
+
+### 2. All-female <El Critico>
+(연극 일부 간단하게 보는중)
+
+스카르파와 블로디아.
+
+#### META-DRAMA
+
+#### Oeudipal Narrative
+이 연극은 원래는 Oeudipal narrative임.
+
+- 볼로디아(비평가) vs 스카르파(극작가) - ~~볼로디아의 아내~~
+- Taubes(코치) vs Eric(amateur boxer) - ~~Taubes' wife~~
+
+All-male two-hander; absence of women
+
+#### Undecidability
+All masculine signs are ambiguous; short hair & suits are typically masculine, but not male-only
+
+Due to gender-neutral translation, no crucial verbal clue provided
+
+Cross-gender acting puts gender representation itself into question
+
+의도적으로 모호하게 만든것
+
+#### Imitation without origin
+Cross-gender acting...
+
+1. Subverts the hierarchy between text and performance
+2. Decouples heteronormative assumption on the sex-gender coherence
+
+### The "impossible"
+Cross-cast production opens up a new way of reading *El Critico* against the grain
+
+*El Critico* may as well be read as a story about the impossibility of capturing women by means of **the machinery of representation**
+
+### The "impossible" possibility
+Actresses **mimic** the masculine economy of signification **cf**. "almost the same but not quite"
+
+#### She who plays
+- S: But this time, the actress is really a problem.
+- V: The problem is not the actress. The actress is great.
+- S: How great! If I had done it, it would have been greater. If I had, the 'falsehood' would have been reduced.
+
+극중극
+
+남성 연기자에 의해 연기되었을때엔 굉장히 미소지닉한 장면이다. 그러나, 여성 연기자에 의해 연기되었을때엔, "전형적인 미소지닉한 장면"을 여성의 몸과 여성의 임으로 이야기함으로써 남성의 지위를 점유, 풍자.
+
+- 지현: 연극 극본이 다들 오래되고 여성혐오적인게 많았어서 연극 자체를 별로 안좋아했는데, 덕분에 재밌는걸 많이 알게되엇서요
+- 교수: 아하 맞아요 저도 그래서 발레는 잘 안 본답니다
+- 나: 허헣ㅎ
+- 라시내: 그래도 요즘 재밌는 작업들이 만아요
+- 교수님: 마자요
+- 라시내: 찾아봐야한다!
+- 교수님: 맞아 찾아봐야대
+- 라시내: 맨날 넷플릭스만 보고~
+
+질문답변
+
+- 나: eTL 장애땜에 에세이2 제출이 늦었다...
+- 교수: 괜찮아용
