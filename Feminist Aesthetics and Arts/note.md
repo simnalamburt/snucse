@@ -1880,3 +1880,146 @@ Actresses **mimic** the masculine economy of signification **cf**. "almost the s
 
 - 나: eTL 장애땜에 에세이2 제출이 늦었다...
 - 교수: 괜찮아용
+
+&nbsp;
+
+Week 11, Mon
+========
+> 2020-11-09
+
+Rethinking Body, Ocularcentrism, Chora, Abject body in Irigaray and Kristeva
+
+> https://prezi.com/p/hnsws546scld/6-rethinking-body-ocularcentrism-abject-body/
+
+제2물결 페미니즘의 간략한 역사와, 페미니즘 여성운동가들의 body에 대한 해석 이야기함
+
+(걸어다니느라 필기 못함)
+
+&nbsp;
+
+Week 11, Wed
+========
+> 2020-11-11
+
+lecriture feminine and parler femme
+
+이미 가부장적 언어로 언어가 오염되어있기때문에, 아무것도 칭찬하지 않거나 깎아내리지 않는것이 해결책이 될 수 있다
+
+### Ocularcentrism
+우리의 문화는 보고 듣는거에 너무 큰 가치를 메긴다.
+
+Fine Art (beaux arts)          | Utilitarian/Functional Art
+-------------------------------|----------------------------
+Music (auditory, spiritual)    | Needlework (touching, haptic)
+Painting (visual)              | Handicraft (haptic, touching)
+Poetry (visual, spiritual)     | Ceramics (touching, visual, haptic)
+Sculpture (visual)             | Entertainment such as Vaudeville, Circus
+Architecture (visual, tactile) | Cooking (smell, taste)
+                               | Perfume (odor)
+Visual, Auditory               | smell, taste, tactile, touching, haptic
+distance, detachment, noble    | infringement, involvement, dirt
+
+무엇을 아는것은 힘으로 여겨진다. Fine art는 그런 의미에서 항상 힘에 관한것임. Gaze, contemplation라는 male power를 상징. 오감에 가까운 오른쪽은 body에 가까운것으로 여겨지고 그러므로 inferior한것으로 여겨짐.
+
+(개가 눈과 귀로 받아들이는것은 공격적으로 느끼는 반면 냄새로 느끼는건 편안하게 느끼는것을 연상시킨다)
+
+우리가 과학시험을 할때 실험대상을 만지고 냄새맡고 느끼고 하지 않죠? 멀리서 개입 없이 지켜보기만 하잖아요. Ocularcentrism도 같습니다. 만지고 느끼는 예술을 더 낮은것으로 보고, 멀리서 지켜보고 듣기만 하는것을 더 높에 여깁니다.
+
+오감에 가까운 냄새, 만지기, 맛 이것들은 artist와 artwork의 경계를 흐립니다. art and reality, I and other의 경계를 흐립니다. 반면 멀리서 보고 듣기만 하는것은 나와 artwork의 경계를 명확히 구분짓습니다.
+
+Criticism of Ocularcentrism 에 더 관심이 있으면 이 책들을 보세용
+
+- Speculum of the other woman
+- Downcast eyes, Martin Jay
+
+> The feminist uses of the real body in art are among the challenges directed to traditional distinction between art and reality. At first glace, it does indeed seem difficult to distinguish art from reality if the art objects is not a representation but a real thing.
+>
+> The ontological distinction between art and reality, strictly speaking, cannot be erased. One must grant, however, that it has been ren[...]
+
+나: I don't know how can I interprete this in aesthetic context, but Ocularcentrism reminds me that dogs takes feeling with its eyes and ears as aggresive while they takes feeling from touching and smell as comfortable. (강형욱 said it so maybe it's reliable)
+
+아기들도 비슷해요. 아기들도 애착인형처럼 만지고 냄새맡고 하는걸 편하게 느끼고 눈으로 보고 귀로 듣는걸 경계하는데, 70년대엔 이런 연구가 없었어요. 제가 키우는 고양이도 그래요. 강형욱씨가 했던 이야기도 이해가 돼용
+
+### Abject body
+Rethinking Body
+
+> We've seen how current interest in the body is manifest in art by means of the presentation of flesh and artists' bodies in installations and performance works.
+>
+> The use of real bodies in art is similar in the representation of things bodily in films and graphic arts, especially experiences that emphasize *the grossness* of the bodily, the aspects of physical existence that seem most to contrast with the purified ether of "mind." *The evocation of bodily elements that provoke disgust* is intimately tied to the philosophical re-evaluation of the body, because disgust is above all others the most physical, visceral emotion.
+
+The evocation of disgust on the part of art is a shocking disruption of traditions of aesthetic value, but at the same time it may be seen as continuous with a venerable and exalted aesthetic category: *the sublime* (p. 133)
+
+#### Sublime
+예전에 했던 그거, 자신이 아주 작은 존재임을 느끼며 자기존재의 위기에서 자기 존재를 느끼는것
+
+> 인디펜던스 데이에서 Russell이 자신을 희생하는 장면
+
+죽기 직전에 농담을 치는 장면
+
+> 어벤저스 엔드게임에서 아이언맨이 자신을 희생하는 장면
+
+Thanos는 자연을 상징함. 아이언맨이 죽기 직전에 "I am iron man"이라고 말하는 장면.
+
+교수님 이론: Sublime은 humor, laughter와 연결되어있음
+
+> Feminist critique on the sublime
+>
+> In the experience of the sublime, nature and secular body (hunger, fear, death) are mostly considered as the feminine that the seubject(you) need to transcend. (Mother nature, mother earth...) Here another denigrating body.
+
+Mother nature만 있고 Father nature가 없음
+
+#### Abject
+The Sublime in Contemporary Art
+
+- "presenting the unpresentable"
+- What does not (yet) have a presence in cultural expression.
+- --> Feminist artists actively start to appropriate because they have no (artistic) language to express their body in a proper way.
+
+> Kiki Smith, 1992. "Tale"
+
+> Kiki Smith, 1993. "Train"
+
+> The Classic Sublime slides towards the disgusting. Something that is "unpresentable", because it ought not to be presented, being base and beneath public acknowledgement, has been spoken of and brought into the light. That which is familiarly characterized as disgusting is transformed here into something sensuously alluring.
+>
+> Menstrual blood, long considered so unspeakable that it never entered public discourse let alone art, is one of the subjects that feminist artists have opened in their art. It still likely raises discomfort; indeed it is raised in order that the discomfort be exposed and plumbed.
+>
+> It expresses previously hidden aspect of female sexuality, probing at the relationship between *the erotic and the disgusting.*
+>
+> p. 260
+
+생리혈, 공공장소에서 보이면 안되는 숨겨야하는것. 이것을 적나라하게 예술작품으로 드러낸것. 고의적인 discomfort.
+
+> When the female body provides the locus of articulation, given all of its associations with materiality and mortality, the visceral and disturbing elements of the body are the ones that are apt to be targeted for artistic expression.
+
+Classic Sublime -> New Sublime: "unpresentable", disgust
+
+Negative Sublime
+
+No pleasure, No liberation, Unpleasure
+
+##### Disgust
+> Probably there is no emotion that draws attention to the body as dramatically as does disgust, because it is a profoundly visceral emotion. It is closely connected to physical responses, such as gagging and nausea.
+>
+> [...]
+
+Artistic/Political Import of Disgusting
+
+쌩얼로 나가면 안되는 사회, 공공장소에 드러내면 안되는것을 드러냄.
+
+호러필름에서 dirty하고 역겨운게 나와도 우리가 계속 즐기는 이유는? 미학이 disgust에 갖는 관점이 이걸 해석하는데에 도움이 됨.
+
+학생 질문: Professor can we say that male representation of women in horror movies can be a part of sublime art (many times the antagonist or object of fright is woman)? Or is it not because it is still the oppressive representation of women by male directors?
+
+어케 생각하시나요? 사실 이게 다음주에 하려던거랑 좀 연관이 있어요.
+
+(와 eTL 교수쪽에서 보면 엄청 신기하다)
+
+- Q: 에세이 쓰려고 해봤는데, 그냥 되는대로 그럴듯한 말을 가져다붙이는듯한 기분이 든다. 좋은 미학 에세이는 몬지.. 평가기준이 궁금하다.
+- A: 정답은 업고.. 미학이 결국에는 철학의 분과니까 저희 에세이는 대부분 철학적 에세이가 될텐데, 철학적 에세이는 단순히 현상을 보고 자기가 느끼고 그런걸 적은게 아니라, 이론적 증거, 실증적 증거가 필요할텐데 거기에 얼마나 설득적으로 제대로 부합하고 얼마나 설득적으로 비판적인지. 비판이 포인트다 사실. 기존의 담론을 뒤집어서 새로운 시각을 나타내는것이 다 철학적 에세이. 기존에 있었던 논의를 가져와서 argue하는것도 좋은 방법이다. 새롭게 만드는건 힘들긴 허니까..
+- 정 어려우면 메일로 주시면 평가를 해드릴게용
+- Q: 발표.. 지금이라도 할수있나?
+- A: 주제가 몬데용
+- Q: 게임을 미학적으로 까는것
+- A: 12월 7일!
+- Q: 스캔들 자체에 대한 설명만 하면 되나 아니면 파이널 에세이 준비하는것처럼 미학적인 해석을 붙여야할가
+- A: 쉽게 답 내릴 수 없는 논쟁적인 부분을 짚어주길 원하는것!
