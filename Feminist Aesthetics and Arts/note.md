@@ -2023,3 +2023,58 @@ Artistic/Political Import of Disgusting
 - A: 12월 7일!
 - Q: 스캔들 자체에 대한 설명만 하면 되나 아니면 파이널 에세이 준비하는것처럼 미학적인 해석을 붙여야할가
 - A: 쉽게 답 내릴 수 없는 논쟁적인 부분을 짚어주길 원하는것!
+
+&nbsp;
+
+Week 12, Mon
+========
+> 2020-11-16
+
+### 발표 1
+마릴린 호리스의 <안토리아스 라인>에 대한 발표, 에코페미니즘
+
+### 발표 2
+마릴린 호리스의 초기 영화인 <침묵에 대한 의문>
+
+이 영화에서 사용한 편집 기법에 대한 소개
+
+Disconnectedness & Alienation effect
+
+#### Murder scene 비교
+일반 영화에서의 살인씬이란..
+
+> 예시장면 하나 나옴
+
+나: 😱
+
+Murder scene이.. 상당히.. 차분하게 나옴. 여성 여럿이 쇼핑몰에서 한 남자를 한참 가만히 쳐다보다가 갑자기 싸다구를 떄림
+
+나: Ouch
+
+그리고 쓰러진 남성을 부러진 옷걸이나 깨진 유리로 죽인 뒤, 여러명이 피해자를 천천히 밟 밟 하는 모습.
+
+나: That was quite gentle and classy murder
+
+쓰러진 뒤로는 죽어가는 남자의 모습이 나오지도 않고, 피가 나오지도 않음. 공격하는 여자들만 모임. 아주 차분함
+
+#### Courtroom debate scene
+재판 마지막에 여성들이 웃다가 퇴정하는 장면
+
+1. The laughter of the women is the humor that breaks the silence
+2. The laughter of the women draws the viewer's attention away from the case to the feminist issue
+
+- Q: 죽이는 방법으로 총같은 전통적인 무기를 쓰지 않은이유
+- A: 서로 모르는 사람들이 사람을 죽이는것, 무기가 준비되어있지 않았음
+- 나: About the reason why women's of both Gorris' film don't kill someone with traditional weapons, I think it is to separate women's fight against men from pre-existing violence of men. For example, In <Antonia's Line> the main character did hold the rifle but didn't used it to kill the rapist, she cursed him instead. I think it's Gorris' ideal to how to fight against masculine world.
+
+재판장의 모든 남자들은 이 여성들이 왜 점장을 죽였는지 아무도 모르지만, 여자들은 모두 알고있다.
+
+### 수업
+> https://prezi.com/p/hnsws546scld/6-rethinking-body-ocularcentrism-abject-body/
+
+Feminist don't want to fuel sexual pleasure. 그래서 아름다움이라는 개념을 비틀음. 몸에 대한 개념을 Rethink함. Body를 추앙시하거나 devalue하지도 않고, 우리 삶 그 자체로 받아들이기.
+
+> Carolyn Korsmeyer, Gender and Aesthetics An Inroduction CH6
+
+- Q: 수업 막판에 자꾸 이런걸 해서 죄송한데... 발표 제목을 <Prositution: Sex work vs. sexual exploitation> 으로 바꿔주세용.
+- A: OK
