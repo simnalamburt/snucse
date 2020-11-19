@@ -2078,3 +2078,123 @@ Feminist don't want to fuel sexual pleasure. 그래서 아름다움이라는 개
 
 - Q: 수업 막판에 자꾸 이런걸 해서 죄송한데... 발표 제목을 <Prositution: Sex work vs. sexual exploitation> 으로 바꿔주세용.
 - A: OK
+
+&nbsp;
+
+Week 12, Wed
+========
+> 2020-11-18
+
+### 아이돌 발표
+#### 1. Female Idol as a Sexual "Body"
+
+> TV쇼에서 남성들에게 뽀뽀를 하는 여성 아이돌 사진
+
+> 군인 위문공연 하는 여성 아이돌 사진
+
+> 구글에 "아이돌 직캠 레전드" 라고 검색한 결과
+
+남자아이돌 직캠 레전드라고 검색해도.. 여자가 나온다.
+
+Female Idol's Body becoming the ideal of beauty. 아이돌들의 마른 몸들이 '다이어트 동기부여'같은 방식으로 자주 인터넷에 등장한다.
+
+> 먹토, 프로아나(거식증 동경)
+
+#### 2. Teenagers Internalizing the "Male Gaze"
+라깡의 "Mirror Stage Theory"로 해석할 수 있다.
+
+로라 멀비, Jean Louis Baudry는 거울단계이론을 process in which audiences equate images와 비슷하다고 봄
+
+로라 멀비의 Male Gaze Theory
+
+Male spectator가 주 타겟이다. 영화뿐만 아니라 TV쇼, 뮤비 등에서 재현됨. 왜 남성이 메인타겟이 되는가? 가부장제
+
+1.  How men look at women
+2.  How women look at themselves
+3.  How women look at other women
+
+1 -> 2 -> 3 방향으로 영향을 두고, 역방향인 3 -> 2 -> 1 도 영향을 줌.
+
+#### 3. Suggestion: How to create our "own gaze"
+> 민경대장이 운동하는 사진
+
+- Functioning Female Body
+- Female Idol's Subjectivity
+- Encouraging Diversity
+
+여성 아이돌들의 다양한 모습을 보여주려는 시도
+
+> 솔라시도 유튜브 채널, 미쓰백 티비쇼
+
+#### Q&A
+- Q: Thanks for your interesting presentation!! And I have a question related to the "Male gaze" and "legend Idol fancam". As you said there are some "Male gaze" in media that depicted Girl Group(Idol) as a Sexual objectification for male spectators. Then is there any common perspective on how the Boy group is presented in the media, maybe the "Female Gaze" on males?
+
+- Q: Just curious but do you feel like the diversity from non Korean celebrities gaining popularity in Korea are changing the perspective for Korean teenagers?
+
+### 아이돌 발표 (2)
+케이팝 아이돌 산업 구조. 어릴때부터 연습생으로 뽑혀 경쟁함
+
+K-pop 아이돌의 마케팅
+
+> SM Entertainment's Dear U Bubble Service
+
+최애와 내가 프라이빗 메세지를 하는듯한 느낌을 주는 서비스, 2020년 2분기에 3670000 USD 벌음.
+
+롤리타 컴플렉스, 미성년자, 마이너의 sexualization
+
+나이에 관계 없이 presented as sexualizaed, but innocent dools, with "애교" to titillate misogynistic fans. Glorification of childish looks represented by the schoolgirl concept : reinforces the fantasy of young and innocent girls.
+
+#### Hypersexualization of Male Idol Groups
+> 몬스타엑스, 근육 노출하는 모습
+
+#### Controversial Points Regarding Sexual Objectification of Male Idols
+- Sexual objectification of male and praising typical masculinity
+- Double standard toward male and female idols
+  - 여성 걸그룹에 더 엄격한 기준이 적용됨
+  - 아티스트의 젠더에 따라 다른 행동과 이미지를 요구함
+
+The effects that girl groups have on young girls and the effects that boy groups have on boys are NOT THE SAME.
+
+> 퀸덤
+
+#### Q&A
+- I feel that the main difference between Male and female sexualization is that for female idols who are told by the company to have a “sexy” concept, the female idols are personally blamed and labeled as being “slutty” while for male idols they do not seem to be personally attacked for adopting an image given by the company.
+
+- 여성아이돌이 당당하게 행동하는것, empowerment로 볼것인가 체제의 재생산으로 볼것인가?
+
+- I want to ask your personal opnion about the difference between sexual objectification of female idols and male idols.
+
+- I feel like when comparing the differences between American celebrities who adopt a sexy image and Korean idols who adopt a sexy image is their involvement (in politics, social issues )or “activeness” outside the field of music. many times Korean idols are prohibited to voice out their political views online because they are supposed to be viewed as passive, easily consumed products
+
+- i think there is also this gradually arising tendency to make rookie(new) male idols to look innocent and cute 
+
+- Naeun phone case is “Girls can do anything.”!
+
+.
+
+- 나: Personally, I have a question of whether sexual objectification of male idols is a matter that should be seriously considered.
+- A: 남성과 여성을 대상으로 한걸 보면, 둘이 정도가 다르긴 하나, 이 시스템이 없어지지 않으면 여전히 존재할것이다.
+- B: 그러나 남성을 대상으로 한 성적 대상화는 남자아이들에게 영향을 주지 않는다는 점에서 여돌과 다름. 성적 대상화가 사회에 끼치는 영향을 생각해야.
+
+.
+
+- 겨스님: 예를들어 제가 레즈비언이어서 여자를 좋아한다면, 여성을 대상으로 한 성적 대상화는 괜찮은 것일까요
+- A: 남돌은 섹시한 컨셉으로 끝나는데, 여돌은 섹시한 컨셉이 그걸로 끝나는게 아니라 그걸 여성에게 요구함. 마마무같은경우는 여성아이돌임에도 여성팬덤이 많고, 트와이스나 러블리즈같은건 팬덤이 대부분 남성인데, 이 둘의 차이를 보면 좀 더 잘 다가온다고 생각함.
+- 나: 그리고 남돌의 경우, 남돌과 팬덤이 상호작용하는것과, 여돌과 팬덤이 상호작용하는걸 보면 굉장한 차이가 있음. 남돌-팬덤 관계에선 전통적인 남성권력이 동작하는걸 볼 수 있는데 https://www.dbpia.co.kr/journal/articleDetail?nodeId=NODE01725681 에 잘 쓰여있다.
+- I think we should consider the proportion of it. Exception always exists. Also, we should consider if it is a 'culture' for major fandoms.
+
+.
+
+- To answer professor’s question, in my opinion, I think that “male gaze” is more dangerous than just normal women’s view and love for female idols. As much as lesbians enjoy different perspectives of female idols (such as cute imagines, sexy imagines, cool imagine, ..) but we wouldn’t do anything that can harm our females idol :? Lesbian would just purely devote and love their idols, without making anything that sexualize about idol (at least from what I see as a Kpop fan). For example, Reveluvs (Red Velvet’s fandom) is extremely proud of the large percentage of LGBT+ (especially lesbians and bisexual women) in their community, because the lesbians are always respectful to their idol (not cutting picture and gifs to make provocative imagines, talking respectfully to idol,...)
+- 겨스님: 레주비언들이 여성 아이돌들을 성적이지 않고 걍 사랑한다구여..? 잘 모르겠는데요
+- 나: I personally disagree with that. This morning I saw my lesbian friends reading RPS 팬픽 of 나인뮤지스
+- Yes I understand!! I just want tell this from my perspective as a lesbian in the Kpop fandom! : )
+
+쉅끝
+
+- 여성팬덤이 남성아이돌 좋아하는것에는 굉장히 모성애적 사랑도 상당하다. 남돌-여팬덤 관계는 유사연애관계 현실에서 만족하지 못하는 욕구가 좀더 강하게 표출됨, 여돌-남팬덤 관계는 다름. 아이돌의 발언 제약도 굉장히 다름.
+
+오늘 수업 조았어용 안농
+
+(- Female Idol who don't know about history: Public apologize and end of career
+- Male Idol who ran Club Burning Sun: Join the army)
