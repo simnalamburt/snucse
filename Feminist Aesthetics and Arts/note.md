@@ -2198,3 +2198,117 @@ The effects that girl groups have on young girls and the effects that boy groups
 
 (- Female Idol who don't know about history: Public apologize and end of career
 - Male Idol who ran Club Burning Sun: Join the army)
+
+&nbsp;
+
+Week 13, Mon
+========
+> 2020-11-23
+
+교수님 고영이 등장
+
+두번째 과제를 한 사람중 표절을 저지른 사람이 있었다. 그거 채점 못한다. 누구라고 말하진 않겠다. 본인인거같으면 연락해라.
+
+Judith Butler, Queering Body and Performativity.
+
+> https://prezi.com/p/8z2npgjjpinh/
+
+퀴어 이론은 역사가 짧다. 페미니즘이 없으면 퀴어 이론은 탄생하지 못했을것이라는것은 자명하다. 큰 퀴어 이론가들은 모두 페미니스트였다.
+
+"여성"이란 무엇인가?
+
+여성의 몸을 불쾌하게 전시하려는 시도, 여성의 몸이 여전히 불편하고 사회에 받아들여지지 못한다는 한계를 지님.
+
+Body art 이후
+
+"서브컬처"는 분석하기 상당히 좋은 사회현상. 메인스트림 컬처로부터 배척받으나 자체적인 라이프스타일과 sexual expermimentation을 유지함. 히피컬처, 등
+
+> Remaining Question:
+>
+> Is there True Woman? Can we know what woman means? What makes me woman? DNA? Genital? Gesture? Style?
+
+여자란 무엇일까? 처음에는 질이었음. 사람의 해부학적인 차이로 모든걸 설명할 수 있다고 믿던 시기가 있었음. 이 당시엔 심지어 머리크면 더 똑똑하다고 믿는 사람들도 있었다.
+
+나: My brain is to smol to understand that argument
+
+맞다. 이 후 여러 과학연구가 거듭되었고, 해부학은 모든 성차를 설명할 수 없다는것이 나타남. 지금 여전히 많은 래디컬 페미니스트들은 남녀간 해부학적 차이를 강조하기는 하나, strong argument는 아님.
+
+이제 우린 발달한 유전공학의 시대에 살고있다. 이제 사람들은 남녀의 차이를 염색체의 차이로 이해하고있다. XX면 여자, XY면 남자. 호르몬으로 받아들이는것도 있다.
+
+과학이 발달함에 따라서 여성의 정의가 자꾸 변한다. 무엇이 정말 여자이고 남자인지 과학으로 설명할 수 있을까?
+
+> Alice Dreger: Is anatomy destiny?
+
+우리는 해부학으로 모든것을 결정할 수 있는가? 과거에는 해부학으로 인종 등 모든걸 설명할 수 있다고 믿었다. 해부학으로 백인과 흑인 아시아인을 나눌 수 있다고 믿었음. 그러나 인종은 전적으로 문화에 관한것이었다.
+
+안드로진과 인터섹스의 등장. 남자로 살고 남자로 길러지고 여자친구도 있고 여자랑 섹스도 했는데 알고보니 몸 안에 자궁과 난소를 가졌던 남성. 해부학으로는 성을 설명할 수 없다.
+
+### Power
+Power in Foucault's term
+
+- Repressive Power
+  - Power is a possession
+  - Power stems from and is based in a central source.
+  - Power is mainly repressive in its aim and effects.
+- Productive Power
+  - Power is produced and exercised at every moment and at every site.
+  - Power is not repressive but productive.
+
+푸코 개념에서 productive power가 훨씬 중요하고 강력한 권력임. 우리의 identity를 조각하는 power. 이 power는 모든곳에 산재한다. 우리의 매 의사결정에 관여함.
+
+> There is no power relation without the correlative constitution of a field of knowledge, nor any knowledge that does not presuppose and constitute at the same time power relations
+>
+> Michel Foucault, *Discipline and Punish: The Birth of the Prison*
+
+> Schools serve the same social functions as prisons and mental institutions - to define, classify, control, and regulate people
+>
+> Michel Foucault
+
+Criticism of Normativity that power produces:
+
+> ... if you are not like everybody else, then you are abnormal, if you are abnormal, then you are sick. These three categories, not being like everybody else, not being normal and being sick are in fact very different but have been reduced to the same thing
+
+> Where there is power, there is resistance
+>
+> Michel Foucault, *The History of Sexuality, Volume 1: An Introduction*
+
+권력과 동성애
+
+> Annamarie Jagose, Queer Theory An Introduction CH2 (2)
+
+푸코에 의하면 동성애는 굉장히 현대적인 개념이다. 동성애 자체는 긴 기간동안 존재했으나, 동성애자라는 아이덴티티는 현대에 와서 동성애를 의학적으로 규정짓고 법적으로 규제하려는 시도가 있었기 때문에 저항적으로 발달했다.
+
+철학자나 과학자들은 푸코의 이런 이론을 비판하기도 하다, 푸코 관점에선 과학도 역사와 같이 과학에 사회에 의해 구축된 것, 팩트라고 할 수 없는것.
+
+동성애가 사회적인 개념이라고 해서 "오늘은 스트레이트 내일은 게이" 이렇게 할 수 있는것은 아니다. 이런 내면화 과정은 무의식적으로 이뤄지기 때문
+
+### Gender Normativity
+주디스 버틀러 이론. 푸코의 이론에 자신의 생각을 덧붙였다. 성 아이덴티티가 어떻게 성립하는가에 대한 이론.
+
+버틀러 이론에 따르면 Gender Identity는 무의식적으로 구축될 뿐만 아니라, 항상 불한정한 상태로 내면화된다.
+
+20세기 말, 세상에는 항상 두개의 성만 있었다.
+
+Original vs Imitation
+
+주디스 버틀러 이론에 따르면, sex는 original, 젠더가 imitation. 근데 우리는 이제 과학의 발전으로 "original sex"따위는 존재하지 않는다는것을 안다. 그럼 젠더는 무엇인가?
+
+예를 들어보자. 비혼 비출산 여성은 살면서 생식기를 전혀 생식하는데에 쓰지 않는다. 그럼에도 여성의 삶을 살고 여성처럼 보이게 하고다닌다. 이건 MtF 트랜스 여성과 같다. 그럼 이 둘의 차이는 무엇일까?
+
+주디스 버틀러에 의하면 Sex는 항상 gender였음. 기존의 sex gender 구분은 말이 안되는것. "원본"따위는 존재하지 않기 때문.
+
+젠더는 Identity가 아니라 verb다. We do gender, We gender male, we gender female.
+
+> There is no gender identity behind the expression of gender; that identity is performatively constituted by the very expressions that are said to be its results.
+
+> Examined Life - Judith Butler & Sunaura Taylor
+
+장애인들의 접근성을 보장한것이, 장애인들의 사회적 접근성도 함께 보장한다!
+
+그러나 여전히 사람들은 다른 사람이 몸을 어떻게 써야하는지에 대한 가정과 선입견이 있고, 그걸 깨면 사람들이 불편해함, 여전히 사회적인 의미에서 이동이 완전히 자유롭지는 못하다.
+
+젠더와 장애는 여러 시점에서 수렴한다. 몸이란 무엇인가, 몸으로 무엇을 할 수 있는가에 대해 다시 생각해보게 만듦 (중략) 어떻게 다른 자세로 걷는것이 살인을 하고싶다는 충동을 일으키게 된 것인가?
+
+담에 마저 봐용
+
+기말 페이퍼 듀: 2020-12-14
