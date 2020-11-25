@@ -2312,3 +2312,100 @@ Original vs Imitation
 담에 마저 봐용
 
 기말 페이퍼 듀: 2020-12-14
+
+&nbsp;
+
+Week 13, Wed
+========
+> 2020-11-25
+
+페미니즘 미학
+
+푸코 관점에서 power에 대해 알아봤다.
+
+우리가 더 관심을 가져야하는 더 중요한 파워는 프로덕티브 파워
+
+교육, 병원, 감시체제 등을 통해 프로덕티브 파워는 구체적인 형태 없이 무의식적으로 전방위에 작용
+
+너가 10세라고 생각해보자. 너의 아버지가 “오늘은 할머니 생일이니까 할머니한테 가자”라고 할수있다. 권위적인 아빠져
+
+반대로 “할머니 생일인데 보러 안가도 된다, 근데 할머니는 널 보고싶어할거다. 보러갈거니?”라고 할수있다. 푸코에 의하면 후자가 전자보다 더 의사결정 측면에서 harsh하고 코어시브(?)하다.
+
+전자는 아빠를 향해 투쟁해야하나, 후자는 자기 자신과 투쟁해야한다. 선택의 자유가 있는것같지만 사실 선택은 이미 내려져있음. 프로덕티브 파워. 선택의 어지가 있는것같지만 없음.
+
+Underlying power, covertly 
+
+- 나: So in Foucault’s theory, “There is a final essay assignment, but you can give up your grade and don’t do it” is 
+- In a way, yes!
+
+Gender identity! 주디스 버틀러에 의하면 이것은 presupposed normativity에 의해 정의됨
+
+3살 여자아이가 있다고 해보자. 남자처럼 하고다닌다. 아이의 엄마가 “be a good girl, 여자처럼 입고다녀라” 라고 했다고 쳐보자. 근데 “여자아이처럼 하기”는 3살 아이에겐 불명확한 개념이다. 여자아이같은게 머고 남자아이같은게 먼데
+
+여자아이가 되기 perform을 잘하면 칭찬을 받게된다. 그럼 당신은 identity를 갖게된다. 이것이 주디스 버틀러의 젠더 아이덴티티 개념
+
+쥬디스 버틀러에게 젠더는 동사다. 당신은 male을 perform한다
+
+Sex가 원인이고 gender가 결과다 라는 causailty는 버틀러뿐만 아니라 많은 철학자들에 의해 도전받았다. 
+
+> There is no ‘being’ behind doing. ‘The doer’ is merely fiction added to the deed - the deed is everything
+>
+> Nietzsche
+
+액션이 모든것이다. 액션이 존재의 본질.
+
+버틀러도 비슷한 말을 했다
+
+“There is no doer behind the deed”
+Performativity: as we perform, we become subject/agency
+
+숌 리비아(?)라는 여성 정신분석가가 있다. 이사람이 쓴 기념비적 논문이 있다. eTL에 올렸다.
+
+“왜 이사람이 분석한 사회적으로 성공적인 여성들은 so feminine”한가? 그리고 이 여성들이 공적 영역에서 뛰어난 임무를 수행한 뒤, 이런 특징이 사라진다. 왜그럴까
+
+분석 결과: 이들의 여성성은 그냥 masquerade 였다. 여성성을 연기함으로서 남성들의 mind를 편하게한것.
+
+여성성을 연기한것과 진짜 여성성을 지닌것을 구분하는것은 불가능하다는게 이 논문의 결론
+
+Knower과 known의 관계. Modern epystomology(?)에서 knower와 known의 관계가 중요
+
+버틀러 이론에서 그냥 보기만 하고 감상만 하는 knower는 아무것도 하는게 없다. Doer와의 상호작용이 더 중요.
+
+남자가 되고 여자가 되는것은 내면적인 일이 아님. 현상이다. 외부로 보이고 행동하는것임
+
+젠더 노말리티를 벗어나면 우리를 탄압하는 구조가 있음. 제도적 구조와 비제도적 구조(괴롭힘, 사람들의 생각)
+
+젠더 패러디의 등장. 패러디는 예술 장르중 하나 원본이 필요한 예술장르.
+
+주디스 버틀러는 젠더와 섹스는 원본 없는 패러디라고 봤음. 젠더 패러디는 마치 판타지의 판타지와 같다.
+
+드랙 컬처. 드랙 컬처에는 다양한 형태가 있다. Transvite, 등. 주디스 버틀러는 드랙 컬처가 젠더의 performativity에 "inner self"가 없다는 증거로 봄. "inner self"과 "identity" 사이에 명확한 경계는 없고, 극단적으로 아예 둘은 같다고 봤음. Drag은 "appearance is an illusion"의 double inversion이라고 봤음.
+
+> Drag says, "My 'outside' appearance is feminie, but my essensce 'insidie'[the body] is masculine." At the same time it symbolizes the opposite inversion; "my appearance 'outside'[my body, my gender] is masculine but my essence 'inside'[myself] is feminine."
+>
+> Both claims to truth contradiction one another and so displace the entire enactment of gender significations from the discourse of truth and falsity.
+>
+> Judith Butler, Gender Trouble: Feminism and the Subversion of Identity, p.174
+
+> Paris is burning (1990) 의 1:04:24 부분
+
+등장인물들 다 트랜스여성. 자기가 하고싶은것 이야기를 하는데, 그냥 평범한 백인 중산층 여성들이 하고싶은걸 하고싶다고 이야기하는 장면.
+
+요즘 90년대 미국에서 트랜스젠더들의 삶을 다룬 드라마가 넷플릭스에 하나 있다. "POSE". 트랜스젠더 여성들의 삶 뿐만 아니라 female subjectivity의 illusion을 드러냄.
+
+> 50살 차이 트랜스젠더들을 인터뷰하다! 내셔널 지오그래픽
+
+"과거엔 트랜스젠더라는 말 자체가 없었다면서요?"
+
+모든 트랜스젠더가 젠더플루이드인것은 아니다. 나이 많은 트랜스젠더와 젊은 트랜스젠더가 젠더 이분법에 대해 시각차를 갖고있고 여기에 대해 이야기하는 장면
+
+### Queering Body and Performativity
+> Makeup to take off | 드랙킹 아장맨 인터뷰
+
+최근 드랙 퍼포머들이 Kpop 뮤직비디오에 등장하고있지만 한국에 아직 드랙문화는 생소함. 특히 남성을 연기하는 여성 드랙 아티스트는 더욱 생소함.
+
+드랙킹이 드랙퀸보다 적은 이유. 남성 퍼포머들은 여성을 연기함에도 여성의 룰이 적용되지 않음. 여성 퍼포머들은 남성을 연기함에도 여성의 룰이 적용됨.
+
+XX XY 염색체나 성호르몬이 존재하지 않는다는 말이 아니다. 젠더 아이덴티티에 대한 우리의 생각이 담론적라는것.
+
+제가 최근 연구하는 분야는 이렇게 성이 사회적으로만 구성되었다고 이야기하진 않는다. 이론이 발전한 순서대로 소개를 드리는것.
