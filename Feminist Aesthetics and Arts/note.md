@@ -2166,7 +2166,7 @@ The effects that girl groups have on young girls and the effects that boy groups
 
 - I feel like when comparing the differences between American celebrities who adopt a sexy image and Korean idols who adopt a sexy image is their involvement (in politics, social issues )or “activeness” outside the field of music. many times Korean idols are prohibited to voice out their political views online because they are supposed to be viewed as passive, easily consumed products
 
-- i think there is also this gradually arising tendency to make rookie(new) male idols to look innocent and cute 
+- i think there is also this gradually arising tendency to make rookie(new) male idols to look innocent and cute
 
 - Naeun phone case is “Girls can do anything.”!
 
@@ -2333,9 +2333,9 @@ Week 13, Wed
 
 전자는 아빠를 향해 투쟁해야하나, 후자는 자기 자신과 투쟁해야한다. 선택의 자유가 있는것같지만 사실 선택은 이미 내려져있음. 프로덕티브 파워. 선택의 어지가 있는것같지만 없음.
 
-Underlying power, covertly 
+Underlying power, covertly
 
-- 나: So in Foucault’s theory, “There is a final essay assignment, but you can give up your grade and don’t do it” is 
+- 나: So in Foucault’s theory, “There is a final essay assignment, but you can give up your grade and don’t do it” is
 - In a way, yes!
 
 Gender identity! 주디스 버틀러에 의하면 이것은 presupposed normativity에 의해 정의됨
@@ -2346,7 +2346,7 @@ Gender identity! 주디스 버틀러에 의하면 이것은 presupposed normativ
 
 쥬디스 버틀러에게 젠더는 동사다. 당신은 male을 perform한다
 
-Sex가 원인이고 gender가 결과다 라는 causailty는 버틀러뿐만 아니라 많은 철학자들에 의해 도전받았다. 
+Sex가 원인이고 gender가 결과다 라는 causailty는 버틀러뿐만 아니라 많은 철학자들에 의해 도전받았다.
 
 > There is no ‘being’ behind doing. ‘The doer’ is merely fiction added to the deed - the deed is everything
 >
@@ -2463,3 +2463,131 @@ Isn't male fandom also can be considered as victim of exploitation too? There sp
 - 교수님: 트랜스젠더가 젠더적으로 약자라는 말을 하는건가용
 - 나: 넹
 - 교수님: 나도 동의하고, 좋은 요지인것같다. 젠더 이분법 norm에 벗어나지 않는 사람들은 젠더권력 측면에서 강자인 경우가 많고, 이런 사람들은 보통 논쟁의 대상이 되지 않음
+
+Week 14, Wed
+========
+> 2020-12-02
+
+페미니즘 미학
+
+# 레이디가가 페미니즘 발표
+
+“Take a bullet” for LGBTQ+ community (Born this way)
+
+음악과 엔터테인먼트에서 혁신과 재능 보임
+
+J. Jack halberstam:  교수, 퀴어
+Direct language, ..
+
+가가 페미니즘이라고 부를만한 새로운 물결이 나타났다고 함. 근데 이 책에서 레이디 가가 얘기만 하는것은 아님. 레이디 가가가 일으킨 일련의 담론에 대해 이야기함
+
+1. Wisdom lies in the unexpected and unanticipated
+2. 변화는 막을수없지만 그 증거를 매일매일의 변화에서 찾지 마라
+3. Think counterintuitively, act accordingly
+4. Practice creative non-believing
+5. Gaga feminism is outrageous
+
+Gender polarity without compulsory heterosexuality
+
+The possibility of heteroflexibility
+
+### 3. 텔레폰 뮤비 (비욘세 피처링)
+젠더를 특정하기 어려운 가가의 모습.
+
+> it drived people nuts!
+
+키스하는 상대의 성별도 특정하기 어려움
+
+Reversing the “male gaze”
+
+Gender norms: 전통적인 여성상에서 벗어나는 가가의 분장
+
+Body as a crime scene
+
+### 4. 가가페미니즘 분석
+> what is gaga today will be something else entirely tomorrow
+
+발표자 생각: 가가페미니즘이 탈코운동같은 다른 움직임과는 다른점은, 변화와 재창조
+
+> Dont be a drag, just be a queen
+
+나: The cat at the last slide is really qute
+
+# 여성 슈퍼히어로
+이전에는 슈퍼히어로 만화에 여성은 부차적인 역할.
+
+1940: 2차대전의 영향으로 여성슈퍼히어로 만화가 나왔다. 그중 하나가 원더우먼, 독립적이고 강한 이미지 강조
+
+1950-1960: 2차대전 종결, 페미니즘 퇴조기. 여성에게 전통적 역할 강조됨, 페미닌한 이미지 강조
+
+그러다 70년대에 제2물결 페미니즘을 거치며 변화. Popular female icon: DC코믹스의 슈퍼걸. 흑인여성히어로, 엑스맨의 스톰. Some still have the “men-hating” stereotype. 여성 슈퍼히어로에게 리더십 역할이 주어짐. Menace, 여성 활동가 이미지
+
+1990: 비전통적 여성상, 퀴어, 등의 등장. 그리고 hyper-sexualized female superhero 등장
+
+“The broken back test”, 미친듯이 성적 대상화되고 실제 사람이 따라할 수 없는 기괴한 자세. (샤프트 각도의 성적인 버전) 1990년엔 이게 2010년과 비교해 두배.
+
+강한 여성은 항상 하이퍼섹슈얼라이즈됨, 여성은 반드시 매력적이어야함, 목소리나 “potential ageny”보단 몸에 집중됨 (무슨뜻이지)
+
+만화가 사회에 끼치는 문화적 영향은 상당하다.
+
+교수: 일러스트들이 이쁘내요
+Slidego 에서 받았서용
+
+나: may I ask the meaning of “potential agency”?
+여성이기때문에 발휘하지 못했던 진짜 힘
+
+교수: 이 여성 슈퍼히어로들이 세상에 나왔을 때, 시장의 반응이 궁금하다. 예를들어 한국에선 백래시가 장난아니었는데
+코믹북 시장에서도 비슷하다
+
+# 잡담
+넷플릭스 드라마: 큐티스, 엄청 할 이야기가 많고 논란도 됐던거같은데 한국에선 이야기된적이 없다
+
+오늘은 일찍 끝내좌!
+
+&nbsp;
+
+Week 15, Mon
+========
+> 2020-12-07
+
+(나 발표함)
+
+성매매 관련해서 art와 함께 이야기할줄알았는데 그게 없넹 ㅠ
+
+(ㅅㅂ 그래야하는거엿어?)
+
+- 교수님: 김젼 너의 의견은 무엇이냐?
+- 나: 노딕 모델이다
+- Q: Thank you for your presentation! It was really interesting. I just wanted to ask, I agree with your pro sex-work point that prostitution cannot be seen to be encouraging misogyny, but I was wondering if you could expand upon how this is true?
+- 탈코운동과 비슷하게, 이것에 참여하지 않는게 미소지니가 될수는 없다고 생각한다. 이것의 문제는 사회이지, 개개인 여성의 행동이 미소지니를 구축하는것이 아니라고 본다
+- Q: Amazing presentation! When you mentioned about the entertainment industry and the borderline idea of it possibly being a factor of prostitution I became curious to what your stance of this might be. Thank you!
+- 감정노동과 비슷하다고 생각한다. 화장을 하지 않고 원치않는 미소를 고객에게 짓고 그러는데, 결국 이것도 여성의 섹슈얼리티를 상품화한것이다. 여성의 섹슈얼리티를 상품화했다는 점에서 두 직업의 차이가 그렇게 크지 않다고 본다.
+
+## 수업
+> https://prezi.com/view/4UMjn9qGnVAJ7vZlcdRm/
+
+### 1. Dilemmas
+1.  Body matters
+
+    Impossibility of the one and only identity
+
+    De we have to choose one between "the same" as identity or "differences" as marks for all kinds of liberation?
+
+2.  Struggling with money!
+
+    Impossibility of the politics with all-pervading individualization in post-capitalism
+
+    Is post-capitalism inescapable?
+
+How can we go beyond?
+
+> [Kimberlé Crenshaw, "The urgency of intersectionality", TED](https://youtu.be/akOe5-UsQ2o)
+
+### 2. Intersectionality
+교차 페미니즘
+
+아프리카계 미국인 페미니즘에 영향받음
+
+Afrofuturism
+
+### 3. Posthuman and Feminism
