@@ -2590,4 +2590,47 @@ How can we go beyond?
 
 Afrofuturism
 
+&nbsp;
+
+Week 15, Wed
+========
+> 2020-12-09
+
+마지막 발표, 마지막 수업
+
+### Postcolonialism and Feminism 발표
+(너무 어려움..)
+
+## 수업
+> https://prezi.com/view/4UMjn9qGnVAJ7vZlcdRm/
+
 ### 3. Posthuman and Feminism
+Anthropocene 인류세
+
+- Transhumanism: 기술로 인간 환경, 지능, 신체력을 마구 끌어올리자
+- Posthumanism: 기술로 humanity가 변하거나 초월할 수 있음, humanism을 버려야 하는것으로 보는 관점
+
+Posthumanism은 주로 Man에 의한 크리틱
+
+Why Feminism meets posthumanism?
+
+- 페미니즘은 "(hu)man"의 개념에 도전하는 담론
+- "human"은 더이상 우리가 어떤 존재인지를 반영해주지 않는다
+
+도나 해러웨이의 사이보그 선언, 반려종 선언, Staying with the trouble
+
+#### Sympoiesis(공동생산)
+posthumanism의 개념은 너무 인간중심적이다.
+
+사람도 외부와 상호교류하며 서로 필요로 하는 존재.
+
+실뜨기: Sympoiesis의 상징
+
+## 종강
+할 얘기 준비를 많이 했는데, 시간이 없어서 마쳐야하네용. 수업을 마치는게 익숙하진 않은데.. 정리합쉬다
+
+여러분들이랑 수업을 할 수 있어서 넘 좋았어요. 발표도 넘 좋았고, 학생들이 이 주제를 넘 잘 이해해서 넘 좋았어요. 언젠가 또 만날 수 있겠조? 그랬으면 좋겠네용. 코로나 상황이지만 건강하게 잘 지내시구용.
+
+- 일동: 와와
+- 학생: 간지 먼지(교수님 고양이)도 고마워용
+- 와와
