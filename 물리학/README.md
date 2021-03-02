@@ -3,7 +3,7 @@
 
 수업명 | 물리학
 :----:|----
-교수 | ???
+교수 | [박건식](https://physics.snu.ac.kr/research-faculty/faculty/fulltime?mode=view&profidx=37)
 강의 번호 | 034.007
 강의 시점 | 2021, Spring
 
