@@ -7,4 +7,6 @@
 강의 번호 | L0442.000400
 강의 시점 | 2021, Spring
 
+[오픈카톡](https://open.kakao.com/o/gxL22Q0c)
+
 > 비대면 실시간 강의, 공지 등은 eTL
