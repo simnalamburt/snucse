@@ -73,3 +73,6 @@ Week 2, Mon
 > 2021-03-08
 
 속도, 평균속도, 가속도 이야기 하는중
+
+## Chapter 3. Falling Objects and Projectile Motion
+포물선 운동 열심히 설명
