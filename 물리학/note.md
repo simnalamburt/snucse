@@ -82,3 +82,5 @@ Week 2, Mon
 Week 2, Wed
 ========
 > 2021-03-10
+
+## Chapter 4. Newton's Laws: Explaining Motions
