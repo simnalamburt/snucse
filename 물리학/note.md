@@ -76,3 +76,9 @@ Week 2, Mon
 
 ## Chapter 3. Falling Objects and Projectile Motion
 포물선 운동 열심히 설명
+
+&nbsp;
+
+Week 2, Wed
+========
+> 2021-03-10
