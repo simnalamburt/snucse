@@ -34,9 +34,19 @@ CAD란 무엇인가? Computer Aided Design. NX, CATIA 등 다양한 캐드 프�
 >
 > https://youtu.be/qwdfdE6ruMw
 
+&nbsp;
+
 Week 2, Mon
 ========
 > 2021-03-08
 
 Fusion 360으로 기본도형 만들고, 스케치한다음 extrude하는법, 두 body cut 하는법
 배움, 과제 나감
+
+&nbsp;
+
+Week 2, Wed
+========
+> 2021-03-10
+
+Fusion 360으로 물컵, 머그컵, 네모 머그컵 만듦. 다양한 도구 사용법 익힘
