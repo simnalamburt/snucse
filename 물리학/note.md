@@ -84,3 +84,11 @@ Week 2, Wed
 > 2021-03-10
 
 ## Chapter 4. Newton's Laws: Explaining Motions
+
+&nbsp;
+
+Week 3, Mon
+========
+> 2021-03-15
+
+## Chapter 5. Circular Motion, the Planets, and Gravity
