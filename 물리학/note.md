@@ -92,3 +92,11 @@ Week 3, Mon
 > 2021-03-15
 
 ## Chapter 5. Circular Motion, the Planets, and Gravity
+
+&nbsp;
+
+Week 3, Wed
+========
+> 2021-03-17
+
+## Chapter 6. Energy and Oscillations
