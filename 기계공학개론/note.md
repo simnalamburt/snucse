@@ -71,3 +71,11 @@ Fusion 360의 "컴포넌트" 개념 익힘
 
 Form Sculpture, Free Form, Subdivision 이 다 되는 소프트웨어가 매우 드물다.
 T spline은 유용한 개념
+
+&nbsp;
+
+Week 4, Mon
+========
+> 2021-03-22
+
+Sculpture 연습해서 의자 만듦
