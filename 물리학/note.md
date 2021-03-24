@@ -108,3 +108,11 @@ Week 4, Mon
 > 2021-03-22
 
 ## Chapter 7. Momentum and Impulse
+
+&nbsp;
+
+Week 4, Wed
+========
+> 2021-03-24
+
+## Chapter 8. Rotational Motion of Solid Objects
