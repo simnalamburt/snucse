@@ -1,2 +1,5 @@
 # Python virtual environment
 /.venv/
+
+# Jupyter
+.ipynb_checkpoints/
