@@ -128,3 +128,21 @@ Week 5, Mon
 
 애니메이션 공부 관련 동영상:
 https://www.youtube.com/watch?v=zq1CuXMgTjM
+
+&nbsp;
+
+Week 5, Wed
+========
+> 2021-03-31
+
+애니메이션 하는법
+
+&nbpsa;
+
+Week 6, Mon
+========
+> 2021-04-05
+
+Fusion 360 끝
+
+교재: 기계공학개론-Wickert-Cengage-2019
