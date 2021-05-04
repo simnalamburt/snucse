@@ -15,15 +15,17 @@ A = np.array([
 ])
 
 B = np.array([
-    50,
-    50,
-    25,
-    25,
+    50.,
+    50.,
+    25.,
+    25.,
 ])
 
 # Initial values
-U = np.array([0, 0, 0, 0])
+U = np.array([0., 0., 0., 0.])
+print(f'U = {U}')
 
 for _ in range(20):
-    U = A@U + B
+    V = A@U + B
+    U = A@V + B
     print(f'U = {U}')
