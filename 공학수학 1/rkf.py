@@ -6,8 +6,10 @@ def euler(
     h: float, n: int,
 ) -> float:
     x0, y = init
-    for _ in range(n):
-        y = y + h*f(x0 + (n-1)*h, y)
+    for i in range(n):
+        x = x0 * i*h
+        k1 = h*f(x, y)
+        y = y + k1
     return y
 
 def improved_euler(
@@ -16,8 +18,8 @@ def improved_euler(
     h: float, n: int,
 ) -> float:
     x0, y = init
-    for _ in range(n):
-        x = x0 + (n-1)*h
+    for i in range(n):
+        x = x0 + i*h
         k1 = h*f(x,     y)
         k2 = h*f(x + h, y + k1)
         y = y + 0.5*(k1 + k2)
@@ -29,8 +31,8 @@ def rk(
     h: float, n: int,
 ) -> float:
     x0, y = init
-    for _ in range(n):
-        x = x0 + (n-1)*h
+    for i in range(n):
+        x = x0 + i*h
         k1 = h*f(x,         y)
         k2 = h*f(x + 0.5*h, y + 0.5*k1)
         k3 = h*f(x + 0.5*h, y + 0.5*k2)
@@ -44,8 +46,8 @@ def rkf(
     h: float, n: int,
 ) -> float:
     x0, y = init
-    for _ in range(n):
-        x = x0 + (n-1)*h
+    for i in range(n):
+        x = x0 + i*h
         k1 = h*f(x, y)
         k2 = h*f(x + 1/4*h, y + 1/4*k1)
         k3 = h*f(x + 3/8*h, y + 3/32*k1 + 9/32*k2)
@@ -55,7 +57,7 @@ def rkf(
         y = y + 16/135*k1 + 6656/12825*k3 + 28561/56430*k4 - 9/50*k5 + 2/55*k6
     return y
 
-print(euler(lambda x, y: x**2 * y, (1, 1), 0.1, 10))
-print(improved_euler(lambda x, y: x**2 * y, (1, 1), 0.1, 10))
-print(rk(lambda x, y: x**2 * y, (1, 1), 0.1, 10))
-print(rkf(lambda x, y: x**2 * y, (1, 1), 0.1, 10))
+print(euler(lambda x, y: 2*x*y, (1, 1), h=0.1, n=10))
+print(improved_euler(lambda x, y: 2*x*y, (1, 1), h=0.1, n=10))
+print(rk(lambda x, y: 2*x*y, (1, 1), h=0.1, n=10))
+print(rkf(lambda x, y: 2*x*y, (1, 1), h=0.1, n=10))
