@@ -1104,10 +1104,12 @@ Disjoint Set만 대상으로 한다. 교집합 없음.
 링크트리스트, 트리로 만들 수 있음. 강의자료에는 없으나 해시로도 만들 수 있음.
 
 ### 링크트리스트 기반
-- 집합 만들기: 자명
-- 집합 대표 찾기: 자명
-- 합집합: 자명, O(n)
-- Weight을 고려한 Union: 작은 집합을 큰 집합 뒤에 붙인다. 대표 원소 포인터 업데이트를 줄이려고.
+![](https://raw.githubusercontent.com/simnalamburt/i/main/snucse/linked-list-disjoint-set.png)
+
+- 집합의 정의: 하나의 링크트 리스트로 연결되면 하나의 집합으로 간주
+- FindSet, 집합 대표 찾기: O(1), 링크트 리스트의 맨 앞 원소를 대표로 사용함, 모든 링크트 리스트 원소가 대표 원소에 대한 포인터를 갖고있음
+- Union: 두 리스트 하나로 연결한 뒤 대표 원소 포인터를 모두 업데이트, O(n)
+  - Weight을 고려한 Union: 무조건 작은 집합을 큰 집합 뒤에 붙이도록 하면, 대표 원소 포인터 업데이트를 줄일 수 있음
 
 Weighted Union 을 썼을때 아래가 성립함.
 
@@ -1122,26 +1124,30 @@ m번의 MakeSet, Union, FindSet을 수행했고, MakeSet이 그중 n번이라면
 알고리즘의 흐름이 아니라 개개의 원소에 몇번의 오퍼레이션이 가해지는지로 분석한다. 새로운 관점!
 
 ### 트리 기반
+![](https://raw.githubusercontent.com/simnalamburt/i/main/snucse/tree-disjoint-set.png)
+
 더 복잡하지만, 더 효율적임. 근데 우리가 보통 보던거랑 포인터 방향이 반대임. 자식들이 부모를 가리킴.
 
-- 집합 만들기: 자명
-- 집합 대표 찾기: 자명
-- 합집합: A의 자식으로 B의 루트를 넣어준다.
+- 집합의 정의: 하나의 트리로 연결되어있으면 하나의 집합으로 간주
+- FindSet, 집합 대표 찾기: O(rank), 루트 노드를 대표로 사용함
+- Union: O(rank), 한쪽 트리를 반대쪽 트리 루트노드의 자식으로 넣어준다.
 
-모든 오퍼레이션들이 Constant time임.
+이것만 보면 대충 log N 시간만에 끝나는것 아닌가 싶지만 아래 두개 최적화를 넣으면 매우 강력해진다.
 
 - Rank를 이용한 Union: 모든 노드는 자신을 루트로 갖는 subtree 높이의 상한을 rank라는 이름으로 저장함, union 할 떄 rank가 낮은 집합을 rank가 높은 집합의 자식으로 넣는다. 같은 rank를 가진 집합끼리 union하면 rank가 증가함.
-- Path compression: Find-Set 할때마다 만나는 모든 노드에 대해, 루트의 직접적인 자식이 되도록 parent 포인터 업데이트
+- Path compression: Find-Set을 하면 루트 노드로 타고 올라가야하는데, 기왕 타고 올라가는 김에 만나는 모든 노드에 대해, 루트의 직접적인 자식이 되도록 parent 포인터 업데이트하기
 
 왜 Height가 아니라 상한이라는 표현을 쓰는가? Path compression할 때 rank 다시 업데이트하는건 비싸서. 자기 밑에 뭐가 있는지 알 수 있는 방법이 없다.
 
-Rank 이요한 Union과 Path compression을 사용한 Find-Set을 쓸 때, 아래가 성립한다.
+Rank 이용한 Union과 Path compression을 사용한 Find-Set을 쓸 때, 아래가 성립한다.
 
 수행시간: m번의 MakeSet, Union, FindSet중 n번이 MakeSet일때 이들의 수행시간은 O(m f(n)) 이다. f(n) = log를 k회 중첩해 log log ... log n <= 1 가 되게하는 최소의 k
 
 f(n)은 몹시 작아서 사실상 상수임.
 
 n = 2^(2^(2^(2^2))) 이면 f(n)은 5
+
+따라서 각 MakeSet, Union, FindSet 연산이 **사실상 상수시간**만에 끝나는것과 같은 효과가 발생한다.
 
 이번 강의에서 심심해서 배경음악을 깔아봤는데 눈치를 채셨는지 모르겠습니다. 저는 귀가 예민해서 강의하다가 자꾸 초점을 놓쳤었습니다.
 
