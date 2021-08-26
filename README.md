@@ -1,5 +1,11 @@
 Happy Campus Life
 ========
+> Bachelor of Science in Computer Science and Engineering
+>
+> 2013-03-04 ~ 2021-08-27
+
+&nbsp;
+
 학교 수업 필기, 학교 과제, 개인 공부 노트 리퍼지토리
 
 ### 학교에서 주는 소프트웨어 목록
